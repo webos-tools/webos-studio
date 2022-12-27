@@ -1,0 +1,39 @@
+/*
+  * Copyright (c) 2022 LG Electronics Inc.
+  * SPDX-License-Identifier: Apache-2.0
+*/
+@font-face {
+    font-family: rubik;
+    src: url("./Rubik/Rubik-VariableFont_wght.ttf");
+}
+
+* {
+    font-family: rubik !important;
+    font-style: normal;
+}
+
+body {
+    background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    padding: 0px;
+    margin: 0px auto;
+}
+
+.content {
+    position: relative;
+    width: 720px;
+    height: 450px;
+    background: #141515;
+}
+
+@media (min-width: 1000px) and (min-height: 625px) {
+    .content {
+        width: 1000px;
+        height: 625px;
+    }
+}

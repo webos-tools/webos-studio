@@ -1,0 +1,215 @@
+<!--
+Copyright (c) 2022 LG Electronics Inc.
+SPDX-License-Identifier: Apache-2.0
+-->
+<!DOCTYPE HTML>
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Webapp</title>
+    <style type="text/css">
+    body {
+        background-color: #ffffff;
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        padding:0;
+        margin: 0 auto;
+    }
+    .grid-container {
+        width : 400px;
+        display: grid;
+        grid-template-columns: repeat(2, 200px);
+      }
+    
+     .grid-container2 {
+       margin-top: 30px;
+       width : 600px;
+       display: grid;
+       grid-template-columns: repeat(2, 350px);
+       padding: 20px;
+       border:1px solid;
+       border-color: #ff8080;
+     }
+    
+    .btn {
+        height:60px;
+        width: 150px;
+        margin-top: 20px; 
+        position:relative;
+        font-size:1.5em;
+        background:#ff8080;
+        color:#FFF;
+        border: 0 solid;
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+        outline: 1px solid rgba(255, 255, 255, 0.5);
+        -webkit-transition: all 1.25s cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 1.25s cubic-bezier(0.19, 1, 0.22, 1);
+        margin: 20px 30px;
+    }
+    .btn:hover {
+        background:#ffffff;
+        color:#ff8080;
+        border: 1px solid;
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+        outline-color: rgba(255, 255, 255, 0);
+        outline-offset: 15px;
+        text-shadow: 1px 1px 2px #427388;
+    }
+    button:disabled,
+    button[disabled]{
+        border: 1px solid #999999;
+        background-color: #cccccc;
+        color: #666666;
+    }
+    img {
+        height: 300px;
+        width: 300px;
+    }
+    img:hover {
+        transition: ease 500ms;
+        filter: brightness(70%);
+    }
+    label {
+        display: block; float: left; 
+        width: 200px;
+        font-family: "Noto Sans KR", sans-serif;
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 1.3;
+
+        color: #444;
+
+        margin-right: 2em;
+        margin-top: 20px;
+    }
+    select {
+        width: 200px;
+        margin-left: 2em;
+        margin-top: 20px;
+        border:1px solid;
+        border-color: #ff8080;
+        background-color: #ffffff;
+    }
+    textarea {
+        width:200px;
+        resize: none;
+        margin-left: 2em;
+        margin-top: 20px;
+        border:1px solid;
+        border-color: #ff8080;
+    }
+    h1 {
+        font-weight: bold;
+        font-size:40px;
+        color: black;
+    }
+    @media (max-width: 550px), (max-height: 700px) {
+        label {
+            margin-top: 10px;
+            margin-right: 0em;
+            font-size: 15px;
+        }
+        select {
+            width: 150px;
+            margin-left: 0em;
+            margin-top: 10px;
+        }
+        textarea {
+            width:150px;
+            margin-left: 0em;
+            margin-top: 10px;
+        }
+        img{
+            height: 150px;
+            width: 150px;
+        }
+        .btn {
+            height: 45px;
+            width: 110px;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .grid-container {
+          width : 300px;
+          grid-template-columns: repeat(2, 150px);
+        }
+        .grid-container2 {
+          width : 400px;
+          grid-template-columns: repeat(2, 250px);
+        }
+        h1 {
+            font-size: 25px;
+        }
+    }
+    
+    </style>
+    </head>
+    <body>
+        <div style="display:flex; flex-direction: column; justify-content: center; align-items: center;">
+            <h1 style="margin-bottom: 20px;">Web Application</h1>
+        </div>
+        <div class="grid-container">
+            <div>
+              <label for="Type">
+                    Type
+                </label>
+            </div>
+            <div>
+              <select name="Type" id="selelct_type">
+                    <option value="none"selected disabled hidden>=== select ===</option>
+                    <option value="basic">basic</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid-container2">
+            <div>
+              <img src="${noImage}" id="app_img">
+            </div>
+            <div>
+                <textarea id="description" name="story" readonly>
+                    Testing..
+                </textarea>
+            </div>
+        </div>
+        <div>
+            <button id="btn_back" class="btn">Back</button>
+            <button id="btn_next" class="btn" disabled>Next</button>
+        </div>
+        <script>
+        (function() {
+            const vscode = acquireVsCodeApi();
+            var selelct_type = document.getElementById("selelct_type");
+            var back_btn = document.getElementById("btn_back");
+            var next_btn = document.getElementById("btn_next");
+            var description = document.getElementById("description");
+            var app_img = document.getElementById("app_img");
+            var app_type;
+            selelct_type.addEventListener('change', function(){
+                app_type = selelct_type.value;
+                next_btn.disabled = false;
+                if(app_type === 'basic') {
+                    app_img.src = "${webappImg}";
+                    description.value = "Description:basic web app for web OS OSE";
+                }
+            })
+            next_btn.addEventListener('click', function(){
+                vscode.postMessage({
+                    command: 'Webapp',
+                    appType: app_type
+                })
+            })
+            back_btn.addEventListener('click', function(){
+                vscode.postMessage({
+                    command: 'Back',
+                    htmlType: 'home'
+                })
+            })
+            aaa();
+        }())
+        </script>
+    </body>
+</html>

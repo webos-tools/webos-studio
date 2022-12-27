@@ -1,0 +1,289 @@
+/*
+  * Copyright (c) 2022 LG Electronics Inc.
+  * SPDX-License-Identifier: Apache-2.0
+*/
+:root {
+    --element-btn-left-icon: "";
+    --element-btn-left-icon-disabled: "";
+    --element-btn-right-icon: "";
+    --element-btn-right-icon-disabled: "";
+    --element-list-all-icon: "";
+    --element-list-right-icon: "";
+    --element-list-all-icon-hover: "";
+    --element-list-right-icon-hover: "";
+}
+
+.navi-top-left {
+    position: absolute;
+    width: 144px;
+    height: 64px;
+    left: 0px;
+    top: 0px;
+    background: #1F2021;
+}
+
+.navi-top-left-text {
+    position: absolute;
+    width: 112px;
+    height: 19px;
+    left: 16px;
+    top: 23px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #BCC0C2;
+}
+
+.navi-top-right {
+    position: absolute;
+    width: 572px;
+    height: 64px;
+    left: 148px;
+    top: 0px;
+    background: #1F2021;
+}
+
+.navi-top-right-text {
+    position: absolute;
+    width: 72px;
+    height: 19px;
+    left: 250px;
+    top: 23px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #BCC0C2;
+}
+
+.navi-left {
+    position: absolute;
+    width: 144px;
+    height: 382px;
+    left: 0px;
+    top: 68px;
+    background: #1F2021;
+}
+
+.navi-bottom {
+    position: absolute;
+    width: 572px;
+    height: 64px;
+    left: 148px;
+    top: 386px;
+    background: #1F2021;
+}
+
+.navi-bottom-btn-box {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 8px;
+    position: absolute;
+    width: 316px;
+    height: 40px;
+    left: 276px;
+    top: 398px;
+}
+
+.btn-small {
+    width: 100px;
+    height: 40px;
+    position: absolute;
+    bottom: 0px;
+    border-radius: 4px;
+    border: none;
+    background: #2487E2;
+}
+
+button:hover {
+    background: #0061BC;
+}
+
+button:disabled,
+button[disabled] {
+    background-color: #85898A;
+    color: #BCC0C2;
+}
+
+.btn-small-1 {
+    left: 0px;
+}
+
+.btn-small-2 {
+    left: 108px;
+}
+
+.btn-small-3 {
+    left: 216px;
+}
+
+.btn-small-text {
+    position: absolute;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.btn-small-text-1 {
+    width: 48px;
+    height: 17px;
+    left: 36px;
+    top: 12px;
+}
+
+.btn-small-text-2 {
+    width: 68px;
+    height: 17px;
+    left: 16px;
+    top: 12px;
+}
+
+.btn-small-text-3 {
+    width: 48px;
+    height: 17px;
+    left: 16px;
+    top: 12px;
+}
+
+.btn-small-img-1 {
+    background: var(--element-btn-left-icon) no-repeat;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 16px;
+    top: 12px;
+}
+
+.btn-small-img-1:disabled {
+    background: var(--element-btn-left-icon-disabled) no-repeat;
+}
+
+.btn-small-img-3 {
+    background: var(--element-btn-right-icon) no-repeat;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 68px;
+    top: 12px;
+}
+
+.btn-small-img-3:disabled {
+    background: var(--element-btn-right-icon-disabled) no-repeat;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.li-left {
+    color: #BCC0C2;
+    background-color: #1F2021;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    height: 20px;
+    width: 104px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    background-repeat: no-repeat;
+    background-position: 16px 50%;
+    padding: 10px 0 10px 40px;
+    margin-top: 1px;
+}
+
+.li-right {
+    color: #BCC0C2;
+    background-color: #1F2021;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    height: 28px;
+    width: 124px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    padding-left: 16px;
+    padding-top: 12px;
+    margin-top: 1px;
+}
+
+li:hover {
+    color: #F0F3F4;
+    background-color: #414344;
+}
+
+li.selected {
+    background-color: #414344;
+}
+
+li.all-img {
+    background-image: var(--element-list-all-icon);
+}
+
+li.all-img:hover {
+    background-image: var(--element-list-all-icon-hover);
+}
+
+li.right-img {
+    background-image: var(--element-list-right-icon);
+}
+
+li.right-img:hover {
+    background-image: var(--element-list-right-icon-hover);
+}
+
+@media (min-width: 1000px) and (min-height: 625px) {
+    .navi-top-left {
+        width: 184px;
+    }
+
+    .navi-top-left-text {
+        left: 24px;
+    }
+
+    .navi-top-right {
+        width: 812px;
+        left: 188px;
+    }
+
+    .navi-top-right-text {
+        left: 370px;
+        top: 23px;
+    }
+
+    .navi-left {
+        width: 184px;
+        height: 557px;
+    }
+
+    .navi-bottom {
+        width: 812px;
+        left: 188px;
+        top: 561px;
+    }
+
+    .navi-bottom-btn-box {
+        left: 436px;
+        top: 573px;
+    }
+
+    .li-left {
+        width: 136px;
+        background-position: 24px 50%;
+        padding: 10px 0 10px 48px;
+    }
+
+    .li-right {
+        width: 230px;
+    }
+}

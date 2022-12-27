@@ -1,0 +1,206 @@
+/*
+  * Copyright (c) 2022 LG Electronics Inc.
+  * SPDX-License-Identifier: Apache-2.0
+*/
+body {
+	background-color: transparent;
+}
+
+.color-list {
+	list-style: none;
+	padding: 0;
+}
+
+.color-entry {
+	width: 100%;
+	display: flex;
+	margin-bottom: 0.4em;
+	border: 1px solid var(--vscode-input-border);
+}
+
+.color-preview {
+	width: 2em;
+	height: 2em;
+}
+
+.color-preview:hover {
+	outline: inset white;
+}
+
+.color-input {
+	display: block;
+	flex: 1;
+	width: 100%;
+	color: var(--vscode-input-foreground);
+	background-color: var(--vscode-input-background);
+	border: none;
+	padding: 0 0.6em;
+}
+
+.webview-button {
+	display: block;
+	border: none;
+	margin: 0 auto;
+}
+
+.welcomeLayout{
+	display: none;
+}
+.listLayout{
+	display: none;
+}
+.addLayout{
+	display: none;
+}
+.InstlistItem{
+	display: flex; 
+	justify-content: space-between; 
+	cursor: pointer;
+}
+.InstlistItem div:nth-child(1) {
+	flex:1;
+  }
+.InstlistItem:focus{
+	background: var(--vscode-list-focusBackground); 
+	color: var(--vscode-list-focusForeground);
+}
+.InstlistItem:hover  {
+	background: var(--vscode-list-hoverBackground);
+
+}
+.InstlistItem:hover .InstlistItemIcons {
+	display: block;
+}
+
+.InstlistItemTitleContainer{
+	
+}
+.InstlistItemTitle{
+
+}
+.InstlistItemSubTitle{
+	
+}
+.InstlistItemIcons{
+	float: right;
+	display: none;
+
+}
+
+.InstlistItemIcon{
+	padding-left: 2px;
+	padding-right: 2px;
+	
+}
+.InstlistItemIcon:hover  {
+	outline: var(--vscode-toolbar-hoverOutline);
+	background-color: var(--vscode-toolbar-hoverBackground); ;
+
+}
+.fileButton {
+    display:inline-block;
+	color: black;
+    border:1px solid #CCC;
+    background:#DDD;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+    cursor:pointer;
+    vertical-align:middle;
+    padding: 2px;
+    text-align: center;
+	border-radius: 3px;
+	
+	font-size: var(--vscode-font-size);
+	font-weight: var(--vscode-font-weight);
+	font-family: var(--vscode-font-family);
+	float: right;
+	
+}
+.fileButton:hover {
+    box-shadow: 0 0 10px -1px rgba(0,0,0,0.6);
+}
+.fileButton:active {
+    box-shadow: 0 0 5px -1px rgba(0,0,0,0.6);
+}
+.fileButtonContainer{
+	display: block;
+	width: 100%;
+	border: none;
+	font-family: var(--vscode-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	color: var(--vscode-input-foreground);
+	outline-color: var(--vscode-input-border);
+	background-color: var(--vscode-input-background);
+
+	font-size: var(--vscode-font-size);
+	font-weight: var(--vscode-font-weight);
+	font-family: var(--vscode-font-family);
+}
+.notSupportedContainer{
+	
+	width: 100%;
+	border: none;
+	font-family: var(--vscode-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	/* color: var(--vscode-inputValidation-warningForeground); */
+	color: var(--vscode-eidtor-foreground);
+	outline-color: var(--vscode-input-border);
+	/* background-color: var(--vscode-inputValidation-warningBackground); */
+	background-color: var(--vscode-editor-background);
+	font-size: var(--vscode-font-size);
+	font-weight: var(--vscode-font-weight);
+	font-family: var(--vscode-font-family);
+	border-radius: 5px;
+
+}
+.notSupportedContainerHeader{
+	
+	width: 100%;
+	border: none;
+	font-family: var(--vscode-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	/* color: var(--vscode-inputValidation-warningForeground); */
+	color: var(--vscode-eidtor-foreground);
+	outline-color: var(--vscode-input-border);
+	/* background-color: var(--vscode-inputValidation-warningBackground); */
+	background-color: var(--vscode-editor-background);
+
+	font-size: var(--vscode-font-size);
+	font-weight: var(--vscode-font-weight);
+	font-family: var(--vscode-font-family);
+
+}
+.defaultValueContainer{
+	
+	width: 100%;
+	border: none;
+	font-family: var(--vscode-font-family);
+	padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+	color: var(--vscode-editor-foreground);
+	/* color: var(--vscode-inputValidation-warningForeground); */
+	outline-color: var(--vscode-input-border);
+	background-color: var(--vscode-editor-background);
+	/* background-color: var(--vscode-inputValidation-warningBackground); */
+	border-radius: 5px;
+	font-size: var(--vscode-font-size);
+	font-weight: var(--vscode-font-weight);
+	font-family: var(--vscode-font-family);
+
+}
+.defaultContainerHeader{
+	
+	width: 100%;
+	border: none;
+	font-family: var(--vscode-font-family);
+	/* padding: var(--input-padding-vertical) var(--input-padding-horizontal); */
+	color: var(--vscode-eidtor-foreground);
+	color: var(--vscode-inputValidation-warningForeground);
+	outline-color: var(--vscode-input-border);
+	/* background-color: var(--vscode-inputValidation-warningBackground); */
+	background-color: var(--vscode-editor-background);
+	font-size: var(--vscode-font-size);
+	font-weight: var(--vscode-font-weight);
+	font-family: var(--vscode-font-family);
+
+}
+
+

@@ -1,0 +1,90 @@
+/*
+  * Copyright (c) 2022 LG Electronics Inc.
+  * SPDX-License-Identifier: Apache-2.0
+*/
+.page-create-middle-left {
+    position: absolute;
+    width: 140px;
+    height: 314px;
+    left: 148px;
+    top: 68px;
+    background: #1F2021;
+}
+
+.page-create-middle-right {
+    position: absolute;
+    width: 428px;
+    height: 314px;
+    left: 292px;
+    top: 68px;
+    background: #1F2021;
+}
+
+.img-small {
+    position: absolute;
+    Width: 394px;
+    Height: 170px;
+    left: 16px;
+    top: 16px;
+    background: #ffffff33;
+    border: 1px solid #ffffff80;
+}
+
+.desc-title {
+    position: absolute;
+    width: 90px;
+    height: 19px;
+    left: 16px;
+    top: 204px;
+    background: #1F2021;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #BCC0C2;
+}
+
+.desc-text {
+    position: absolute;
+    width: 396px;
+    height: 67px;
+    left: 16px;
+    top: 231px;
+    background: #1F2021;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #86898A;
+}
+
+@media (min-width: 1000px) and (min-height: 625px) {
+    .page-create-middle-left {
+        width: 246px;
+        height: 489px;
+        left: 188px;
+    }
+
+    .page-create-middle-right {
+        width: 562px;
+        height: 489px;
+        left: 438px;
+    }
+
+    .img-small {
+        Width: 512px;
+        Height: 239px;
+        left: 24px;
+        top: 24px;
+    }
+
+    .desc-title {
+        left: 24px;
+        top: 289px;
+    }
+
+    .desc-text {
+        width: 514px;
+        height: 137px;
+        left: 24px;
+        top: 328px;
+    }
+}

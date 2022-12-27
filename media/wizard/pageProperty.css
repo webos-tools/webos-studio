@@ -1,0 +1,215 @@
+/*
+  * Copyright (c) 2022 LG Electronics Inc.
+  * SPDX-License-Identifier: Apache-2.0
+*/
+.page-property-middle {
+    position: absolute;
+    width: 572px;
+    height: 314px;
+    left: 148px;
+    top: 68px;
+    background: #1F2021;
+}
+
+.property-header {
+    position: absolute;
+    width: 173px;
+    height: 19px;
+    left: 199px;
+    top: 16px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #F0F3F4;
+}
+
+.property-guide {
+    position: absolute;
+    width: 199px;
+    height: 17px;
+    left: 186px;
+    top: 41px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    color: #BCC0C2;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 131px 310px;
+    position: absolute;
+    width: 441px;
+    left: 65px;
+    top: 74px;
+    padding-top : 1px;
+    row-gap: 4px;
+    column-gap: 0px;
+    background: #1F2021;
+    align-items: center;
+}
+
+.grid-container-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 131px;
+    height: 32px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #BCC0C2;
+}
+
+input[type="text"], textarea {
+    background: #141515;
+    border-radius: 4px;
+    border: none;
+    height: 32px;
+    padding : 0px 0px 0px 12px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #85898A;
+    outline: none;
+}
+
+.filebox {
+    display: flex;
+    flex-direction: row;
+}
+
+.filebox input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+} 
+
+.filebox label {
+    display: inline-block; 
+    text-align: center;
+    width: 51px;
+    height: 16px;
+    margin-left: 8px;
+    padding: 8px 12px;
+    gap: 4px;
+    color: #FFFFFF; 
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #2487E2;
+    border-radius: 4px;
+}
+
+.filebox label:hover{
+    background: #0061BC;
+}
+
+.filebox .upload-name {
+    display: inline-block;
+    border: none;
+    height: 32px;
+    padding : 0px 0px 0px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 17px;
+    background: #141515;
+    color: #85898A;
+    border-radius: 4px;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none; 
+    appearance: none; 
+}
+
+.check-container {
+    display: inline-flex;
+    position: relative;
+    padding-left: 20px;
+    padding-right: 14px; /* adjust 16px-> 14px */
+    font-weight: 400;
+    font-size: 14px;
+    color: #BCC0C2;
+    line-height: 17px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.check-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 3px;
+    left: 0px;
+    height: 12px;
+    width: 12px;
+    border-radius: 2px;
+    background-color: #414344;
+}
+
+.check-container input:checked ~ .checkmark {
+    background: #2487E2;
+    border-radius: 2px;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.check-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.check-container .checkmark:after {
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 2px;
+    height: 5px;
+    border: solid #FFFFFF;
+    border-width: 0 1px 1px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+@media (min-width: 1000px) and (min-height: 625px) {
+    .page-property-middle {
+        width: 812px;
+        height: 489px;
+        left: 188px;
+    }
+
+    .property-header {
+        left: 320px;
+        top: 48px;
+    }
+
+    .property-guide {
+        left: 307px;
+        top: 73px;
+    }
+
+    .grid-container {
+        left: 186px;
+        top: 136px;
+        row-gap: 16px;
+    }
+}

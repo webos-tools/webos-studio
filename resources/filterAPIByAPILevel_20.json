@@ -1,0 +1,1819 @@
+{
+    "product": "Open",
+    "APILevel": 20,
+    "build": "496",
+    "services": [
+        {
+            "uri": "com.palm.configurator/rescan"
+        },
+        {
+            "uri": "com.palm.configurator/run"
+        },
+        {
+            "uri": "com.palm.configurator/scan"
+        },
+        {
+            "uri": "com.palm.configurator/unconfigure"
+        },
+        {
+            "uri": "com.palm.db/batch"
+        },
+        {
+            "uri": "com.palm.db/compact"
+        },
+        {
+            "uri": "com.palm.db/del"
+        },
+        {
+            "uri": "com.palm.db/delKind"
+        },
+        {
+            "uri": "com.palm.db/dump"
+        },
+        {
+            "uri": "com.palm.db/find"
+        },
+        {
+            "uri": "com.palm.db/get"
+        },
+        {
+            "uri": "com.palm.db/getProfile"
+        },
+        {
+            "uri": "com.palm.db/load"
+        },
+        {
+            "uri": "com.palm.db/merge"
+        },
+        {
+            "uri": "com.palm.db/mergePut"
+        },
+        {
+            "uri": "com.palm.db/profile"
+        },
+        {
+            "uri": "com.palm.db/purge"
+        },
+        {
+            "uri": "com.palm.db/purgeStatus"
+        },
+        {
+            "uri": "com.palm.db/put"
+        },
+        {
+            "uri": "com.palm.db/putKind"
+        },
+        {
+            "uri": "com.palm.db/putPermissions"
+        },
+        {
+            "uri": "com.palm.db/putQuotas"
+        },
+        {
+            "uri": "com.palm.db/quotaStats"
+        },
+        {
+            "uri": "com.palm.db/removeAppData"
+        },
+        {
+            "uri": "com.palm.db/reserveIds"
+        },
+        {
+            "uri": "com.palm.db/search"
+        },
+        {
+            "uri": "com.palm.db/stats"
+        },
+        {
+            "uri": "com.palm.db/watch"
+        },
+        {
+            "uri": "com.palm.filecache/ChangeType"
+        },
+        {
+            "uri": "com.palm.filecache/CopyCacheObject"
+        },
+        {
+            "uri": "com.palm.filecache/DefineType"
+        },
+        {
+            "uri": "com.palm.filecache/DeleteType"
+        },
+        {
+            "uri": "com.palm.filecache/DescribeType"
+        },
+        {
+            "uri": "com.palm.filecache/ExpireCacheObject"
+        },
+        {
+            "uri": "com.palm.filecache/GetCacheObjectFilename"
+        },
+        {
+            "uri": "com.palm.filecache/GetCacheObjectSize"
+        },
+        {
+            "uri": "com.palm.filecache/GetCacheStatus"
+        },
+        {
+            "uri": "com.palm.filecache/GetCacheTypeStatus"
+        },
+        {
+            "uri": "com.palm.filecache/GetCacheTypes"
+        },
+        {
+            "uri": "com.palm.filecache/GetVersion"
+        },
+        {
+            "uri": "com.palm.filecache/InsertCacheObject"
+        },
+        {
+            "uri": "com.palm.filecache/ResizeCacheObject"
+        },
+        {
+            "uri": "com.palm.filecache/SubscribeCacheObject"
+        },
+        {
+            "uri": "com.palm.filecache/TouchCacheObject"
+        },
+        {
+            "uri": "com.palm.preferences/appProperties/getAllAppProperties"
+        },
+        {
+            "uri": "com.palm.preferences/appProperties/getAllAppPropertiesObj"
+        },
+        {
+            "uri": "com.palm.preferences/appProperties/getAppKeys"
+        },
+        {
+            "uri": "com.palm.preferences/appProperties/getAppKeysObj"
+        },
+        {
+            "uri": "com.palm.preferences/appProperties/getAppProperty"
+        },
+        {
+            "uri": "com.palm.preferences/appProperties/removeAppProperty"
+        },
+        {
+            "uri": "com.palm.preferences/appProperties/setAppProperty"
+        },
+        {
+            "uri": "com.palm.preferences/backup/postRestore"
+        },
+        {
+            "uri": "com.palm.preferences/backup/preBackup"
+        },
+        {
+            "uri": "com.palm.service.devmode/getDevMode"
+        },
+        {
+            "uri": "com.palm.service.devmode/setDevMode"
+        },
+        {
+            "uri": "com.palm.sleep/shutdown/initiate"
+        },
+        {
+            "uri": "com.palm.sleep/shutdown/machineOff"
+        },
+        {
+            "uri": "com.palm.sleep/shutdown/machineReboot"
+        },
+        {
+            "uri": "com.palm.sleep/shutdown/shutdownApplicationsAck"
+        },
+        {
+            "uri": "com.palm.sleep/shutdown/shutdownApplicationsRegister"
+        },
+        {
+            "uri": "com.palm.sleep/shutdown/shutdownServicesAck"
+        },
+        {
+            "uri": "com.palm.sleep/shutdown/shutdownServicesRegister"
+        },
+        {
+            "uri": "com.palm.sleep/timeout/clear"
+        },
+        {
+            "uri": "com.palm.sleep/timeout/set"
+        },
+        {
+            "uri": "com.palm.webappmanager/clearBrowsingData"
+        },
+        {
+            "uri": "com.palm.webappmanager/closeAllApps"
+        },
+        {
+            "uri": "com.palm.webappmanager/getWebProcessSize"
+        },
+        {
+            "uri": "com.palm.webappmanager/killApp"
+        },
+        {
+            "uri": "com.palm.webappmanager/launchApp"
+        },
+        {
+            "uri": "com.palm.webappmanager/listRunningApps"
+        },
+        {
+            "uri": "com.palm.webappmanager/logControl"
+        },
+        {
+            "uri": "com.palm.webappmanager/pauseApp"
+        },
+        {
+            "uri": "com.palm.webappmanager/webProcessCreated"
+        },
+        {
+            "uri": "com.webos.appInstallService/dev/install"
+        },
+        {
+            "uri": "com.webos.appInstallService/dev/remove"
+        },
+        {
+            "uri": "com.webos.appInstallService/install"
+        },
+        {
+            "uri": "com.webos.appInstallService/remove"
+        },
+        {
+            "uri": "com.webos.appInstallService/status"
+        },
+        {
+            "uri": "com.webos.bootManager/generateSignal"
+        },
+        {
+            "uri": "com.webos.bootManager/getBootStatus"
+        },
+        {
+            "uri": "com.webos.media/acquire"
+        },
+        {
+            "uri": "com.webos.media/attach"
+        },
+        {
+            "uri": "com.webos.media/getActivePipelines"
+        },
+        {
+            "uri": "com.webos.media/getForegroundAppInfo"
+        },
+        {
+            "uri": "com.webos.media/load"
+        },
+        {
+            "uri": "com.webos.media/notifyActivity"
+        },
+        {
+            "uri": "com.webos.media/notifyBackground"
+        },
+        {
+            "uri": "com.webos.media/notifyForeground"
+        },
+        {
+            "uri": "com.webos.media/pause"
+        },
+        {
+            "uri": "com.webos.media/play"
+        },
+        {
+            "uri": "com.webos.media/registerPipeline"
+        },
+        {
+            "uri": "com.webos.media/release"
+        },
+        {
+            "uri": "com.webos.media/seek"
+        },
+        {
+            "uri": "com.webos.media/setPlayRate"
+        },
+        {
+            "uri": "com.webos.media/setVolume"
+        },
+        {
+            "uri": "com.webos.media/startCameraRecord"
+        },
+        {
+            "uri": "com.webos.media/stopCameraRecord"
+        },
+        {
+            "uri": "com.webos.media/subscribe"
+        },
+        {
+            "uri": "com.webos.media/takeCameraSnapshot"
+        },
+        {
+            "uri": "com.webos.media/trackAppProcesses"
+        },
+        {
+            "uri": "com.webos.media/tryAcquire"
+        },
+        {
+            "uri": "com.webos.media/unload"
+        },
+        {
+            "uri": "com.webos.media/unregisterPipeline"
+        },
+        {
+            "uri": "com.webos.media/unsubscribe"
+        },
+        {
+            "uri": "com.webos.notification/closeAlert"
+        },
+        {
+            "uri": "com.webos.notification/closeAllAlerts"
+        },
+        {
+            "uri": "com.webos.notification/closeToast"
+        },
+        {
+            "uri": "com.webos.notification/createAlert"
+        },
+        {
+            "uri": "com.webos.notification/createToast"
+        },
+        {
+            "uri": "com.webos.notification/getAlertNotification"
+        },
+        {
+            "uri": "com.webos.notification/getToastCount"
+        },
+        {
+            "uri": "com.webos.notification/getToastList"
+        },
+        {
+            "uri": "com.webos.notification/getToastNotification"
+        },
+        {
+            "uri": "com.webos.notification/removeAllNotification"
+        },
+        {
+            "uri": "com.webos.notification/setToastStatus"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/adopt"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/cancel"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/complete"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/create"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/getActivityInfo"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/getManagerInfo"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/pause"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/release"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/start"
+        },
+        {
+            "uri": "com.webos.service.activitymanager/stop"
+        },
+        {
+            "uri": "com.webos.service.ai.voice/getResponse"
+        },
+        {
+            "uri": "com.webos.service.ai.voice/getState"
+        },
+        {
+            "uri": "com.webos.service.ai.voice/start"
+        },
+        {
+            "uri": "com.webos.service.ai.voice/stop"
+        },
+        {
+            "uri": "com.webos.service.alarm/clear"
+        },
+        {
+            "uri": "com.webos.service.alarm/set"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/addLaunchPoint"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/close"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/closeByAppId"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/dev/closeByAppId"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/dev/listApps"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/dev/running"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/getAppBasePath"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/getAppInfo"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/getAppLifeEvents"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/getAppLifeStatus"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/getAppStatus"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/getForegroundAppInfo"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/launch"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/listApps"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/listLaunchPoints"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/lockApp"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/pause"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/registerApp"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/removeLaunchPoint"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/running"
+        },
+        {
+            "uri": "com.webos.service.applicationmanager/updateLaunchPoint"
+        },
+        {
+            "uri": "com.webos.service.audio/UMI/connect"
+        },
+        {
+            "uri": "com.webos.service.audio/UMI/disconnect"
+        },
+        {
+            "uri": "com.webos.service.audio/UMI/getStatus"
+        },
+        {
+            "uri": "com.webos.service.audio/UMI/mute"
+        },
+        {
+            "uri": "com.webos.service.audio/getInputVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/getSoundInput"
+        },
+        {
+            "uri": "com.webos.service.audio/getSoundOutput"
+        },
+        {
+            "uri": "com.webos.service.audio/getSourceInputVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/getSourceStatus"
+        },
+        {
+            "uri": "com.webos.service.audio/getStreamStatus"
+        },
+        {
+            "uri": "com.webos.service.audio/listSupportedDevices"
+        },
+        {
+            "uri": "com.webos.service.audio/master/getMicVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/master/getVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/master/muteMic"
+        },
+        {
+            "uri": "com.webos.service.audio/master/muteVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/master/setMicVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/master/setVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/master/volumeDown"
+        },
+        {
+            "uri": "com.webos.service.audio/master/volumeUp"
+        },
+        {
+            "uri": "com.webos.service.audio/media/setVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/muteSink"
+        },
+        {
+            "uri": "com.webos.service.audio/muteSource"
+        },
+        {
+            "uri": "com.webos.service.audio/playSound"
+        },
+        {
+            "uri": "com.webos.service.audio/registerTrack"
+        },
+        {
+            "uri": "com.webos.service.audio/setInputVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/setSoundInput"
+        },
+        {
+            "uri": "com.webos.service.audio/setSoundOutput"
+        },
+        {
+            "uri": "com.webos.service.audio/setSourceInputVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/setTrackVolume"
+        },
+        {
+            "uri": "com.webos.service.audio/soundSettings/setSoundOut"
+        },
+        {
+            "uri": "com.webos.service.audio/systemsounds/playFeedback"
+        },
+        {
+            "uri": "com.webos.service.audio/udev/event"
+        },
+        {
+            "uri": "com.webos.service.audio/unregisterTrack"
+        },
+        {
+            "uri": "com.webos.service.audiofocusmanager/getStatus"
+        },
+        {
+            "uri": "com.webos.service.audiofocusmanager/releaseFocus"
+        },
+        {
+            "uri": "com.webos.service.audiofocusmanager/requestFocus"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/connect"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/disconnect"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/getStatus"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/mute"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/setSoundOut"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/volume/down"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/volume/getStatus"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/volume/muteSoundOut"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/volume/set"
+        },
+        {
+            "uri": "com.webos.service.audiooutput/audio/volume/up"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/a2dp/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/a2dp/disableDelayReporting"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/a2dp/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/a2dp/enableDelayReporting"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/a2dp/getDelayReportingTime"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/a2dp/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/awaitPairingRequests"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/cancelDiscovery"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/cancelPairing"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/pair"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/queryAvailable"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/setState"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/startDiscovery"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/supplyPasskey"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/supplyPasskeyConfirmation"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/supplyPinCode"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/adapter/unpair"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/awaitMediaMetaDataRequest"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/awaitMediaPlayStatusRequest"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/browse/addToNowPlaying"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/browse/changePath"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/browse/getCurrentFolder"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/browse/getFolderItems"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/browse/getNumberOfItems"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/browse/playItem"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/browse/search"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/getMediaMetaData"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/getMediaPlayStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/getPlayerApplicationSettings"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/getPlayerInfo"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/getRemoteVolume"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/internal/disable"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/internal/enable"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/internal/getRemoteFeatures"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/internal/getSupportedNotificationEvents"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/notifyMediaPlayStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/receivePassThroughCommand"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/sendPassThroughCommand"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/setAbsoluteVolume"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/setPlayerApplicationSettings"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/supplyMediaMetaData"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/avrcp/supplyMediaPlayStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/device/getDiscoveredDevice"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/device/getPairedDevices"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/device/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/device/setState"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/addService"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/closeServer"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/discoverServices"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/getServices"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/monitorCharacteristic"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/monitorCharacteristics"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/openServer"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/readCharacteristicValue"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/readCharacteristicValues"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/readDescriptorValue"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/readDescriptorValues"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/removeService"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/writeCharacteristicValue"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/gatt/writeDescriptorValue"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/hfp/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/hfp/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/hfp/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/le/startAdvertising"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/le/startScan"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/getFolderList"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/getMASInstances"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/getMessage"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/getMessageFilters"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/getMessageList"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/getMessageNotification"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/pushMessage"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/setFolder"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/map/setMessageStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/createAppKey"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/createNetwork"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/getMeshInfo"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/keyRefresh"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/listProvisionedNodes"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/model/config/get"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/model/config/getCompositionData"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/model/config/set"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/model/onOff/set"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/model/receive"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/model/send"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/provision"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/removeNode"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/scanUnprovisionedDevices"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/supplyProvisioningNumeric"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/supplyProvisioningOob"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/mesh/unprovisionedScanCancel"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/acceptTransferRequest"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/awaitTransferRequest"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/cancelTransfer"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/monitorTransfer"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/pushFile"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/opp/rejectTransferRequest"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/getPhoneBookProperties"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/getSize"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/getvCardFilters"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/pullPhoneBook"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/pullvCard"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/searchPhoneBook"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/setPhoneBook"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/pbap/vCardListing"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/spp/connect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/spp/createChannel"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/spp/disconnect"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/spp/getStatus"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/spp/readData"
+        },
+        {
+            "uri": "com.webos.service.bluetooth2/spp/writeData"
+        },
+        {
+            "uri": "com.webos.service.bugreport/createBug"
+        },
+        {
+            "uri": "com.webos.service.bugreport/getConfig"
+        },
+        {
+            "uri": "com.webos.service.bugreport/setConfig"
+        },
+        {
+            "uri": "com.webos.service.camera2/close"
+        },
+        {
+            "uri": "com.webos.service.camera2/getCameraList"
+        },
+        {
+            "uri": "com.webos.service.camera2/getEventNotification"
+        },
+        {
+            "uri": "com.webos.service.camera2/getFd"
+        },
+        {
+            "uri": "com.webos.service.camera2/getInfo"
+        },
+        {
+            "uri": "com.webos.service.camera2/getProperties"
+        },
+        {
+            "uri": "com.webos.service.camera2/open"
+        },
+        {
+            "uri": "com.webos.service.camera2/setFormat"
+        },
+        {
+            "uri": "com.webos.service.camera2/setProperties"
+        },
+        {
+            "uri": "com.webos.service.camera2/startCapture"
+        },
+        {
+            "uri": "com.webos.service.camera2/startPreview"
+        },
+        {
+            "uri": "com.webos.service.camera2/stopCapture"
+        },
+        {
+            "uri": "com.webos.service.camera2/stopPreview"
+        },
+        {
+            "uri": "com.webos.service.cec/getConfig"
+        },
+        {
+            "uri": "com.webos.service.cec/listAdapters"
+        },
+        {
+            "uri": "com.webos.service.cec/scan"
+        },
+        {
+            "uri": "com.webos.service.cec/sendCommand"
+        },
+        {
+            "uri": "com.webos.service.cec/setConfig"
+        },
+        {
+            "uri": "com.webos.service.config/getConfigs"
+        },
+        {
+            "uri": "com.webos.service.config/reconfigure"
+        },
+        {
+            "uri": "com.webos.service.config/setConfigs"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/findProxyForURL"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/getStatus"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/getinfo"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/setDefaultInterface"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/setProxy"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/setTechnologyState"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/setdns"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/setipv4"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/setipv6"
+        },
+        {
+            "uri": "com.webos.service.connectionmanager/setstate"
+        },
+        {
+            "uri": "com.webos.service.contextintentmgr/getDataFromWorkflow"
+        },
+        {
+            "uri": "com.webos.service.contextintentmgr/injectDataToWorkflow"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/allow1x"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/cancelAllDownloads"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/cancelDownload"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/cancelUpload"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/clearHistory"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/deleteDownloadedFile"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/download"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/downloadStatusQuery"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/getAllHistory"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/is1xMode"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/listPending"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/pauseDownload"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/resumeDownload"
+        },
+        {
+            "uri": "com.webos.service.downloadmanager/upload"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/answerCall"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/call"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/getStatus"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/holdActiveCalls"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/mergeCall"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/releaseActiveCalls"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/releaseHeldCalls"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/setVolume"
+        },
+        {
+            "uri": "com.webos.service.hfp/hf/terminateCall"
+        },
+        {
+            "uri": "com.webos.service.intent/query"
+        },
+        {
+            "uri": "com.webos.service.intent/sendResult"
+        },
+        {
+            "uri": "com.webos.service.intent/start"
+        },
+        {
+            "uri": "com.webos.service.intent/subscribeResult"
+        },
+        {
+            "uri": "com.webos.service.location/getAllLocationHandlers"
+        },
+        {
+            "uri": "com.webos.service.location/getGeoCodeLocation"
+        },
+        {
+            "uri": "com.webos.service.location/getGpsStatus"
+        },
+        {
+            "uri": "com.webos.service.location/getLocationHandlerDetails"
+        },
+        {
+            "uri": "com.webos.service.location/getLocationUpdates"
+        },
+        {
+            "uri": "com.webos.service.location/getReverseLocation"
+        },
+        {
+            "uri": "com.webos.service.location/getState"
+        },
+        {
+            "uri": "com.webos.service.location/mock/disable"
+        },
+        {
+            "uri": "com.webos.service.location/mock/enable"
+        },
+        {
+            "uri": "com.webos.service.location/mock/setLocation"
+        },
+        {
+            "uri": "com.webos.service.location/setState"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/activateMediaSession"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/deactivateMediaSession"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/getActiveMediaSessions"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/getMediaMetaData"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/getMediaPlayStatus"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/getMediaSessionId"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/getMediaSessionInfo"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/injectMediaKeyEvent"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/receiveMediaPlaybackInfo"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/registerMediaSession"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/setMediaMetaData"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/setMediaMuteStatus"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/setMediaPlayPosition"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/setMediaPlayStatus"
+        },
+        {
+            "uri": "com.webos.service.mediacontroller/unregisterMediaSession"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getAudioList"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getAudioMetadata"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getDeviceList"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getImageList"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getImageMetadata"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getMediaDbPermission"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getVideoList"
+        },
+        {
+            "uri": "com.webos.service.mediaindexer/getVideoMetadata"
+        },
+        {
+            "uri": "com.webos.service.memorymanager/getMemoryStatus"
+        },
+        {
+            "uri": "com.webos.service.memorymanager/requireMemory"
+        },
+        {
+            "uri": "com.webos.service.nettools/arping"
+        },
+        {
+            "uri": "com.webos.service.nettools/checkhttp"
+        },
+        {
+            "uri": "com.webos.service.nettools/createVlan"
+        },
+        {
+            "uri": "com.webos.service.nettools/deleteVlan"
+        },
+        {
+            "uri": "com.webos.service.nettools/gethostname"
+        },
+        {
+            "uri": "com.webos.service.nettools/ping"
+        },
+        {
+            "uri": "com.webos.service.nettools/ping6"
+        },
+        {
+            "uri": "com.webos.service.nettools/resolvehostname"
+        },
+        {
+            "uri": "com.webos.service.nettools/sethostname"
+        },
+        {
+            "uri": "com.webos.service.pdm/eject"
+        },
+        {
+            "uri": "com.webos.service.pdm/format"
+        },
+        {
+            "uri": "com.webos.service.pdm/fsck"
+        },
+        {
+            "uri": "com.webos.service.pdm/getAttachedDeviceStatus"
+        },
+        {
+            "uri": "com.webos.service.pdm/getAttachedNonStorageDeviceList"
+        },
+        {
+            "uri": "com.webos.service.pdm/getAttachedStorageDeviceList"
+        },
+        {
+            "uri": "com.webos.service.pdm/getSpaceInfo"
+        },
+        {
+            "uri": "com.webos.service.pdm/isWritableDrive"
+        },
+        {
+            "uri": "com.webos.service.pdm/setVolumeLabel"
+        },
+        {
+            "uri": "com.webos.service.pdm/umountAllDrive"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/close"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/getDirection"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/getPollingFd"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/getValue"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/list"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/open"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/setDirection"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/gpio/setValue"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/close"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/getPollingFd"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/list"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/open"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/read"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/readRegBuffer"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/readRegByte"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/readRegWord"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/write"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/writeRegBuffer"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/writeRegByte"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/i2c/writeRegWord"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/close"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/list"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/open"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/setBitJustification"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/setBitsPerWord"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/setDelay"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/setFrequency"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/setMode"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/transfer"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/writeBuffer"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/spi/writeByte"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/close"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/getBaudrate"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/getPollingFd"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/list"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/open"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/read"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/setBaudrate"
+        },
+        {
+            "uri": "com.webos.service.peripheralmanager/uart/write"
+        },
+        {
+            "uri": "com.webos.service.power2/acquireWakeLock"
+        },
+        {
+            "uri": "com.webos.service.power2/getPowerOnReason"
+        },
+        {
+            "uri": "com.webos.service.power2/getState"
+        },
+        {
+            "uri": "com.webos.service.power2/reboot"
+        },
+        {
+            "uri": "com.webos.service.power2/registerStateTransition"
+        },
+        {
+            "uri": "com.webos.service.power2/releaseWakeLock"
+        },
+        {
+            "uri": "com.webos.service.power2/respondStateTransitionAck"
+        },
+        {
+            "uri": "com.webos.service.power2/setPowerOnReason"
+        },
+        {
+            "uri": "com.webos.service.power2/setState"
+        },
+        {
+            "uri": "com.webos.service.power2/shutdown"
+        },
+        {
+            "uri": "com.webos.service.settings/batch"
+        },
+        {
+            "uri": "com.webos.service.settings/deleteSystemSettings"
+        },
+        {
+            "uri": "com.webos.service.settings/getCurrentSettings"
+        },
+        {
+            "uri": "com.webos.service.settings/getSystemSettingDesc"
+        },
+        {
+            "uri": "com.webos.service.settings/getSystemSettingFactoryValue"
+        },
+        {
+            "uri": "com.webos.service.settings/getSystemSettingValues"
+        },
+        {
+            "uri": "com.webos.service.settings/getSystemSettings"
+        },
+        {
+            "uri": "com.webos.service.settings/internal/getCurrentSubscriptions"
+        },
+        {
+            "uri": "com.webos.service.settings/internal/instrument"
+        },
+        {
+            "uri": "com.webos.service.settings/resetSystemSettingDesc"
+        },
+        {
+            "uri": "com.webos.service.settings/resetSystemSettings"
+        },
+        {
+            "uri": "com.webos.service.settings/setSystemSettingDesc"
+        },
+        {
+            "uri": "com.webos.service.settings/setSystemSettingFactoryDesc"
+        },
+        {
+            "uri": "com.webos.service.settings/setSystemSettingFactoryValue"
+        },
+        {
+            "uri": "com.webos.service.settings/setSystemSettingValues"
+        },
+        {
+            "uri": "com.webos.service.settings/setSystemSettings"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/copy"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/eject"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/getProperties"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/handleExtraCommand"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/list"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/move"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/remove"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/device/rename"
+        },
+        {
+            "uri": "com.webos.service.storageaccess/listStorageProviders"
+        },
+        {
+            "uri": "com.webos.service.systemservice/backup/postRestore"
+        },
+        {
+            "uri": "com.webos.service.systemservice/backup/preBackup"
+        },
+        {
+            "uri": "com.webos.service.systemservice/clock/getTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/clock/setTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/deviceInfo/query"
+        },
+        {
+            "uri": "com.webos.service.systemservice/getPreferenceValues"
+        },
+        {
+            "uri": "com.webos.service.systemservice/getPreferences"
+        },
+        {
+            "uri": "com.webos.service.systemservice/osInfo/query"
+        },
+        {
+            "uri": "com.webos.service.systemservice/ringtone/addRingtone"
+        },
+        {
+            "uri": "com.webos.service.systemservice/ringtone/deleteRingtone"
+        },
+        {
+            "uri": "com.webos.service.systemservice/setPreferences"
+        },
+        {
+            "uri": "com.webos.service.systemservice/softwareInfo/query"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/convertDate"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/getBroadcastTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/getCurrentTimeZoneByLocale"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/getEffectiveBroadcastTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/getNTPTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/getSystemTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/getSystemTimezoneFile"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/getSystemUptime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/launchTimeChangeApps"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/setBroadcastTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/setSystemNetworkTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/setSystemTime"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/setTimeChangeLaunch"
+        },
+        {
+            "uri": "com.webos.service.systemservice/time/setTimeWithNTP"
+        },
+        {
+            "uri": "com.webos.service.systemservice/timezone/createTimeZoneFromEasData"
+        },
+        {
+            "uri": "com.webos.service.systemservice/timezone/getTimeZoneFromEasData"
+        },
+        {
+            "uri": "com.webos.service.systemservice/timezone/getTimeZoneRules"
+        },
+        {
+            "uri": "com.webos.service.systemservice/wallpaper/convert"
+        },
+        {
+            "uri": "com.webos.service.systemservice/wallpaper/deleteWallpaper"
+        },
+        {
+            "uri": "com.webos.service.systemservice/wallpaper/importWallpaper"
+        },
+        {
+            "uri": "com.webos.service.systemservice/wallpaper/info"
+        },
+        {
+            "uri": "com.webos.service.systemservice/wallpaper/refresh"
+        },
+        {
+            "uri": "com.webos.service.tts/getAvailableLanguages"
+        },
+        {
+            "uri": "com.webos.service.tts/getStatus"
+        },
+        {
+            "uri": "com.webos.service.tts/speak"
+        },
+        {
+            "uri": "com.webos.service.tts/stop"
+        },
+        {
+            "uri": "com.webos.service.unifiedsearch/getCategories"
+        },
+        {
+            "uri": "com.webos.service.unifiedsearch/search"
+        },
+        {
+            "uri": "com.webos.service.unifiedsearch/updateCategory"
+        },
+        {
+            "uri": "com.webos.service.wifi/changeNetwork"
+        },
+        {
+            "uri": "com.webos.service.wifi/connect"
+        },
+        {
+            "uri": "com.webos.service.wifi/deleteprofile"
+        },
+        {
+            "uri": "com.webos.service.wifi/findnetworks"
+        },
+        {
+            "uri": "com.webos.service.wifi/getCountryCode"
+        },
+        {
+            "uri": "com.webos.service.wifi/getNetworks"
+        },
+        {
+            "uri": "com.webos.service.wifi/getprofile"
+        },
+        {
+            "uri": "com.webos.service.wifi/getprofilelist"
+        },
+        {
+            "uri": "com.webos.service.wifi/getstatus"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/addservice"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/cancel"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/connect"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/creategroup"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/deleteprofile"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/deleteservice"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/disconnect"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/disconnectgroup"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/findservice"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/getdevicename"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/getgrouppeers"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/getgroups"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/getp2prequests"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/getpeers"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/getstate"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/getwifidisplayinfo"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/invite"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/rejectpeer"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/setdevicename"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/setgointent"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/setlistenchannel"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/setlistenparams"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/setstate"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/settethering"
+        },
+        {
+            "uri": "com.webos.service.wifi/p2p/setwifidisplayinfo"
+        },
+        {
+            "uri": "com.webos.service.wifi/scan"
+        },
+        {
+            "uri": "com.webos.service.wifi/setCountryCode"
+        },
+        {
+            "uri": "com.webos.service.wifi/setstate"
+        },
+        {
+            "uri": "com.webos.service.wifi/tethering/getMaxStationCount"
+        },
+        {
+            "uri": "com.webos.service.wifi/tethering/getState"
+        },
+        {
+            "uri": "com.webos.service.wifi/tethering/getStationCount"
+        },
+        {
+            "uri": "com.webos.service.wifi/tethering/setMaxStationCount"
+        },
+        {
+            "uri": "com.webos.service.wifi/tethering/setState"
+        },
+        {
+            "uri": "com.webos.surfacemanager/captureCompositorOutput"
+        },
+        {
+            "uri": "com.webos.surfacemanager/getAppMirroring"
+        },
+        {
+            "uri": "com.webos.surfacemanager/getForegroundAppInfo"
+        },
+        {
+            "uri": "com.webos.surfacemanager/setAppMirroring"
+        }
+    ]
+}

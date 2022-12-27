@@ -1,0 +1,22 @@
+diff --git a/node_modules/@types/webos-service/index.d.ts b/node_modules/@types/webos-service/index.d.ts
+index 7bca8e2..ab74804 100644
+--- a/node_modules/@types/webos-service/index.d.ts
++++ b/node_modules/@types/webos-service/index.d.ts
+@@ -4,8 +4,8 @@
+ //                 Piotr Dobrowolski <https://github.com/informatic>
+ // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+ 
+-export as namespace WebosService;
+-
++export = Service;
++export as namespace Service;
+ import { ActivityManager } from "./activity-manager";
+ import { Message } from "./message";
+ import { Method } from "./method";
+@@ -13,4 +13,5 @@ import { Service } from "./service";
+ import { Subscription } from "./subscription";
+ 
+ export { ActivityManager, Message, Method, Subscription };
+-export default Service;
++
++

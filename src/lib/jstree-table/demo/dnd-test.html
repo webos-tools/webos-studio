@@ -1,0 +1,195 @@
+<html>
+	<head>
+		<title>jstree treetable 3.2.0 plugin demo</title>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/themes/default/style.min.css" rel="stylesheet">
+		<script type='text/javascript' src='http://code.jquery.com/jquery-3.6.0.js'></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/jstree.min.js"></script>
+		<script type="text/javascript" src="../jstreetable.js"></script>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+		<script type="text/javascript">
+		$(document).ready(function(){
+			$("#js1").jstree({
+			  plugins: ["table", "dnd", "types", "checkbox", "wholerow", "contextmenu"],
+			  "checkbox": {
+			    "three_state": false,
+			    "cascade": "down",
+			    "tie_selection": false,
+			    "whole_node": false
+			  },
+			  'table': {
+			    'columns': [{
+			      'header': 'Column 1'
+			    }, {
+			      'header': 'Column 2',
+			      'value': 'col2'
+			    }, {
+			      'header': 'Column 3',
+			      'value': 'col3'
+			    }],
+			    'resizable': true,
+			    'contextmenu': true
+			  },
+			  'core': {
+			    "check_callback": true,
+			    'data': [{
+			      "text": "This 1 column is ok.",
+			      "state": {
+			        "selected": true,
+			        "opened": true,
+			        "checked": false
+			      },
+			      "parent": "#",
+			      "id": "0011100001CaxJLAA2",
+			      "data": {
+			        "col2": "I will be lost 1!",
+			        "col3": "Me too 1!"
+			      }
+			    }, {
+			      "text": "This 1 column is ok too!",
+			      "state": {
+			        "selected": true,
+			        "opened": true,
+			        "checked": true
+			      },
+			      "parent": "0011100001CaxJLAA2",
+			      "id": "0011600001lNOsfAA1",
+			      "data": {
+			        "col2": "I will be lost again 1!",
+			        "col3": "Me too! No 1!!"
+			      }
+			    }]
+			  },
+			  "types": {
+			    "#": {
+			      "max_children": 1,
+			      "valid_children": ["default", "hidden", "root", "visible"]
+			    },
+			    "default": {
+			      "valid_children": ["default", "hidden", "root", "visible"]
+			    }
+			  },
+			  'contextmenu': {
+			    'items': {}
+			  }
+			});
+			$("#js2").jstree({
+			  plugins: ["table", "dnd", "types", "checkbox", "wholerow", "contextmenu"],
+			  "checkbox": {
+			    //"three_state" : false,
+			    "cascade": "up",
+			    "tie_selection": false,
+			    "whole_node": false
+			  },
+			  'table': {
+			    'columns': [{
+			      'header': 'Column 1'
+			    }, {
+			      'header': 'Column 2',
+			      'value': 'col2'
+			    }, {
+			      'header': 'Column 3',
+			      'value': 'col3'
+			    }],
+			    'resizable': true,
+			    'contextmenu': true
+			  },
+			  'core': {
+			    "check_callback": true,
+			    'data': [{
+			      "text": "This column is ok.",
+			      "state": {
+			        "selected": true,
+			        "opened": true,
+			        "checked": false
+			      },
+			      "parent": "#",
+			      "id": "0011100001CaxJLAAZ",
+			      "data": {
+			        "col2": "I will be lost!",
+			        "col3": "Me too!"
+			      }
+			    }, {
+			      "text": "This column is ok too!",
+			      "state": {
+			        "selected": true,
+			        "opened": true,
+			        "checked": true
+			      },
+			      "parent": "0011100001CaxJLAAZ",
+			      "id": "0011600001lNOsfAAG",
+			      "data": {
+			        "col2": "I will be lost again!",
+			        "col3": "Me too! No!!"
+			      }
+			    }]
+			  },
+			  'dnd': {
+			    "copy": false
+			  },
+			  "types": {
+			    "#": {
+			      "max_children": 1
+			    },
+			    "default": {
+			      "valid_children": ["default", "hidden", "root", "visible"]
+			    }
+			  },
+			  'contextmenu': {
+			    'items': {}
+			  }
+			});
+
+			$('#basbl').click(function() {
+			  var v = $("#js1").jstree(true).get_json('#', {
+			    flat: true,
+			    no_state: false
+			  });
+			  var x = JSON.stringify(v);
+			  $("#testerl").text(x);
+			  return;
+			});
+
+			$('#basbr').click(function() {
+			  var v = $("#js2").jstree(true).get_json('#', {
+			    flat: true,
+			    no_state: false
+			  });
+			  var x = JSON.stringify(v);
+			  $("#testerr").text(x);
+			  return;
+			});
+
+			});
+
+
+		</script>
+
+
+
+
+
+
+
+
+
+	</head>
+	<body>
+
+		<h2>Tree table DND Test</h2>
+
+			<div class="container-fluid">
+			  <div class="row">
+			    <div class="col-md-6">
+						<button type="button" id="basbl" class="btn btn-danger btn-lg">BASB Left</button>
+			      <div id="js1"></div>
+						<p id="testerl">Tree hierarchy</p>
+			    </div>
+			    <div class="col-md-6">
+						<button type="button" id="basbr" class="btn btn-danger btn-lg">BASB Right</button>
+			      <div id="js2"></div>
+						<p id="testerr">Tree hierarchy</p>
+			    </div>
+			  </div>
+			</div>
+	</body>
+</html>

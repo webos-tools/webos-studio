@@ -1,0 +1,12 @@
+<!-- iconfinder_tv_3325159 by Cole Bemis, https://www.iconfinder.com/iconsets/feather, used under CC BY / Changed color from original -->
+<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title stroke="#ffffff">Layer 1</title>
+  <rect id="svg_1" y="7" x="2" width="20" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="#ffffff" ry="2" rx="2" height="15" fill="none"/>
+  <polyline id="svg_2" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="#ffffff" points="17 2 12 7 7 2" fill="none"/>
+ </g>
+</svg>
