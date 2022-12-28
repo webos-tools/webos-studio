@@ -2,6 +2,8 @@
 
 This extension helps develop apps and services for [webOS Open Source Edition (OSE)](https://webosose.org).
 
+> **IMPORTANT NOTICE:** If you installed the [webOS OSE](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose) extension, please uninstall it first. Then install this extension.
+
 ---
 
 **Table of Contents**
