@@ -43,7 +43,7 @@ This extension helps develop apps and services for [webOS Open Source Edition (O
 
 ## Workspace Setup
 
-Before creating your first project, we recommend that you set a workspace &mdash; it's a kind of base directory of multiple projects &mdash; for all your webOS apps/services. All projects contained within the workspace are shown in the **APPS IN WORKSPACE** tab. This will make managing your projects more effectively.
+Before creating your first project, we recommend that you set a workspace &mdash; it's a kind of base directory of multiple projects &mdash; for all your webOS apps/services. All projects contained within the workspace are shown in the **APPS IN WORKSPACE** view. This will make managing your projects more effectively.
 
 A workspace can be set up in one of two ways:
 
@@ -60,9 +60,9 @@ This section explains a typical development flow of webOS apps and services usin
 > - Execute `webOS OSE: Install Global Packages` in the Command Palette (Ctrl + Shift + P).
 > - Update `npm` to the latest version.
 
-1. Click the **+** button in the **APPS IN WORKSPACE** tab.
+1. Click the **+** button in the **APPS IN WORKSPACE** view.
     
-    ![Add button in the tab](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-button-apps-in-workspace.png)
+    ![Add button in the view](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-button-apps-in-workspace.png)
 
 2. Select the project type in **Command Palette**, and enter the information depending on your type.
 
@@ -74,7 +74,7 @@ This section explains a typical development flow of webOS apps and services usin
     |------|-------------|
     | Enact app | For UI components for the Enact app, you can choose either [sandstone](https://enactjs.com/docs/modules/sandstone/ActionGuide/) or [moonstone](https://enactjs.com/docs/modules/moonstone/BodyText/) library. <br />![Select Enact Library](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/select-enact-library.jpg) |
     | JavaScript Service | A JavaScript service always needs an app to be packaged with. Choose an app or click **Choose a Different App**. <br />![Link an app to the service](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/link-an-app-to-the-service.jpg) |
-    | Enact app & JavaScript service | If you want to [webos-service library](https://www.webosose.org/docs/reference/webos-service-library/webos-service-library-api-reference/) and the content assistant feature for the library, click **Yes**. <br />![Add webos-service library](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-webos-service-library.jpg) <br />Or you can add this library after you create the app or service. In the **APPS IN WORKPLACE** tab, right-click your app or service and click **Insatll webOS NPM Library**. <br />![Install webos-service library using NPM](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/install-webos-service-library-using-npm.jpg) |
+    | Enact app & JavaScript service | If you want to [webos-service library](https://www.webosose.org/docs/reference/webos-service-library/webos-service-library-api-reference/) and the content assistant feature for the library, click **Yes**. <br />![Add webos-service library](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-webos-service-library.jpg) <br />Or you can add this library after you create the app or service. In the **APPS IN WORKPLACE** view, right-click your app or service and click **Install webOS NPM Library**. <br />![Install webos-service library using NPM](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/install-webos-service-library-using-npm.jpg) |
     | Hosted web app | Enter the URL to show. <br />![Enter the URL for a hosted web app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/enter-the-url-for-hosted-web-app.jpg)|
 
 ### Modifying the Source Code
@@ -91,11 +91,11 @@ The known device is a webOS device that user can access to.
 
 > **Note:** This step is required only once per device.
 
-1. Click the **+** button in the **KNOWN DEVICE** tab.
+1. Click the **+** button in the **KNOWN DEVICE** view.
 
     ![Add the known device](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-known-device.png)
 
-    > **Note:** By default, a dummy emulator device is listed in the tab. If no emulator is available on your computer, see the guides in the [Emulator Manager](#emulator-manager) section.
+    > **Note:** By default, a dummy emulator device is listed in the view. If no emulator is available on your computer, see the guides in the [Emulator Manager](#emulator-manager) section.
     
 2. Enter the name and IP address of your webOS device.
 
@@ -113,7 +113,7 @@ Typical steps to install webOS apps are as follows:
 2. Install the IPK file.
 3. Launch the installed app.
 
-The above three steps are triggered sequentially by clikcin the **Run App** button in the **APPS IN WORKSPACE** tab.
+The above three steps are triggered sequentially by clicking the **Run App** button in the **APPS IN WORKSPACE** view.
 
 ![The run app button](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/run-app-button.jpg)
 
@@ -121,11 +121,11 @@ Then, enter the information about the app.
 
 ![Package, install, and launch an app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/package-install-launch-app.gif)
 
-> **Note:** A JavaScript service is always packaged with an app. If you want to install a JavaScript service, select the service in the **Sevice directory to pack with App** step.
+> **Note:** A JavaScript service is always packaged with an app. If you want to install a JavaScript service, select the service in the **Service directory to pack with App** step.
 > 
 > ![Select JS service](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/select-js-service.jpg)
 
-You can uninstall the apps in the **KNOWN DEVICE** tab.
+You can uninstall the apps in the **KNOWN DEVICE** view.
 
 ![Uninstall the app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/uninstall-the-app.jpg)
 
@@ -137,7 +137,7 @@ You can debug web apps, Enact apps, and JavaScript services that are installed o
 
 > **Note:** This guide only describes how to start a debugging session and its basic usage. For more details on how to debug on VS Code, refer to the [official guide](https://code.visualstudio.com/docs/editor/debugging).
 
-#### Prerequisities
+#### Prerequisites
 
 - Google Chrome browser must be available/installed on the local system.
 - IP address of target device (or emulator) and IDE should be in the same network for debugging.
@@ -165,7 +165,7 @@ After a while, the **Run and Debug** view is automatically opened. In the view, 
 
 You can preview web apps or Enact apps in your VS Code before installing it.
 
-In the **APPS IN WORKSPACE** tab, right-click the app and click **App Preview**.
+In the **APPS IN WORKSPACE** view, right-click the app and click **App Preview**.
 
 ![App preview](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/app-preview.jpg)
 
@@ -179,7 +179,7 @@ An **App Preview** page is automatically launched.
 
 ESLint statically analyzes files for potential errors (or warnings) and helps enforce a common coding style. For more information, check [ESLint Configurations](https://enactjs.com/docs/developer-tools/eslint-config-enact/).
 
-In the **APPS IN WORKSPACE** tab, right-click the React app and click **Run Lint**. The **PROBLEMS** panel shows the result messages.
+In the **APPS IN WORKSPACE** view, right-click the React app and click **Run Lint**. The **PROBLEMS** panel shows the result messages.
 
 ![Run lint](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/run-lint.gif)
 
@@ -231,7 +231,7 @@ Type `new LS2Request` to use [webos Library](https://enactjs.com/docs/modules/we
 
 ### Emulator Manager
 
-You can manage webOS emulator (VirtualBox) images in VS Code. By default, any webOS emulator images installed in VirtualBox are listed in the **EMULATOR MANAGER** tab.
+You can manage webOS emulator (VirtualBox) images in VS Code. By default, any webOS emulator images installed in VirtualBox are listed in the **EMULATOR MANAGER** view.
 
 #### Prerequisites
 
@@ -245,7 +245,7 @@ You can manage webOS emulator (VirtualBox) images in VS Code. By default, any we
 
 #### How to Manage Emulator Images
 
-1. Click the **+** button in the **EMULATOR MANAGER** tab.
+1. Click the **+** button in the **EMULATOR MANAGER** view.
 
     ![Add emulator button](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-emulator.png)
 
@@ -253,7 +253,7 @@ You can manage webOS emulator (VirtualBox) images in VS Code. By default, any we
 
     ![Emulator input form](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/emulator-input-form.jpg)
 
-3. Click **Add Instance** and the created instance is listed in the **EMULATOR MANAGER** tab.
+3. Click **Add Instance** and the created instance is listed in the **EMULATOR MANAGER** view.
 
     ![Added emulator instance](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/added-emulator-instance.png)
 
@@ -265,7 +265,7 @@ You can manage webOS emulator (VirtualBox) images in VS Code. By default, any we
 
 > **Note:**
 > - Multiple emulator instances cannot use the same VMDK file.
-> - Only one emulator instance can bb launched at the same time.
+> - Only one emulator instance can be launched at the same time.
 > - When deleting an emulator instance, the associated VMDK file is also **DELETED**. Make sure that the VMDK file is safely backed up.
 
 ### IPK Analyzer
