@@ -29,8 +29,9 @@ const fs = require('fs');
 const path = require('path');
 const extensionPath = __dirname;
 
-let registerServiceList = [];
-let svcArray= [];
+let serviceObjArray = [];
+let methodObjArray = [];
+let paramObjArray = [];
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -50,8 +51,18 @@ function activate(context) {
                     return undefined;
                 }
                 const returnItemArray = [];
-                for (const i in registerServiceList) {
-                    returnItemArray.push(new vscode.CompletionItem(registerServiceList[i], vscode.CompletionItemKind.Method));
+
+                for (const i in serviceObjArray) {
+                    const serviceItemName = serviceObjArray[i].name;
+                    const serviceItemInterface = {label:serviceItemName, description: "Luna API Service"};
+                    const serviceItemSummary = serviceObjArray[i].summary;
+                    const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Snippet);
+                    const content = new vscode.MarkdownString(serviceItemSummary);
+                    content.supportHtml = true;
+                    content.isTrusted = true;
+                    commitCharacterCompletion.documentation = content;
+
+                    returnItemArray.push(commitCharacterCompletion);
                 }
                 return returnItemArray;
             }
@@ -65,13 +76,12 @@ function activate(context) {
             provideCompletionItems(document, position) {
                 let serviceName = "";
                 const returnItemArray = [];
-                const serviceArray = svcArray;
                 const linePrefix = document.lineAt(position).text.substring(0, position.character);
-
                 let found = false;
-                for (const i in registerServiceList) {
-                    serviceName = registerServiceList[i];
-                    const endKeyword = registerServiceList[i].split(".");
+
+                for (const i in serviceObjArray) {
+                    serviceName = serviceObjArray[i].name;
+                    const endKeyword = serviceName.split(".");
                     const endService = endKeyword[endKeyword.length-1];
 
                     if (linePrefix.endsWith(`${endService}/`)) {
@@ -85,10 +95,18 @@ function activate(context) {
                 }
 
                 // find matched service's object to get method lists.
-                const findServiceIndex = svcArray.findIndex((element) => element["service"] === serviceName);
+                const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
                 if (findServiceIndex != -1) {
-                    for (const i in serviceArray[findServiceIndex]["methods"]) {
-                        returnItemArray.push(new vscode.CompletionItem(serviceArray[findServiceIndex]["methods"][i].substring(1), vscode.CompletionItemKind.Method));
+                    for (const i in methodObjArray[findServiceIndex]["methods"]) {
+                        const methodItemName = methodObjArray[findServiceIndex]["methods"][i].name.substring(1);
+                        const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
+                        const methodItemDesc = methodObjArray[findServiceIndex]["methods"][i].description;
+                        const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
+                        const content = new vscode.MarkdownString(methodItemDesc);
+                        content.supportHtml = true;
+                        content.isTrusted = true;
+                        commitCharacterCompletion.documentation = content;
+                        returnItemArray.push(commitCharacterCompletion);
                     }
                 }
                 return returnItemArray;
@@ -102,10 +120,28 @@ function activate(context) {
 
         provideCompletionItems() {
             const stringFirstMain = 'new LS2Request()';
-            const firstSnippetCompletion = new vscode.CompletionItem(stringFirstMain);
+            const snippetFirstItemInterface = {label:stringFirstMain, description: "Luna API Snippet"};
+            const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface);
+            const serviceList = [];
+
+            let snippetDesc = "<p>Example)</p><p>new LS2Request().send({ \
+                        <br>&emsp;service: 'luna://com.webos.applicationManager/', \
+                        <br>&emsp;method: 'launch', \
+                        <br>&emsp;parameters: params \
+                        <br>});<p>"
+            let content = new vscode.MarkdownString(snippetDesc);
+            content.supportHtml = true;
+            content.isTrusted = true;
+            firstSnippetCompletion.documentation = content;
+            firstSnippetCompletion.detail = "Need to insert 'import LS2Request from '@enact/webos/LS2Request';' "
+
+            for (const i in serviceObjArray) {
+                const serviceItemName = serviceObjArray[i].name;
+                serviceList.push(serviceItemName);
+            }
 
             const stringFirstSub = 'new LS2Request().send({' + '\n'
-                + '\t' + 'service: \'luna://' + '${1|'+ registerServiceList + '|}/\',' + '\n'
+                + '\t' + 'service: \'luna://' + '${1|'+ serviceList + '|}/\',' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
                 + '\t' + 'parameters: params' + '\n'
             + '});';
@@ -113,8 +149,22 @@ function activate(context) {
             firstSnippetCompletion.insertText = new vscode.SnippetString(stringFirstSub);
 
             const stringSecondMain = 'webOS.service.request()';
-            const secondSnippetCompletion = new vscode.CompletionItem(stringSecondMain);
-            const stringSecondSub = 'webOS.service.request(\'luna://' + '${1|'+ registerServiceList + '|}/\', {' + '\n'
+            const snippetSecondItemInterface = {label:stringSecondMain, description: "Luna API Snippet"};
+            const secondSnippetCompletion = new vscode.CompletionItem(snippetSecondItemInterface);
+            snippetDesc = "<p>Example)</p><p>function checkMenuLanguage(){\
+                    <br>&emsp;webOS.service.request('luna://com.webos.service.settings/', { \
+                    <br>&emsp;&emsp;method: \"getSystemSettings\", \
+                    <br>&emsp;&emsp;parameters: {\"keys\":[\"localeInfo\"]}, \
+                    <br>&emsp;&emsp;onSuccess: function (res) {setMenuLanguage(res.settings.localeInfo.locales);}, \
+                    <br>&emsp;&emsp;onFailure: function (res) {setMenuLanguage({});}, \
+                    <br>&emsp;}); \
+                    <br>}</p>"
+            content = new vscode.MarkdownString(snippetDesc);
+            content.supportHtml = true;
+            content.isTrusted = true;
+            secondSnippetCompletion.documentation = content;
+
+            const stringSecondSub = 'webOS.service.request(\'luna://' + '${1|'+ serviceList + '|}/\', {' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
                 + '\t' + 'parameters: {},' + '\n'
                 + '\t' + 'onSuccess: {},' + '\n'
@@ -123,7 +173,6 @@ function activate(context) {
 
             secondSnippetCompletion.insertText = new vscode.SnippetString(stringSecondSub);
 
-            // return all completion items as array
             return [
                 firstSnippetCompletion,
                 secondSnippetCompletion
@@ -150,9 +199,18 @@ function activate(context) {
                     serviceName = lineSplitEnd.split("'")[0];
                 }
 
-                const methodArr = snippetFindmethod(serviceName);
-                for (const i in methodArr) {
-                    returnItemArray.push(new vscode.CompletionItem(methodArr[i].substring(1), vscode.CompletionItemKind.Method));
+                const [methodNameArr, methodDescArr] = snippetFindMethod(serviceName);
+                for (const i in methodNameArr) {
+                    const methodItemName = methodNameArr[i].substring(1);
+                    const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
+                    const methodItemDesc = methodDescArr[i];
+                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
+
+                    const content = new vscode.MarkdownString(methodItemDesc);
+                    content.supportHtml = true;
+                    content.isTrusted = true;
+                    commitCharacterCompletion.documentation = content;
+                    returnItemArray.push(commitCharacterCompletion);
                 }
             }
 
@@ -628,6 +686,7 @@ function getResourcePath() {
 }
 
 function setFromConvertCacheAPI(apiLevel) {
+    const date1 = new Date();
     let fileData = "";
     let apiLevelStatus = "";
     let apiLevelStatusSplit = [];
@@ -645,9 +704,6 @@ function setFromConvertCacheAPI(apiLevel) {
     apiLevel = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
     let jsonPath = path.join(__dirname, "resources/filterAPIByAPILevel_" + apiLevel + ".json");
 
-    registerServiceList = [];
-    svcArray = [];
-
     try {
         fileData = fs.readFileSync(jsonPath, 'utf8');
     }
@@ -655,95 +711,178 @@ function setFromConvertCacheAPI(apiLevel) {
         console.log("err " + e);
     }
 
+    serviceObjArray = [];
+    methodObjArray = [];
+    paramObjArray = [];
+
     const jsonData= JSON.parse(fileData);
     const jsonDataServices = jsonData.services;
-    const uriList = [];
+    const jsonDataMethods = jsonData.methods;
+
+    const replaceRegex = new RegExp("\\n\\n\\t", "g");
+    const replaceString = "\n\t\t";
 
     for (const key in jsonDataServices) {
-        uriList.push(jsonDataServices[key].uri);
+        let serviceName = "", serviceSummary = "";
+
+        serviceName = jsonDataServices[key].uri;
+        serviceName = changeServiceName(serviceName);
+        if(serviceName == "remove") {
+            continue;
+        }
+
+        serviceSummary = jsonDataServices[key].summary;
+
+        const findSummaryIndex = serviceSummary.match(replaceRegex);
+
+		if(findSummaryIndex) {
+			serviceSummary = serviceSummary.replace(replaceRegex, replaceString);
+		}
+
+        const serviceObj = {
+            "name" : serviceName,
+            "summary" : serviceSummary
+        };
+
+        const findServiceIndex = serviceObjArray.findIndex((element) => element["name"] === serviceName);
+        if (findServiceIndex == -1) {
+            serviceObjArray.push(serviceObj);
+        }
     }
 
-    const servicesArray = [];
-
-    for (const index in uriList) {
+    for (const key in jsonDataMethods) {
         let serviceName = "";
-        let methodName = "";
+        let methodName = "", methodDesc = "", acgName = "";
+        let paramsArray = [];
+        const paramsList = [];
 
-        const words = uriList[index].split('/');
+        const words = jsonDataMethods[key].uri.split('/');
         if (words.length > 1) {
             serviceName = words[0];
-            methodName = uriList[index].substring(serviceName.length);
-            if (serviceName === "com.webos.service.power") { // Remove duplicated service
+            methodName = jsonDataMethods[key].uri.substring(serviceName.length);
+            methodDesc = jsonDataMethods[key].description;
+            acgName = jsonDataMethods[key].acg;
+            paramsArray = jsonDataMethods[key].parameters;
+
+            serviceName = changeServiceName(serviceName);
+            if (serviceName == "remove") {
                 continue;
             }
-            if (serviceName.includes("palm")) { // Change the service name from palm to webos
-                let replaceWord = "";
-                if (serviceName.includes("service")) {
-                    replaceWord = "webos";
-                }
-                else {
-                    replaceWord = "webos.service";
-                }
-                serviceName = serviceName.replace("palm", replaceWord)
-            }
-            const lunaService = serviceName;
-            if (registerServiceList.indexOf(lunaService) == -1) {
-                registerServiceList.push(lunaService);
-            }
-        }
 
-        const findServiceIndex = servicesArray.findIndex((element) => element["service"] === serviceName);
+            for (const key in paramsArray) {
+                let paramName = "", requireName = "", typeName = "";
 
-        // service name alreay exist in servicesArray
-        if (findServiceIndex != -1) {
-            if (servicesArray[findServiceIndex]["methods"].indexOf(methodName) == -1) {
-                servicesArray[findServiceIndex]["methods"].push(methodName);
+                paramName = paramsArray[key].name;
+                requireName = paramsArray[key].required;
+                typeName = paramsArray[key].type;
+
+                const paramsObj = {
+                    "name" : paramName,
+                    "required" : requireName,
+                    "type" : typeName
+                };
+                paramsList.push(paramsObj);
             }
-        } else {
-            // Add new service object including serviceName and method array.
-            const serviceObj = {
-                "service" : serviceName,
-                "methods" : [methodName]
+
+            const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
+            const findDescriptionIndex = methodDesc.match(replaceRegex);
+
+            if(findDescriptionIndex) {
+                methodDesc = methodDesc.replace(replaceRegex, replaceString);
+            }
+
+            const methodObj = {
+                "name" : methodName,
+                "description" : methodDesc,
+                "acg" : acgName
             };
-            servicesArray.push(serviceObj);
+
+            const paramObj = {
+                "name" : methodName,
+                "params" : paramsList
+            };
+
+            if (findServiceIndex != -1) {
+                const findMethodIndex = methodObjArray[findServiceIndex]["methods"].findIndex((element) => element["name"] === methodName);
+                if (findMethodIndex == -1) {
+                    methodObjArray[findServiceIndex]["methods"].push(methodObj);
+                    paramObjArray[findServiceIndex]["methods"].push(paramObj);
+                }
+            } else {
+                // Add new serviceMethodObject including serviceName and method array.
+                // Add new serviceMethodParamObject including serviceName and method and param array.
+                const serviceMethodObj = {
+                    "name" : serviceName,
+                    "methods" : [methodObj]
+                };
+                methodObjArray.push(serviceMethodObj);
+
+                const serviceMethodParamObj = {
+                    "name" : serviceName,
+                    "methods" : [paramObj]
+                };
+                paramObjArray.push(serviceMethodParamObj);
+            }
         }
     }
+    serviceObjArray.sort(compareFn);
+    methodObjArray.sort(compareFn);
+    paramObjArray.sort(compareFn);
 
-    // Sort API array
-    registerServiceList.sort();
-    servicesArray.sort(function(a, b) {
-        let x = a.service.toLowerCase();
-        let y = b.service.toLowerCase();
-        if (x < y) {
-            return -1;
-        }
-        if (x > y) {
-            return 1;
-        }
-        return 0;
-    });
+    const date2 = new Date();
 
-    // platform, product, APILevel information obejct would be removed later (TBD)
-    const convertedApiObj = {
-        "platform": "Ombre",
-        "product": "OSE",
-        "APILevel": apiLevel,
-        "services" : servicesArray
-    };
-
-    svcArray = servicesArray;
-
-    return convertedApiObj;
+    const elapsedMSec = date2.getTime() - date1.getTime();
+    const elapsedSec = elapsedMSec / 1000;
+    console.log("Excution time of converting data function  : " + elapsedSec);
 }
 
-function snippetFindmethod(serviceName) {
-    let servicemethod = [];
-    const serviceArray = svcArray;
-    const findServiceIndex = svcArray.findIndex((element) => element["service"] === serviceName);
-    if (findServiceIndex != -1) {
-        servicemethod = serviceArray[findServiceIndex]["methods"];
+function compareFn(a, b) {
+    const x = a.name.toLowerCase();
+    const y = b.name.toLowerCase();
+
+    if (x < y) {
+        return -1;
     }
-    return servicemethod;
+    if (x > y) {
+        return 1;
+    }
+    return 0;
+}
+
+function changeServiceName(serviceName) {
+    let changeName = serviceName;
+    if (serviceName === "com.webos.service.power") { // Remove duplicated service
+        changeName = "remove";
+    }
+    else {
+        if (serviceName.includes("palm")) { // Change the service name from palm to webos
+            let replaceWord = "";
+            if (serviceName.includes("service")) {
+                replaceWord = "webos";
+            }
+            else {
+                replaceWord = "webos.service";
+            }
+            changeName = serviceName.replace("palm", replaceWord);
+        }
+    }
+    return changeName;
+}
+
+function snippetFindMethod(serviceName) {
+    const methodNameArr = [], methodDescrArr = [];
+
+    const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
+
+    if (findServiceIndex != -1) {
+        for (const i in methodObjArray[findServiceIndex]["methods"]) {
+            const methodItemName = methodObjArray[findServiceIndex]["methods"][i].name;
+            const mehthodItemDesc = methodObjArray[findServiceIndex]["methods"][i].description;
+            methodNameArr.push(methodItemName);
+            methodDescrArr.push(mehthodItemDesc);
+        }
+    }
+    return [methodNameArr, methodDescrArr];
 }
 
 function getWebviewHome(resource) {
