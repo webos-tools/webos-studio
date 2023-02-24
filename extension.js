@@ -54,8 +54,13 @@ function activate(context) {
 
                 for (const i in serviceObjArray) {
                     const serviceItemName = serviceObjArray[i].name;
+                    let urlServiceName = replaceAll(serviceItemName, ".", "-");
+                    urlServiceName = urlServiceName.toLocaleLowerCase();
+                    const urlName = `http://www.webosose.org/docs/reference/ls2-api/${urlServiceName}`;
+                    const urlServiceSite = `<a href='${urlName}'>Site link of service(${serviceItemName})</a>`
+
                     const serviceItemInterface = {label:serviceItemName, description: "Luna API Service"};
-                    const serviceItemSummary = serviceObjArray[i].summary;
+                    const serviceItemSummary = serviceObjArray[i].summary + urlServiceSite;
                     const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Snippet);
                     const content = new vscode.MarkdownString(serviceItemSummary);
                     content.supportHtml = true;
@@ -94,26 +99,69 @@ function activate(context) {
                     return undefined;
                 }
 
-                // find matched service's object to get method lists.
-                const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
-                if (findServiceIndex != -1) {
-                    for (const i in methodObjArray[findServiceIndex]["methods"]) {
-                        const methodItemName = methodObjArray[findServiceIndex]["methods"][i].name.substring(1);
-                        const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
-                        const methodItemDesc = methodObjArray[findServiceIndex]["methods"][i].description;
-                        const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
-                        const content = new vscode.MarkdownString(methodItemDesc);
-                        content.supportHtml = true;
-                        content.isTrusted = true;
-                        commitCharacterCompletion.documentation = content;
-                        returnItemArray.push(commitCharacterCompletion);
-                    }
+                const [methodNameArr, methodDescArr] = findMethodInArray(serviceName);
+                for (const i in methodNameArr) {
+                    const methodItemName = methodNameArr[i].substring(1);
+                    // eslint-disable-next-line no-async-promise-executor
+                    const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
+                    const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
+                    const methodItemDesc = methodDescArr[i] + methodParamDesc;
+                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
+
+                    const content = new vscode.MarkdownString(methodItemDesc);
+                    content.supportHtml = true;
+                    content.isTrusted = true;
+                    commitCharacterCompletion.documentation = content;
+                    returnItemArray.push(commitCharacterCompletion);
                 }
                 return returnItemArray;
             }
         },
         '/' // triggered whenever a '/' is being typed
     );
+
+    const paramProvider = vscode.languages.registerCompletionItemProvider(
+        ['plaintext','javascript', 'typescript'], {
+
+        provideCompletionItems(document, position) {
+            const returnItemArray = [];
+            let serviceName = "";
+            let methodName = "";
+
+            const linePrefix = document.lineAt(position).text;
+
+            if (linePrefix.includes("luna://com.webos")) {
+                const lineSplit = linePrefix.split("/");
+                const linelength = lineSplit.length;
+                serviceName = lineSplit[2];
+
+                if(linelength > 4) { //case : method (a/b) linelength:5
+                    const blankSplit = lineSplit[4].split(" ");
+                    methodName = [lineSplit[3], blankSplit[0]].join("/");
+                }
+                else {
+                    const blankSplit = lineSplit[3].split(" ");
+                    methodName = blankSplit[0];
+                }
+
+                // eslint-disable-next-line no-async-promise-executor
+                const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodName);
+                for (const i in paramNameArr) {
+                    const paramItemName = paramNameArr[i];
+                    const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
+                    const paramItemDesc = paramDescArr[i];
+                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Snippet);
+                    const content = new vscode.MarkdownString(paramItemDesc);
+                    content.supportHtml = true;
+                    content.isTrusted = true;
+                    commitCharacterCompletion.documentation = content;
+                    returnItemArray.push(commitCharacterCompletion);
+                }
+            }
+
+            return returnItemArray;
+        }
+    });
 
     const snippetServiceProvider = vscode.languages.registerCompletionItemProvider(
         ['plaintext','javascript', 'typescript', 'html'], {
@@ -141,9 +189,10 @@ function activate(context) {
             }
 
             const stringFirstSub = 'new LS2Request().send({' + '\n'
-                + '\t' + 'service: \'luna://' + '${1|'+ serviceList + '|}/\',' + '\n'
+                //+ '\t' + 'service: \'luna://' + '${1|'+ serviceList + '|}/\',' + '\n'
+                + '\t' + 'service: \'luna://' + '${1}\',' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
-                + '\t' + 'parameters: params' + '\n'
+                + '\t' + 'parameters: {${3}}' + '\n'
             + '});';
 
             firstSnippetCompletion.insertText = new vscode.SnippetString(stringFirstSub);
@@ -164,9 +213,10 @@ function activate(context) {
             content.isTrusted = true;
             secondSnippetCompletion.documentation = content;
 
-            const stringSecondSub = 'webOS.service.request(\'luna://' + '${1|'+ serviceList + '|}/\', {' + '\n'
+            //const stringSecondSub = 'webOS.service.request(\'luna://' + '${1|'+ serviceList + '|}/\', {' + '\n'
+            const stringSecondSub = 'webOS.service.request(\'luna://' + '${1}\', {' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
-                + '\t' + 'parameters: {},' + '\n'
+                + '\t' + 'parameters: {\'${3}\'},' + '\n'
                 + '\t' + 'onSuccess: {},' + '\n'
                 + '\t' + 'onFailure: {},' + '\n'
             + '});';
@@ -199,11 +249,13 @@ function activate(context) {
                     serviceName = lineSplitEnd.split("'")[0];
                 }
 
-                const [methodNameArr, methodDescArr] = snippetFindMethod(serviceName);
+                const [methodNameArr, methodDescArr] = findMethodInArray(serviceName);
                 for (const i in methodNameArr) {
                     const methodItemName = methodNameArr[i].substring(1);
+                    // eslint-disable-next-line no-async-promise-executor
+                    const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
                     const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
-                    const methodItemDesc = methodDescArr[i];
+                    const methodItemDesc = methodDescArr[i] + methodParamDesc;
                     const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
 
                     const content = new vscode.MarkdownString(methodItemDesc);
@@ -218,7 +270,55 @@ function activate(context) {
         }
     });
 
-    context.subscriptions.push(serviceProvider, methodProvider, snippetServiceProvider, snippetMethodProvider);
+    const snippetParamProvider = vscode.languages.registerCompletionItemProvider(
+        ['plaintext','javascript', 'typescript'], {
+
+        provideCompletionItems(document, position) {
+
+            const returnItemArray = [];
+            let serviceName = "";
+            let methodName = "";
+
+            const linePrefix = document.lineAt(position.line-1).text;
+            const linePrefix2 = document.lineAt(position.line-2).text;
+
+            if (linePrefix.includes("method:")) {
+                if (linePrefix2.includes("service:") || linePrefix2.includes("webOS.service.request")) {
+                    const lineSplit = linePrefix2.split("luna://");
+                    const lineSplitEnd = lineSplit[lineSplit.length-1];
+
+                    if (lineSplitEnd.includes('/')) {
+                        serviceName = lineSplitEnd.split("/")[0];
+                    }
+                    else {
+                        serviceName = lineSplitEnd.split("'")[0];
+                    }
+                }
+                const lineSplit = linePrefix.split("method: ");
+                const lineSplitEnd = lineSplit[lineSplit.length-1];
+
+                methodName = lineSplitEnd.split("'")[1];
+
+                // eslint-disable-next-line no-async-promise-executor
+                const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodName);
+                for (const i in paramNameArr) {
+                    const paramItemName = paramNameArr[i];
+                    const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
+                    const paramItemDesc = paramDescArr[i];
+                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Snippet);
+                    const content = new vscode.MarkdownString(paramItemDesc);
+                    content.supportHtml = true;
+                    content.isTrusted = true;
+                    commitCharacterCompletion.documentation = content;
+                    returnItemArray.push(commitCharacterCompletion);
+                }
+            }
+
+            return returnItemArray;
+        }
+    });
+
+    context.subscriptions.push(serviceProvider, methodProvider, paramProvider, snippetServiceProvider, snippetMethodProvider, snippetParamProvider);
 
     context.subscriptions.push(
         vscode.commands.registerCommand('webosose.projectWizard', () => {
@@ -735,9 +835,9 @@ function setFromConvertCacheAPI(apiLevel) {
 
         const findSummaryIndex = serviceSummary.match(replaceRegex);
 
-		if(findSummaryIndex) {
-			serviceSummary = serviceSummary.replace(replaceRegex, replaceString);
-		}
+        if(findSummaryIndex) {
+            serviceSummary = serviceSummary.replace(replaceRegex, replaceString);
+        }
 
         const serviceObj = {
             "name" : serviceName,
@@ -869,7 +969,7 @@ function changeServiceName(serviceName) {
     return changeName;
 }
 
-function snippetFindMethod(serviceName) {
+function findMethodInArray(serviceName) {
     const methodNameArr = [], methodDescrArr = [];
 
     const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
@@ -884,6 +984,59 @@ function snippetFindMethod(serviceName) {
     }
     return [methodNameArr, methodDescrArr];
 }
+
+function replaceAll(str, searchStr, replaceStr) {
+    return str.split(searchStr).join(replaceStr);
+}
+
+function findParamInArray(serviceName, methodName) {
+    const paramNameArr = [], paramDescrArr = [], paramRequiredArr = [], paramTypeArr = [];
+    let methodParamDesc = "";
+
+    let urlServiceName = replaceAll(serviceName, ".", "-");
+    let urlMethodName = replaceAll(methodName, "/", "-");
+    urlServiceName = urlServiceName.toLocaleLowerCase();
+    urlMethodName = urlMethodName.toLocaleLowerCase();
+    const urlName = `http://www.webosose.org/docs/reference/ls2-api//${urlServiceName}/#${urlMethodName}`;
+
+    const findServiceIndex = paramObjArray.findIndex((element) => element["name"] === serviceName);
+
+    if (findServiceIndex != -1) {
+        const findMethodIndex = paramObjArray[findServiceIndex]["methods"].findIndex((element) => element["name"].substring(1) === methodName);
+        if (findMethodIndex != -1) {
+            for (const i in paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"]) {
+                const paramItemName = paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].name;
+                const paramItemRequired = paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].required;
+                const paramItemType = paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].type;
+                const paramItemDesc = `<p><strong>${methodName}</strong> method parameter<br><br>required : <strong>${paramItemRequired} \
+                                    </strong><br>type : <strong>${paramItemType}</strong><br><br> \
+                                    <a href='${urlName}'>Site link of method(${methodName})</a></p>`;
+
+                paramNameArr.push(paramItemName);
+                paramRequiredArr.push(paramItemRequired);
+                paramTypeArr.push(paramItemType);
+                paramDescrArr.push(paramItemDesc);
+            }
+        }
+
+        methodParamDesc = `<p><strong>Parameter list</strong> (${paramNameArr.length})<br>`;
+
+        for (const i in paramNameArr) {
+            let requiredString;
+            if(paramRequiredArr[i] === "yes") {
+                requiredString = "Required";
+            }
+            else {
+                requiredString = "Optional";
+            }
+            const paramDesc = `<li><strong>${paramNameArr[i]}</strong> : ${paramTypeArr[i]} (${requiredString}}</li>`;
+            methodParamDesc = methodParamDesc + paramDesc;
+        }
+        methodParamDesc = methodParamDesc + `<br><a href='${urlName}'>Site link of method(${methodName})</a></p>`;
+    }
+    return [paramNameArr, paramDescrArr, [methodParamDesc]];
+}
+
 
 function getWebviewHome(resource) {
     const commonCssUri = resource + '/media/wizard/pageCommon.css';
