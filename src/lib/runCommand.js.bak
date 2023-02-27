@@ -91,14 +91,11 @@ function _execPreviewServer(cmd, params, cwd, port) {
             cwd: cwd,
             shell: true,
         });
-      
-        child.stdout.on('data', (data) => {
-            console.error("preview data on data ->",data.toString());
+
+        child.stdout.on('data', () => {
             tcpPortUsed.check(port, sysIP)
                 .then(() => {
-                    console.log("port using",port,sysIP  )
-
-                    resolve(["http://" + sysIP + ":" + port, child,data.toString()]);
+                    resolve(["http://" + sysIP + ":" + port, child]);
                 }, function (err) {
                     console.log('Error on port status:', err.message);
                 });
@@ -106,7 +103,7 @@ function _execPreviewServer(cmd, params, cwd, port) {
 
         // @ts-ignore
         child.stderr.on('data', (data) => {
-            console.error("preview data on error ->",data);
+            console.error(data);
             // reject(data);
         });
         child.on('error', (err) => {
@@ -203,19 +200,7 @@ async function pack(appDir, outDir, minify, serviceDir) {
         }
     })
 }
-async function push(device, srcDir, destDir) {
-      let cmd = `${path.join(await getCliPath(), 'ares-push')} --device "${device}"  "${srcDir}"   "${destDir}"  `;
-      return _execAsync(cmd, (stdout, resolve, reject) => {
-        if (stdout.includes('Push:')) {
-            console.log("pushing ---",stdout)
-        }
-        if (stdout.includes('Success')) {
-            resolve("");
-        } else {
-            reject('ares-push: failed!');
-        }
-    })
-}
+
 async function packInfo(ipkPath) {
     let option = '-i';
 
@@ -333,7 +318,7 @@ async function server(appDir, isEnact, port) {
     let cmd = "";
 
     if (isEnact) {
-        cmd = "enact serve -f  -p " + port;
+        cmd = "enact serve -p " + port;
         let params = "";
         return _execPreviewServer(cmd, params, path.join(appDir), port);
 
@@ -548,6 +533,5 @@ module.exports = {
     installEnactTemplate: installEnactTemplate,
     isInstalledService: isInstalledService,
     getLintResults: getLintResults,
-    checkDeviceOnline:checkDeviceOnline,
-    push:push
+    checkDeviceOnline:checkDeviceOnline
 }

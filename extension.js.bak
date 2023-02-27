@@ -5,7 +5,6 @@
 const vscode = require('vscode');
 const { generateApp, generateAppFromProjectWizard, removeApp } = require('./src/generateApp');
 const previewApp = require('./src/previewApp');
-const {devicePreviewStart, devicePreviewStop} = require('./src/devicePreview');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
 const setupDevice = require('./src/setupDevice');
@@ -518,12 +517,6 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.previewApp', () => {
         previewApp(null, previewPanelInfo);
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstart', () => {
-        devicePreviewStart(null,context);
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstop', () => {
-        devicePreviewStop(context,true);
-    }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.packageApp', () => { packageApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setupDevice', () => { setupDevice(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installApp', () => {
@@ -718,9 +711,6 @@ function activate(context) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.previewApp', async (app) => {
         previewApp(app.label, previewPanelInfo);
-    }));
-    context.subscriptions.push(vscode.commands.registerCommand('apps.devicepreviewstart', async (app) => {
-        devicePreviewStart(app,context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp', async (app) => {
         inspectApp(app.label, undefined, true);
