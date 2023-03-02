@@ -1048,7 +1048,7 @@ function findParamInArray(serviceName, methodName) {
             else {
                 requiredString = "Optional";
             }
-            const paramDesc = `<li><strong>${paramNameArr[i]}</strong> : ${paramTypeArr[i]} (${requiredString}}</li>`;
+            const paramDesc = `<li><strong>${paramNameArr[i]}</strong> : ${paramTypeArr[i]} (${requiredString})</li>`;
             methodParamDesc = methodParamDesc + paramDesc;
         }
         methodParamDesc = methodParamDesc + `<br><a href='${urlName}'>Site link of method(${methodName})</a></p>`;
