@@ -62,7 +62,9 @@ function activate(context) {
 
                     const serviceItemInterface = {label:serviceItemName, description: "Luna API Service"};
                     const serviceItemSummary = serviceObjArray[i].summary + urlServiceSite;
-                    const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Method);
+                    commitCharacterCompletion.sortText = "0";
+
                     const content = new vscode.MarkdownString(serviceItemSummary);
                     content.supportHtml = true;
                     content.isTrusted = true;
@@ -107,7 +109,8 @@ function activate(context) {
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
                     const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
-                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Method);
+                    commitCharacterCompletion.sortText = "0";
 
                     const content = new vscode.MarkdownString(methodItemDesc);
                     content.supportHtml = true;
@@ -151,7 +154,9 @@ function activate(context) {
                     const paramItemName = paramNameArr[i];
                     const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
                     const paramItemDesc = paramDescArr[i];
-                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Method);
+                    commitCharacterCompletion.sortText = "0";
+
                     const content = new vscode.MarkdownString(paramItemDesc);
                     content.supportHtml = true;
                     content.isTrusted = true;
@@ -170,7 +175,8 @@ function activate(context) {
         provideCompletionItems() {
             const stringFirstMain = 'new LS2Request()';
             const snippetFirstItemInterface = {label:stringFirstMain, description: "Luna API Snippet"};
-            const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface);
+            const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface, vscode.CompletionItemKind.Snippet);
+            firstSnippetCompletion.sortText = "1";
             const serviceList = [];
 
             let snippetDesc = "<p>Example)</p><p>new LS2Request().send({ \
@@ -200,7 +206,9 @@ function activate(context) {
 
             const stringSecondMain = 'webOS.service.request()';
             const snippetSecondItemInterface = {label:stringSecondMain, description: "Luna API Snippet"};
-            const secondSnippetCompletion = new vscode.CompletionItem(snippetSecondItemInterface);
+            const secondSnippetCompletion = new vscode.CompletionItem(snippetSecondItemInterface, vscode.CompletionItemKind.Snippet);
+            //secondSnippetCompletion.sortText = "2";
+
             snippetDesc = "<p>Example)</p><p>function checkMenuLanguage(){\
                     <br>&emsp;webOS.service.request('luna://com.webos.service.settings/', { \
                     <br>&emsp;&emsp;method: \"getSystemSettings\", \
@@ -213,7 +221,6 @@ function activate(context) {
             content.supportHtml = true;
             content.isTrusted = true;
             secondSnippetCompletion.documentation = content;
-
             //const stringSecondSub = 'webOS.service.request(\'luna://' + '${1|'+ serviceList + '|}/\', {' + '\n'
             const stringSecondSub = 'webOS.service.request(\'luna://' + '${1}\', {' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
@@ -257,9 +264,10 @@ function activate(context) {
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
                     const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
-                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Method);
 
                     const content = new vscode.MarkdownString(methodItemDesc);
+                    commitCharacterCompletion.sortText = "0";
                     content.supportHtml = true;
                     content.isTrusted = true;
                     commitCharacterCompletion.documentation = content;
@@ -306,8 +314,9 @@ function activate(context) {
                     const paramItemName = paramNameArr[i];
                     const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
                     const paramItemDesc = paramDescArr[i];
-                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Method);
                     const content = new vscode.MarkdownString(paramItemDesc);
+                    commitCharacterCompletion.sortText = "0";
                     content.supportHtml = true;
                     content.isTrusted = true;
                     commitCharacterCompletion.documentation = content;
