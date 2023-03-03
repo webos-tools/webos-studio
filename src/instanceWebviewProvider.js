@@ -9,6 +9,7 @@ const { exec } = require('child_process');
 const { resolve } = require("path");
 const { getRunningInstance } = require('./lib/vboxUtils');
 const fs = require('fs')
+const { logger } = require('./lib/logger');
 const wemulIntegration = true;
 class InstanceWebviewProvider {
 
@@ -573,11 +574,18 @@ class InstanceWebviewProvider {
     async exec_commands(commands) {
         let commandstring = commands.join(" && ");
         return new Promise((resolve, reject) => {
+            logger.run(commandstring )
+            logger.log("------------------------------------------------")
             exec(commandstring, (error, stdout, stderr) => {
+                if(stdout){
+                    logger.log(error )
+                }
                 if (error) {
+                    logger.error(error )
                     reject(error);
                 }
                 if (stderr) {
+                    logger.warn(error )
                     // console.log(`stderr: ${stderr}`);
                 }
                 resolve(stdout);

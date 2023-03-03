@@ -27,13 +27,12 @@ const io = require("socket.io")(http);
 const enactUtils = require("./lib/enactUtils");
 const kill = require("tree-kill");
 let sysIP = "127.0.0.1";
-const { logger } = require('./lib/logger');
-const chalk = require('chalk');
+const { logger } = require("./lib/logger");
 
 let userAppDir = "";
 let targetDevice = null;
 let isEnact;
-let dp_appId;
+let dp_appInfo;
 let socketClient = null;
 let dpContext = {
   isPreviewStarted: false,
@@ -45,13 +44,12 @@ let dpContext = {
   appFileWatcher: null,
   previewURL: "",
   isPreviewUrlSent: false,
-  enactCompileCount: 0,
+  socketPort: "",
+  socketIp: "",
 };
 
 async function devicePreviewStart(appSelectedDir, context) {
-   
-
-  dp_appId = getDevicePreviewAppId(context);
+  dp_appInfo = getDevicePreviewAppId(context);
 
   let device = null;
 
@@ -105,8 +103,7 @@ async function devicePreviewStart(appSelectedDir, context) {
           return "The directory must be specified.";
         }
       }
-      // return InputChecker.checkDirectoryExist(value);
-
+  
       let folderError = InputChecker.checkDirectoryExist(value);
       if (folderError != null) {
         return folderError;
@@ -165,65 +162,107 @@ async function devicePreviewStart(appSelectedDir, context) {
     userAppDir = appDir;
     targetDevice = device;
     isEnact = await enactUtils.isEnactApp(appDir);
-    await devicePreviewStop(context, false, dpContext);
 
-    dpContext.userAppDir = userAppDir;
-    dpContext.targetDevice = targetDevice;
+    let containerAppInfo = await getExistingContainerAppInfo(device);
     dpContext.isEnact = isEnact;
-
-    installContainerAppOnDeviceAndLaunch(context, device);
-  
+    if (
+      dpContext.previewProcess != null &&
+      containerAppInfo &&
+      dpContext.userAppDir == appDir &&
+      dpContext.targetDevice["name"] == targetDevice.name
+    ) {
+      onlyLaunchContainerApp(context, device);
+    } else {
+      await devicePreviewStop(context, false);
+      dpContext.userAppDir = userAppDir;
+      dpContext.targetDevice = targetDevice;
+      if (containerAppInfo) {
+        // launch
+        startSocketAndLaunchContainerApp(context, device);
+      } else {
+        installContainerAndStartSocketAndLaunch(context, device);
+      }
+    }
   }
 }
+async function getExistingContainerAppInfo(device) {
+  let installedAppInfoObj = null;
+  await ares.installListFull(device.name).then(async (appInfo) => {
+    let appInfoArray = appInfo
+      .replace(new RegExp("id : ", "g"), "#$#id : ")
+      .split("#$#");
+    let appInfoJsonArray = [];
 
-function updateConfigJs(context, port) {
-  try {
-    fs.writeFileSync(
-      path.join(context.extensionPath, "device_preview", "js", "config.js"),
-      `var SOCKET_SERVER_IP ="${sysIP}";
-           var SOCKET_SERVER_PORT ="${port}";`,
-      "utf8"
-    );
-  } catch (e) {
-    console.log("error updating configfile", e);
-  }
+    appInfoArray.forEach((cell) => {
+      try {
+        let lines = cell.split("\n");
+        let appJson = {};
+        lines.forEach((line) => {
+          let lineArray = line.split(":");
+          try {
+            appJson[lineArray[0].trim()] = lineArray[1].trim();
+          } catch (e) {}
+        });
+
+        appInfoJsonArray.push(appJson);
+      } catch (e) {}
+    });
+
+    appInfoJsonArray.forEach((appObj) => {
+      if (
+        appObj["id"] == dp_appInfo["id"] &&
+        appObj["version"] == dp_appInfo["version"]
+      ) {
+        installedAppInfoObj = appObj;
+        return;
+      }
+    });
+  });
+  return installedAppInfoObj;
 }
+
 function getDevicePreviewAppId(context) {
   let rawdata = fs.readFileSync(
-    path.join(context.extensionPath, "device_preview", "appinfo.json")
+    path.join(context.extensionPath, "src", "device_preview", "appinfo.json")
   );
-  return JSON.parse(rawdata).id;
+  return JSON.parse(rawdata);
 }
-async function installContainerAppOnDeviceAndLaunch(context, device) {
-  let appDir = path.join(context.extensionPath, "device_preview");
-  let outDir = path.join(context.extensionPath, "device_preview", "out");
+async function installContainerAndStartSocketAndLaunch(context, device) {
+  let appDir = path.join(context.extensionPath, "src", "device_preview");
+  let outDir = path.join(context.extensionPath, "src", "device_preview", "out");
 
   portfinder
     .getPortPromise()
     .then(async (port) => {
-      updateConfigJs(context, port);
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Setting Up Device Preview..",
+          title: "Setting Up Device Preview",
           cancellable: false,
         },
         async (progress) => {
-          await notify.showProgress(progress, 40, "Packaging ");
+          await notify.showProgress(progress, 40, "Please Wait ");
           await ares
             .package(appDir, outDir, false, "")
             .then(async (ipkFile) => {
               let ipkPath = path.join(outDir, ipkFile);
-              await notify.showProgress(progress, 60, "Installing ");
+              await notify.showProgress(progress, 60, "Please Wait ");
               await ares
                 .install(ipkPath, device.name)
                 .then(async () => {
                   // launch the app
                   startSocketServer(sysIP, port);
 
+                  dpContext.socketIp = sysIP;
+                  dpContext.socketPort = port;
+
                   await notify.showProgress(progress, 80, `Launching`);
+                  let param = {
+                    SOCKET_SERVER_IP: `${sysIP}`,
+                    SOCKET_SERVER_PORT: `${port}`,
+                  };
                   await ares
-                    .launch(dp_appId, device.name, undefined, 0)
+                    .launch(dp_appInfo["id"], device.name, param, 0)
                     .then(async () => {
                       await notify.clearProgress(
                         progress,
@@ -236,7 +275,7 @@ async function installContainerAppOnDeviceAndLaunch(context, device) {
                       }, 500);
                     })
                     .catch(async (err) => {
-                      let errMsg = `Failed to launch ${dp_appId} on ${device.name}.`;
+                      let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
                       if (err.includes(`Connection time out`)) {
                         errMsg = `Please check ${device}'s IP address or port.`;
                       }
@@ -262,7 +301,7 @@ async function installContainerAppOnDeviceAndLaunch(context, device) {
                     `ERROR! ${errMsg}. Details As follows: ${erMsg}`
                   );
                 });
-              // resolve(ipkPath);
+              
             })
             .catch((err) => {
               console.log("error", err);
@@ -276,8 +315,97 @@ async function installContainerAppOnDeviceAndLaunch(context, device) {
       vscode.window.showErrorMessage(`Error! Failed to get free port`);
     });
 }
+async function startSocketAndLaunchContainerApp(context, device) {
+  portfinder
+    .getPortPromise()
+    .then(async (port) => {
+      vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "Starting Device Preview",
+          cancellable: false,
+        },
+        async (progress) => {
+          await notify.showProgress(progress, 40, "Please Wait ");
+          startSocketServer(sysIP, port);
+
+          dpContext.socketIp = sysIP;
+          dpContext.socketPort = port;
+
+          await notify.showProgress(progress, 80, `Launching`);
+          let param = {
+            SOCKET_SERVER_IP: `${sysIP}`,
+            SOCKET_SERVER_PORT: `${port}`,
+          };
+          await ares.launchClose(dp_appInfo["id"], device.name, 0);
+          await ares
+
+            .launch(dp_appInfo["id"], device.name, param, 0)
+            .then(async () => {
+              await notify.clearProgress(
+                progress,
+                "Device Preview App Launched"
+              );
+              // start the serving app
+
+              setTimeout(() => {
+                startLocalPreview();
+              }, 500);
+            })
+            .catch(async (err) => {
+              let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
+              if (err.includes(`Connection time out`)) {
+                errMsg = `Please check ${device}'s IP address or port.`;
+              }
+              await notify.clearProgress(progress, `ERROR! ${errMsg}`);
+              let erMsg = err.toString();
+              vscode.window.showErrorMessage(
+                `ERROR! ${errMsg}. Details As follows: ${erMsg}`
+              );
+            });
+        }
+      );
+    })
+    .catch((err) => {
+      console.log(err);
+      vscode.window.showErrorMessage(`Error! Failed to get free port`);
+    });
+}
+async function onlyLaunchContainerApp(context, device) {
+  vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: "Starting Device Preview",
+      cancellable: false,
+    },
+    async (progress) => {
+      await notify.showProgress(progress, 80, `Launching`);
+      let param = {
+        SOCKET_SERVER_IP: `${dpContext.socketIp}`,
+        SOCKET_SERVER_PORT: `${dpContext.socketPort}`,
+      };
+      await ares.launchClose(dp_appInfo["id"], device.name, 0);
+      await ares
+
+        .launch(dp_appInfo["id"], device.name, param, 0)
+        .then(async () => {
+          await notify.clearProgress(progress, "Device Preview App Launched");
+        })
+        .catch(async (err) => {
+          let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
+          if (err.includes(`Connection time out`)) {
+            errMsg = `Please check ${device}'s IP address or port.`;
+          }
+          await notify.clearProgress(progress, `ERROR! ${errMsg}`);
+          let erMsg = err.toString();
+          vscode.window.showErrorMessage(
+            `ERROR! ${errMsg}. Details As follows: ${erMsg}`
+          );
+        });
+    }
+  );
+}
 function getNWAddress(networkInterfaces) {
-  // const { gateway, interface } = defaultGateway.v4.sync();
   const result = defaultGateway.v4.sync();
   for (let i = 0; i < networkInterfaces[result["interface"]].length; i++) {
     let addrEntity = networkInterfaces[result["interface"]][i];
@@ -288,14 +416,6 @@ function getNWAddress(networkInterfaces) {
   return "127.0.0.1";
 }
 async function startSocketServer(ip, port) {
-  // const socketPort = data.socketPort;
-  // const hostAppId = hostAppHelper.getHostAppId(data.baseAppPath);
-  // const hostAppName = hostAppId.split('.')[1];
-  // deviceName = deviceInfo.deviceName; //global
-  // const hostAppPath = deviceInfo.appInstallPath + hostAppName;
-  // module.exports.closeSocketServer();
-  // appLaunchHelper.terminateApp(deviceName, hostAppId);
-
   http.listen(port, ip, () => {
     console.log(`listening on ${port}`);
   });
@@ -321,12 +441,6 @@ async function startSocketServer(ip, port) {
       if (dpContext.isPreviewStarted) {
         socket.emit("app_url_resp", { url: dpContext.previewURL });
       }
-      // if(dpContext.enactCompileCount ==1){
-      //   socket.emit("preview_progress", {
-      //     statusText: "App Preview : Compiling",
-      //     progress: 90,
-      //   });
-      // }
     });
     socket.on("disconnect", () => {
       console.log(`disconnect, id = ${socket.id}`);
@@ -362,6 +476,7 @@ async function startLocalPreview() {
         }
       } else {
         clearInterval(enactProgressTimer);
+    
       }
     }, 3000);
   }
@@ -381,6 +496,7 @@ async function startLocalPreview() {
           if (isEnact) {
             // send compailing
             clearInterval(enactProgressTimer);
+            // pvalue =60;
             if (socketClient) {
               socketClient.emit("preview_progress", {
                 statusText: "App Preview : Compiling",
@@ -402,30 +518,25 @@ async function startLocalPreview() {
               }
             }, 3000);
 
+
             child.stdout.on("data", async (data) => {
-              console.error("process data ->", data.toString());
-
-              let outData = data.toString();
-
-              if (outData.includes("Compiling...")) {
-                dpContext.enactCompileCount++;
-                if (dpContext.enactCompileCount == 1) {
-                  //todo
-                }
-              }
-
+              let outData = logger.replaceAnsiColor(data.toString());
+             
               // if done
               if (
                 outData.includes("Failed to compile") ||
-                outData.includes("Compiled with warnings") ||
+                outData.includes("Compiled with ") ||
                 outData.includes("Compiled successfully")
               ) {
-               
                 if (dpContext.isPreviewUrlSent) {
-                  // await ares.launchClose(dp_appId, targetDevice.name, 0);
-                  // await ares.launch(dp_appId, targetDevice.name, undefined, 0);
+                  // await ares.launchClose(dp_appInfo["id"], targetDevice.name, 0);
+                  // await ares.launch(dp_appInfo["id"], targetDevice.name, undefined, 0);
                 } else {
                   if (socketClient) {
+                    if(enactProgressTimer){
+                      clearInterval(enactProgressTimer);
+                    }
+                 
                     dpContext.isPreviewUrlSent = true;
                     socketClient.emit("preview_progress", {
                       statusText: "App Preview : Loading App",
@@ -439,7 +550,6 @@ async function startLocalPreview() {
               }
             });
           } else {
-         
             if (socketClient) {
               socketClient.emit("preview_progress", {
                 statusText: "App Preview : Loading App",
@@ -454,8 +564,17 @@ async function startLocalPreview() {
               { recursive: true },
               async (evt, name) => {
                 console.log("File changes->" + `${name} ${evt}`);
-                await ares.launchClose(dp_appId, targetDevice.name, 0);
-                await ares.launch(dp_appId, targetDevice.name, undefined, 0);
+                let param = {
+                  SOCKET_SERVER_IP: `${dpContext.socketIp}`,
+                  SOCKET_SERVER_PORT: `${dpContext.socketPort}`,
+                };
+                await ares.launchClose(dp_appInfo["id"], targetDevice.name, 0);
+                await ares.launch(
+                  dp_appInfo["id"],
+                  targetDevice.name,
+                  param,
+                  0
+                );
               }
             );
           }
@@ -472,24 +591,9 @@ async function startLocalPreview() {
       vscode.window.showErrorMessage(`Error! Failed to get free port`);
     });
 }
-// watchForAppChanges(path.join(userAppDir));
-// function watchForAppChanges(basePath) {
-//   console.log("watching ->", basePath);
-
-//   dpContext.appFileWatcher = watch(
-//     basePath,
-//     { recursive: true },
-//     async (evt, name) => {
-//       console.log("File changes->"+`${name} ${evt}`);
-//       // await ares.launchClose(dp_appId, targetDevice.name, 0);
-//       // await ares.launch(dp_appId, targetDevice.name, undefined, 0);
-
-//     }
-//   );
-// }
 
 async function devicePreviewStop(context, isFromCommand) {
-  dp_appId = getDevicePreviewAppId(context);
+  dp_appInfo = getDevicePreviewAppId(context);
   // dpContext = dp_context;
   if (targetDevice == null) {
     let deviceList = await getDeviceList();
@@ -502,60 +606,59 @@ async function devicePreviewStop(context, isFromCommand) {
       targetDevice = deviceListDefault[0];
     }
   }
-  if (targetDevice) {
-    // if(!dpContext.isPreviewStarted ){
-    //   if(isFromCommand){
-    //     vscode.window.showErrorMessage(
-    //       "Preview Procress is in Process, Unable to Stop Device Preview"
-    //      );
-    //      return;
-    //   }
 
-    // }
-    let deviceName = targetDevice.name;
-    await ares
-      .installRemove(dp_appId, deviceName)
-      .then(async () => {
-        if (dpContext.previewProcess != null) {
-          dpContext.previewProcess.stdin.pause();
-          kill(dpContext.previewProcess.pid);
-        }
-        if (dpContext.appFileWatcher != null) {
-          dpContext.appFileWatcher.close();
-        }
-        http.close();
-        io.removeAllListeners("connection");
-        io.close();
-        if (isFromCommand)
+  // clear all the process
+  if (dpContext.previewProcess != null) {
+    dpContext.previewProcess.stdin.pause();
+    kill(dpContext.previewProcess.pid);
+  }
+  if (dpContext.appFileWatcher != null) {
+    dpContext.appFileWatcher.close();
+  }
+  if (http) {
+    http.close();
+    io.removeAllListeners("connection");
+    io.close();
+  }
+
+  if (isFromCommand) {
+    if (targetDevice) {
+      let deviceName = targetDevice.name;
+
+      await ares
+        .installRemove(dp_appInfo["id"], deviceName)
+        .then(async () => {
           vscode.window.showInformationMessage(
             "Device Preview has been stoped."
           );
-      })
-      .catch((err) => {
-        console.log("Error on removing  Device Preview App on " + deviceName);
-        if (isFromCommand)
+        })
+        .catch((err) => {
+          console.log("Error on removing  Device Preview App on " + deviceName);
+
           vscode.window.showErrorMessage(
             "Error on removing  Device Preview App on " + deviceName
           );
-      });
-
-    dpContext = {
-      isPreviewStarted: false,
-      userAppDir: "",
-      targetDevice: "",
-      isEnact: false,
-      previewPort: "",
-      previewProcess: null,
-      appFileWatcher: null,
-      previewURL: "",
-      isPreviewUrlSent: false,
-      enactCompileCount: 0,
-    };
-  } else {
-    vscode.window.showErrorMessage(
-      `Unable to connect to device to stop preview `
-    );
+        });
+    } else {
+      if (isFromCommand)
+        vscode.window.showErrorMessage(
+          `Unable to connect to device to stop preview `
+        );
+    }
   }
+  dpContext = {
+    isPreviewStarted: false,
+    userAppDir: "",
+    targetDevice: "",
+    isEnact: false,
+    previewPort: "",
+    previewProcess: null,
+    appFileWatcher: null,
+    previewURL: "",
+    isPreviewUrlSent: false,
+    socketPort: "",
+    socketIp: "",
+  };
 }
 module.exports = {
   devicePreviewStart: devicePreviewStart,

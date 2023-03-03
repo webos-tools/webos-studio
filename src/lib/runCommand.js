@@ -9,8 +9,12 @@ const { getCliPath, getBrowserPath } = require('./configUtils');
 const os = require('os');
 const tcpPortUsed = require('tcp-port-used');
 const defaultGateway = require('default-gateway');
+const { logger } = require('./logger');
 
 function _execAsync(cmd, option, next) {
+    logger.run(cmd )
+    // +" "+ typeof option == "object"?JSON.stringify(option):""
+    logger.log("------------------------------------------------")
     return new Promise((resolve, reject) => {
         let execOption = {};
         if (typeof option == "function") {
@@ -20,7 +24,16 @@ function _execAsync(cmd, option, next) {
         }
 
         exec(cmd, execOption, (err, stdout, stderr) => {
+            if(stdout){
+                logger.log(stdout)
+            }
+            if(stderr){
+                logger.error(stderr)
+            }
+           
+
             if (err) {
+                logger.error(err)
                 if (stderr.includes('not recognized') || stderr.includes('not found')) {
                     const { showPrompt } = require('../installGlobalLibrary');
                     showPrompt();
@@ -40,6 +53,8 @@ function _execAsync(cmd, option, next) {
 }
 
 function _execServer(cmd, params) {
+    logger.run(cmd +" "+ params)
+    logger.log("------------------------------------------------")
     return new Promise((resolve, reject) => {
         console.log(`runCommand_execServer: ${cmd}`);
         const myArr = params.split(" ");
@@ -51,6 +66,7 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stdout.on('data', (data) => {
+            logger.log(data.toString())
             if (data.includes('http://localhost')) {
                 let startIndex = data.indexOf('http');
                 let finishIndex = data.indexOf('\n');
@@ -65,10 +81,12 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stderr.on('data', (data) => {
+            logger.warn(data.toString())
             console.error(data);
             reject(data);
         });
         child.on('error', (err) => {
+            logger.error(err.toString())
             console.error('Failed to start subprocess.');
             console.error(err);
             reject(err);
@@ -82,22 +100,28 @@ function _execServer(cmd, params) {
 }
 
 function _execPreviewServer(cmd, params, cwd, port) {
+ 
+    logger.run(cmd +" "+params)
+    logger.log("------------------------------------------------")
     return new Promise((resolve, reject) => {
+
         const myArr = params.split(" ");
 
         var sysIP = getNWAdderss(os.networkInterfaces())
         var child = spawn(cmd, myArr, {
             // @ts-ignore
+            encoding: 'utf8',
             cwd: cwd,
             shell: true,
         });
-      
+        // @ts-ignore
         child.stdout.on('data', (data) => {
-            console.error("preview data on data ->",data.toString());
+          
+            logger.log(data.toString());
+          
             tcpPortUsed.check(port, sysIP)
                 .then(() => {
                     console.log("port using",port,sysIP  )
-
                     resolve(["http://" + sysIP + ":" + port, child,data.toString()]);
                 }, function (err) {
                     console.log('Error on port status:', err.message);
@@ -106,10 +130,12 @@ function _execPreviewServer(cmd, params, cwd, port) {
 
         // @ts-ignore
         child.stderr.on('data', (data) => {
+            logger.warn(data.toString());
             console.error("preview data on error ->",data);
             // reject(data);
         });
         child.on('error', (err) => {
+            logger.error(err.toString());;
             console.error('Failed to start subprocess.', err);
             reject(err);
         });
@@ -251,7 +277,19 @@ async function install(appFilePath, device) {
         }
     })
 }
+async function installListFull(device) {
+ 
+    let cmd = `${path.join(await getCliPath(), 'ares-install')}`;
 
+    if (device) {
+        cmd += ` -d "${device}" -F`;
+    }
+
+    return _execAsync(cmd, (stdout, resolve, reject) => {
+        resolve(stdout);
+       
+    })
+}
 async function installList(device) {
     if (!device) {
         return Promise.reject('ares-install --list: arguments are not fulfilled.')
@@ -333,7 +371,7 @@ async function server(appDir, isEnact, port) {
     let cmd = "";
 
     if (isEnact) {
-        cmd = "enact serve -f  -p " + port;
+        cmd = "enact serve  -p " + port;
         let params = "";
         return _execPreviewServer(cmd, params, path.join(appDir), port);
 
@@ -392,6 +430,8 @@ async function openBrowser(url) {
     }
     args = args.concat([url]);
     console.log(`openBrowser: ${info[0]} ${args}`);
+    logger.run(info[0] +" "+args)
+    logger.log("------------------------------------------------")
     spawn(info[0], args);
 }
 
@@ -549,5 +589,6 @@ module.exports = {
     isInstalledService: isInstalledService,
     getLintResults: getLintResults,
     checkDeviceOnline:checkDeviceOnline,
-    push:push
+    push:push,
+    installListFull:installListFull
 }

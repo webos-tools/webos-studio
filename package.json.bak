@@ -19,6 +19,8 @@
         "onCommand:webosose.installGlobal",
         "onCommand:webosose.generateApp",
         "onCommand:webosose.previewApp",
+        "onCommand:webosose.devicepreviewstart",
+        "onCommand:webosose.devicepreviewstop",
         "onCommand:webosose.packageApp",
         "onCommand:webosose.setupDevice",
         "onCommand:webosose.installApp",
@@ -52,6 +54,7 @@
         "onCommand:apps.installWebOS",
         "onCommand:apps.installApp",
         "onCommand:apps.previewApp",
+        "onCommand:apps.devicepreviewstart",
         "onCommand:webapp.reloadPreview",
         "onCommand.apps.debugApp",
         "onCommand.apps.lintApp",
@@ -73,6 +76,7 @@
         "onCommand:webosose.explorermenu.installApp",
         "onCommand:webosose.explorermenu.runApp",
         "onCommand:webosose.explorermenu.appPreview",
+        "onCommand:webosose.explorermenu.devicepreviewstart",
         "onCommand:webosose.explorermenu.debug",
         "onCommand:ipkanalyze.start"
     ],
@@ -130,6 +134,14 @@
                 "title": "webOS OSE: Preview Application"
             },
             {
+                "command": "webosose.devicepreviewstart",
+                "title": "webOS OSE: Device Preview - Start"
+            },
+            {
+                "command": "webosose.devicepreviewstop",
+                "title": "webOS OSE: Device Preview - Stop"
+            },
+            {
                 "command": "webosose.packageApp",
                 "title": "webOS OSE: Package Application"
             },
@@ -184,6 +196,10 @@
             {
                 "command": "webosose.explorermenu.appPreview",
                 "title": "webOS OSE: Preview Application"
+            },
+            {
+                "command": "webosose.explorermenu.devicepreviewstart",
+                "title": "webOS OSE: Preview Application on Device"
             },
             {
                 "command": "webosose.explorermenu.debug",
@@ -292,6 +308,10 @@
             {
                 "command": "apps.previewApp",
                 "title": "App Preview"
+            },
+            {
+                "command": "apps.devicepreviewstart",
+                "title": "Device Preview - Start"
             },
             {
                 "command": "apps.debugApp",
@@ -452,6 +472,11 @@
                     "group": "app2@2"
                 },
                 {
+                    "command": "apps.devicepreviewstart",
+                    "when": "view == apps && viewItem == web-app || viewItem == enact-app",
+                    "group": "app2@2"
+                },
+                {
                     "command": "apps.debugApp",
                     "when": "view == apps && viewItem == js-service || viewItem == enact-app || viewItem == web-app",
                     "group": "app2@2"
@@ -527,6 +552,11 @@
                     "group": "device2@1"
                 },
                 {
+                    "command": "webosose.explorermenu.devicepreviewstart",
+                    "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
+                    "group": "device2@1"
+                },
+                {
                     "command": "webosose.explorermenu.debug",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedFolders",
                     "group": "device2@1"
@@ -543,6 +573,10 @@
                 },
                 {
                     "command": "webosose.explorermenu.appPreview",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorermenu.devicepreviewstart",
                     "when": "false"
                 },
                 {
@@ -678,6 +712,10 @@
                     "when": "false"
                 },
                 {
+                    "command": "apps.devicepreviewstart",
+                    "when": "false"
+                },
+                {
                     "command": "apps.debugApp",
                     "when": "false"
                 },
@@ -777,7 +815,10 @@
         "rimraf": "3.0.2",
         "catalogist": "1.0.4",
         "get-folder-size": "2.0.1",
-        "fast-folder-size": "1.7.0"
+        "fast-folder-size": "1.7.0",
+        "node-watch": "^0.6.2",
+        "socket.io": "^3.1.0",
+        "chalk": "^4.1.0"
     },
     "repository": {
         "type": "git",

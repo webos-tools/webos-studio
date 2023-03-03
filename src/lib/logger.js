@@ -1,67 +1,70 @@
-const outputChannel = [];
 
-const setOutputChannel = output => {
-    if (typeof output !== 'function') {
-        throw new Error(`output should be function`);
-    }
-    const id = generateId();
-    outputChannel.push({ id, output });
-    return id;
+const vscode = require("vscode");
+let  outputChannel;
+const createOutPutChannel = ()=> {
+     outputChannel = vscode.window.createOutputChannel("WebOS Studio","Log")
+     outputChannel.show(true);
+     log("WebOS Studio Initialized...")
 };
 
-function generateId() {
-    const min = Math.ceil(1000);
-    const max = Math.floor(9999);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-const unsetOutputChannel = requestId => {
-    const removedId = outputChannel.findIndex(({ id }) => requestId === id);
-    if (removedId < 0) {
-        console.error(`The request id(${requestId}) is not exist`);
-        return;
+const removeOutputChannel = () => {
+    if(outputChannel){
+        outputChannel.dispose();
     }
-    outputChannel.splice(removedId, 1);
+   
 };
 
-function error() {
-    const args = [].slice.call(arguments);
-    const outputCallback = outputChannel.map(({ output }) => output);
-    [console.error, ...outputCallback].forEach(print => {
-        print(...args);
-    });
+function replaceAnsiColor(data){
+    return data.replace(
+        /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+}
+function error(data) {
+    if(outputChannel){
+        outputChannel.appendLine("[Error] "+replaceAnsiColor(data));
+    }
+    
 }
 
-function warn() {
-    const args = [].slice.call(arguments);
-    const outputCallback = outputChannel.map(({ output }) => output);
-    [console.warn, ...outputCallback].forEach(print => {
-        print(...args);
-    });
+function warn(data) {
+    if(outputChannel){
+        outputChannel.appendLine("[Warning] "+replaceAnsiColor(data));
+    }
 }
 
-function log() {
-    const args = [].slice.call(arguments);
-    const outputCallback = outputChannel.map(({ output }) => output);
-    [console.log, ...outputCallback].forEach(print => {
-        print(...args);
-    });
+function log(data) {
+    if(outputChannel){
+        outputChannel.appendLine( replaceAnsiColor(data));
+    }
+}
+function info(data) {
+    if(outputChannel){
+        outputChannel.appendLine("[Info] "+ replaceAnsiColor(data));
+    }
 }
 
-function debug() {
-    const args = [].slice.call(arguments);
-    console.debug(...args);
+function debug(data) {
+    if(outputChannel){
+        outputChannel.appendLine("[Debug] "+replaceAnsiColor(data));
+    }
+}
+function run(data) {
+    if(outputChannel){
+        outputChannel.appendLine("[Executing] "+replaceAnsiColor(data));
+    }
 }
 
 const logger = {
     error,
     warn,
     log,
-    debug
+    debug,
+    info,
+    run,
+    replaceAnsiColor
 };
 
 module.exports = {
-    setOutputChannel,
-    unsetOutputChannel,
+    createOutPutChannel,
+    removeOutputChannel,
     logger
 };

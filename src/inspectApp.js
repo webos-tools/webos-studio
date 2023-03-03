@@ -12,7 +12,7 @@ const path = require('path');
 const portfinder = require('portfinder');
 const notify = require('./lib/notificationUtils');
 const tcpPortUsed = require('tcp-port-used');
-
+const { logger } = require('./lib/logger');
 module.exports = async function inspectApp(id, deviceName, isFolder) {
     let folderName = id;
     let appId = id;
@@ -109,6 +109,9 @@ module.exports = async function inspectApp(id, deviceName, isFolder) {
         }
         ares.inspect(appId, device, isService)
             .then(([url, child]) => {
+                child.stdout.on('data', (data) => {
+                    logger.log(data.toString('utf8'))
+                })
                 let debugurl = url;
                 if (isService) {
                     var desc = debugurl.toString('utf8');

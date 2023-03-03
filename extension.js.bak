@@ -5,6 +5,7 @@
 const vscode = require('vscode');
 const { generateApp, generateAppFromProjectWizard, removeApp } = require('./src/generateApp');
 const previewApp = require('./src/previewApp');
+const {devicePreviewStart, devicePreviewStop} = require('./src/devicePreview');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
 const setupDevice = require('./src/setupDevice');
@@ -61,7 +62,9 @@ function activate(context) {
 
                     const serviceItemInterface = {label:serviceItemName, description: "Luna API Service"};
                     const serviceItemSummary = serviceObjArray[i].summary + urlServiceSite;
-                    const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Method);
+                    commitCharacterCompletion.sortText = "0";
+
                     const content = new vscode.MarkdownString(serviceItemSummary);
                     content.supportHtml = true;
                     content.isTrusted = true;
@@ -106,7 +109,8 @@ function activate(context) {
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
                     const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
-                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Method);
+                    commitCharacterCompletion.sortText = "0";
 
                     const content = new vscode.MarkdownString(methodItemDesc);
                     content.supportHtml = true;
@@ -150,7 +154,9 @@ function activate(context) {
                     const paramItemName = paramNameArr[i];
                     const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
                     const paramItemDesc = paramDescArr[i];
-                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Method);
+                    commitCharacterCompletion.sortText = "0";
+
                     const content = new vscode.MarkdownString(paramItemDesc);
                     content.supportHtml = true;
                     content.isTrusted = true;
@@ -169,7 +175,8 @@ function activate(context) {
         provideCompletionItems() {
             const stringFirstMain = 'new LS2Request()';
             const snippetFirstItemInterface = {label:stringFirstMain, description: "Luna API Snippet"};
-            const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface);
+            const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface, vscode.CompletionItemKind.Snippet);
+            firstSnippetCompletion.sortText = "1";
             const serviceList = [];
 
             let snippetDesc = "<p>Example)</p><p>new LS2Request().send({ \
@@ -199,7 +206,9 @@ function activate(context) {
 
             const stringSecondMain = 'webOS.service.request()';
             const snippetSecondItemInterface = {label:stringSecondMain, description: "Luna API Snippet"};
-            const secondSnippetCompletion = new vscode.CompletionItem(snippetSecondItemInterface);
+            const secondSnippetCompletion = new vscode.CompletionItem(snippetSecondItemInterface, vscode.CompletionItemKind.Snippet);
+            //secondSnippetCompletion.sortText = "2";
+
             snippetDesc = "<p>Example)</p><p>function checkMenuLanguage(){\
                     <br>&emsp;webOS.service.request('luna://com.webos.service.settings/', { \
                     <br>&emsp;&emsp;method: \"getSystemSettings\", \
@@ -212,7 +221,6 @@ function activate(context) {
             content.supportHtml = true;
             content.isTrusted = true;
             secondSnippetCompletion.documentation = content;
-
             //const stringSecondSub = 'webOS.service.request(\'luna://' + '${1|'+ serviceList + '|}/\', {' + '\n'
             const stringSecondSub = 'webOS.service.request(\'luna://' + '${1}\', {' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
@@ -256,9 +264,10 @@ function activate(context) {
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
                     const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
-                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Method);
 
                     const content = new vscode.MarkdownString(methodItemDesc);
+                    commitCharacterCompletion.sortText = "0";
                     content.supportHtml = true;
                     content.isTrusted = true;
                     commitCharacterCompletion.documentation = content;
@@ -305,8 +314,9 @@ function activate(context) {
                     const paramItemName = paramNameArr[i];
                     const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
                     const paramItemDesc = paramDescArr[i];
-                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Snippet);
+                    const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Method);
                     const content = new vscode.MarkdownString(paramItemDesc);
+                    commitCharacterCompletion.sortText = "0";
                     content.supportHtml = true;
                     content.isTrusted = true;
                     commitCharacterCompletion.documentation = content;
@@ -517,6 +527,12 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.previewApp', () => {
         previewApp(null, previewPanelInfo);
     }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstart', () => {
+        devicePreviewStart(null,context);
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstop', () => {
+        devicePreviewStop(context,true);
+    }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.packageApp', () => { packageApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setupDevice', () => { setupDevice(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installApp', () => {
@@ -711,6 +727,9 @@ function activate(context) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.previewApp', async (app) => {
         previewApp(app.label, previewPanelInfo);
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('apps.devicepreviewstart', async (app) => {
+        devicePreviewStart(app,context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp', async (app) => {
         inspectApp(app.label, undefined, true);
@@ -1029,7 +1048,7 @@ function findParamInArray(serviceName, methodName) {
             else {
                 requiredString = "Optional";
             }
-            const paramDesc = `<li><strong>${paramNameArr[i]}</strong> : ${paramTypeArr[i]} (${requiredString}}</li>`;
+            const paramDesc = `<li><strong>${paramNameArr[i]}</strong> : ${paramTypeArr[i]} (${requiredString})</li>`;
             methodParamDesc = methodParamDesc + paramDesc;
         }
         methodParamDesc = methodParamDesc + `<br><a href='${urlName}'>Site link of method(${methodName})</a></p>`;

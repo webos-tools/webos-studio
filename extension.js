@@ -25,7 +25,7 @@ const { getDefaultDir } = require('./src/lib/workspaceUtils');
 const { InputChecker } = require('./src/lib/inputChecker');
 const { HelpProvider, renderReadMe, renderChangeLog } = require('./src/helpProvider');
 const { IPK_ANALYZER } = require('./src/ipkAnalyzer');
-
+const { logger,createOutPutChannel } = require('./src/lib/logger');
 const fs = require('fs');
 const path = require('path');
 const extensionPath = __dirname;
@@ -39,6 +39,7 @@ let paramObjArray = [];
  */
 function activate(context) {
 
+    createOutPutChannel(); // 
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
 
     setFromConvertCacheAPI("");
@@ -785,7 +786,9 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.debug', async (resource) => {
         explorerMenuMgr.debugApp(resource)
     }));
-
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.devicepreviewstart', async (resource) => {
+        explorerMenuMgr.devicePreview(resource)
+    }));
     context.subscriptions.push(vscode.commands.registerCommand('ipkanalyze.start', async () => {
 
         const ipkAnalyzer = new IPK_ANALYZER(context);

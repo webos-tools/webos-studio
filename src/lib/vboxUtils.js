@@ -6,7 +6,7 @@ const vscode = require('vscode');
 const path = require('path');
 const { exec } = require('child_process');
 const { getCliPath } = require('./configUtils');
-
+const { logger } = require('./logger');
 let instanceList = [];
 
 function _sortByName(a, b) {
@@ -21,8 +21,17 @@ function _execAsync(cmd, option, next) {
         } else if (typeof option == "object") {
             execOption = option;
         }
+        logger.run(cmd )
+        logger.log("------------------------------------------------")
         exec(cmd, execOption, (err, stdout, stderr) => {
+            if(stdout){
+                logger.log(stdout);
+            }
+            if(stderr){
+                logger.warn(stderr);
+            }
             if (err) {
+                logger.error(err);
                 if (stderr.includes('not recognized') || stderr.includes('not found') || err.toString().includes('Command failed')) {
                     // const { showPrompt } = require('../installGlobalLibrary');
                     // showPrompt();

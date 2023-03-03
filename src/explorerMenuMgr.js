@@ -24,6 +24,9 @@ class ExplorerMenuMgr {
     appPreview(resource) {
         vscode.commands.executeCommand('apps.previewApp', this.getAppObject(resource));
     }
+    devicePreview(resource) {
+        vscode.commands.executeCommand('apps.devicepreviewstart',null, this.getAppObject(resource));
+    }
     debugApp(resource) {
         vscode.commands.executeCommand('apps.debugApp', this.getAppObject(resource));
     }

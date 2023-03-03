@@ -1,2 +1,0 @@
-var SOCKET_SERVER_IP ="192.168.29.169";
-           var SOCKET_SERVER_PORT ="8001";

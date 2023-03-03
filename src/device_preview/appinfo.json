@@ -1,6 +1,6 @@
 {
   "id": "com.devicepreview.app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "vendor": "My Company",
   "type": "web",
   "main": "index.html",
