@@ -44,8 +44,9 @@
             description.value = descriptionValue + '2.18.0';
         } else if (apiVersionValue === 'OSE_APILevel_21') {
             description.value = descriptionValue + '2.19.0';
+        } else if (apiVersionValue === 'OSE_APILevel_22') {
+            description.value = descriptionValue + '2.20.0';
         }
-
     });
     btnGenerate.addEventListener('click', function() {
         vscode.postMessage({

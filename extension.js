@@ -955,7 +955,7 @@ function setFromConvertCacheAPI(apiLevel) {
 
     const elapsedMSec = date2.getTime() - date1.getTime();
     const elapsedSec = elapsedMSec / 1000;
-    console.log("Excution time of converting data function  : " + elapsedSec);
+    console.log(`Excution time of converting data function : ${elapsedSec} (s)`);
 }
 
 function compareFn(a, b) {
@@ -1097,6 +1097,7 @@ function getWebviewHome(resource) {
                 </label>
                 <select name="selelct-api-version" id="selelct-api-version" disabled>
                         <option value="none" selected disabled hidden>====== select ======</option>
+                        <option value="OSE_APILevel_22">OSE APILevel22</option>
                         <option value="OSE_APILevel_21">OSE APILevel21</option>
                         <option value="OSE_APILevel_20">OSE APILevel20</option>
                 </select>
