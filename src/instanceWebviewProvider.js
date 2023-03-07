@@ -578,14 +578,14 @@ class InstanceWebviewProvider {
             logger.log("------------------------------------------------")
             exec(commandstring, (error, stdout, stderr) => {
                 if(stdout){
-                    logger.log(error )
+                    logger.log(stdout )
                 }
                 if (error) {
                     logger.error(error )
                     reject(error);
                 }
                 if (stderr) {
-                    logger.warn(error )
+                    logger.warn(stderr )
                     // console.log(`stderr: ${stderr}`);
                 }
                 resolve(stdout);
