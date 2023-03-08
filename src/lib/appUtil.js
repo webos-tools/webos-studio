@@ -42,7 +42,6 @@ function copyFile(src, dest, cb) {
         console.log(err);
     });
     readStream.once('end', () => {
-        console.log('done copying');
         cb();
     });
     readStream.pipe(fs.createWriteStream(dest));
@@ -68,7 +67,7 @@ let getServiceId = (value, cb) => {
 
 async function createAppInfo(prop, projectPath) {
     let absolutePath = getAbsolutePath(projectPath);
-    console.log(prop, projectPath);
+  
     let appInfo = defaultAppInfo;
     appInfo.id = prop.id;
     appInfo.version = prop.version;

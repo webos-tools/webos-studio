@@ -64,10 +64,10 @@ async function pack(appDir, minify) {
 
     return execAsync(cmd, option, (stdout, resolve, reject) => {
         if (stdout.includes('success')) {
-            console.log("success");
+          
             resolve();
         } else {
-            console.log("failed");
+         
             reject('enact pack: failed!');
         }
     }).catch((err) => {

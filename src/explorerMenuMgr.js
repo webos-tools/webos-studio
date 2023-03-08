@@ -25,7 +25,7 @@ class ExplorerMenuMgr {
         vscode.commands.executeCommand('apps.previewApp', this.getAppObject(resource));
     }
     devicePreview(resource) {
-        vscode.commands.executeCommand('apps.devicepreviewstart',null, this.getAppObject(resource));
+        vscode.commands.executeCommand('apps.devicepreviewstart',this.getAppObject(resource));
     }
     debugApp(resource) {
         vscode.commands.executeCommand('apps.debugApp', this.getAppObject(resource));
@@ -34,7 +34,7 @@ class ExplorerMenuMgr {
         let fPath = resource._fsPath==null?resource.fsPath:resource._fsPath
         let pathElement = fPath.split(path.sep)
         // let pathElement = resource._fsPath.split(path.sep)
-        return { "label": pathElement[pathElement.length - 1].trim() }
+         return { "label": pathElement[pathElement.length - 1].trim() }
     }
 }
 

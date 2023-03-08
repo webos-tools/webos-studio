@@ -500,15 +500,12 @@ async function generateAppFromProjectWizard(template, projectLocation, projectNa
 }
 
 function _removeAppDir(appDirPath) {
-    console.log("_removeAppDir()");
-
     try {
         if (!fs.existsSync(appDirPath)) {
             return "REMOVE_SUCCESS";
         }
 
         fs.rmSync(appDirPath, { recursive: true });
-        console.log("App folder removed " + appDirPath);
         return "REMOVE_SUCCESS";
     } catch(err) {
         return err;

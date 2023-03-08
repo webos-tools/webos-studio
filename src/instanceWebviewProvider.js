@@ -586,7 +586,7 @@ class InstanceWebviewProvider {
                 }
                 if (stderr) {
                     logger.warn(stderr )
-                    // console.log(`stderr: ${stderr}`);
+                  
                 }
                 resolve(stdout);
             });

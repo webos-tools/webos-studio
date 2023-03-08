@@ -22,6 +22,7 @@ class DevPreview {
   loadApp(url) {
   
    window.location.href =url
+  //window.open(url,"_blank")
 
   }
   unloadApp() {
@@ -118,3 +119,5 @@ document.addEventListener('webOSLaunch', function(inData) {
  
 
 }, true);
+
+

@@ -85,7 +85,7 @@ async function copyDirSync(src, dest) {
         let exists = fs.existsSync(src);
         let stats = exists && fs.statSync(src);
         let isDirectory = exists && stats.isDirectory();
-        console.log("exists", exists, "stats", stats, "isDirectory", isDirectory)
+      
         if (isDirectory) {
             try {
                 fs.mkdirSync(dest);

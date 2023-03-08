@@ -110,13 +110,12 @@ module.exports = async function inspectApp(id, deviceName, isFolder) {
         ares.inspect(appId, device, isService)
             .then(([url, child]) => {
                 child.stdout.on('data', (data) => {
-                    logger.log(data.toString('utf8'))
+                    logger.log(data)
                 })
                 let debugurl = url;
                 if (isService) {
                     var desc = debugurl.toString('utf8');
                     var regdesc = JSON.parse(desc.match(/"([^']+)"/g));
-                    console.log(regdesc);
                     var arrUrl = regdesc.split(':');
                     var ipaddress = arrUrl[0];
                     var emulport = arrUrl[1];
@@ -137,8 +136,6 @@ module.exports = async function inspectApp(id, deviceName, isFolder) {
                     new Promise(resolve => {
                         vscode.debug.onDidTerminateDebugSession(() => {
                             resolve();
-                            console.log("Stop");
-                            console.log(child);
                             child.stdin.pause();
                             kill(child.pid);
                             vscode.debug.stopDebugging();
@@ -173,7 +170,6 @@ module.exports = async function inspectApp(id, deviceName, isFolder) {
                                             var inUse = true;   // wait until the port is in use
                                             tcpPortUsed.waitForStatus(parseInt(hostport), hostip, inUse, 1000, 20000)
                                                 .then(function () {
-                                                    console.log('Port is now in use.');
                                                     launchConfiguration = {
                                                         "type": "pwa-chrome",
                                                         "request": "attach",
@@ -206,14 +202,10 @@ module.exports = async function inspectApp(id, deviceName, isFolder) {
                                             new Promise(resolve => {
                                                 vscode.debug.onDidTerminateDebugSession(() => {
                                                     resolve();
-                                                    console.log("Stop");
-                                                    console.log(child);
                                                     child.stdin.pause();
                                                     kill(child.pid);
 
                                                     if (enactchild != null) {
-                                                        console.log("enact serve kill");
-                                                        console.log(enactchild);
                                                         enactchild.stdin.pause();
                                                         kill(enactchild.pid);
                                                     }
@@ -262,8 +254,6 @@ module.exports = async function inspectApp(id, deviceName, isFolder) {
                         new Promise(resolve => {
                             vscode.debug.onDidTerminateDebugSession(() => {
                                 resolve();
-                                console.log("Stop");
-                                console.log(child);
                                 child.stdin.pause();
                                 kill(child.pid);
                                 vscode.debug.stopDebugging();

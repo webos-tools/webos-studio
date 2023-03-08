@@ -3,22 +3,24 @@ const vscode = require("vscode");
 let  outputChannel;
 
 const createOutPutChannel = ()=> {
-     outputChannel = vscode.window.createOutputChannel("WebOS Studio","Log");
-     outputChannel.show(true);
-     log("WebOS Studio Initialized...");
+    outputChannel = vscode.window.createOutputChannel("WebOS Studio","Log")
+        outputChannel.show(true);
+        log("WebOS Studio Initialized.")
+    
+   
 };
 
 const removeOutputChannel = () => {
     if(outputChannel){
         outputChannel.dispose();
-    }   
+    }
+   
 };
 
 function replaceAnsiColor(data){
     return data.toString('utf8').replace(
         /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 }
-
 function error(data) {
     if(outputChannel){
         outputChannel.appendLine("[Error] "+replaceAnsiColor(data));

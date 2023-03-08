@@ -1,10 +1,10 @@
 {
   "id": "com.devicepreview.app",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "vendor": "My Company",
   "type": "web",
   "main": "index.html",
-  "title": "Device Preview",
+  "title": "Preview Application",
   "icon": "icon.png",
   "requiredPermissions": [
     "time.query",

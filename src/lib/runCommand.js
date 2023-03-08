@@ -56,7 +56,7 @@ function _execServer(cmd, params) {
     logger.run(cmd +" "+ params)
     logger.log("------------------------------------------------")
     return new Promise((resolve, reject) => {
-        console.log(`runCommand_execServer: ${cmd}`);
+      
         const myArr = params.split(" ");
         var child = spawn(cmd, myArr, {
             // @ts-ignore
@@ -66,7 +66,7 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stdout.on('data', (data) => {
-            logger.log(data.toString())
+            logger.log(data)
             if (data.includes('http://localhost')) {
                 let startIndex = data.indexOf('http');
                 let finishIndex = data.indexOf('\n');
@@ -81,12 +81,12 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stderr.on('data', (data) => {
-            logger.warn(data.toString())
+            logger.warn(data)
             console.error(data);
             reject(data);
         });
         child.on('error', (err) => {
-            logger.error(err.toString())
+            logger.error(err)
             console.error('Failed to start subprocess.');
             console.error(err);
             reject(err);
@@ -117,11 +117,11 @@ function _execPreviewServer(cmd, params, cwd, port) {
         // @ts-ignore
         child.stdout.on('data', (data) => {
           
-            logger.log(data.toString());
+            logger.log(data);
           
             tcpPortUsed.check(port, sysIP)
                 .then(() => {
-                    console.log("port using",port,sysIP  )
+                  
                     resolve(["http://" + sysIP + ":" + port, child,data.toString()]);
                 }, function (err) {
                     console.log('Error on port status:', err.message);
@@ -130,12 +130,12 @@ function _execPreviewServer(cmd, params, cwd, port) {
 
         // @ts-ignore
         child.stderr.on('data', (data) => {
-            logger.warn(data.toString());
+            logger.warn(data);
             console.error("preview data on error ->",data);
             // reject(data);
         });
         child.on('error', (err) => {
-            logger.error(err.toString());;
+            logger.error(err);;
             console.error('Failed to start subprocess.', err);
             reject(err);
         });
@@ -233,7 +233,7 @@ async function push(device, srcDir, destDir) {
       let cmd = `${path.join(await getCliPath(), 'ares-push')} --device "${device}"  "${srcDir}"   "${destDir}"  `;
       return _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout.includes('Push:')) {
-            console.log("pushing ---",stdout)
+        
         }
         if (stdout.includes('Success')) {
             resolve("");
@@ -250,7 +250,6 @@ async function packInfo(ipkPath) {
 
     return _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout.includes('Package Information')) {
-            console.log()
             resolve(stdout);
         } else {
             reject('ares-package: analyze info failed!');
@@ -290,6 +289,7 @@ async function installListFull(device) {
        
     })
 }
+
 async function installList(device) {
     if (!device) {
         return Promise.reject('ares-install --list: arguments are not fulfilled.')
@@ -429,7 +429,6 @@ async function openBrowser(url) {
         args = args.concat(['--new', '--args']);
     }
     args = args.concat([url]);
-    console.log(`openBrowser: ${info[0]} ${args}`);
     logger.run(info[0] +" "+args)
     logger.log("------------------------------------------------")
     spawn(info[0], args);
@@ -551,7 +550,7 @@ function addQuotes(name) {
 
 async function isInstalledService(serviceId, device) {
     let cmd = 'ares-shell --run "test -d "/media/developer/apps/usr/palm/services/' + serviceId + '" && echo 1 || echo 0" -d ' + addQuotes(device);
-    console.log(cmd);
+  
     return await _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout) {
             stdout = parseInt(stdout);

@@ -38,8 +38,8 @@ let paramObjArray = [];
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-
-    createOutPutChannel(); // 
+    createOutPutChannel();
+   
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
 
     setFromConvertCacheAPI("");
@@ -730,7 +730,7 @@ function activate(context) {
         previewApp(app.label, previewPanelInfo);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.devicepreviewstart', async (app) => {
-        devicePreviewStart(app,context);
+        devicePreviewStart(app.label,context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp', async (app) => {
         inspectApp(app.label, undefined, true);
@@ -798,6 +798,7 @@ function activate(context) {
 
     vscode.commands.executeCommand('webososeDevices.refreshList');
     webososeAppsProvider.storeContextOnExtnLaunch(context);
+   
 }
 
 function getResourcePath() {

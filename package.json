@@ -131,15 +131,15 @@
             },
             {
                 "command": "webosose.previewApp",
-                "title": "webOS OSE: Preview Application"
+                "title": "webOS OSE: Preview Application [Local]"
             },
             {
                 "command": "webosose.devicepreviewstart",
-                "title": "webOS OSE: Device Preview - Start"
+                "title": "webOS OSE: Preview Application [Device] - Start"
             },
             {
                 "command": "webosose.devicepreviewstop",
-                "title": "webOS OSE: Device Preview - Stop"
+                "title": "webOS OSE: Preview Application [Device] - Stop"
             },
             {
                 "command": "webosose.packageApp",
@@ -195,11 +195,11 @@
             },
             {
                 "command": "webosose.explorermenu.appPreview",
-                "title": "webOS OSE: Preview Application"
+                "title": "webOS OSE: Preview Application [Local]"
             },
             {
                 "command": "webosose.explorermenu.devicepreviewstart",
-                "title": "webOS OSE: Preview Application on Device"
+                "title": "webOS OSE: Preview Application [Device]"
             },
             {
                 "command": "webosose.explorermenu.debug",
@@ -307,11 +307,11 @@
             },
             {
                 "command": "apps.previewApp",
-                "title": "App Preview"
+                "title": "Preview Application [Local]"
             },
             {
                 "command": "apps.devicepreviewstart",
-                "title": "Device Preview - Start"
+                "title": "Preview Application [Device]"
             },
             {
                 "command": "apps.debugApp",

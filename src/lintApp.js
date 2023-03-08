@@ -34,7 +34,7 @@ module.exports = async function lintApp(appFolder, collection, isLintEnabled) {
                     await notify.showProgress(progress, 80, `Analyzing lint in progress, please wait few seconds...`);
                     var test = stdout;
                     var arrLint = test.split(/\r\n|\r|\n/);
-                    console.log(arrLint);
+            
                     // [{"docUri":"path","lintArr":[{Obj1details}, {Obj2details}]}, 
                     //  {"uri2":"path","lintArr":[{Obj1details}, {Obj2details}]}]
                     var diagArr = parseLintData(arrLint);
@@ -137,7 +137,7 @@ function parseLintData(arrLint) {
 
 function disableAppDiagnostics(dirPath, collection) {
     getAllFiles(function (files) {
-        console.log(files);
+      
         files.forEach(docUri => {
             vscode.workspace.openTextDocument(docUri).then(function (document) {
                 if (document && document.uri.fsPath.includes(dirPath)) {

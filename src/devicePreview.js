@@ -13,7 +13,11 @@ const appUtils = require("./lib/appUtil");
 const portfinder = require("portfinder");
 const notify = require("./lib/notificationUtils");
 
-const { getDeviceList, getInstalledList } = require("./lib/deviceUtils");
+const {
+  getDeviceList,
+  getInstalledList,
+  getRunningList,
+} = require("./lib/deviceUtils");
 const fs = require("fs");
 const defaultGateway = require("default-gateway");
 const os = require("os");
@@ -47,8 +51,10 @@ let dpContext = {
   socketPort: "",
   socketIp: "",
 };
-
+let containerAppInfo = null;
+// let gContext =null;
 async function devicePreviewStart(appSelectedDir, context) {
+  // gContext =context;
   dp_appInfo = getDevicePreviewAppId(context);
 
   let device = null;
@@ -63,11 +69,13 @@ async function devicePreviewStart(appSelectedDir, context) {
     device = deviceListDefault[0];
   }
 
+  let appDir;
+  let appId;
+
   /// get the app dir
   let defaultDir = getDefaultDir();
   let defaultString = "";
-  let appDir;
-  let appId;
+
 
   if (defaultDir) {
     defaultString = ` (default: ${defaultDir})`;
@@ -103,7 +111,7 @@ async function devicePreviewStart(appSelectedDir, context) {
           return "The directory must be specified.";
         }
       }
-  
+
       let folderError = InputChecker.checkDirectoryExist(value);
       if (folderError != null) {
         return folderError;
@@ -120,6 +128,7 @@ async function devicePreviewStart(appSelectedDir, context) {
       }
     },
   });
+
   if (appSelectedDir) {
     appDir = appSelectedDir;
     appUtils.getAppId(appDir, (id) => {
@@ -163,7 +172,8 @@ async function devicePreviewStart(appSelectedDir, context) {
     targetDevice = device;
     isEnact = await enactUtils.isEnactApp(appDir);
 
-    let containerAppInfo = await getExistingContainerAppInfo(device);
+    containerAppInfo = await getExistingContainerAppInfo(device);
+
     dpContext.isEnact = isEnact;
     if (
       dpContext.previewProcess != null &&
@@ -181,6 +191,7 @@ async function devicePreviewStart(appSelectedDir, context) {
         startSocketAndLaunchContainerApp(context, device);
       } else {
         installContainerAndStartSocketAndLaunch(context, device);
+       
       }
     }
   }
@@ -208,17 +219,32 @@ async function getExistingContainerAppInfo(device) {
       } catch (e) {}
     });
 
+    //getRunningList
+    let runningAppIdJson = await getRunningAppJson(device);
+
     appInfoJsonArray.forEach((appObj) => {
       if (
         appObj["id"] == dp_appInfo["id"] &&
         appObj["version"] == dp_appInfo["version"]
       ) {
         installedAppInfoObj = appObj;
+        installedAppInfoObj["isRunning"] = runningAppIdJson[appObj["id"]];
         return;
       }
     });
   });
   return installedAppInfoObj;
+}
+async function getRunningAppJson(device) {
+  let runningAppIdJson = {};
+  let running = await getRunningList(device.name);
+
+  running.forEach((appId) => {
+    let idArray = appId.split(/\s+/);
+    let id = idArray[0].trim();
+    runningAppIdJson[id] = true;
+  });
+  return runningAppIdJson;
 }
 
 function getDevicePreviewAppId(context) {
@@ -264,19 +290,26 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                   await ares
                     .launch(dp_appInfo["id"], device.name, param, 0)
                     .then(async () => {
+                      if(containerAppInfo)
+                       containerAppInfo["isRunning"] =true;
                       await notify.clearProgress(
                         progress,
                         "Device Preview App Launched"
                       );
-                      // start the serving app
+                     
+                      containerAppInfo = await getExistingContainerAppInfo(device);
+                      if(containerAppInfo)
+                      containerAppInfo["isRunning"] =true;
 
+                  // start the serving app
                       setTimeout(() => {
                         startLocalPreview();
+
                       }, 500);
                     })
                     .catch(async (err) => {
                       let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
-                      if (err.includes(`Connection time out`)) {
+                      if (err.toString().includes(`Connection time out`)) {
                         errMsg = `Please check ${device}'s IP address or port.`;
                       }
                       await notify.clearProgress(progress, `ERROR! ${errMsg}`);
@@ -289,7 +322,7 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                 .catch(async (err) => {
                   let errMsg = `Failed to install ${ipkPath} on ${device.name}.`;
                   if (
-                    err.includes(`Unknown method "install" for category "/dev"`)
+                   err .toString().includes(`Unknown method "install" for category "/dev"`)
                   ) {
                     errMsg = `Please make sure the 'Developer Mode' is on.`;
                   } else if (err.includes(`Connection time out`)) {
@@ -301,7 +334,6 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                     `ERROR! ${errMsg}. Details As follows: ${erMsg}`
                   );
                 });
-              
             })
             .catch((err) => {
               console.log("error", err);
@@ -337,11 +369,16 @@ async function startSocketAndLaunchContainerApp(context, device) {
             SOCKET_SERVER_IP: `${sysIP}`,
             SOCKET_SERVER_PORT: `${port}`,
           };
-          await ares.launchClose(dp_appInfo["id"], device.name, 0);
+          if (containerAppInfo && containerAppInfo["isRunning"]) {
+            await ares.launchClose(dp_appInfo["id"], targetDevice.name, 0);
+          }
+
           await ares
 
             .launch(dp_appInfo["id"], device.name, param, 0)
             .then(async () => {
+              if(containerAppInfo)
+          containerAppInfo["isRunning"] =true;
               await notify.clearProgress(
                 progress,
                 "Device Preview App Launched"
@@ -354,7 +391,7 @@ async function startSocketAndLaunchContainerApp(context, device) {
             })
             .catch(async (err) => {
               let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
-              if (err.includes(`Connection time out`)) {
+              if (err.toString().includes(`Connection time out`)) {
                 errMsg = `Please check ${device}'s IP address or port.`;
               }
               await notify.clearProgress(progress, `ERROR! ${errMsg}`);
@@ -384,16 +421,21 @@ async function onlyLaunchContainerApp(context, device) {
         SOCKET_SERVER_IP: `${dpContext.socketIp}`,
         SOCKET_SERVER_PORT: `${dpContext.socketPort}`,
       };
-      await ares.launchClose(dp_appInfo["id"], device.name, 0);
+      if (containerAppInfo && containerAppInfo["isRunning"]) {
+        await ares.launchClose(dp_appInfo["id"], device.name, 0);
+      }
+
       await ares
 
         .launch(dp_appInfo["id"], device.name, param, 0)
         .then(async () => {
+          if(containerAppInfo)
+          containerAppInfo["isRunning"] =true;
           await notify.clearProgress(progress, "Device Preview App Launched");
         })
         .catch(async (err) => {
           let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
-          if (err.includes(`Connection time out`)) {
+          if (err.toString().includes(`Connection time out`)) {
             errMsg = `Please check ${device}'s IP address or port.`;
           }
           await notify.clearProgress(progress, `ERROR! ${errMsg}`);
@@ -432,7 +474,7 @@ async function startSocketServer(ip, port) {
 
   socketClient = io.on("connection", (socket) => {
     theSocket = socket;
-    console.log(`a user connected`);
+   
     console.log(`new client connected, id = ${socket.id} `);
     socket.emit("connection_resp", { status: "connected" });
 
@@ -449,7 +491,7 @@ async function startSocketServer(ip, port) {
     });
 
     socket.once("connect_error", () => {
-      console.log(`socket once::::connect_error`);
+      console.log(`connect_error::::connect_error`);
     });
   });
 }
@@ -476,7 +518,6 @@ async function startLocalPreview() {
         }
       } else {
         clearInterval(enactProgressTimer);
-    
       }
     }, 3000);
   }
@@ -518,10 +559,9 @@ async function startLocalPreview() {
               }
             }, 3000);
 
-
             child.stdout.on("data", async (data) => {
-              let outData = logger.replaceAnsiColor(data.toString());
-             
+              let outData = logger.replaceAnsiColor(data.toString("utf8"));
+
               // if done
               if (
                 outData.includes("Failed to compile") ||
@@ -533,10 +573,10 @@ async function startLocalPreview() {
                   // await ares.launch(dp_appInfo["id"], targetDevice.name, undefined, 0);
                 } else {
                   if (socketClient) {
-                    if(enactProgressTimer){
+                    if (enactProgressTimer) {
                       clearInterval(enactProgressTimer);
                     }
-                 
+
                     dpContext.isPreviewUrlSent = true;
                     socketClient.emit("preview_progress", {
                       statusText: "App Preview : Loading App",
@@ -563,18 +603,60 @@ async function startLocalPreview() {
               userAppDir,
               { recursive: true },
               async (evt, name) => {
-                console.log("File changes->" + `${name} ${evt}`);
+              
                 let param = {
                   SOCKET_SERVER_IP: `${dpContext.socketIp}`,
                   SOCKET_SERVER_PORT: `${dpContext.socketPort}`,
                 };
-                await ares.launchClose(dp_appInfo["id"], targetDevice.name, 0);
-                await ares.launch(
-                  dp_appInfo["id"],
-                  targetDevice.name,
-                  param,
-                  0
-                );
+                let installed = await getInstalledList(targetDevice.name);
+                let isContainerInstalled = false;
+                installed.forEach((appId) => {
+                  if (appId.includes(dp_appInfo["id"])) {
+                    isContainerInstalled = true;
+                    return;
+                  }
+                });
+
+                if (!isContainerInstalled) {
+                  vscode.window.showErrorMessage(
+                    `ERROR! Device Preview App is not Installed, Please Start Device Preview`
+                  );
+                  // devicePreviewStop(gContext,true)
+                  clearProcess();
+                  resetDpContext();
+                  // containerAppInfo = null;
+                  return;
+                }
+                let runningAppIdJson = await getRunningAppJson(targetDevice);
+                if (containerAppInfo && !runningAppIdJson[dp_appInfo["id"]]) {
+                  containerAppInfo["isRunning"] = null
+                }
+                if (containerAppInfo && containerAppInfo["isRunning"]) {
+
+                  await ares.launchClose(
+                    dp_appInfo["id"],
+                    targetDevice.name,
+                    0
+                  );
+                }
+
+                await ares
+                  .launch(dp_appInfo["id"], targetDevice.name, param, 0)
+                  .then(()=>{
+                    if(containerAppInfo)
+                    containerAppInfo["isRunning"] =true;
+                  })
+                  .catch(async (err) => {
+                    let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
+                    if (err.toString().includes(`Connection time out`)) {
+                      errMsg = `Please check ${device}'s IP address or port.`;
+                    }
+                    await notify.clearProgress(progress, `ERROR! ${errMsg}`);
+                    let erMsg = err.toString();
+                    vscode.window.showErrorMessage(
+                      `ERROR! ${errMsg}. Details As follows: ${erMsg}`
+                    );
+                  });
               }
             );
           }
@@ -594,7 +676,7 @@ async function startLocalPreview() {
 
 async function devicePreviewStop(context, isFromCommand) {
   dp_appInfo = getDevicePreviewAppId(context);
-  // dpContext = dp_context;
+ 
   if (targetDevice == null) {
     let deviceList = await getDeviceList();
 
@@ -608,18 +690,8 @@ async function devicePreviewStop(context, isFromCommand) {
   }
 
   // clear all the process
-  if (dpContext.previewProcess != null) {
-    dpContext.previewProcess.stdin.pause();
-    kill(dpContext.previewProcess.pid);
-  }
-  if (dpContext.appFileWatcher != null) {
-    dpContext.appFileWatcher.close();
-  }
-  if (http) {
-    http.close();
-    io.removeAllListeners("connection");
-    io.close();
-  }
+
+  clearProcess();
 
   if (isFromCommand) {
     if (targetDevice) {
@@ -634,7 +706,6 @@ async function devicePreviewStop(context, isFromCommand) {
         })
         .catch((err) => {
           console.log("Error on removing  Device Preview App on " + deviceName);
-
           vscode.window.showErrorMessage(
             "Error on removing  Device Preview App on " + deviceName
           );
@@ -646,6 +717,9 @@ async function devicePreviewStop(context, isFromCommand) {
         );
     }
   }
+  resetDpContext();
+}
+function resetDpContext(){
   dpContext = {
     isPreviewStarted: false,
     userAppDir: "",
@@ -659,6 +733,22 @@ async function devicePreviewStop(context, isFromCommand) {
     socketPort: "",
     socketIp: "",
   };
+}
+function clearProcess(){
+  
+  // clear all the process
+  if (dpContext.previewProcess != null) {
+    dpContext.previewProcess.stdin.pause();
+    kill(dpContext.previewProcess.pid);
+  }
+  if (dpContext.appFileWatcher != null) {
+    dpContext.appFileWatcher.close();
+  }
+  if (http) {
+    http.close();
+    io.removeAllListeners("connection");
+    io.close();
+  }
 }
 module.exports = {
   devicePreviewStart: devicePreviewStart,

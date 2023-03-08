@@ -129,7 +129,7 @@ class AppsProvider {
                                         // eslint-disable-next-line no-unused-vars
                                         return execAsync(cmd, option, (stdout, resolve, reject) => {
                                             if (stdout) {
-                                                // console.log("success");
+                                              
                                                 // progress.report({ increment: 20, message: `Installing Node modules ...` });
                                                 resolve();
                                             }
