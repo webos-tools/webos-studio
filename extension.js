@@ -733,7 +733,13 @@ function activate(context) {
         devicePreviewStart(app.label,context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp', async (app) => {
-        inspectApp(app.label, undefined, true);
+        inspectApp(app.label, undefined, true, 'IDE');
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp.ide', async (app) => {
+        inspectApp(app.label, undefined, true, 'IDE');
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp.browser', async (app) => {
+        inspectApp(app.label, undefined, true, 'BROWSER');
     }));
     // Provide Diagnostics when user performs lint.
     let collection = vscode.languages.createDiagnosticCollection('appLintCollection');
@@ -784,6 +790,12 @@ function activate(context) {
         explorerMenuMgr.appPreview(resource)
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.debug', async (resource) => {
+        explorerMenuMgr.debugApp(resource)
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.debug.ide', async (resource) => {
+        explorerMenuMgr.debugApp(resource)
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.debug.browser', async (resource) => {
         explorerMenuMgr.debugApp(resource)
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.devicepreviewstart', async (resource) => {

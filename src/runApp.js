@@ -9,6 +9,18 @@ const installApp = require('./installApp');
 const launchApp = require('./launchApp');
 const inspectApp = require('./inspectApp');
 
+async function _getDebugOption(title) {
+    const controller = new InputController();
+    controller.addStep({
+        title: title,
+        placeholder: 'Debug in IDE or Browser?',
+        items: ['IDE', 'BROWSER'].map(label => ({ label }))
+    });
+    const results = await controller.start();
+    const debugoption = results.shift() === 'IDE';
+    return debugoption;
+}
+
 module.exports = async function runApp(isDebug) {
     try {
         let device = null;
@@ -34,12 +46,14 @@ module.exports = async function runApp(isDebug) {
             device = deviceName;
         }
 
+        const debugoption = await _getDebugOption('Start Debug Application');
+
         packageApp()
             .then((ipkPath) => {
                 return installApp(ipkPath, device);
             }).then((obj) => {
                 if (isDebug) {
-                    inspectApp(obj.appId, device, false);
+                    inspectApp(obj.appId, device, false, debugoption);
                 } else {
                     launchApp(obj.appId, device);
                 }

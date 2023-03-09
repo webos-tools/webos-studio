@@ -72,7 +72,7 @@ function _execServer(cmd, params) {
                 let finishIndex = data.indexOf('\n');
                 let url = data.slice(startIndex, finishIndex);
                 resolve([url, child]);
-            } else if (data.includes('localhost:')) {
+            } else if (data.includes('localhost:') || data.includes('127.0.0.1:')) {
                 let startIndex = 0;
                 let finishIndex = data.indexOf('(');
                 let url = data.slice(startIndex, finishIndex);

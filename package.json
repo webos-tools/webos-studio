@@ -57,6 +57,8 @@
         "onCommand:apps.devicepreviewstart",
         "onCommand:webapp.reloadPreview",
         "onCommand.apps.debugApp",
+        "onCommand.apps.debugApp.ide",
+        "onCommand.apps.debugApp.browser",
         "onCommand.apps.lintApp",
         "onCommand.apps.lintAppDisable",
         "onView:webosose.webososeDevices",
@@ -78,6 +80,8 @@
         "onCommand:webosose.explorermenu.appPreview",
         "onCommand:webosose.explorermenu.devicepreviewstart",
         "onCommand:webosose.explorermenu.debug",
+        "onCommand:webosose.explorermenu.debug.ide",
+        "onCommand:webosose.explorermenu.debug.browser",
         "onCommand:ipkanalyze.start"
     ],
     "main": "./extension.js",
@@ -206,6 +210,14 @@
                 "title": "webOS OSE: Debug App/Service"
             },
             {
+                "command": "webosose.explorermenu.debug.ide",
+                "title": "IDE"
+            },
+            {
+                "command": "webosose.explorermenu.debug.browser",
+                "title": "BROWSER"
+            },
+            {
                 "command": "webososeDevices.refreshList",
                 "title": "Refresh",
                 "icon": "$(refresh)"
@@ -316,6 +328,14 @@
             {
                 "command": "apps.debugApp",
                 "title": "Debug App/Service"
+            },
+            {
+                "command": "apps.debugApp.ide",
+                "title": "IDE"
+            },
+            {
+                "command": "apps.debugApp.browser",
+                "title": "BROWSER"
             },
             {
                 "command": "apps.lintApp",
@@ -477,7 +497,7 @@
                     "group": "app2@2"
                 },
                 {
-                    "command": "apps.debugApp",
+                    "submenu": "apps.debugApp",
                     "when": "view == apps && viewItem == js-service || viewItem == enact-app || viewItem == web-app",
                     "group": "app2@2"
                 },
@@ -557,7 +577,7 @@
                     "group": "device2@1"
                 },
                 {
-                    "command": "webosose.explorermenu.debug",
+                    "submenu": "webosose.explorermenu.debug",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedFolders",
                     "group": "device2@1"
                 }
@@ -613,6 +633,14 @@
                 },
                 {
                     "command": "webosose.explorermenu.debug",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorermenu.debug.ide",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorermenu.debug.browser",
                     "when": "false"
                 },
                 {
@@ -720,6 +748,14 @@
                     "when": "false"
                 },
                 {
+                    "command": "apps.debugApp.ide",
+                    "when": "false"
+                },
+                {
+                    "command": "apps.debugApp.browser",
+                    "when": "false"
+                },
+                {
                     "command": "apps.lintApp",
                     "when": "false"
                 },
@@ -759,6 +795,26 @@
                     "command": "webososeDevices.closeApp.display1",
                     "group": "1_closeapp@0"
                 }
+            ],
+            "webosose.explorermenu.debug": [
+                {
+                    "command": "webosose.explorermenu.debug.ide",
+                    "group": "1_debugapp@0"
+                },
+                {
+                    "command": "webosose.explorermenu.debug.browser",
+                    "group": "1_debugapp@0"
+                }
+            ],
+            "apps.debugApp": [
+                {
+                    "command": "apps.debugApp.ide",
+                    "group": "2_debugapp@0"
+                },
+                {
+                    "command": "apps.debugApp.browser",
+                    "group": "2_debugapp@0"
+                }
             ]
         },
         "submenus": [
@@ -769,6 +825,14 @@
             {
                 "id": "webososeDevices.closeApp",
                 "label": "Close"
+            },
+            {
+                "id": "webosose.explorermenu.debug",
+                "label": "webOS OSE: Debug App/Service"
+            },
+            {
+                "id": "apps.debugApp",
+                "label": "Debug App/Service"
             }
         ],
         "configuration": {
