@@ -340,23 +340,7 @@ async function launch(appId, device, params, dp) {
         }
     })
 }
-async function relaunch(appId, device, params, dp) {
-    if (!appId || !device) {
-        return Promise.reject('ares-launch: arguments are not fulfilled.')
-    }
-    let closeCmd = `${path.join(await getCliPath(), 'ares-launch')} -c ${appId} -d "${device}" -dp "${dp}"`;
-  
-    let paramsStr = params ? `-p "${JSON.stringify(params).replace(/"/g, "'")}"` : "";
-    let launchCmd = `${path.join(await getCliPath(), 'ares-launch')} ${appId} -d "${device}" ${paramsStr} -dp "${dp}"`;
-    let cmd =closeCmd+" && "+launchCmd
-    return _execAsync(cmd, (stdout, resolve, reject) => {
-        if (stdout.includes('Launched application')) {
-            resolve();
-        } else if (stdout.includes("ares-launch ERR!")) {
-            reject('ares-relaunch: failed!');
-        }
-    })
-}
+
 async function launchRunning(device) {
     if (!device) {
         return Promise.reject('ares-launch --running: arguments are not fulfilled.')
@@ -591,7 +575,6 @@ module.exports = {
     launch: launch,
     launchRunning: launchRunning,
     launchClose: launchClose,
-    relaunch:relaunch,
     server: server,
     inspect: inspect,
     openBrowser: openBrowser,

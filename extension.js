@@ -28,6 +28,7 @@ const { IPK_ANALYZER } = require('./src/ipkAnalyzer');
 const { logger,createOutPutChannel } = require('./src/lib/logger');
 const fs = require('fs');
 const path = require('path');
+const setLogLevel = require('./src/setLogLevel');
 const extensionPath = __dirname;
 
 let serviceObjArray = [];
@@ -524,6 +525,9 @@ function activate(context) {
         await generateApp();
         await webososeAppsProvider.refresh();
         webososeAppsProvider.storeContextOnExtnLaunch(context);
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.setloglevel', () => {
+        setLogLevel();
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.previewApp', () => {
         previewApp(null, previewPanelInfo);

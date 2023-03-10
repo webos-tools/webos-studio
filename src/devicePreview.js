@@ -96,7 +96,7 @@ async function devicePreviewStart(appSelectedDir, context) {
 
   let controller = new InputController();
   controller.addStep({
-    title: "Device Preview",
+    title: "Application Preview [Device]",
     placeholder: `App Directory${defaultString}`,
     prompt: "Enter Directory/Path to Preview on Device",
     buttons: [folderBtn],
@@ -279,7 +279,7 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Setting Up Device Preview",
+          title: "Setting Up Application Preview on Device",
           cancellable: false,
         },
         async (progress) => {
@@ -303,6 +303,10 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                     SOCKET_SERVER_IP: `${sysIP}`,
                     SOCKET_SERVER_PORT: `${port}`,
                   };
+                  // start the serving app
+                  setTimeout(() => {
+                    startLocalPreview();
+                  }, 10);
                   await ares
                     .launch(dp_appInfo["id"], device.name, param, 0)
                     .then(async () => {
@@ -319,10 +323,6 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                       if (containerAppInfo)
                         containerAppInfo["isRunning"] = true;
 
-                      // start the serving app
-                      setTimeout(() => {
-                        startLocalPreview();
-                      }, 500);
                     })
                     .catch(async (err) => {
                       let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
@@ -373,7 +373,7 @@ async function startSocketAndLaunchContainerApp(context, device) {
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Starting Device Preview",
+          title: "Starting Application Preview on Device",
           cancellable: false,
         },
         async (progress) => {
@@ -391,7 +391,9 @@ async function startSocketAndLaunchContainerApp(context, device) {
           if (containerAppInfo && containerAppInfo["isRunning"]) {
             await ares.launchClose(dp_appInfo["id"], targetDevice.name, 0);
           }
-
+          setTimeout(() => {
+            startLocalPreview();
+          }, 10);
           await ares
 
             .launch(dp_appInfo["id"], device.name, param, 0)
@@ -401,11 +403,7 @@ async function startSocketAndLaunchContainerApp(context, device) {
                 progress,
                 "Device Preview App Launched"
               );
-              // start the serving app
-
-              setTimeout(() => {
-                startLocalPreview();
-              }, 500);
+       
             })
             .catch(async (err) => {
               let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
@@ -430,7 +428,7 @@ async function onlyLaunchContainerApp(context, device) {
   vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: "Starting Device Preview",
+      title: "Starting Application Preview on Device",
       cancellable: false,
     },
     async (progress) => {
@@ -662,53 +660,61 @@ async function startLocalPreview() {
                   SOCKET_SERVER_IP: `${dpContext.socketIp}`,
                   SOCKET_SERVER_PORT: `${dpContext.socketPort}`,
                 };
-                let installed = await getInstalledList(targetDevice.name);
-                let isContainerInstalled = false;
-                installed.forEach((appId) => {
-                  if (appId.includes(dp_appInfo["id"])) {
-                    isContainerInstalled = true;
+
+
+                await ares.relaunch(
+                  dp_appInfo["id"], targetDevice.name, param, 0
+                ).catch(async()=>{
+                  let installed = await getInstalledList(targetDevice.name);
+                  let isContainerInstalled = false;
+                  installed.forEach((appId) => {
+                    if (appId.includes(dp_appInfo["id"])) {
+                      isContainerInstalled = true;
+                      return;
+                    }
+                  });
+  
+                  if (!isContainerInstalled) {
+                    vscode.window.showErrorMessage(
+                      `ERROR! Device Preview App is not Installed, Please Start Device Preview`
+                    );
+                    // devicePreviewStop(gContext,true)
+                    clearProcess();
+                    resetDpContext();
+                    // containerAppInfo = null;
                     return;
                   }
+                  let runningAppIdJson = await getRunningAppJson(targetDevice);
+                  if (containerAppInfo && !runningAppIdJson[dp_appInfo["id"]]) {
+                    containerAppInfo["isRunning"] = null;
+                  }
+                  if (containerAppInfo && containerAppInfo["isRunning"]) {
+                    await ares.relaunch(
+                      dp_appInfo["id"], targetDevice.name, param, 0
+                    )
+               
+                  }else{
+                    await ares
+                    .launch(dp_appInfo["id"], targetDevice.name, param, 0)
+                    .then(() => {
+                      if (containerAppInfo) containerAppInfo["isRunning"] = true;
+                    })
+                    .catch(async (err) => {
+                      let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
+                      if (err.toString().includes(`Connection time out`)) {
+                        errMsg = `Please check ${device}'s IP address or port.`;
+                      }
+                      await notify.clearProgress(progress, `ERROR! ${errMsg}`);
+                      let erMsg = err.toString();
+                      vscode.window.showErrorMessage(
+                        `ERROR! ${errMsg}. Details As follows: ${erMsg}`
+                      );
+                    });
+                  }
+
                 });
 
-                if (!isContainerInstalled) {
-                  vscode.window.showErrorMessage(
-                    `ERROR! Device Preview App is not Installed, Please Start Device Preview`
-                  );
-                  // devicePreviewStop(gContext,true)
-                  clearProcess();
-                  resetDpContext();
-                  // containerAppInfo = null;
-                  return;
-                }
-                let runningAppIdJson = await getRunningAppJson(targetDevice);
-                if (containerAppInfo && !runningAppIdJson[dp_appInfo["id"]]) {
-                  containerAppInfo["isRunning"] = null;
-                }
-                if (containerAppInfo && containerAppInfo["isRunning"]) {
-                  await ares.launchClose(
-                    dp_appInfo["id"],
-                    targetDevice.name,
-                    0
-                  );
-                }
-
-                await ares
-                  .launch(dp_appInfo["id"], targetDevice.name, param, 0)
-                  .then(() => {
-                    if (containerAppInfo) containerAppInfo["isRunning"] = true;
-                  })
-                  .catch(async (err) => {
-                    let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
-                    if (err.toString().includes(`Connection time out`)) {
-                      errMsg = `Please check ${device}'s IP address or port.`;
-                    }
-                    await notify.clearProgress(progress, `ERROR! ${errMsg}`);
-                    let erMsg = err.toString();
-                    vscode.window.showErrorMessage(
-                      `ERROR! ${errMsg}. Details As follows: ${erMsg}`
-                    );
-                  });
+                
               }
             );
           }
@@ -761,7 +767,7 @@ async function devicePreviewStop(context, isFromCommand) {
         .installRemove(dp_appInfo["id"], deviceName)
         .then(async () => {
           vscode.window.showInformationMessage(
-            "Device Preview has been stoped."
+            "Application Preview on Device has been stoped."
           );
         })
         .catch((err) => {
