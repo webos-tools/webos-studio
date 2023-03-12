@@ -219,7 +219,8 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                                                         if (!debugStart) {
                                                             debugStart = true;
                                                             vscode.debug.activeDebugConsole.appendLine(`window.location = "${url}"`);
-                                                            vscode.window.showInformationMessage(`Enter the command - window.location = "${url}" in DEBUG CONSOLE to debug pre-compiled files.`);
+                                                            vscode.debug.activeDebugConsole.appendLine(`Enter the command - window.location = "${url}" in DEBUG CONSOLE to debug pre-compiled files.(In case scripts are not loaded)`);
+                                                            //vscode.window.showInformationMessage(`Enter the command - window.location = "${url}" in DEBUG CONSOLE to debug pre-compiled files.`);
                                                             // vscode.debug.activeDebugConsole.appendLine(eval(`this.window.location = "${url}"`));
                                                             // vscode.debug.activeDebugConsole.appendLine(`this.window.location.reload()`);
                                                             resolve();

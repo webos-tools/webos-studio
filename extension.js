@@ -797,10 +797,10 @@ function activate(context) {
         explorerMenuMgr.debugApp(resource)
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.debug.ide', async (resource) => {
-        explorerMenuMgr.debugApp(resource)
+        explorerMenuMgr.debugApp(resource, 'IDE')
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.debug.browser', async (resource) => {
-        explorerMenuMgr.debugApp(resource)
+        explorerMenuMgr.debugApp(resource, 'BROWSER')
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.devicepreviewstart', async (resource) => {
         explorerMenuMgr.devicePreview(resource)

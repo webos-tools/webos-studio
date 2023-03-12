@@ -27,8 +27,13 @@ class ExplorerMenuMgr {
     devicePreview(resource) {
         vscode.commands.executeCommand('apps.devicepreviewstart',this.getAppObject(resource));
     }
-    debugApp(resource) {
-        vscode.commands.executeCommand('apps.debugApp', this.getAppObject(resource));
+    debugApp(resource, debugoption) {
+        if(debugoption === 'IDE'){
+            vscode.commands.executeCommand('apps.debugApp.ide', this.getAppObject(resource));
+        }
+        else{
+            vscode.commands.executeCommand('apps.debugApp.browser', this.getAppObject(resource));
+        }
     }
     getAppObject(resource) {
         let fPath = resource._fsPath==null?resource.fsPath:resource._fsPath
