@@ -535,9 +535,7 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstart', () => {
         devicePreviewStart(null,context);
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstop', () => {
-        devicePreviewStop(context,true);
-    }));
+  
     context.subscriptions.push(vscode.commands.registerCommand('webosose.packageApp', () => { packageApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setupDevice', () => { setupDevice(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installApp', () => {

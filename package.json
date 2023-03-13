@@ -20,7 +20,6 @@
         "onCommand:webosose.generateApp",
         "onCommand:webosose.previewApp",
         "onCommand:webosose.devicepreviewstart",
-        "onCommand:webosose.devicepreviewstop",
         "onCommand:webosose.packageApp",
         "onCommand:webosose.setupDevice",
         "onCommand:webosose.installApp",
@@ -139,12 +138,9 @@
             },
             {
                 "command": "webosose.devicepreviewstart",
-                "title": "webOS OSE: Preview Application [Device] - Start"
+                "title": "webOS OSE: Preview Application [Device]"
             },
-            {
-                "command": "webosose.devicepreviewstop",
-                "title": "webOS OSE: Preview Application [Device] - Stop"
-            },
+          
             {
                 "command": "webosose.packageApp",
                 "title": "webOS OSE: Package Application"

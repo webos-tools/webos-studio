@@ -56,6 +56,7 @@ const removeOutputChannel = () => {
 };
 
 function replaceAnsiColor(data) {
+
   return data
     .toString("utf8")
     .replace(

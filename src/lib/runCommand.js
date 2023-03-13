@@ -11,6 +11,7 @@ const tcpPortUsed = require('tcp-port-used');
 const defaultGateway = require('default-gateway');
 const { logger } = require('./logger');
 
+
 function _execAsync(cmd, option, next) {
     logger.run(cmd )
     // +" "+ typeof option == "object"?JSON.stringify(option):""
@@ -108,12 +109,15 @@ function _execPreviewServer(cmd, params, cwd, port) {
         const myArr = params.split(" ");
 
         var sysIP = getNWAdderss(os.networkInterfaces())
+        
         var child = spawn(cmd, myArr, {
             // @ts-ignore
             encoding: 'utf8',
             cwd: cwd,
             shell: true,
         });
+       
+          
         // @ts-ignore
         child.stdout.on('data', (data) => {
           
@@ -281,7 +285,7 @@ async function installListFull(device) {
     let cmd = `${path.join(await getCliPath(), 'ares-install')}`;
 
     if (device) {
-        cmd += ` -d "${device}" -F`;
+        cmd += ` -d "${device}" -l`;
     }
 
     return _execAsync(cmd, (stdout, resolve, reject) => {

@@ -1,7 +1,7 @@
 {
-  "id": "com.devicepreview.app",
-  "version": "0.0.1",
-  "vendor": "My Company",
+  "id": "com.sdk.previewapp",
+  "version": "1.0.0",
+  "vendor": "LG Soft",
   "type": "web",
   "main": "index.html",
   "title": "Preview Application",
