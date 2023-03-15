@@ -46,7 +46,11 @@ module.exports = async function runApp(isDebug) {
             device = deviceName;
         }
 
-        const debugoption = await _getDebugOption('Start Debug Application');
+        let debugoption = undefined;
+        if (isDebug) {
+            const isIDE = await _getDebugOption('Debug Application');
+            debugoption = isIDE ? 'IDE' : 'BROWSER';
+        }
 
         packageApp()
             .then((ipkPath) => {

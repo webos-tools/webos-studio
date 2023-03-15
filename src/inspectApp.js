@@ -163,6 +163,20 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                                 console.log(child);
                                 child.stdin.pause();
                                 kill(child.pid);
+                                ares.launchClose(appId, device, "0")
+                                .then(() => {
+                                    console.log(`Closed ${appId} on ${device}.`);
+                                    resolve();
+                                }).catch((err) => {
+                                    let errMsg = `Failed to close ${appId} on ${device}.`
+                                    if (err.includes(`Unknown method "closeByAppId" for category "/dev"`)) {
+                                        errMsg = `Please make sure the 'Developer Mode' is on.`;
+                                    } else if (err.includes(`Connection time out`)) {
+                                        errMsg = `Please check ${device}'s IP address or port.`
+                                    }
+                                    console.log(`Error! ${errMsg}`);
+                                    reject();
+                                });
                             }
                         });
                         // open browser
@@ -238,7 +252,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                                                             kill(enactchild.pid);
                                                         }
                                                         vscode.debug.stopDebugging();
-                                                        ares.launchClose(appId, device, 0)
+                                                        ares.launchClose(appId, device, "0")
                                                             .then(() => {
                                                                 console.log(`Closed ${appId} on ${device}.`);
                                                                 resolve();
@@ -285,7 +299,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                                     child.stdin.pause();
                                     kill(child.pid);
                                     vscode.debug.stopDebugging();
-                                    ares.launchClose(appId, device)
+                                    ares.launchClose(appId, device, "0")
                                         .then(() => {
                                             console.log(`Closed ${appId} on ${device}.`);
                                             resolve();

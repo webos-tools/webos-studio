@@ -5,7 +5,7 @@
 const vscode = require('vscode');
 const { InputController } = require("./lib/inputController");
 const { InputChecker } = require("./lib/inputChecker");
-const { logger } = require('./Lib/logger');
+const { logger } = require('./lib/logger');
 
 module.exports = async function setLogLevel() {
     const templateList = [
