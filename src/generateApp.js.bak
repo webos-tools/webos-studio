@@ -341,13 +341,12 @@ async function generateApp() {
             placeholder: 'Enter Project Name',
             prompt: 'Enter Project Name',
             validator: function (value) {
-                // value = value.trim();
+                value = value.trim();
                 if (value === '') {
                     return 'Please enter the project name.';
                 }
                 let isNameInvalid = InputChecker.checkDirectoryName(value);
                 if (isNameInvalid) {
-                    value = value.trim()
                     return isNameInvalid;
                 } else {
                     let projectPath = path.join(location, value);

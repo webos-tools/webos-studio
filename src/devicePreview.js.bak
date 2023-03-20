@@ -55,9 +55,9 @@ let dpContext = {
 };
 let containerAppInfo = null;
 
- let gContext =null;
+// let gContext =null;
 async function devicePreviewStart(appSelectedDir, context) {
-   gContext =context;
+  // gContext =context;
   dp_appInfo = getDevicePreviewAppId(context);
 
   let device = null;
@@ -646,18 +646,14 @@ async function startLocalPreview() {
                   SOCKET_SERVER_PORT: `${dpContext.socketPort}`,
                 };
 
-                if(!isWebappExcludedFiles(name)){
-                  await ares.relaunch(
-                    dp_appInfo["id"], targetDevice.name, param, 0
-                  ).catch( async(errMsg)=>{
-                    
-                            vscode.window.showErrorMessage(
-                              "Application Preview on Device has been stoped."
-                        );
-                        await devicePreviewStop(gContext, false);
-                  });
-                }
-                
+
+                await ares.relaunch(
+                  dp_appInfo["id"], targetDevice.name, param, 0
+                ).catch( (errMsg)=>{
+                          vscode.window.showErrorMessage(
+                            "Application Preview on Device has been stoped."
+                      );
+                });
 
                 
               }
@@ -675,16 +671,6 @@ async function startLocalPreview() {
       console.log(err);
       vscode.window.showErrorMessage(`Error! Failed to get free port`);
     });
-}
-function isWebappExcludedFiles(fileName){
-  let pathArray = fileName.split(".")
-  if(pathArray.length>0 && (pathArray[pathArray.length-1] =="json" || pathArray[pathArray.length-1] =="ipk")){
-    return true
-  }
- 
-    return false
-
-  
 }
 
 async function devicePreviewStop(context, isFromCommand) {
