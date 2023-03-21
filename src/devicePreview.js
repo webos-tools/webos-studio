@@ -637,6 +637,7 @@ async function startLocalPreview() {
               dpContext.isPreviewUrlSent = true;
               socketClient.emit("app_url_resp", { url: url });
             }
+            let isAppReloading = false;
             dpContext.appFileWatcher = watch(
               userAppDir,
               { recursive: true },
@@ -646,15 +647,19 @@ async function startLocalPreview() {
                   SOCKET_SERVER_PORT: `${dpContext.socketPort}`,
                 };
 
-                if(!isWebappExcludedFiles(name)){
+                if(!isWebappExcludedFiles(name) && !isAppReloading){
+                  isAppReloading = true;
                   await ares.relaunch(
                     dp_appInfo["id"], targetDevice.name, param, 0
-                  ).catch( async(errMsg)=>{
-                    
-                            vscode.window.showErrorMessage(
-                              "Application Preview on Device has been stoped."
-                        );
-                        await devicePreviewStop(gContext, false);
+                  ).then(()=>{
+                    isAppReloading = false;
+                  })
+                  .catch( async(errMsg)=>{
+                    isAppReloading = false;
+                        //     vscode.window.showErrorMessage(
+                        //       "Application Preview on Device has been stoped."
+                        // );
+                        // await devicePreviewStop(gContext, false);
                   });
                 }
                 
