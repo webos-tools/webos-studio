@@ -656,10 +656,7 @@ async function startLocalPreview() {
                   })
                   .catch( async(errMsg)=>{
                     isAppReloading = false;
-                        //     vscode.window.showErrorMessage(
-                        //       "Application Preview on Device has been stoped."
-                        // );
-                        // await devicePreviewStop(gContext, false);
+                
                   });
                 }
                 

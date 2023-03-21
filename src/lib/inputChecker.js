@@ -36,7 +36,7 @@ class InputChecker {
 
     static checkDirectoryName(value) {
         if (!matchReg(value, /[a-zA-Z0-9-._]+/g)) {
-            return 'Please include only letters(A-Z,a-z), digits(0-9), space, underscore & minus signs.';
+            return 'Please include only letters(A-Z,a-z), digits(0-9), underscore & minus signs.';
         }
         return null;
     }
