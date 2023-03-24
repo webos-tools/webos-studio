@@ -31,9 +31,8 @@ const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
 const extensionPath = __dirname;
 
-let serviceObjArray = [];
-let methodObjArray = [];
-let paramObjArray = [];
+const apiObjArray = [];
+let apiObjArrayIndex = 0;
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -43,8 +42,6 @@ function activate(context) {
    
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
 
-    setFromConvertCacheAPI("");
-
     const serviceProvider = vscode.languages.registerCompletionItemProvider(
         ['plaintext','javascript', 'typescript', 'html'],
         {
@@ -53,17 +50,21 @@ function activate(context) {
                 if (!linePrefix.endsWith('luna://')) {
                     return undefined;
                 }
+
+                apiObjArrayIndex = setFromConvertCacheAPI();
                 const returnItemArray = [];
 
-                for (const i in serviceObjArray) {
-                    const serviceItemName = serviceObjArray[i].name;
+                const apiServiceArray = apiObjArray[apiObjArrayIndex].service;
+
+                for (const i in apiServiceArray) {
+                    const serviceItemName = apiServiceArray[i].name;
                     let urlServiceName = replaceAll(serviceItemName, ".", "-");
                     urlServiceName = urlServiceName.toLocaleLowerCase();
                     const urlName = `http://www.webosose.org/docs/reference/ls2-api/${urlServiceName}`;
                     const urlServiceSite = `<a href='${urlName}'>Site link of service(${serviceItemName})</a>`
 
                     const serviceItemInterface = {label:serviceItemName, description: "Luna API Service"};
-                    const serviceItemSummary = serviceObjArray[i].summary + urlServiceSite;
+                    const serviceItemSummary = apiServiceArray[i].summary + urlServiceSite;
                     const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Method);
                     commitCharacterCompletion.sortText = "0";
 
@@ -87,10 +88,13 @@ function activate(context) {
                 let serviceName = "";
                 const returnItemArray = [];
                 const linePrefix = document.lineAt(position).text.substring(0, position.character);
+
+                const apiServiceArray = apiObjArray[apiObjArrayIndex].service;
+
                 let found = false;
 
-                for (const i in serviceObjArray) {
-                    serviceName = serviceObjArray[i].name;
+                for (const i in apiServiceArray) {
+                    serviceName = apiServiceArray[i].name;
                     const endKeyword = serviceName.split(".");
                     const endService = endKeyword[endKeyword.length-1];
 
@@ -179,26 +183,19 @@ function activate(context) {
             const snippetFirstItemInterface = {label:stringFirstMain, description: "Luna API Snippet"};
             const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface, vscode.CompletionItemKind.Snippet);
             firstSnippetCompletion.sortText = "1";
-            const serviceList = [];
 
             let snippetDesc = "<p>Example)</p><p>new LS2Request().send({ \
                         <br>&emsp;service: 'luna://com.webos.applicationManager/', \
                         <br>&emsp;method: 'launch', \
                         <br>&emsp;parameters: params \
-                        <br>});<p>"
+                        <br>});<p>";
             let content = new vscode.MarkdownString(snippetDesc);
             content.supportHtml = true;
             content.isTrusted = true;
             firstSnippetCompletion.documentation = content;
             firstSnippetCompletion.detail = "Need to insert 'import LS2Request from '@enact/webos/LS2Request';' "
 
-            for (const i in serviceObjArray) {
-                const serviceItemName = serviceObjArray[i].name;
-                serviceList.push(serviceItemName);
-            }
-
             const stringFirstSub = 'new LS2Request().send({' + '\n'
-                //+ '\t' + 'service: \'luna://' + '${1|'+ serviceList + '|}/\',' + '\n'
                 + '\t' + 'service: \'luna://' + '${1}\',' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
                 + '\t' + 'parameters: {${3}}' + '\n'
@@ -218,15 +215,14 @@ function activate(context) {
                     <br>&emsp;&emsp;onSuccess: function (res) {setMenuLanguage(res.settings.localeInfo.locales);}, \
                     <br>&emsp;&emsp;onFailure: function (res) {setMenuLanguage({});}, \
                     <br>&emsp;}); \
-                    <br>}</p>"
+                    <br>}</p>";
             content = new vscode.MarkdownString(snippetDesc);
             content.supportHtml = true;
             content.isTrusted = true;
             secondSnippetCompletion.documentation = content;
-            //const stringSecondSub = 'webOS.service.request(\'luna://' + '${1|'+ serviceList + '|}/\', {' + '\n'
             const stringSecondSub = 'webOS.service.request(\'luna://' + '${1}\', {' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
-                + '\t' + 'parameters: {\'${3}\'},' + '\n'
+                + '\t' + 'parameters: {${3}},' + '\n'
                 + '\t' + 'onSuccess: {},' + '\n'
                 + '\t' + 'onFailure: {},' + '\n'
             + '});';
@@ -360,7 +356,6 @@ function activate(context) {
                         panel.title = msg;
                         panel.webview.html = getWebviewCreateProject(appTypeIndex, resource); // page2
                         vscode.workspace.getConfiguration().update("webosose.lunaApiLevel", apiLevel);
-                        setFromConvertCacheAPI(apiLevel);
                         break;
                     case 'Next':
                         appType = message.appType;
@@ -486,6 +481,20 @@ function activate(context) {
                 if (disposeFinish) {
                     generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib)
                         .then(() => {
+                            let apiLevelStatus = "", apiLevelNo = "";
+                            let apiLevelStatusSplit = [];
+
+                            apiLevelStatus = apiLevel;
+
+                            apiLevelStatusSplit = apiLevelStatus.split("_");
+                            apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
+                            const level = {
+                                api_level: apiLevelNo
+                            }
+                            const levelJSON = JSON.stringify(level, null, 2);
+                            const jsonPath = path.join(projectLocation, `${projectName}/appconfig.json`);
+                            fs.writeFileSync(jsonPath, levelJSON);
+
                             webososeAppsProvider.refresh();
                         });
                     }
@@ -822,155 +831,206 @@ function getResourcePath() {
     return resource;
 }
 
-function setFromConvertCacheAPI(apiLevel) {
-    const date1 = new Date();
+function setFromConvertCacheAPI() {
+    const date_start = new Date();
     let fileData = "";
-    let apiLevelStatus = "";
-    let apiLevelStatusSplit = [];
-    if (apiLevel == "") {
+    let apiLevel = "";
+    let apiIndex = 0;
+    let filepath = "";
+    let jsonData;
+    let apiData = "";
+
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    const activeTextEditors = vscode.window.activeTextEditor;
+
+    if (!workspaceFolders) {
+        vscode.window.showInformationMessage("Open a folder/workspace first");
+        return;
+    }
+
+    if (activeTextEditors) {
+        const docUri = activeTextEditors.document.uri;
+        if (docUri?.fsPath) {
+            const uriPath = docUri.fsPath;
+            const parent = (vscode.Uri.file(path.dirname(uriPath)));
+            const file =  vscode.Uri.file(path.join(parent.fsPath, "appconfig.json"));
+            filepath = file.fsPath;
+        }
+    }
+
+    try {
+        fileData = fs.readFileSync(filepath, 'utf8');
+    }
+    catch (e) {
+        console.log("err " + e);
+    }
+    if(fileData) {
+        jsonData = JSON.parse(fileData);
+        apiData = jsonData.api_level;
+    }
+
+    if(!apiData) {
+        let apiLevelStatus = "";
+        let apiLevelStatusSplit = [];
         apiLevelStatus = vscode.workspace.getConfiguration().get("webosose.lunaApiLevel");
         if (apiLevelStatus.includes('#')) {
             apiLevelStatus = "OSE_APILevel_21";
             vscode.workspace.getConfiguration().update("webosose.lunaApiLevel", apiLevelStatus);
         }
+        apiLevelStatusSplit = apiLevelStatus.split("_");
+        apiLevel = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
     }
     else {
-        apiLevelStatus = apiLevel;
-    }
-    apiLevelStatusSplit = apiLevelStatus.split("_");
-    apiLevel = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
-    let jsonPath = path.join(__dirname, "resources/filterAPIByAPILevel_" + apiLevel + ".json");
-
-    try {
-        fileData = fs.readFileSync(jsonPath, 'utf8');
-    }
-    catch (e) {
-        console.log("err " + e);
+        apiLevel = apiData;
     }
 
-    serviceObjArray = [];
-    methodObjArray = [];
-    paramObjArray = [];
+    const findAPIIndex = apiObjArray.findIndex((element) => element["level"] === apiLevel);
+    if (findAPIIndex != -1) { // aplilevel exists in the apiobj
+        apiIndex = findAPIIndex;
+    }
+    else { // aplilevel doesn't exist in the apiobj
+        const serviceObjArray = [];
+        const methodObjArray = [];
+        const paramObjArray = [];
 
-    const jsonData= JSON.parse(fileData);
-    const jsonDataServices = jsonData.services;
-    const jsonDataMethods = jsonData.methods;
+        const jsonPath = path.join(__dirname, "resources/filterAPIByAPILevel_" + apiLevel + ".json");
 
-    const replaceRegex = new RegExp("\\n\\n\\t", "g");
-    const replaceString = "\n\t\t";
-
-    for (const key in jsonDataServices) {
-        let serviceName = "", serviceSummary = "";
-
-        serviceName = jsonDataServices[key].uri;
-        serviceName = changeServiceName(serviceName);
-        if(serviceName == "remove") {
-            continue;
+        try {
+            fileData = fs.readFileSync(jsonPath, 'utf8');
+        }
+        catch (e) {
+            console.log("err " + e);
         }
 
-        serviceSummary = jsonDataServices[key].summary;
+        jsonData= JSON.parse(fileData);
+        const jsonDataServices = jsonData.services;
+        const jsonDataMethods = jsonData.methods;
 
-        const findSummaryIndex = serviceSummary.match(replaceRegex);
+        const replaceRegex = new RegExp("\\n\\n\\t", "g");
+        const replaceString = "\n\t\t";
 
-        if(findSummaryIndex) {
-            serviceSummary = serviceSummary.replace(replaceRegex, replaceString);
-        }
+        for (const key in jsonDataServices) {
+            let serviceName = "", serviceSummary = "";
 
-        const serviceObj = {
-            "name" : serviceName,
-            "summary" : serviceSummary
-        };
-
-        const findServiceIndex = serviceObjArray.findIndex((element) => element["name"] === serviceName);
-        if (findServiceIndex == -1) {
-            serviceObjArray.push(serviceObj);
-        }
-    }
-
-    for (const key in jsonDataMethods) {
-        let serviceName = "";
-        let methodName = "", methodDesc = "", acgName = "";
-        let paramsArray = [];
-        const paramsList = [];
-
-        const words = jsonDataMethods[key].uri.split('/');
-        if (words.length > 1) {
-            serviceName = words[0];
-            methodName = jsonDataMethods[key].uri.substring(serviceName.length);
-            methodDesc = jsonDataMethods[key].description;
-            acgName = jsonDataMethods[key].acg;
-            paramsArray = jsonDataMethods[key].parameters;
-
+            serviceName = jsonDataServices[key].uri;
             serviceName = changeServiceName(serviceName);
-            if (serviceName == "remove") {
+            if(serviceName == "remove") {
                 continue;
             }
 
-            for (const key in paramsArray) {
-                let paramName = "", requireName = "", typeName = "";
+            serviceSummary = jsonDataServices[key].summary;
 
-                paramName = paramsArray[key].name;
-                requireName = paramsArray[key].required;
-                typeName = paramsArray[key].type;
+            const findSummaryIndex = serviceSummary.match(replaceRegex);
 
-                const paramsObj = {
-                    "name" : paramName,
-                    "required" : requireName,
-                    "type" : typeName
-                };
-                paramsList.push(paramsObj);
+            if(findSummaryIndex) {
+                serviceSummary = serviceSummary.replace(replaceRegex, replaceString);
             }
 
-            const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
-            const findDescriptionIndex = methodDesc.match(replaceRegex);
-
-            if(findDescriptionIndex) {
-                methodDesc = methodDesc.replace(replaceRegex, replaceString);
-            }
-
-            const methodObj = {
-                "name" : methodName,
-                "description" : methodDesc,
-                "acg" : acgName
+            const serviceObj = {
+                "name" : serviceName,
+                "summary" : serviceSummary
             };
 
-            const paramObj = {
-                "name" : methodName,
-                "params" : paramsList
-            };
-
-            if (findServiceIndex != -1) {
-                const findMethodIndex = methodObjArray[findServiceIndex]["methods"].findIndex((element) => element["name"] === methodName);
-                if (findMethodIndex == -1) {
-                    methodObjArray[findServiceIndex]["methods"].push(methodObj);
-                    paramObjArray[findServiceIndex]["methods"].push(paramObj);
-                }
-            } else {
-                // Add new serviceMethodObject including serviceName and method array.
-                // Add new serviceMethodParamObject including serviceName and method and param array.
-                const serviceMethodObj = {
-                    "name" : serviceName,
-                    "methods" : [methodObj]
-                };
-                methodObjArray.push(serviceMethodObj);
-
-                const serviceMethodParamObj = {
-                    "name" : serviceName,
-                    "methods" : [paramObj]
-                };
-                paramObjArray.push(serviceMethodParamObj);
+            const findServiceIndex = serviceObjArray.findIndex((element) => element["name"] === serviceName);
+            if (findServiceIndex == -1) {
+                serviceObjArray.push(serviceObj);
             }
         }
+
+        for (const key in jsonDataMethods) {
+            let serviceName = "";
+            let methodName = "", methodDesc = "", acgName = "";
+            let paramsArray = [];
+            const paramsList = [];
+
+            const words = jsonDataMethods[key].uri.split('/');
+            if (words.length > 1) {
+                serviceName = words[0];
+                methodName = jsonDataMethods[key].uri.substring(serviceName.length);
+                methodDesc = jsonDataMethods[key].description;
+                acgName = jsonDataMethods[key].acg;
+                paramsArray = jsonDataMethods[key].parameters;
+
+                serviceName = changeServiceName(serviceName);
+                if (serviceName == "remove") {
+                    continue;
+                }
+
+                for (const key in paramsArray) {
+                    let paramName = "", requireName = "", typeName = "";
+
+                    paramName = paramsArray[key].name;
+                    requireName = paramsArray[key].required;
+                    typeName = paramsArray[key].type;
+
+                    const paramsObj = {
+                        "name" : paramName,
+                        "required" : requireName,
+                        "type" : typeName
+                    };
+                    paramsList.push(paramsObj);
+                }
+
+                const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
+                const findDescriptionIndex = methodDesc.match(replaceRegex);
+
+                if(findDescriptionIndex) {
+                    methodDesc = methodDesc.replace(replaceRegex, replaceString);
+                }
+
+                const methodObj = {
+                    "name" : methodName,
+                    "description" : methodDesc,
+                    "acg" : acgName
+                };
+
+                const paramObj = {
+                    "name" : methodName,
+                    "params" : paramsList
+                };
+
+                if (findServiceIndex != -1) {
+                    const findMethodIndex = methodObjArray[findServiceIndex]["methods"].findIndex((element) => element["name"] === methodName);
+                    if (findMethodIndex == -1) {
+                        methodObjArray[findServiceIndex]["methods"].push(methodObj);
+                        paramObjArray[findServiceIndex]["methods"].push(paramObj);
+                    }
+                } else {
+                    // Add new serviceMethodObject including serviceName and method array.
+                    // Add new serviceMethodParamObject including serviceName and method and param array.
+                    const serviceMethodObj = {
+                        "name" : serviceName,
+                        "methods" : [methodObj]
+                    };
+                    methodObjArray.push(serviceMethodObj);
+
+                    const serviceMethodParamObj = {
+                        "name" : serviceName,
+                        "methods" : [paramObj]
+                    };
+                    paramObjArray.push(serviceMethodParamObj);
+                }
+            }
+        }
+        serviceObjArray.sort(compareFn);
+        methodObjArray.sort(compareFn);
+        paramObjArray.sort(compareFn);
+        const apiObj =  {
+			"level" : apiLevel,
+			"service" : serviceObjArray,
+			"method" : methodObjArray,
+			"param" : paramObjArray
+		};
+		apiObjArray.push(apiObj);
+		apiIndex = apiObjArray.length - 1;
     }
-    serviceObjArray.sort(compareFn);
-    methodObjArray.sort(compareFn);
-    paramObjArray.sort(compareFn);
 
-    const date2 = new Date();
+    const date_end = new Date();
 
-    const elapsedMSec = date2.getTime() - date1.getTime();
+    const elapsedMSec = date_end.getTime() - date_start.getTime();
     const elapsedSec = elapsedMSec / 1000;
     console.log(`Excution time of converting data function : ${elapsedSec} (s)`);
+	return apiIndex;
 }
 
 function compareFn(a, b) {
@@ -1008,13 +1068,14 @@ function changeServiceName(serviceName) {
 
 function findMethodInArray(serviceName) {
     const methodNameArr = [], methodDescrArr = [];
+    const apiMethodArray = apiObjArray[apiObjArrayIndex].method;
 
-    const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
+    const findServiceIndex = apiMethodArray.findIndex((element) => element["name"] === serviceName);
 
     if (findServiceIndex != -1) {
-        for (const i in methodObjArray[findServiceIndex]["methods"]) {
-            const methodItemName = methodObjArray[findServiceIndex]["methods"][i].name;
-            const mehthodItemDesc = methodObjArray[findServiceIndex]["methods"][i].description;
+        for (const i in apiMethodArray[findServiceIndex]["methods"]) {
+            const methodItemName = apiMethodArray[findServiceIndex]["methods"][i].name;
+            const mehthodItemDesc = apiMethodArray[findServiceIndex]["methods"][i].description;
             methodNameArr.push(methodItemName);
             methodDescrArr.push(mehthodItemDesc);
         }
@@ -1036,15 +1097,16 @@ function findParamInArray(serviceName, methodName) {
     urlMethodName = urlMethodName.toLocaleLowerCase();
     const urlName = `http://www.webosose.org/docs/reference/ls2-api//${urlServiceName}/#${urlMethodName}`;
 
-    const findServiceIndex = paramObjArray.findIndex((element) => element["name"] === serviceName);
+    const apiParamArray = apiObjArray[apiObjArrayIndex].param;
+    const findServiceIndex = apiParamArray.findIndex((element) => element["name"] === serviceName);
 
     if (findServiceIndex != -1) {
-        const findMethodIndex = paramObjArray[findServiceIndex]["methods"].findIndex((element) => element["name"].substring(1) === methodName);
+        const findMethodIndex = apiParamArray[findServiceIndex]["methods"].findIndex((element) => element["name"].substring(1) === methodName);
         if (findMethodIndex != -1) {
-            for (const i in paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"]) {
-                const paramItemName = paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].name;
-                const paramItemRequired = paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].required;
-                const paramItemType = paramObjArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].type;
+            for (const i in apiParamArray[findServiceIndex]["methods"][findMethodIndex]["params"]) {
+                const paramItemName = apiParamArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].name;
+                const paramItemRequired = apiParamArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].required;
+                const paramItemType = apiParamArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].type;
                 const paramItemDesc = `<p><strong>${methodName}</strong> method parameter<br><br>required : <strong>${paramItemRequired} \
                                     </strong><br>type : <strong>${paramItemType}</strong><br><br> \
                                     <a href='${urlName}'>Site link of method(${methodName})</a></p>`;
