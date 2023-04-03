@@ -492,7 +492,7 @@ function activate(context) {
                                 api_level: apiLevelNo
                             }
                             const levelJSON = JSON.stringify(level, null, 2);
-                            const jsonPath = path.join(projectLocation, `${projectName}/appconfig.json`);
+                            const jsonPath = path.join(projectLocation, `${projectName}/.webosstudio.config`);
                             fs.writeFileSync(jsonPath, levelJSON);
 
                             webososeAppsProvider.refresh();
@@ -853,7 +853,7 @@ function setFromConvertCacheAPI() {
         if (docUri?.fsPath) {
             const uriPath = docUri.fsPath;
             const parent = (vscode.Uri.file(path.dirname(uriPath)));
-            const file =  vscode.Uri.file(path.join(parent.fsPath, "appconfig.json"));
+            const file =  vscode.Uri.file(path.join(parent.fsPath, ".webosstudio.config"));
             filepath = file.fsPath;
         }
     }
