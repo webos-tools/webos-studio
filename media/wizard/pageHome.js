@@ -40,6 +40,7 @@
     selelctApiVersion.addEventListener('change', function() {
         apiVersionValue = selelctApiVersion.value;
         btnGenerate.disabled = false;
+        // [REQUIRED] Update the api level when new version of OSE is released.
         if (apiVersionValue === 'OSE_APILevel_20') {
             description.value = descriptionValue + '2.18.0';
         } else if (apiVersionValue === 'OSE_APILevel_21') {

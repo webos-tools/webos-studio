@@ -26,12 +26,13 @@ const { InputChecker } = require('./src/lib/inputChecker');
 const { HelpProvider, renderReadMe, renderChangeLog } = require('./src/helpProvider');
 const { IPK_ANALYZER } = require('./src/ipkAnalyzer');
 const { logger,createOutPutChannel } = require('./src/lib/logger');
+const { InputController } = require('./src/lib/inputController');
 const fs = require('fs');
 const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
 const extensionPath = __dirname;
 
-const apiObjArray = [];
+let apiObjArray = [];
 let apiObjArrayIndex = 0;
 
 /**
@@ -833,6 +834,43 @@ function getResourcePath() {
     return resource;
 }
 
+function chooseAPILevel(filepath) {
+    if (fs.existsSync(filepath)) {
+        return Promise.resolve();
+    } else {
+        return vscode.window
+        .showInformationMessage(`There is no API level information in the folder of this project.
+                                Do you want to create it?\n If you select "Yes", create ".webosstuido.config" file.
+                                If not, you can't use the Luna API Auto Completion.`, ...["Yes", "No"])
+        .then(async (answer) => {
+            if (answer === "Yes") {
+                let controller = new InputController();
+                let apiList = ['20', '21', '22'];  // [REQUIRED] Update the api level when new version of OSE is released.
+
+                controller.addStep({
+                    title: 'Choose API Level',
+                    placeholder: `Select API Level`,
+                    items: apiList.map(label => ({ label }))
+                });
+
+                let results = await controller.start();
+                let apiLevelNo = results.shift();
+
+                const level = {
+                    api_level: apiLevelNo
+                }
+                const levelJSON = JSON.stringify(level, null, 2);
+
+                fs.writeFileSync(filepath, levelJSON);
+            }
+            else {
+                //console.log("No");
+            }
+            return Promise.resolve();
+        });
+    }
+}
+
 function setFromConvertCacheAPI() {
     const date_start = new Date();
     let fileData = "";
@@ -865,6 +903,8 @@ function setFromConvertCacheAPI() {
     }
     catch (e) {
         console.log("err " + e);
+        chooseAPILevel(filepath);
+        return;
     }
     if(fileData) {
         jsonData = JSON.parse(fileData);
@@ -1176,6 +1216,7 @@ function getWebviewHome(resource) {
                 </label>
                 <select name="selelct-api-version" id="selelct-api-version" disabled>
                         <option value="none" selected disabled hidden>====== select ======</option>
+                        <!--[REQUIRED] Update the api level when new version of OSE is released.-->
                         <option value="OSE_APILevel_22">OSE APILevel22</option>
                         <option value="OSE_APILevel_21">OSE APILevel21</option>
                         <option value="OSE_APILevel_20">OSE APILevel20</option>

@@ -140,7 +140,6 @@
                 "command": "webosose.devicepreviewstart",
                 "title": "webOS OSE: Preview Application [Device]"
             },
-          
             {
                 "command": "webosose.packageApp",
                 "title": "webOS OSE: Package Application"
@@ -858,7 +857,6 @@
                 }
             }
         },
-
         "languages": [
             {
                 "id": "Log",
