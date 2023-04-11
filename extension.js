@@ -531,11 +531,12 @@ function activate(context) {
     ]);
     vscode.window.registerTreeDataProvider('extensionHelp', webososeHelpProvider);
 
-    context.subscriptions.push(vscode.commands.registerCommand('webosose.generateApp', async () => {
+    // comment out unused command registration, webosose.generateApp
+    /*context.subscriptions.push(vscode.commands.registerCommand('webosose.generateApp', async () => {
         await generateApp();
         await webososeAppsProvider.refresh();
         webososeAppsProvider.storeContextOnExtnLaunch(context);
-    }));
+    }));*/
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setloglevel', () => {
         setLogLevel();
     }));
@@ -702,10 +703,14 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('apps.refreshList', () => {
         webososeAppsProvider.refresh();
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('apps.generateApp', async () => {
+    // comment out unused command registration, apps.generateApp
+    /*context.subscriptions.push(vscode.commands.registerCommand('apps.generateApp', async () => {
         await generateApp();
         await webososeAppsProvider.refresh();
         webososeAppsProvider.storeContextOnExtnLaunch(context);
+    }));*/
+    context.subscriptions.push(vscode.commands.registerCommand('apps.projectWizard', async (app) => {
+        vscode.commands.executeCommand('webosose.projectWizard');
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.packageApp', async (app) => {
         packageApp(app.label);

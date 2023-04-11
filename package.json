@@ -45,7 +45,7 @@
         "onCommand:webososeDevices.closeApp.display1",
         "onCommand:webosose.explorer.installApp",
         "onCommand:webosose.explorer.runApp",
-        "onCommand:apps.generateApp",
+        "onCommand:apps.projectWizard",
         "onCommand:apps.refreshList",
         "onCommand:apps.packageApp",
         "onCommand:apps.runApp",
@@ -281,7 +281,7 @@
                 "title": "display 1"
             },
             {
-                "command": "apps.generateApp",
+                "command": "apps.projectWizard",
                 "title": "Add Apps",
                 "icon": "$(add)"
             },
@@ -390,7 +390,7 @@
                     "group": "navigation"
                 },
                 {
-                    "command": "apps.generateApp",
+                    "command": "apps.projectWizard",
                     "when": "view == apps",
                     "group": "navigation"
                 },
@@ -703,7 +703,7 @@
                     "when": "false"
                 },
                 {
-                    "command": "apps.generateApp",
+                    "command": "webosose.generateApp",
                     "when": "false"
                 },
                 {
