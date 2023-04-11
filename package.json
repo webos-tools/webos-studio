@@ -281,7 +281,7 @@
                 "title": "display 1"
             },
             {
-                "command": "webosose.projectWizard",
+                "command": "apps.generateApp",
                 "title": "Add Apps",
                 "icon": "$(add)"
             },
@@ -390,7 +390,7 @@
                     "group": "navigation"
                 },
                 {
-                    "command": "webosose.projectWizard",
+                    "command": "apps.generateApp",
                     "when": "view == apps",
                     "group": "navigation"
                 },
@@ -703,7 +703,7 @@
                     "when": "false"
                 },
                 {
-                    "command": "webosose.generateApp",
+                    "command": "apps.generateApp",
                     "when": "false"
                 },
                 {
