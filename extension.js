@@ -27,6 +27,7 @@ const { HelpProvider, renderReadMe, renderChangeLog } = require('./src/helpProvi
 const { IPK_ANALYZER } = require('./src/ipkAnalyzer');
 const { logger,createOutPutChannel } = require('./src/lib/logger');
 const { InputController } = require('./src/lib/inputController');
+const { SDK_Manager } = require('./src/packageManager');
 const fs = require('fs');
 const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
@@ -822,6 +823,12 @@ function activate(context) {
 
         const ipkAnalyzer = new IPK_ANALYZER(context);
         ipkAnalyzer.startEditor();
+
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('sdkmanager.start', async () => {
+
+        const sdkManager = new SDK_Manager(context);
+        sdkManager.startEditor();
 
     }));
 

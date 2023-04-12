@@ -81,7 +81,8 @@
         "onCommand:webosose.explorermenu.debug",
         "onCommand:webosose.explorermenu.debug.ide",
         "onCommand:webosose.explorermenu.debug.browser",
-        "onCommand:ipkanalyze.start"
+        "onCommand:ipkanalyze.start",
+        "onCommand:sdkmanager.start"
     ],
     "main": "./extension.js",
     "contributes": {
@@ -119,6 +120,10 @@
             {
                 "command": "ipkanalyze.start",
                 "title": "webOS OSE: IPK Analyzer"
+            },
+            {
+                "command": "sdkmanager.start",
+                "title": "webOS OSE: Package Manager"
             },
             {
                 "command": "webapp.reloadPreview",

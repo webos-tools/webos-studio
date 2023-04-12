@@ -1,0 +1,151 @@
+{
+    "tv_components": {
+        "location": "",
+        "components":["ares-cli","emulator"],
+        "ares-cli": [
+            {
+                "description": "AresCli -version 1.0.1",
+                "ver": "1.0.1",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"release 1",
+                "summary":""
+            },
+            {
+                "description": "AresCli -version 1.0.2",
+                "ver": "1.0.2",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"abcd2",
+                "summary":""
+            }
+        ],
+        "emulator": [
+            {
+                "description": "Emulator 1.0.1",
+                "ver": "1.0.1",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            },
+            {
+                "description": "Emulator -version 1.0.2",
+                "ver": "1.0.2",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            }
+        ]
+
+    },
+    "ose_components": {
+        "location": "",
+        "components":["ares-cli","enact-cli","emulator"],
+        "ares-cli": [
+            {
+                "description": "AresCli -version 1.0.1",
+                "ver": "1.0.1",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            },
+            {
+                "description": "AresCli -version 1.0.2",
+                "ver": "1.0.2",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            }
+        ],
+        "emulator": [
+            {
+                "description": "Emulator 1.0.1",
+                "ver": "1.0.1",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            },
+            {
+                "description": "Emulator -version 1.0.2",
+                "ver": "1.0.2",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            }
+        ],
+        "enact-cli": [
+            {
+                "description": "Emulator 1.0.1",
+                "ver": "1.0.1",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            },
+            {
+                "description": "Emulator -version 1.0.2",
+                "ver": "1.0.2",
+                "repoLocation": "repolocation",
+                "repoType": "npm",
+                "isInstalled": false,
+                "installedLocation":"",
+                "isActive": false,
+                "isUpdateAvailable": false,
+                "isInProgress":false,
+                "releaseNote":"",
+                "summary":""
+            }
+        ]
+    }
+}
