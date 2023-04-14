@@ -1,0 +1,35 @@
+{
+  
+    "tv": {
+        "installed":[
+                {
+                    "type":"cli",
+                    "sdk_version":"1.0.1",
+                    "location":"tv/cli/v1.0.1"
+                },
+                {
+                    "type":"cli",
+                    "sdk_version":"1.0.2",
+                    "location":"tv/cli/v1.0.2"
+                }
+
+        ]
+          
+    },
+    "ose": {
+        "installed":[
+            {
+                "type":"cli",
+                "sdk_version":"1.0.1",
+                "location":"ose/cli/v1.0.1"
+            },
+            {
+                "type":"cli",
+                "sdk_version":"1.0.2",
+                "location":"ose/cli/v1.0.2"
+            }
+
+    ]
+      
+    }
+}

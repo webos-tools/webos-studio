@@ -57,9 +57,10 @@ class SDK_Manager {
                     {
                         break;
                     }
-                case 'ERROR_MESSAGE':
+                case 'INSTALL_COMP':
                     {
-                        vscode.window.showErrorMessage(`Error! "${msg.text}"!`);
+
+                      this.panel.webview.postMessage({ command: 'START_PROGRESS', "data":msg.data})
                         break; // msg.text
                     }
                 case 'READ_CONFIG':{
@@ -105,7 +106,7 @@ class SDK_Manager {
               
                
                 
-                ${this.getCompTreeGridView("tv_components")}
+                ${this.getCompTreeGridView("tv")}
                 
                 <fieldset id="tvnotes" class="notes">
                   <legend class="notelegend" >Release Notes</legend>
@@ -120,7 +121,7 @@ class SDK_Manager {
               <div id="ose" class="tabcontent">
               
                 
-              ${this.getCompTreeGridView("ose_components")}
+              ${this.getCompTreeGridView("ose")}
              
                 <fieldset id="osenotes" class="notes">
                 <legend class="notelegend" >Release Notes</legend>
@@ -131,7 +132,7 @@ class SDK_Manager {
               </div>
 
               <div id="progress" class="tabcontent">
-                <h4>Progress</h4>
+              ${this.getProgressTreeGridView()}
                 
               </div>
               
@@ -148,11 +149,13 @@ class SDK_Manager {
         <col id="treegrid-col1">
         <col id="treegrid-col2">
         <col id="treegrid-col3">
+        <col id="treegrid-col4">
       </colgroup>
       <thead>
         <tr>
           <th scope="col">Component</th>
           <th scope="col">Version</th>
+          <th scope="col">API Level</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -166,16 +169,17 @@ class SDK_Manager {
     </div>
       `
     }
-    getTreeTableParentRowHTML(title){
+    getTreeTableParentRowHTML(compName,displayName){
       return `
-      <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
-        <td role="gridcell">${title}</td>
+      <tr data-compname="${compName}"role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+        <td role="gridcell">${displayName}</td>
+        <td role="gridcell"></td>
         <td role="gridcell"></td>
         <td role="gridcell"></td>
       </tr>
       `
     }
-    getTreeTableChildRowHTML(rowObj,compName,sdk,j){
+    getTreeTableChildRowHTML(rowObj,compName,sdk,statusJson,j){
       let altRowStyle ="";
       if((j+1) %2 == 0){
         altRowStyle = ` style="background-color:whitesmoke"`
@@ -183,24 +187,86 @@ class SDK_Manager {
       let rowObjB64 =Buffer.from(JSON.stringify(rowObj)).toString('base64')
       return `
       <tr ${altRowStyle} data-compName="${compName}" data-sdk="${sdk}" data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="2" aria-posinset="1" aria-setsize="3">
-      <td role="gridcell">${rowObj.description}</td>
-      <td role="gridcell"> ${rowObj.ver}</td>
-      <td role="gridcell"><button>Install</button></td>
+      <td role="gridcell">${rowObj.displayName}</td>
+      <td role="gridcell"> ${rowObj.sdk_version}</td>
+      <td role="gridcell"> ${rowObj.apiLevel}</td>
+      <td role="gridcell">${this.getActionHTML(rowObj,compName,sdk,statusJson)}</td>
     </tr>
       `
     }
+    getActionHTML(rowObj,compName,sdk,statusJson){
+      let isInstalled =false;
+      if(statusJson != "" && statusJson[sdk] && statusJson[sdk]["installed"]){
+        for (let i = 0; i< statusJson[sdk]["installed"].length;i++){
+          if(statusJson[sdk]["installed"][i]["type"]==rowObj["type"]&& statusJson[sdk]["installed"][i]["sdk_version"]==rowObj["sdk_version"]){
+            isInstalled = true
+            break;
+          }
+        }
+
+      }
+      if(isInstalled){
+        return `<button onclick ="doRowAction('INSTALL_COMP','${btoa(JSON.stringify(rowObj))}','${compName}','${sdk}')">Uninstall</button>`
+      }else{
+        return `<button onclick ="doRowAction('INSTALL_COMP','${btoa(JSON.stringify(rowObj))}','${compName}','${sdk}')">Install</button>`
+      }
+      // if(rowObj["isInProgress"]){
+      //   return `<div class ="loader"></div> <div>Installing</div>`
+      // }else{
+        
+      // }
+    }
+    getProgressTreeGridView(){
+      return `<div class="table-wrap"><table id="treegrid" role="treegrid" aria-label="Inbox">
+      <colgroup>
+        <col id="treegrid-col1">
+        <col id="treegrid-col2">
+        <col id="treegrid-col3">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">SDK</th>
+          <th scope="col">Component</th>
+          <th scope="col">Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+          <td role="gridcell">TV</td>
+          <td role="gridcell"></td>
+          <td role="gridcell"></td>
+        </tr>
+        <tr role="row" aria-level="2" aria-posinset="1" aria-setsize="3">
+          <td role="gridcell">cli</td>
+          <td role="gridcell">1.0.1</td>
+          <td role="gridcell"><div class="loader"></div></td>
+        </tr>
+        <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+        <td role="gridcell">OSE</td>
+        <td role="gridcell"></td>
+        <td role="gridcell"></td>
+      </tr>
+      <tr role="row" aria-level="2" aria-posinset="1" aria-setsize="3">
+        <td role="gridcell">cli</td>
+        <td role="gridcell">1.0.1</td>
+        <td role="gridcell"><div class="loader"></div></td>
+      </tr>
+      </tbody>
+    </table></div>`
+
+    }
 
     getCompTreeGridView(sdk){
-    let confiData =   this.getConfigFile();
-   
-    if(confiData !=""){
-      let config = confiData[sdk]
+    let configData =   this.getConfigFile();
+    let statusJson =   this.getStatusJson();
+    if(configData !=""){
+      let config = configData[sdk]
       let treeHTML = "";
       for (let i = 0; i< config["components"].length;i++){
-        let compName = config["components"][i]
-        treeHTML = treeHTML+ this.getTreeTableParentRowHTML(compName)
+        let compName = config["components"][i]["type"]
+        treeHTML = treeHTML+ this.getTreeTableParentRowHTML(compName,config["components"][i]["displayName"])
         for (let j = 0; j< config[compName].length;j++){
-          treeHTML = treeHTML+ this.getTreeTableChildRowHTML( config[compName][j],compName,sdk,j)
+          treeHTML = treeHTML+ this.getTreeTableChildRowHTML( config[compName][j],compName,sdk,statusJson,j)
        }
       }
       treeHTML = this.getTreeTableHeaderHTML(sdk)+treeHTML+this.getTreeTableFooterHTML()
@@ -211,6 +277,19 @@ class SDK_Manager {
     }
     getConfigFile(){
       let jsonPath  =  vscode.Uri.joinPath(this.context.extensionUri, 'media', "package_manager", "js", 'config.json')
+      let configData =""
+      try {
+        configData = fs.readFileSync(jsonPath.fsPath, 'utf8');
+        return  JSON.parse(configData);
+      }
+      catch (e) {
+          console.log("err " + e);
+          return "";
+      }
+  
+    }
+    getStatusJson(){
+      let jsonPath  =  vscode.Uri.joinPath(this.context.extensionUri, 'media', "package_manager", "js", 'status.json')
       let configData =""
       try {
         configData = fs.readFileSync(jsonPath.fsPath, 'utf8');

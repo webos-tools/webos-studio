@@ -518,12 +518,17 @@ document.addEventListener('DOMContentLoaded', function () {
   var doAllowRowFocus = cellParam !== 'force';
   var doStartRowFocus = doAllowRowFocus && cellParam !== 'start';
   TreeGrid(
-    document.getElementById('treegrid_tv_components'),
+    document.getElementById('treegrid_tv'),
     doAllowRowFocus,
     doStartRowFocus
   );
   TreeGrid(
-    document.getElementById('treegrid_ose_components'),
+    document.getElementById('treegrid_ose'),
+    doAllowRowFocus,
+    doStartRowFocus
+  );
+  TreeGrid(
+    document.getElementById('treegrid_progress'),
     doAllowRowFocus,
     doStartRowFocus
   );

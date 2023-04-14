@@ -1,150 +1,113 @@
+
 {
-    "tv_components": {
-        "location": "",
-        "components":["ares-cli","emulator"],
-        "ares-cli": [
+    "sdk_env": "LG_WEBOS_STUDIO_SDK_HOME",
+    "tv": {
+        "subDirName":"tv",
+        "components": [
             {
-                "description": "AresCli -version 1.0.1",
-                "ver": "1.0.1",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"release 1",
-                "summary":""
+                "type": "cli",
+                "displayName": "Command Line Interface (CLI)",
+                "subDirName":"ares-cli"
             },
             {
-                "description": "AresCli -version 1.0.2",
-                "ver": "1.0.2",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"abcd2",
-                "summary":""
+                "type": "emulator",
+                "displayName": "Emulator",
+                "subDirName":"emulator"
             }
+        ],
+        "cli": [
+            {
+                "subDirName":"v1.0.1",
+                "displayName": "webOS TV CLI",
+                "sdk_version": "1.0.1",
+                "apiLevel": "21",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
+            },
+            {
+                "subDirName":"v1.0.1",
+                "displayName": "webOS TV CLI",
+                "sdk_version": "1.0.2",
+                "apiLevel": "22",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
+            }
+          
         ],
         "emulator": [
             {
-                "description": "Emulator 1.0.1",
-                "ver": "1.0.1",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
+                "subDirName":"v1.0.1",
+                "displayName": "webOS TV Emulator",
+                "sdk_version": "1.0.1",
+                "apiLevel": "21",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
             },
             {
-                "description": "Emulator -version 1.0.2",
-                "ver": "1.0.2",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
+                "subDirName":"v1.0.1",
+                "displayName": "webOS TV Emulator",
+                "sdk_version": "1.0.2",
+                "apiLevel": "22",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
             }
         ]
-
     },
-    "ose_components": {
-        "location": "",
-        "components":["ares-cli","enact-cli","emulator"],
-        "ares-cli": [
+    "ose": {
+        "subDirName":"ose",
+        "components": [
             {
-                "description": "AresCli -version 1.0.1",
-                "ver": "1.0.1",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
+                "type": "cli",
+                "displayName": "Command Line Interface (CLI)",
+                "subDirName":"ares-cli"
             },
             {
-                "description": "AresCli -version 1.0.2",
-                "ver": "1.0.2",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
+                "type": "emulator",
+                "displayName": "Emulator",
+                "subDirName":"ares-cli"
             }
+        ],
+        "cli": [
+            {
+                "subDirName":"v1.0.1",
+                "displayName": "webOS OSE CLI",
+                "sdk_version": "1.0.1",
+                "apiLevel": "21",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
+            }
+          
         ],
         "emulator": [
             {
-                "description": "Emulator 1.0.1",
-                "ver": "1.0.1",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
+                "subDirName":"v1.0.1",
+                "displayName": "webOS OSE Emulator",
+                "sdk_version": "1.0.1",
+                "apiLevel": "21",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
             },
             {
-                "description": "Emulator -version 1.0.2",
-                "ver": "1.0.2",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
-            }
-        ],
-        "enact-cli": [
-            {
-                "description": "Emulator 1.0.1",
-                "ver": "1.0.1",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
-            },
-            {
-                "description": "Emulator -version 1.0.2",
-                "ver": "1.0.2",
-                "repoLocation": "repolocation",
-                "repoType": "npm",
-                "isInstalled": false,
-                "installedLocation":"",
-                "isActive": false,
-                "isUpdateAvailable": false,
-                "isInProgress":false,
-                "releaseNote":"",
-                "summary":""
+                "subDirName":"v1.0.2",
+                "displayName": "webOS OSE Emulator",
+                "sdk_version": "1.0.2",
+                "apiLevel": "22",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
             }
         ]
     }
