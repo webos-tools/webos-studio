@@ -86,20 +86,23 @@ class SDK_Manager {
         const commonJs = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'media', "package_manager", "js", 'common.js'));
         const treGridCss = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'media', "package_manager", "css", 'treegrid.css'));
         const treeGridJS = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'media', "package_manager", "js", 'treegrid.js'));
+        const commonCss = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri,'media', "package_manager", "css", 'common.css'));
       
         return `
         <html lang="en">
         <head>
+        <link href="${commonCss}" rel="stylesheet">
         <link href="${tabviewCss}" rel="stylesheet">
         <link href="${treGridCss}" rel="stylesheet">
+        	
 
         <dialog open  class="dlg" >
               <h3 class="tabheader">Package Manager</h3>
-
+          
               <div class="tab">
                 <button id="tvhead" class="tablinks" onclick="openTab(event, 'tv')">webOS TV </button>
                 <button id="osehead" class="tablinks" onclick="openTab(event, 'ose')">webOS OSE</button>
-                <button id="prghead" style ="align:right" class="tablinks" onclick="openTab(event, 'progress')">Progress</button>
+                <button id="prghead" style ="  border-top-right-radius: 5px;" class="tablinks" onclick="openTab(event, 'progress')">Progress</button>
               </div>
 
               <div id="tv" class="tabcontent">
@@ -110,7 +113,7 @@ class SDK_Manager {
                 
                 <fieldset id="tvnotes" class="notes">
                   <legend class="notelegend" >Release Notes</legend>
-                  <div id="tvnotecontent"> 
+                  <div class ="notecontent" id="tvnotecontent"> 
                    
                   </div>
                 </fieldset>
@@ -125,7 +128,7 @@ class SDK_Manager {
              
                 <fieldset id="osenotes" class="notes">
                 <legend class="notelegend" >Release Notes</legend>
-                <div id="osenotecontent"> 
+                <div class ="notecontent" id="osenotecontent"> 
                
                 </div>
               </fieldset>
@@ -146,16 +149,16 @@ class SDK_Manager {
       return `
       <div class="table-wrap"><table id="${"treegrid_"+id}" class="treegrid" role="treegrid" aria-label="Inbox">
       <colgroup>
-        <col id="treegrid-col1">
-        <col id="treegrid-col2">
-        <col id="treegrid-col3">
-        <col id="treegrid-col4">
+        <col id="treegrid-col1" style="width:40%">
+        <col id="treegrid-col2" style="width:20%" >
+        <col id="treegrid-col3" style="width:20%" >
+        <col id="treegrid-col4" style="width:20%" >
       </colgroup>
       <thead>
         <tr>
-          <th scope="col">Component</th>
-          <th scope="col">Version</th>
-          <th scope="col">API Level</th>
+          <th scope="col" >Component</th>
+          <th scope="col" >Version</th>
+          <th scope="col" >API Level</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -181,12 +184,12 @@ class SDK_Manager {
     }
     getTreeTableChildRowHTML(rowObj,compName,sdk,statusJson,j){
       let altRowStyle ="";
-      if((j+1) %2 == 0){
-        altRowStyle = ` style="background-color:whitesmoke"`
-      }
+      // if((j+1) %2 == 0){
+      //   altRowStyle = ` style="background-color:whitesmoke"`
+      // }
       let rowObjB64 =Buffer.from(JSON.stringify(rowObj)).toString('base64')
       return `
-      <tr ${altRowStyle} data-compName="${compName}" data-sdk="${sdk}" data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="2" aria-posinset="1" aria-setsize="3">
+      <tr class="trhover childrow" ${altRowStyle} data-compName="${compName}" data-sdk="${sdk}" data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="2" aria-posinset="1" aria-setsize="3">
       <td role="gridcell">${rowObj.displayName}</td>
       <td role="gridcell"> ${rowObj.sdk_version}</td>
       <td role="gridcell"> ${rowObj.apiLevel}</td>
@@ -206,9 +209,9 @@ class SDK_Manager {
 
       }
       if(isInstalled){
-        return `<button onclick ="doRowAction('INSTALL_COMP','${btoa(JSON.stringify(rowObj))}','${compName}','${sdk}')">Uninstall</button>`
+        return `<button  class="tg_button" onclick ="doRowAction('INSTALL_COMP','${btoa(JSON.stringify(rowObj))}','${compName}','${sdk}')">Uninstall</button>`
       }else{
-        return `<button onclick ="doRowAction('INSTALL_COMP','${btoa(JSON.stringify(rowObj))}','${compName}','${sdk}')">Install</button>`
+        return `<button class="tg_button" onclick ="doRowAction('INSTALL_COMP','${btoa(JSON.stringify(rowObj))}','${compName}','${sdk}')">Install</button>`
       }
       // if(rowObj["isInProgress"]){
       //   return `<div class ="loader"></div> <div>Installing</div>`

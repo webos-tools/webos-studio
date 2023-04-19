@@ -1,3 +1,7 @@
+.table-wrap{
+  height: 200px;
+  overflow: auto;
+}
 .treegrid {
     width: 100%;
     white-space: nowrap;
@@ -8,6 +12,11 @@
   .treegrid tr {
     display: table-row;
     cursor: default;
+
+  }
+  .trhover:hover{
+    opacity: .8;
+    background-color: var(--vscode-list-deemphasizedForeground);
   }
   
   /* Extra space between columns for readability */
@@ -20,16 +29,27 @@
   
   .treegrid tbody td {
     cursor: default;
+    
   }
+  /* .treegrid tbody {
+    height: 200px;
+    overflow: auto;
+    
+  } */
+ 
+/*   
   
-  .treegrid-col1,
-  .treegrid-col3 {
-    width: 30%;
+  .treegrid-col1 {
+    width: 40%;
   }
-  
+  .treegrid-col2
+  .treegrid-col3
+  .treegrid-col4 {
+    width: 20%;
+  } */
   .treegrid th {
     text-align: left;
-    background-color: #eee;
+    /* background-color: #eee; */
   }
   
   .treegrid a {
@@ -37,11 +57,16 @@
     padding-right: 0.25ch;
   }
   
-  .treegrid tr:focus,
+
+  /* .treegrid tr:focus,
   .treegrid td:focus,
-  .treegrid a:focus {
-    outline: 2px solid hsl(216deg 94% 70%);
-    background-color: hsl(216deg 80% 97%);
+  .treegrid a:focus  */
+
+  .childrow:focus
+ {
+    /* outline: 2px solid hsl(216deg 94% 70%);
+    background-color: hsl(216deg 80% 97%); */
+    background-color: var(--vscode-list-deemphasizedForeground);
   }
   
   .treegrid tr > td:not(:first-child),
@@ -77,7 +102,7 @@
   
   /* Collapse/expand icons */
   .treegrid tr > td:first-child::before {
-    font-family: monospace;
+    /* font-family: monospace; */
     content: " ";
     display: inline-block;
     width: 2ch;
@@ -91,9 +116,11 @@
     cursor: pointer;
   
     /* Load both right away so there is no lag when we need the other */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='black' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A"),
+    /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='black' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A"),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
-    background-repeat: no-repeat;
+    */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
+      background-repeat: no-repeat;
   }
   
   .treegrid tr[aria-expanded="true"] > td:first-child::before,

@@ -1,27 +1,30 @@
 body {
-  font-family: Arial;
-  
+  /* font-family: Arial; */
+/* background-color: ; */
 }
 
 /* Style the tab */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border: none;
+  /* border: 1px solid  var(--vscode-list-deemphasizedForeground); */
+  /* background-color: #f1f1f1; */
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  border-bottom: none;
 }
 .tabheader{
-  margin-top: -12px;
+  margin-top: 0px;
+  /* margin-top: -12px;
   margin-left: -12px;
-  margin-right: -12px;
-  background-color: #ccc;
-  padding: 6px;
+  margin-right: -12px; */
+  /* background-color:var(--vscode-list-deemphasizedForeground); */
+  /* padding: 6px; */
 }
 
 /* Style the buttons inside the tab */
 .tab button {
-  background-color: inherit;
+  /* background-color: inherit; */
   float: left;
   border: none;
   outline: none;
@@ -33,44 +36,56 @@ body {
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  background-color: #ddd;
+  /* background-color: #ddd; */
+  background-color: var(--vscode-list-deemphasizedForeground);
+  opacity: .5;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
-  background-color: #ccc;
+  /* background-color:var(--vscode-listFilterWidget-shadow) */
+  background-color: var(--vscode-list-deemphasizedForeground);
+  
 }
 
 /* Style the tab content */
 .tabcontent {
   display: none;
   padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-  min-height: 70%;
+  border: 1px solid var(--vscode-list-deemphasizedForeground);
+ 
+  /* min-height: 70%; */
 
 }
 .notes {
  
   padding: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid  var(--vscode-list-deemphasizedForeground);;
   border-radius: 3px;
-  background-color: whitesmoke;
-  margin-left: -12px;
-  margin-right: -12px;
+  margin-top: 10px;
+  /* background-color: whitesmoke; */
+  /* margin-left: -12px;
+  margin-right: -12px; */
 }
 .notelegend{
   padding:2px;
   font-weight: bold;
 }
-
+.notecontent{
+  padding:5px;
+}
 .dlg {
   width: 70%;
   /* position: absolute; */
   top: 50%;
-  min-height: 70%;
+  /* min-height: 70%; */
+  /* margin: auto; */
   
   transform: translatey(-50%);
   border-radius: 5px;
-  /* background-color: var(--checkbox-background); */
+  background-color: var(--vscode-activityBar-background);
+  border: var(--vscode-activityBar-border);
+  color:var(--vscode-activityBar-foreground);
+
+
 }

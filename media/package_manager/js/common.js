@@ -41,4 +41,22 @@ function handleMsg() {
     }
   });
 }
+function getTheme(){
+
+    switch (document.body.getAttribute("data-vscode-theme-kind")) {
+
+        case "vscode-dark":
+            href = hljscssElement.href.replace(this.currentThemeCss, "dark.css");
+            this.currentThemeCss  ="dark.css"
+            break;
+        case "vscode-light":
+            href = hljscssElement.href.replace(this.currentThemeCss, "light.css");
+            this.currentThemeCss  ="light.css"
+            break;
+        case "vscode-high-contrast":
+            href = hljscssElement.href.replace(this.currentThemeCss, "contrast.css");
+            this.currentThemeCss  ="contrast.css"
+            break;
+    }
+}
 handleMsg();

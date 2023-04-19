@@ -17,6 +17,7 @@
         ],
         "cli": [
             {
+                "comp_uid":"tv_cli_1",
                 "subDirName":"v1.0.1",
                 "displayName": "webOS TV CLI",
                 "sdk_version": "1.0.1",
@@ -27,6 +28,29 @@
                 "password": "sdk"
             },
             {
+                "comp_uid":"tv_cli_2",
+                "subDirName":"v1.0.1",
+                "displayName": "webOS TV CLI",
+                "sdk_version": "1.0.1",
+                "apiLevel": "21",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
+            },
+            {
+                "comp_uid":"tv_cli_3",
+                "subDirName":"v1.0.1",
+                "displayName": "webOS TV CLI",
+                "sdk_version": "1.0.1",
+                "apiLevel": "21",
+                "repository": "repolocation",
+                "description": "release 1",
+                "userid": "sdk",
+                "password": "sdk"
+            },
+            {
+                "comp_uid":"tv_cli_4",
                 "subDirName":"v1.0.1",
                 "displayName": "webOS TV CLI",
                 "sdk_version": "1.0.2",
@@ -40,6 +64,7 @@
         ],
         "emulator": [
             {
+                "comp_uid":"tv_emulator_1",
                 "subDirName":"v1.0.1",
                 "displayName": "webOS TV Emulator",
                 "sdk_version": "1.0.1",
@@ -50,6 +75,7 @@
                 "password": "sdk"
             },
             {
+                "comp_uid":"tv_emulator_2",
                 "subDirName":"v1.0.1",
                 "displayName": "webOS TV Emulator",
                 "sdk_version": "1.0.2",
@@ -77,6 +103,7 @@
         ],
         "cli": [
             {
+                "comp_uid":"ose_tv_1",
                 "subDirName":"v1.0.1",
                 "displayName": "webOS OSE CLI",
                 "sdk_version": "1.0.1",
@@ -90,6 +117,7 @@
         ],
         "emulator": [
             {
+                "comp_uid":"ose_emulator_1",
                 "subDirName":"v1.0.1",
                 "displayName": "webOS OSE Emulator",
                 "sdk_version": "1.0.1",
@@ -100,6 +128,7 @@
                 "password": "sdk"
             },
             {
+                "comp_uid":"ose_emulator_2",
                 "subDirName":"v1.0.2",
                 "displayName": "webOS OSE Emulator",
                 "sdk_version": "1.0.2",
