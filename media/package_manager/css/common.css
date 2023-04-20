@@ -32,3 +32,23 @@
 .tg_button.secondary:hover {
 	background: var(--vscode-button-secondaryHoverBackground);
 }
+.rowIcon {
+    padding:5px;
+	cursor: pointer;
+	color:yellow
+}
+.rowIconText {
+    /* display:none; */
+	    /* display: none; */
+		color: var(--vscode-notifications-foreground);
+		position: absolute;
+		background-color: var(--vscode-list-deemphasizedForeground);
+		border-radius: 5px;
+		padding: 10px;
+		background-color: var(--vscode-notifications-background);
+		border-style: solid;
+		border-width: 1px;
+		border-color: var(--vscode-notifications-border);
+	
+    
+}

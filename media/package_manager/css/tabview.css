@@ -15,11 +15,7 @@ body {
 }
 .tabheader{
   margin-top: 0px;
-  /* margin-top: -12px;
-  margin-left: -12px;
-  margin-right: -12px; */
-  /* background-color:var(--vscode-list-deemphasizedForeground); */
-  /* padding: 6px; */
+ 
 }
 
 /* Style the buttons inside the tab */
@@ -36,14 +32,14 @@ body {
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-  /* background-color: #ddd; */
+ 
   background-color: var(--vscode-list-deemphasizedForeground);
   opacity: .5;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
-  /* background-color:var(--vscode-listFilterWidget-shadow) */
+
   background-color: var(--vscode-list-deemphasizedForeground);
   
 }
@@ -54,8 +50,6 @@ body {
   padding: 6px 12px;
   border: 1px solid var(--vscode-list-deemphasizedForeground);
  
-  /* min-height: 70%; */
-
 }
 .notes {
  
@@ -63,9 +57,7 @@ body {
   border: 1px solid  var(--vscode-list-deemphasizedForeground);;
   border-radius: 3px;
   margin-top: 10px;
-  /* background-color: whitesmoke; */
-  /* margin-left: -12px;
-  margin-right: -12px; */
+
 }
 .notelegend{
   padding:2px;
@@ -76,6 +68,7 @@ body {
 }
 .dlg {
   width: 70%;
+  min-width: 50%;
   /* position: absolute; */
   top: 50%;
   /* min-height: 70%; */

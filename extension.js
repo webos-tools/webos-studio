@@ -831,7 +831,7 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('sdkmanager.start', async () => {
 
         const sdkManager = new SDK_Manager(context);
-        sdkManager.startEditor();
+        sdkManager.loadSDKManager();
 
     }));
 
