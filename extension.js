@@ -155,6 +155,9 @@ function activate(context) {
                     const blankSplit = lineSplit[3].split(" ");
                     methodName = blankSplit[0];
                 }
+                //remove ' or " in methodName
+                methodName = methodName.split("\"")[0];
+                methodName = methodName.split("'")[0];
 
                 // eslint-disable-next-line no-async-promise-executor
                 const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodName);
