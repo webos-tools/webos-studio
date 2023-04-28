@@ -190,10 +190,11 @@ function activate(context) {
             firstSnippetCompletion.sortText = "1";
 
             let snippetDesc = "<p>Example)</p><p>new LS2Request().send({ \
-                        <br>&emsp;service: 'luna://com.webos.service/', \
-                        <br>&emsp;method: 'method', \
-                        <br>&emsp;parameters: 'params' \
+                        <br>&emsp;service: 'luna://com.webos.applicationManager/', \
+                        <br>&emsp;method: 'launch', \
+                        <br>&emsp;parameters: {\"id\":\"com.sample.app\"} \
                         <br>});<p>";
+
             let content = new vscode.MarkdownString(snippetDesc);
             content.supportHtml = true;
             content.isTrusted = true;
@@ -203,7 +204,7 @@ function activate(context) {
             const stringFirstSub = 'new LS2Request().send({' + '\n'
                 + '\t' + 'service: \'luna://' + '${1}\',' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
-                + '\t' + 'parameters: \'${3}\'' + '\n'
+                + '\t' + 'parameters: {${3}}' + '\n'
             + '});';
 
             firstSnippetCompletion.insertText = new vscode.SnippetString(stringFirstSub);
