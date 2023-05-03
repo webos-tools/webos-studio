@@ -21,7 +21,7 @@ const { AppsProvider } = require('./src/webososeApps');
 const { uninstallApp, closeApp, getDeviceInfo, setDefaultDevice } = require('./src/contextMenus');
 const { InstanceWebviewProvider } = require('./src/instanceWebviewProvider');
 const { ExplorerMenuMgr } = require('./src/explorerMenuMgr');
-const { getDefaultDir } = require('./src/lib/workspaceUtils');
+const { getDefaultDir, isAppDir } = require('./src/lib/workspaceUtils');
 const { InputChecker } = require('./src/lib/inputChecker');
 const { HelpProvider, renderReadMe, renderChangeLog } = require('./src/helpProvider');
 const { IPK_ANALYZER } = require('./src/ipkAnalyzer');
@@ -133,7 +133,7 @@ function activate(context) {
     );
 
     const paramProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript'], {
+        ['plaintext','javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
             const returnItemArray = [];
@@ -284,7 +284,7 @@ function activate(context) {
     });
 
     const snippetParamProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript'], {
+        ['plaintext','javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
 
@@ -848,6 +848,29 @@ function getResourcePath() {
     return resource;
 }
 
+function getAppsListinWorkspace(folderPath, type) {
+    let dirArray = [];
+    if (folderPath && fs.existsSync(folderPath)) {
+        try {
+            dirArray = fs.readdirSync(folderPath, { withFileTypes: true })
+                .filter(isAppDir)
+            if (type && type == "service") {
+                dirArray = dirArray.filter(dirent => dirent.type == "js-service")
+                    .map(dirent => dirent.name);
+            } else if (type && type == "apps") {
+                dirArray = dirArray.filter(dirent => dirent.type != "js-service")
+                    .map(dirent => dirent.name);
+            }
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+        return dirArray;
+    } else {
+        return null;
+    }
+}
+
 function chooseAPILevel(filepath) {
     if (fs.existsSync(filepath)) {
         return Promise.resolve();
@@ -907,8 +930,15 @@ function setFromConvertCacheAPI() {
         if (docUri?.fsPath) {
             const uriPath = docUri.fsPath;
             const parent = (vscode.Uri.file(path.dirname(uriPath)));
-            const file =  vscode.Uri.file(path.join(parent.fsPath, ".webosstudio.config"));
-            filepath = file.fsPath;
+            const workspaceFloder = vscode.workspace.getWorkspaceFolder(parent);
+            const appList = getAppsListinWorkspace(workspaceFloder.uri.fsPath);
+
+            for(let appName of appList) {
+                if (appName instanceof fs.Dirent && parent.fsPath.indexOf(appName.name) > 0) {
+                    const file =  vscode.Uri.file(path.join(workspaceFloder.uri.fsPath, appName.name, ".webosstudio.config"));
+                    filepath = file.fsPath;
+                }
+            }
         }
     }
 
