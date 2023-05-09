@@ -578,7 +578,9 @@ class InstanceWebviewProvider {
             logger.log("------------------------------------------------")
             exec(commandstring, (error, stdout, stderr) => {
                 if(stdout){
-                    logger.log(stdout )
+                    if (!commandstring.includes("showvminfo")) {
+                        logger.log(stdout )
+                    }
                 }
                 if (error) {
                     logger.error(error )

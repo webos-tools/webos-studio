@@ -25,7 +25,9 @@ function _execAsync(cmd, option, next) {
         logger.log("------------------------------------------------")
         exec(cmd, execOption, (err, stdout, stderr) => {
             if(stdout){
-                logger.log(stdout);
+                if (!cmd.includes('list vms -l')) {
+                    logger.log(stdout);
+                }
             }
             if(stderr){
                 logger.warn(stderr);
