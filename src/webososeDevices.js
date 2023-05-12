@@ -5,6 +5,7 @@
 const vscode = require('vscode');
 const path = require('path');
 const { getDeviceList, getInstalledList, getRunningList,updateDeviceStatus } = require('./lib/deviceUtils');
+const { logger } = require('./lib/logger');
 
 class DeviceProvider {
     _onDidChangeTreeData = new vscode.EventEmitter();
@@ -47,6 +48,9 @@ class DeviceProvider {
             description += `${device.username}@${device.ip}:${device.port}`
             array.push(new Device(device.name, description,device["isOnline"]));
         });
+        if(logger.extInit == false)
+            logger.logAny("webOS Studio Initialized successfully.");
+        logger.extInit = true;
         return array;
     }
 
