@@ -2,27 +2,33 @@
 
 This extension helps develop apps and services for [webOS Open Source Edition (OSE)](https://webosose.org).
 
-> **IMPORTANT NOTICE:** If you installed the [webOS OSE](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose) extension, please uninstall it first. Then install this extension.
+> **IMPORTANT NOTICE:** 
+> - If you installed the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose), please uninstall it first. Then install this extension.
+> - Read [Requirements](#requirements) and [Setup](#setup) sections.
 
 ---
 
 **Table of Contents**
 
-- [Prerequisites](#prerequisites)
-- [Workspace Setup](#workspace-setup)
+- [Requirements](#requirements)
+  - [Hardware](#hardware)
+  - [Software](#software)
+- [Setup](#setup)
+  - [Selecting a Workspace Folder](#selecting-a-workspace-folder)
+  - [Installing Global Packages](#installing-global-packages)
 - [Basic Usage](#basic-usage)
-    - [Creating an App/Service](#creating-an-appservice)
-    - [Modifying the Source Code](#modifying-the-source-code)
-    - [Adding Known Devices](#adding-known-devices)
-    - [Packaging / Installing / Launching](#packaging--installing--launching)
-    - [Debugging the App/Service](#debugging-the-appservice)
-    - [Previewing the App (Web and Enact)](#previewing-the-app-web-and-enact)
-    - [Running ESLint on the Enact App](#running-eslint-on-the-enact-app)
+  - [Creating an App/Service](#creating-an-appservice)
+  - [Editing the Source Code](#editing-the-source-code)
+  - [Adding Known Devices](#adding-known-devices)
+  - [Previewing with Live Reload](#previewing-with-live-reload)
+  - [Packaging / Installing / Launching](#packaging--installing--launching)
+  - [Debugging](#debugging)
+  - [Running ESLint on the Enact App](#running-eslint-on-the-enact-app)
 - [Other Features](#other-features)
-    - [Project Wizard](#project-wizard)
-    - [Auto-Completion](#auto-completion)
-    - [Emulator Manager](#emulator-manager)
-    - [IPK Analyzer](#ipk-analyzer)
+  - [Auto-Completion](#auto-completion)
+  - [Emulator Manager](#emulator-manager)
+  - [IPK Analyzer](#ipk-analyzer)
+  - [Process Log](#process-log)
 - [Command Palette](#command-palette)
 - [Miscellaneous Information](#miscellaneous-information)
 - [References](#references)
@@ -31,24 +37,50 @@ This extension helps develop apps and services for [webOS Open Source Edition (O
 
 ---
 
-> **Note:** Some features of this extension are originated from the [webOS TV extension](https://marketplace.visualstudio.com/items?itemName=webOSTVSDK.webostv).
+> Some features of this extension are originated from the [webOS TV extension](https://marketplace.visualstudio.com/items?itemName=webOSTVSDK.webostv).
 
-## Prerequisites
+## Requirements
 
-- Microsoft Visual Studio Code v1.58.0 or higher
-- Node.js from v8.12.0 to v14.15.1 (recommended)
-- Python 3.6 or higher (Only for Emulator)
-- VirtualBox (Only for Emulator)
-- Basic understanding of webOS web app, Enact app, and JavaScript service development. Refer to [www.webosose.org/docs/tutorials/](https://www.webosose.org/docs/tutorials/).
+This extension helps the users develop webOS web apps, Enact apps, and JavaScript services. So the users need a basic understanding of webOS OSE developments. If you are not familiar with webOS, please refer to [www.webosose.org/docs/tutorials/](https://www.webosose.org/docs/tutorials/).
 
-## Workspace Setup
+### Hardware
 
-Before creating your first project, we recommend that you set a workspace &mdash; it's a kind of base directory of multiple projects &mdash; for all your webOS apps/services. All projects contained within the workspace are shown in the **APPS IN WORKSPACE** view. This will make managing your projects more effectively.
+Emulator-related features are not supported in Apple Silicon Mac.
 
-A workspace can be set up in one of two ways:
+### Software
 
-- Navigate to **File** > **Open Folder** and select a directory. This directory is set up as the workspace.
-- When [creating an app/service](#creating-an-appservice) using this extension, the **Project Location** is automatically set up as the workspace.
+> 🚨 **Warning:** If you have installed [webOS TV CLI](https://webostv.developer.lge.com/develop/tools/cli-installation), you MUST delete it before installing this extension.
+
+| Software | Required version |
+|----------|------------------|
+| Microsoft Visual Studio Code | 1.58.0 or higher |
+| Node.js | 8.12.0 ~ 14.15.1 (Recommended) |
+| Python | 3.6 or higher |
+| VirtualBox | 6.1 or higher |
+
+## Setup
+
+Before creating your first project, do the following tasks to set up your webOS Studio.
+
+### Selecting a Workspace Folder
+
+The workspace is a base directory for all your webOS apps/services. All actions in webOS Studio are based to this folder. 
+
+Navigate to **File** > **Open Folder** and select a directory. This directory is set up as the workspace.
+
+> **Note:** The workspace in webOS Studio is different from that of VS Code. webOS Studio can only have one root directory as a workspace at a time.
+
+### Installing Global Packages
+
+Execute `webOS OSE: Install Global Packages` in the Command Palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>). This task is only required the first time you install the webOS Studio extension.
+
+![Installing global packages](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/install-global-packages.png)
+
+Or you can install the global packages using the following command in the terminal:
+
+``` bash
+npm install -g @enact/cli @webosose/ares-cli patch-package
+```
 
 ## Basic Usage
 
@@ -56,38 +88,36 @@ This section explains a typical development flow of webOS apps and services usin
 
 ### Creating an App/Service
 
-> **Note:** If you failed to create an app or service, please do the followings:
-> - Execute `webOS OSE: Install Global Packages` in the Command Palette (Ctrl + Shift + P).
-> - Update `npm` to the latest version.
+You can create an app or service using the project wizard. Click the **+** button in the **APPS IN WORKSPACE** view or execute `webOS OSE: Create ProjectWizard` in the **Command Palette**.
 
-1. Click the **+** button in the **APPS IN WORKSPACE** view.
-    
-    ![Add button in the view](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-button-apps-in-workspace.png)
+![Creating an app](images/creating-an-app.gif)
 
-2. Select the project type in **Command Palette**, and enter the information depending on your type.
+| Item | Description |
+|------|-------------|
+| API Version | This is an API level of webOS OSE. webOS OSE supports many useful features through [LS2 API](https://www.webosose.org/docs/reference/#ls2-api). And the API level is a unique indicator for managing LS2 APIs. See [LS2 API Index](https://www.webosose.org/docs/reference/ls2-api/ls2-api-index/). |
+| Supported Types | <p>Supported types are as follows:</p> <dl> <dt>Basic Web App</dt><dd>A basic web app for webOS OSE.</dd> <dt>Hosted Web App</dt><dd>A hosted web app.</dd> <dt>Web App Info</dt><dd>Configuration file for a web app (<code>appinfo.json</code>). See <a href="https://www.webosose.org/docs/guides/development/configuration-files/appinfo-json/">appinfo.json</a>.</dd> <dt>JS Service</dt><dd>A JavaScript service for webOS OSE. <strong>This service must be packaged and installed with an app.</strong></dd> <dt>JS Service Info</dt><dd>Configuration files for a JS service (<code>services.json</code> and <code>package.json</code>). See <a href="https://www.webosose.org/docs/guides/development/configuration-files/services-json/">services.json</a>.</dd> <dt>Sandstone, Moonstone</dt><dd>Enact apps with the Sandstone library or the Moonstone library. For more details about Enact apps, visit <a href="https://enactjs.com/">the Enact website</a>.</dd> </dl> |
 
-    ![Creating Enact App](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/creating-apps-services.gif)
+To use [webos-service library](https://www.webosose.org/docs/reference/webos-service-library/webos-service-library-api-reference/) in JavaScript service or Enact app projects, check the **Yes** button for **Add webOS library**.
+ 
+![Add LS2 APIs to projects](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-ls2-apis.jpg)
 
-    Some types need additional steps. Check the following table:
+Or install it in the **APP IN WORKSPACE** view.
 
-    | Type | Description |
-    |------|-------------|
-    | Enact app | For UI components for the Enact app, you can choose either [sandstone](https://enactjs.com/docs/modules/sandstone/ActionGuide/) or [moonstone](https://enactjs.com/docs/modules/moonstone/BodyText/) library. <br />![Select Enact Library](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/select-enact-library.jpg) |
-    | JavaScript Service | A JavaScript service always needs an app to be packaged with. Choose an app or click **Choose a Different App**. <br />![Link an app to the service](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/link-an-app-to-the-service.jpg) |
-    | Enact app & JavaScript service | If you want to [webos-service library](https://www.webosose.org/docs/reference/webos-service-library/webos-service-library-api-reference/) and the content assistant feature for the library, click **Yes**. <br />![Add webos-service library](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-webos-service-library.jpg) <br />Or you can add this library after you create the app or service. In the **APPS IN WORKPLACE** view, right-click your app or service and click **Install webOS NPM Library**. <br />![Install webos-service library using NPM](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/install-webos-service-library-using-npm.jpg) |
-    | Hosted web app | Enter the URL to show. <br />![Enter the URL for a hosted web app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/enter-the-url-for-hosted-web-app.jpg)|
+![Install webos-service library using NPM](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/install-webos-npm-library.png)
 
-### Modifying the Source Code
+### Editing the Source Code
 
-Now that the app or service is created, update (implement) the source code for the project. 
+Now it's time to implement your own features on the created apps or services.
 
-The extension also provides the content assist feature for Enact apps (for webOS LS2 APIs and Enact APIs) and JavaScript services (for webOS LS2 APIs). This means if the developer types a keyword, through the content-assist feature, the API syntax and documentation (if available) are shown:
+webOS Studio supports a powerful content-assist feature called *Auto-Completion*. Auto-completion includes API suggestions and automatically completes method names, helping users implement webOS features more easily.
 
-![Content assistant feature](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/content-assist.png)
+For more details about the auto-completion feature, see [Auto-Completion](#auto-completion).
+
+![Auto Compleation Example](images/auto-completion-example.jpg)
 
 ### Adding Known Devices
 
-The known device is a webOS device that user can access to.
+The known device is a webOS device that the user can access.
 
 > **Note:** This step is required only once per device.
 
@@ -104,6 +134,18 @@ The known device is a webOS device that user can access to.
 3. Set the device as the default device. This ensures that all device operations are performed on that device.
 
     ![Set the default device](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/set-default-device.jpg)
+
+### Previewing with Live Reload
+
+You can preview web apps or Enact apps before installing them.
+
+In the **APPS IN WORKSPACE** view, right-click the app and click **Preview Application [Device]** or **Preview Application [Local]**. The preview of the app is automatically launched on the target device (device) or IDE (local).
+
+![Start the app preview](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/app-preview-local.png)
+
+In the preview, you can modify the source codes and check the results instantly.
+
+![Live reload the previewing app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/app-preview-live-reload.gif)
 
 ### Packaging / Installing / Launching
 
@@ -131,49 +173,105 @@ You can uninstall the apps in the **KNOWN DEVICE** view.
 
 Or You can uninstall the app manually using the [appInstallService](https://www.webosose.org/docs/reference/ls2-api/com-webos-appinstallservice) API or [webOS OSE CLI](https://www.webosose.org/docs/tools/sdk/cli/cli-user-guide/).
 
-### Debugging the App/Service
+### Debugging
 
-You can debug web apps, Enact apps, and JavaScript services that are installed on the device (or emulator).
+You can debug apps or services that are installed on [the known devices](#adding-known-devices). Supported types are as follows:
 
-> **Note:** This guide only describes how to start a debugging session and its basic usage. For more details on how to debug on VS Code, refer to the [official guide](https://code.visualstudio.com/docs/editor/debugging).
+- Web app
+- Enact app
+- JavaScript service
+
+![Start a debugging session](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/start-debugging-session.gif)
+
+In the debugging session, you can set breakpoints, check variables, callstack, etc.
+
+![Breakpoint example](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debug-breakpoint.jpg)
 
 #### Prerequisites
 
-- Google Chrome browser must be available/installed on the local system.
-- IP address of target device (or emulator) and IDE should be in the same network for debugging.
+- Apps or services that are installed on target devices or emulators
+    - The target devices or emulators should be registered as [the known devices](#adding-known-devices).
+- (For browser debugging) Chromium-based browser
 
-#### How to Start a webOS Debugging Session
+#### Start a Debugging Session - App 
 
-Right-click an installed app or service and click **Debug App/Service**. After a while, a debugging session will be enabled.
+1. Right-click an installed app.
+2. Click **Debug App/Service**. 
+3. Click **Browser** or **IDE**. 
+    
+    **[Browser]**
 
-![Debug the app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debug-the-app.gif)
+    Enter a path for the browser executable.
+    
+    ![Enter a broweser executable path](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/enter-browser-executable-path.png)
 
-In the **DEBUG CONSOLE** panel, you can check the console messages from the app or service.
+    Then the debugging session will be activated in the browser.
 
-![Debug console](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debug-console.jpg)
+    ![Debugging an app with browser](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debugging-app-with-browser.png)
 
-After a while, the **Run and Debug** view is automatically opened. In the view, you can check variables, callstack, etc.
+    **[IDE]**
+        
+    The **DEBUG CONSOLE** panel will be activated automatically. In the panel, you can check the console messages from the app or service.
 
-![Breakpoint](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debug-breakpoint.jpg)
+    ![Debug console](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debug-console.jpg)
+
+#### Start a Debugging Session - Service 
+
+1. Right-click an installed service.
+2. Click **Debug App/Service**. 
+3. Click **Browser** or **IDE**. 
+    
+    **[Browser]**
+
+    1. After clicking the **Browser** button, a URL for the debugging session will be displayed in the **OUTPUT** panel. Copy the URL.
+    
+        ![URL for debugging service](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/url-for-debugging-service.png)
+
+    2. Open your browser and go to `chrome://inspect`. Configure the URL as follows:
+   
+        ![Configure the debugging URL](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/configure-debugging-url.png)
+
+        > **Note:** Microsoft Edge browser automatically redirects `chrome://inspect` to `edge://inspect`.
+
+    3. Click `inspect`.
+
+        ![Click the inspect button](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/click-the-inspect-button.png)
+
+        This opens a new window for the debugging session.
+
+        ![Debugging a service with browser](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debugging-service-with-browser.png)
+
+    **[IDE]**
+        
+    The **DEBUG CONSOLE** panel will be activated automatically.
+
+    ![Debugging a service with IDE](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debugging-service-with-ide.png)
+
+> **Note:** Every time you restart a debug session, the packaged app will be closed on the target device. If you want to check the behavior of the app, relaunch the app manually.
+>
+> ![Relaunch the app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/relaunch-the-app.png)
+
+#### Trouble Shooting Guide for Debugging
+
+<dl>
+  <dt>The <b>Run and Debug</b> view is not opened</dt>
+  <dd>
+    <p>Click <b>View > Open View... > Run and Debug</b>.</p>
+  </dd>
+  <dt>The debugging session is not launched</dt>
+  <dd>
+    <p>Close all running apps on the webOS device and re-try to click <b>Debug App/Service</b>.</p>
+  </dd>
+  <dt>(Very rare to happen) A notification says the debugging session is already activated</dt>
+  <dd>
+    <p>If you get this notification, even when all debug sessions are closed, restart the VS Code and try to start a debugging session again.</p>
+  </dd>
+</dl>
 
 > **Note:** 
-> - If the **Run and Debug** view is not opened, navigate to **View** > **Open View...** and select **Run and Debug**.
-> - If the debugging session is not launched, close all running apps on the webOS device and re-try to click **Debug App/Service**.
-> - (very unlikely to occur) You might get a notification indicating that a debug session is already active, even when all debug sessions are closed. To resolve this issue, restart the IDE and try debugging again.
-
-### Previewing the App (Web and Enact)
-
-You can preview web apps or Enact apps in your VS Code before installing it.
-
-In the **APPS IN WORKSPACE** view, right-click the app and click **App Preview**.
-
-![App preview](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/app-preview.jpg)
-
-An **App Preview** page is automatically launched.
-
-![Previewed web app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/previewed-web-app.jpg)
-
-> **Note:** Only one app can be previewed at the same time. If another app preview is launched, the new preview is launched in the existing tab.
+> See also the following guides:
+> - [VS Code official debugging guide](https://code.visualstudio.com/docs/editor/debugging)
+> - [Debug JavaScript on the Chrome browser](https://developer.chrome.com/docs/devtools/javascript/)
 
 ### Running ESLint on the Enact App
 
@@ -189,45 +287,84 @@ To clean the Lint messages from the panel, click **Clear Lint**.
 
 ## Other Features
 
-### Project Wizard
-
-You can generate various templates for webOS apps or services.
-
-![How to use Project Wizard](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/how-to-use-project-wizard.gif)
-
-> **Note:** To use [webos-service library](https://www.webosose.org/docs/reference/webos-service-library/webos-service-library-api-reference/) in JavaScript service or Enact app projects, check the **Yes** button for **Add webOS library**.
-> 
-> ![Add LS2 APIs to projects](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/add-ls2-apis.jpg)
-
 ### Auto-Completion
 
-This features provides the auto-completion using the following trigger strings:
+Auto-completion suggests a list of available [LS2 APIs](https://www.webosose.org/docs/guides/getting-started/introduction-to-ls2-api/) based on the project's API level. 
+
+![Auto completion Overview](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/auto-completion-overview.jpg)
+
+#### Features
+
+Key features are as follows:
+
+- Auto-complete API strings using the <kbd>Tab</kbd> key
+- Provide a list of available LS2 APIs (services, methods, and parameters)
+- Provide descriptions for each LS2 API
+- Provide links to API documentation webpages
+
+> **Note:** If you have trouble using the auto-completion, check the [Trouble Shooting Guide](#trouble-shooting-guide-for-auto-completion).
+
+#### How to Use
+
+To use auto-completion, type one of the following trigger strings:
 
 - `luna://`
 - `new LS2Request`
 
-#### 'luna://' Strings
+**luna://**
 
-Type one of the following texts to call [LS2 APIs](https://www.webosose.org/docs/guides/getting-started/introduction-to-ls2-api/).
+To start the auto-completion feature, enter one of the following strings:
 
 - `luna://`
 - `'luna://'`
 - `"luna://"`
 
-![Auto completion for LS2 APIs](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/auto-complete-ls2-apis.gif)
+![Auto completion for LS2 APIs](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/auto-completion-example-ls2api.gif)
 
-You can also use the **Tab** key to auto-complete input strings.
+You can print the list of available services, methods, and parameters using the following trigger strings:
 
-![Auto completion using the Tab key](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/auto-complete-tab-key.gif)
+| Item | Trigger String |
+|------|----------------|
+| Service | `luna://` | 
+| Method | Enter the <kbd>/</kbd> right after `luna://<service name>` | 
+| Parameter | <kbd>Ctrl</kbd> + <kbd>Space</kbd> after `luna://<service>/<method>` | 
 
-> **Note:** If the auto-completion with the **Tab** key doesn't work, please check the **Tab Completion** setting is on.
-> ![Enable the tab completion feature](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/enable-tab-completion.jpg)
+**new LS2Request**
 
-#### new LS2Request
+Type `new LS2Request` to use [Enact webos Library](https://enactjs.com/docs/modules/webos/LS2Request/). Using <kbd>Ctrl</kbd> + <kbd>Space</kbd>, you can use the auto-completion.
 
-Type `new LS2Request` to use [webos Library](https://enactjs.com/docs/modules/webos/LS2Request/) of Enact. Using the `Ctrl + Space` keys, you can check the list of supported methods.
+![Auto completion for LS2Request](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/auto-completion-example-ls2request.gif)
 
-![Auto completion for Enact library](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/auto-complete-enact.gif)  
+#### Trouble Shooting Guide for Auto-Completion
+
+<dl>
+  <dt>Q) Auto-completing using the <kbd>Tab</kbd> key doesn't work</dt>
+  <dd>
+    <p>Check the <strong>Tab Completion</strong> setting is on.</p>
+    <img src="https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/enable-tab-completion.jpg" alt="Enable the tab completion feature">
+  </dd>
+  <dt>Q) I entered the trigger strings, but it didn't show a list</dt>
+  <dd>
+    <p>To use auto-completion, <code>.webosstudio.config</code> file should be in the project root folder. This file contains information about the API level.</p>
+    <p>This file will be automatically generated if you generate a project using the <a href="#project-wizard">Project Wizard</a>. In case you don't have this file, generate the file as follows:</p>
+    <ol>
+      <li>
+        <p>Type <code>luna://</code>.</p>
+        <p>This invokes a notification to generate the config file. Click <strong>Yes</strong>.</p>
+        <img src="https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/notification-generating-config-file.jpg" alt="Notification to generated the config file">
+      </li>
+      <li>
+        <p>Then a Quick Pick pop-up appears at the top of VS Code.</p>
+        <p>Enter the API level you want.</p>
+        <img src="https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/quick-pick-pop-up.jpg" alt="Quick pick pop-up for selecting the API level">
+      </li>
+      <li>
+        <p>The config file is generated in your project folder. You can check the API level in the config file.</p>
+        <img src="https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/generated-config-file.jpg" alt="Generated config file">
+      </li>
+    </ol>
+  </dd>
+</dl>
 
 ### Emulator Manager
 
@@ -257,7 +394,7 @@ You can manage webOS emulator (VirtualBox) images in VS Code. By default, any we
 
     ![Added emulator instance](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/added-emulator-instance.png)
 
-4. Click the **Run App** button (triangle) to run the emulator. This action will launch a new a VirtualBox window.
+4. Click the **Run App** button (triangle) to run the emulator. This action will launch a new VirtualBox window.
 
     ![Start the emulator instance](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/start-emulator.png)
 
@@ -282,6 +419,12 @@ You can analyze the file size of the app or services in the IPK file.
 
     ![Compare IPK files](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/compare-ipks.jpg)
 
+### Process Log
+
+webOS Studio has many internal utility commands including ares-cli, enact-cli, and VirtualBox utility. In the **OUTPUT** panel, you can check the output logs of these commands. Developers might find out helpful information to debug their apps or services.
+
+![Process log in the output panel](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/output-panel.png)
+
 ## Command Palette
 
 | Category                   | Command                            | Description                                                         |
@@ -299,7 +442,7 @@ You can analyze the file size of the app or services in the IPK file.
 
 ## Miscellaneous Information
 
-- When the IDE is opened, a notification indicates the VirtualBox is not installed, even when VirtualBox is in fact installed and working properly. To resolve this, update the environment path variable to point to the VirtualBox installation directory.
+- When the IDE is opened, a notification indicates that VirtualBox is not installed, even when VirtualBox is already installed and working properly. To resolve this, update the environment path variable to point to the VirtualBox installation directory.
 - If you want to report bugs or suggest some features, use **Issue Reporter**. (**Help** > **Report Issue**)
 
 ## References
