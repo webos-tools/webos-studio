@@ -616,7 +616,7 @@ class InstanceWebviewProvider {
 			</head>
 			<body style ="display:none">
                 <div id="welcomeLayout" class="welcomeLayout" >
-                     In order to create Virtual Box Emulator, you can click on the 'Add Instance' icon on the top or click below button.</br></br>
+                     In order to create VirtualBox Emulator, you can click on the 'Add Instance' icon on the top or click below button.</br></br>
                      <button id="welcomAddInstance" class="webview-button">Add Instance</button>
                      </br>
                      learn more about how to use emulator
