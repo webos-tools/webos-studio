@@ -12,7 +12,7 @@ let jsServicePatchPath = path.join(__dirname, "../media/patches");
 module.exports = async function installLibrary(appDirName, type) {
     vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
-        title: "Install WebOS",
+        title: "Install webOS",
         cancellable: true
     }, async (progress, token) => {
         token.onCancellationRequested(() => {
