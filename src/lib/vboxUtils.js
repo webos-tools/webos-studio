@@ -38,7 +38,7 @@ function _execAsync(cmd, option, next) {
                     // const { showPrompt } = require('../installGlobalLibrary');
                     // showPrompt();
                     if (cmd.includes('VBoxManage')) {
-                        vscode.window.showErrorMessage(`Error! Unable to find the Virtual Box.`)
+                        vscode.window.showWarningMessage(`Error! Unable to find the Virtual Box.`)
                         reject("Unable to find the installed  Virtual Box");
                     } else {
                         vscode.window.showWarningMessage(`Warning! Unable to find the webos-emulator.\

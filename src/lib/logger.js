@@ -25,7 +25,6 @@ const setLogLevel = (logLvl) => {
 const createOutPutChannel = () => {
   outputChannel = vscode.window.createOutputChannel("WebOS Studio", "Log");
   outputChannel.show(true);
-  //logAny("webOS Studio Initialized.");
   // logAny("Current log level enabled for - " + getLogLevelText(logLevel));
   // logAny(
   //   "To change the log level, select 'Set log level' option from command prompt"
