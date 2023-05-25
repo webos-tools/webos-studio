@@ -4,6 +4,11 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+## [1.1.0-pre1] [2023-05-26]
+
+- Improve logging output for user's perspective.
+- Add a new command: `webOS OSE: Install Emulator Launcher`
+
 ## [1.0.8] [2023-05-15]
 
 - Enhance the Auto-completion feature.

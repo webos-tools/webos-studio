@@ -53,6 +53,42 @@ function _execAsync(cmd, option, next) {
     })
 }
 
+function _execAsyncLauncher(cmd, option, next) {
+    logger.run(cmd )
+    logger.log("------------------------------------------------")
+    return new Promise((resolve, reject) => {
+        let execOption = {};
+        if (typeof option == "function") {
+            next = option;
+        } else if (typeof option == "object") {
+            execOption = option;
+        }
+
+        exec(cmd, execOption, (err, stdout, stderr) => {
+            if(stdout){
+                logger.log(stdout)
+            }
+            if(stderr){
+                logger.error(stderr)
+            }
+            if (err) {
+                logger.error(err)
+                if (stderr.includes('not recognized') || stderr.includes('not found')) {
+                    reject("python3 and VirtualBox are needed");
+                } else {
+                    reject(stderr);
+                }
+            } else {
+                if (next) {
+                    next(stdout, resolve, reject);
+                } else {
+                    resolve(stdout);
+                }
+            }
+        })
+    })
+}
+
 function _execServer(cmd, params) {
     logger.run(cmd +" "+ params)
     logger.log("------------------------------------------------")
@@ -581,6 +617,20 @@ async function isInstalledService(serviceId, device) {
     })
 }
 
+async function addEmulatorLauncher() {
+    const python = os.platform().includes('win')? 'python' : 'python3';
+    let cmd = `VBoxManage && ${python} -m pip install --upgrade webos-emulator --force-reinstall`;
+
+    return await _execAsyncLauncher(cmd, (stdout, resolve, reject) => {
+        if (stdout) {
+            stdout = parseInt(stdout);
+            resolve(stdout);
+        } else {
+            reject('pip : failed!');
+        }
+    })
+}
+
 module.exports = {
     generate: generate,
     setupDeviceList: setupDeviceList,
@@ -607,6 +657,7 @@ module.exports = {
     execAsync: _execAsync,
     installEnactTemplate: installEnactTemplate,
     isInstalledService: isInstalledService,
+    addEmulatorLauncher: addEmulatorLauncher,
     getLintResults: getLintResults,
     checkDeviceOnline:checkDeviceOnline,
     push:push,

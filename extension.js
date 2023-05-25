@@ -15,7 +15,7 @@ const launchApp = require('./src/launchApp');
 const inspectApp = require('./src/inspectApp');
 const lintApp = require('./src/lintApp');
 const installLibrary = require('./src/installLibrary');
-const { installGlobalLibrary } = require('./src/installGlobalLibrary');
+const { installGlobalLibrary, installEmulatorLauncher } = require('./src/installGlobalLibrary');
 const { DeviceProvider } = require('./src/webososeDevices');
 const { AppsProvider } = require('./src/webososeApps');
 const { uninstallApp, closeApp, getDeviceInfo, setDefaultDevice } = require('./src/contextMenus');
@@ -512,6 +512,10 @@ function activate(context) {
 	);
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installGlobal', () => {
         installGlobalLibrary();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.installEmulator', () => {
+        installEmulatorLauncher();
     }));
 
     // Help Provide

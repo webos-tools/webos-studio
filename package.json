@@ -2,7 +2,7 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "1.0.9",
+    "version": "1.1.0-pre1",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
@@ -17,6 +17,7 @@
         "onStartupFinished",
         "onCommand:webosose.projectWizard",
         "onCommand:webosose.installGlobal",
+        "onCommand:webosose.installEmulator",
         "onCommand:webosose.generateApp",
         "onCommand:webosose.previewApp",
         "onCommand:webosose.devicepreviewstart",
@@ -62,6 +63,7 @@
         "onCommand.apps.lintAppDisable",
         "onView:webosose.webososeDevices",
         "onView:webosose.installGlobal",
+        "onView:webosose.installEmulator",
         "onView:webosose.apps",
         "onView:webosose.apps.vbox",
         "onView:webosose.extensionHelp",
@@ -132,6 +134,10 @@
             {
                 "command": "webosose.installGlobal",
                 "title": "webOS OSE: Install Global Packages"
+            },
+            {
+                "command": "webosose.installEmulator",
+                "title": "webOS OSE: Install Emulator Launcher"
             },
             {
                 "command": "webosose.generateApp",

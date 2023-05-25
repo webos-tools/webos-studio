@@ -3,7 +3,7 @@
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
-let { addLibrary, installEnactTemplate } = require('./lib/runCommand');
+let { addLibrary, installEnactTemplate, addEmulatorLauncher } = require('./lib/runCommand');
 const notify = require('./lib/notificationUtils');
 const { InputChecker } = require('./lib/inputChecker');
 const libraryList = ["@enact/cli", "@webosose/ares-cli", "patch-package"];
@@ -64,6 +64,36 @@ async function installGlobalLibrary() {
     });
 }
 
+async function installEmulatorLauncher() {
+    vscode.window.withProgress({
+        location: vscode.ProgressLocation.Notification,
+        title: "Install Emulator Launcher",
+        cancellable: false
+    }, async (progress, token) => {
+        token.onCancellationRequested(() => {
+            console.log("User canceled the long running operation");
+        });
+        try {
+            await notify.showProgress(progress, 1, `Instalation initiated..`);
+            await notify.showProgress(progress, 10, `Emulator Launcher`);
+
+            await addEmulatorLauncher();
+            await notify.showProgress(progress, 10, `Emulator Launcher install Completed.`);
+                
+            vscode.commands.executeCommand('webososeDevices.refreshList');
+            await notify.clearProgress(progress, `Success! Emulator Launcher installed`);
+            return Promise.resolve();
+        } catch (err) {
+            let erMsg = err.toString();
+            vscode.window.showErrorMessage(`ERROR! Failed to install package.
+                Please install manually python3 and VirtualBox by referring to https://www.webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-launcher/.
+                And then set appropriate PATH. Details As follows: ${erMsg}`);
+            await notify.clearProgress(progress, `ERROR! Failed to install package.`);
+            return Promise.reject(err);
+        }
+    });
+}
+
 async function showPrompt() {
     await vscode.window.showInformationMessage(
         `This extension needs following packages to be installed globally, ${libraryList}.
@@ -101,6 +131,7 @@ async function getSudoPassword() {
 
 module.exports = {
     installGlobalLibrary: installGlobalLibrary,
+    installEmulatorLauncher: installEmulatorLauncher,
     showPrompt: showPrompt,
     getSudoPassword: getSudoPassword
 }
