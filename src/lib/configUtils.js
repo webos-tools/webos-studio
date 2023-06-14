@@ -1,5 +1,5 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
+  * Copyright (c) 2021-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
@@ -7,6 +7,7 @@ const fs = require('fs');
 const { fileURLToPath } = require('url');
 const { InputController } = require('./inputController');
 const { InputChecker } = require('./inputChecker');
+const path = require('path');
 
 const WEBOSOSE = 'webosose';
 const BROWSER_PATH = 'chromeExecutable';
@@ -53,8 +54,28 @@ async function getDefaultDevice() {
     return "";
 }
 
+function getSimulatorDirPath() {
+    let simulatorDir;
+    const sdkHomePath = process.env.LG_WEBOS_TV_SDK_HOME;
+    const cliPath = process.env.WEBOS_CLI_TV;
+
+    if (sdkHomePath) {
+        simulatorDir = path.join(sdkHomePath, 'Simulator');
+    } else if (cliPath) {
+        simulatorDir = path.resolve(cliPath, '../../Simulator');
+    }
+
+    console.log('simulatorDirPath:', simulatorDir);
+    if (!fs.existsSync(simulatorDir) || !fs.statSync(simulatorDir).isDirectory()) {
+        return null;
+    } else {
+        return simulatorDir;
+    }
+}
+
 module.exports = {
     getCliPath: getCliPath,
     getBrowserPath: getBrowserPath,
-    getDefaultDevice: getDefaultDevice
+    getDefaultDevice: getDefaultDevice,
+    getSimulatorDirPath: getSimulatorDirPath
 }

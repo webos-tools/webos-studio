@@ -266,6 +266,20 @@ class InputChecker {
         }
         return null;
     }
+
+    static checkJSON(value) {
+        if (value === '') {
+            return 'Please enter the parameters.';
+        }
+
+        try {
+            JSON.parse(value);
+            return null;
+        } catch (err) {
+            console.error(err);
+            return 'Please enter the stringified JSON format. For example, {"key":"value"}';
+        }
+    }
 }
 
 exports.InputChecker = InputChecker;

@@ -1,11 +1,14 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
+  * Copyright (c) 2021-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
 const ares = require('./runCommand');
+const { getSimulatorDirPath } = require('./configUtils');
+const { getSimulatorVersionArray } = require('./workspaceUtils');
 
 let deviceList = [];
+let simulatorList = [];
 
 function _sortByName(a, b) {
     return a.name > b.name ? 1 : -1;
@@ -99,9 +102,43 @@ async function getRunningList(device) {
     return appList;
 }
 
+async function _setSimulatorList() {
+    try {
+        const simulatorDir = getSimulatorDirPath();
+        const versionArray = await getSimulatorVersionArray(simulatorDir);
+
+        if (versionArray && versionArray.length > 0) {
+            for (let i = 0; i < versionArray.length; i++) {
+                const data = {};
+                data.version = versionArray[i];
+                data.name = `webOS_TV_${versionArray[i]}_Simulator`;
+                simulatorList.push(data);
+            }
+            simulatorList.sort(_sortByName);
+            return;
+        } else {
+            // err
+            return;
+        }
+    } catch (err) {
+        console.error(err);
+        vscode.window.showErrorMessage(`Error! Failed to get the simulator list.`);
+        return;
+    }
+}
+
+async function getSimulatorList(withRefresh) {
+    if (!!withRefresh || simulatorList.length === 0) {
+        simulatorList = [];
+        await _setSimulatorList();
+    }
+    return simulatorList;
+}
+
 module.exports = {
     getDeviceList: getDeviceList,
     getInstalledList: getInstalledList,
     getRunningList: getRunningList,
-    updateDeviceStatus:updateDeviceStatus
+    updateDeviceStatus:updateDeviceStatus,
+    getSimulatorList: getSimulatorList
 }

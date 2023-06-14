@@ -1,5 +1,5 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
+  * Copyright (c) 2021-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
@@ -155,6 +155,35 @@ function getAppId(appDir) {
     }
 }
 
+async function getSimulatorVersionArray(folderPath) {
+    if (folderPath && fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory()) {
+        const versionArr = [];
+        try {
+            const simulArr = await readdirAsync(folderPath);
+            const simulatorPrefix = `webOS_TV_`;
+
+            for (let i = 0; i < simulArr.length; i++) {
+                if (simulArr[i].indexOf(simulatorPrefix) === 0) {
+                    if (fs.statSync(path.resolve(folderPath, simulArr[i])).isDirectory()) {
+                        // extract version of simulator directory
+                        // ex) webOS_TV_22_Simulator_1.0.0
+                        const simulNameArr = simulArr[i].split('_');
+                        if (!versionArr.includes(simulNameArr[2])) {
+                            versionArr.push(simulNameArr[2]);
+                        }
+                    }
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+        return versionArr;
+    } else {
+        return null;
+    }
+}
+
 module.exports = {
     setDefaultDir: setDefaultDir,
     getDefaultDir: getDefaultDir,
@@ -165,5 +194,6 @@ module.exports = {
     getServiceId: getServiceId,
     getAppId: getAppId,
     isAppDir: isAppDir,
-    isAppFolder: isAppFolder
+    isAppFolder: isAppFolder,
+    getSimulatorVersionArray: getSimulatorVersionArray
 }

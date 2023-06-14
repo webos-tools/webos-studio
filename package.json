@@ -18,6 +18,7 @@
         "onCommand:webosose.projectWizard",
         "onCommand:webosose.installGlobal",
         "onCommand:webosose.installEmulator",
+        "onCommand:webos.runSimulator",
         "onCommand:webosose.generateApp",
         "onCommand:webosose.previewApp",
         "onCommand:webosose.devicepreviewstart",
@@ -64,6 +65,7 @@
         "onView:webosose.webososeDevices",
         "onView:webosose.installGlobal",
         "onView:webosose.installEmulator",
+        "onView:webos.runSimulator",
         "onView:webosose.apps",
         "onView:webosose.apps.vbox",
         "onView:webosose.extensionHelp",
@@ -138,6 +140,10 @@
             {
                 "command": "webosose.installEmulator",
                 "title": "webOS OSE: Install Emulator Launcher"
+            },
+            {
+                "command": "webos.runSimulator",
+                "title": "webOS: Run on TV Simulator"
             },
             {
                 "command": "webosose.generateApp",

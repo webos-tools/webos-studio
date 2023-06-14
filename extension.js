@@ -1,5 +1,5 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
+  * Copyright (c) 2021-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
@@ -16,6 +16,7 @@ const inspectApp = require('./src/inspectApp');
 const lintApp = require('./src/lintApp');
 const installLibrary = require('./src/installLibrary');
 const { installGlobalLibrary, installEmulatorLauncher } = require('./src/installGlobalLibrary');
+const runSimulator = require('./src/lib/runSimulator');;
 const { DeviceProvider } = require('./src/webososeDevices');
 const { AppsProvider } = require('./src/webososeApps');
 const { uninstallApp, closeApp, getDeviceInfo, setDefaultDevice } = require('./src/contextMenus');
@@ -516,6 +517,10 @@ function activate(context) {
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installEmulator', () => {
         installEmulatorLauncher();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', () => {
+        console.log("runSimulator!");
     }));
 
     // Help Provide
