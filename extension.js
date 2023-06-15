@@ -16,7 +16,7 @@ const inspectApp = require('./src/inspectApp');
 const lintApp = require('./src/lintApp');
 const installLibrary = require('./src/installLibrary');
 const { installGlobalLibrary, installEmulatorLauncher } = require('./src/installGlobalLibrary');
-const runSimulator = require('./src/lib/runSimulator');;
+const runSimulator = require('./src/lib/runSimulator');
 const { DeviceProvider } = require('./src/webososeDevices');
 const { AppsProvider } = require('./src/webososeApps');
 const { uninstallApp, closeApp, getDeviceInfo, setDefaultDevice } = require('./src/contextMenus');
@@ -519,8 +519,13 @@ function activate(context) {
         installEmulatorLauncher();
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', () => {
+    context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', (file) => {
         console.log("runSimulator!");
+        if (file && file.fsPath && fs.statSync(file.fsPath).isDirectory()) {
+            runSimulator(file.fsPath);
+        } else {
+            runSimulator();
+        }
     }));
 
     // Help Provide
