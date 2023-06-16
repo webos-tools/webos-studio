@@ -1,7 +1,8 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
+  * Copyright (c) 2021-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
+const vscode = require('vscode');
 const path = require('path');
 const { exec, spawn } = require('child_process');
 const systemPlatform = require('os').platform();
@@ -631,6 +632,34 @@ async function addEmulatorLauncher() {
     })
 }
 
+async function launchSimulator(appDir, version, params) {
+    if (!appDir || !version) {
+        return Promise.reject('ares-launch --simulator: argument is not fulfilled.');
+    }
+
+    const terminalName = 'webOS TV Simulator';
+    const cliPath = await getCliPath();
+    try {
+        const terminal = vscode.window.createTerminal({
+            name: terminalName,
+            env: {
+                path: cliPath
+            }
+        });
+        const paramsStr = params ? `-p "${JSON.stringify(params).replace(/"/g, "'")}"` : "";
+        const cmd = `ares-launch ${appDir.replace(/\\/g, '/')} -s ${version} ${paramsStr}`;
+        console.log(`runCommand: ${cmd}`);
+
+        terminal.sendText(cmd);
+        setTimeout(() => {
+            terminal.dispose();
+            return Promise.resolve();
+        }, 10000);
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
 module.exports = {
     generate: generate,
     setupDeviceList: setupDeviceList,
@@ -661,5 +690,6 @@ module.exports = {
     getLintResults: getLintResults,
     checkDeviceOnline:checkDeviceOnline,
     push:push,
-    installListFull:installListFull
+    installListFull:installListFull,
+    launchSimulator: launchSimulator,
 }
