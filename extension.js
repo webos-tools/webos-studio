@@ -822,6 +822,9 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.runApp', async (resource) => {
         explorerMenuMgr.runApp(resource)
     }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.runSimulator', async (resource) => {
+        explorerMenuMgr.runSimulator(resource)
+    }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.appPreview', async (resource) => {
         explorerMenuMgr.appPreview(resource)
     }));

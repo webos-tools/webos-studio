@@ -80,6 +80,7 @@
         "onCommand:webosose.explorermenu.packageApp",
         "onCommand:webosose.explorermenu.installApp",
         "onCommand:webosose.explorermenu.runApp",
+        "onCommand:webosose.explorermenu.runSimulator",
         "onCommand:webosose.explorermenu.appPreview",
         "onCommand:webosose.explorermenu.devicepreviewstart",
         "onCommand:webosose.explorermenu.debug",
@@ -208,6 +209,10 @@
             {
                 "command": "webosose.explorermenu.runApp",
                 "title": "webOS OSE: Run Application"
+            },
+            {
+                "command": "webosose.explorermenu.runSimulator",
+                "title": "webOS: Run on TV Simulator"
             },
             {
                 "command": "webosose.explorermenu.appPreview",
@@ -489,6 +494,11 @@
                     "group": "app1@3"
                 },
                 {
+                    "command": "webos.runSimulator",
+                    "when": "view == apps && viewItem == web-app || viewItem == enact-app",
+                    "group": "app1@4"
+                },
+                {
                     "command": "apps.removeApp",
                     "when": "view == apps && viewItem == web-app || viewItem == enact-app || viewItem == js-service",
                     "group": "app1@3"
@@ -579,6 +589,11 @@
                     "group": "device1@1"
                 },
                 {
+                    "command": "webosose.explorermenu.runSimulator",
+                    "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
+                    "group": "device1@1"
+                },
+                {
                     "command": "webosose.explorermenu.appPreview",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
                     "group": "device2@1"
@@ -641,6 +656,10 @@
                 },
                 {
                     "command": "webosose.explorermenu.runApp",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorermenu.runSimulator",
                     "when": "false"
                 },
                 {
