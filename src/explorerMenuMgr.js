@@ -22,7 +22,8 @@ class ExplorerMenuMgr {
         vscode.commands.executeCommand('apps.runApp', this.getAppObject(resource));
     }
     runSimulator(resource) {
-        vscode.commands.executeCommand('webos.runSimulator', this.getAppObject(resource));
+        let fPath = resource._fsPath==null?resource.fsPath:resource._fsPath;
+        vscode.commands.executeCommand('webos.runSimulator', fPath);
     }
     appPreview(resource) {
         vscode.commands.executeCommand('apps.previewApp', this.getAppObject(resource));
