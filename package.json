@@ -19,6 +19,7 @@
         "onCommand:webosose.installGlobal",
         "onCommand:webosose.installEmulator",
         "onCommand:webos.runSimulator",
+        "onCommand:webos.runSimulatorParams",
         "onCommand:webosose.generateApp",
         "onCommand:webosose.previewApp",
         "onCommand:webosose.devicepreviewstart",
@@ -146,6 +147,10 @@
                 "command": "webos.runSimulator",
                 "title": "webOS TV: Run on Simulator"
             },
+            {
+				"command": "webosos.runSimulatorParams",
+				"title": "webOS TV: Run on Simulator with Parameters"
+			},
             {
                 "command": "webosose.generateApp",
                 "title": "webOS OSE: Generate Project"

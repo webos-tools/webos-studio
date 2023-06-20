@@ -528,6 +528,12 @@ function activate(context) {
         }
     }));
 
+    context.subscriptions.push(
+		vscode.commands.registerCommand('webosos.runSimulatorParams', () => {
+			runSimulator(null, null, true);
+		})
+	);
+
     // Help Provide
     const helpPanels = new Map();
     const readmeCommand = vscode.commands.registerCommand('extensionHelp.readme', async () => {

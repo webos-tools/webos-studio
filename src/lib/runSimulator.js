@@ -33,7 +33,7 @@ async function _runSimulator(selectedDir, selectedVersion, withParams) {
     const prompt = 'Enter Directory Path to Run';
     const appDir = selectedDir || await getAppDir(title, prompt);
     const simulatorVersion = selectedVersion || await _getSimulatorVersion(title);
-    const params = withParams ? await getLaunchParams(title) : {};
+    const params = withParams ? await getLaunchParams(title) : null;
 
     return new Promise((resolve, reject) => {
         if (!simulatorVersion) {
