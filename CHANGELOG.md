@@ -4,24 +4,29 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
-## [1.1.0-pre1] [2023-05-26]
+## [1.1.1] [2023-06-26]
 
-- Improve logging output for user's perspective.
+- Fix broken URLs for images in README.md
+- Update package-lock.json with node v18.12.1 and npm 8.19.2
+
+## [1.1.0] [2023-06-12]
+
+- Improve logging output for user's perspective
 - Add a new command: `webOS OSE: Install Emulator Launcher`
 
 ## [1.0.8] [2023-05-15]
 
-- Enhance the Auto-completion feature.
-  - Suggest parameters based on user input.
-  - Provide descriptions for LS2 API services, methods, and parameters.
+- Enhance the Auto-completion feature
+  - Suggest parameters based on user input
+  - Provide descriptions for LS2 API services, methods, and parameters
   - Manage the API level of projects using `.webosstudio.config`
-- Support live reloading in preview.
-- Provide operation logs in the OUTPUT panel.
-- Support debugging in VS Code.
+- Support live reloading in preview
+- Provide operation logs in the OUTPUT panel
+- Support debugging in VS Code
 
 ## [1.0.1] [2022-12-28]
 
-- Add a notice for restriction in README.md.
+- Add a notice for restriction in README.md
 
 ## [1.0.0] [2022-12-27]
 
