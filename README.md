@@ -90,7 +90,7 @@ This section explains a typical development flow of webOS apps and services usin
 
 You can create an app or service using the project wizard. Click the **+** button in the **APPS IN WORKSPACE** view or execute `webOS OSE: Create ProjectWizard` in the **Command Palette**.
 
-![Creating an app](images/creating-an-app.gif)
+![Creating an app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/creating-an-app.gif)
 
 | Item | Description |
 |------|-------------|
@@ -113,7 +113,7 @@ webOS Studio supports a powerful content-assist feature called *Auto-Completion*
 
 For more details about the auto-completion feature, see [Auto-Completion](#auto-completion).
 
-![Auto Compleation Example](images/auto-completion-example.jpg)
+![Auto Compleation Example](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/auto-completion-example.jpg)
 
 ### Adding Known Devices
 
