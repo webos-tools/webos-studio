@@ -18,6 +18,7 @@
         "onCommand:webosose.projectWizard",
         "onCommand:webosose.installGlobal",
         "onCommand:webosose.installEmulator",
+        "onCommand:webos.setDeviceProfile",
         "onCommand:webos.runSimulator",
         "onCommand:webos.runSimulatorParams",
         "onCommand:webosose.generateApp",
@@ -66,6 +67,7 @@
         "onView:webosose.webososeDevices",
         "onView:webosose.installGlobal",
         "onView:webosose.installEmulator",
+        "onView:webosose.setDeviceProfile",
         "onView:webos.runSimulator",
         "onView:webosose.apps",
         "onView:webosose.apps.vbox",
@@ -142,6 +144,10 @@
             {
                 "command": "webosose.installEmulator",
                 "title": "webOS OSE: Install Emulator Launcher"
+            },
+            {
+                "command": "webos.setDeviceProfile",
+                "title": "webOS: Set Device Profile"
             },
             {
                 "command": "webos.runSimulator",

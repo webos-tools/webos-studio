@@ -468,6 +468,32 @@ async function inspect(appId, device, isService) {
     return _execServer(cmd, params);
 }
 
+async function config(isSet, profile) {
+    let cmd;
+    if (!isSet) {
+        cmd = `${path.join(await getCliPath(), 'ares-config')} -c`;
+        return _execAsync(cmd, (stdout, resolve, reject) => {
+            if (stdout.includes('Current profile')) {
+                const currentProfile = stdout.split(' ').pop();
+                resolve(currentProfile);
+            } else {
+                reject('ares-config -c: failed!');
+            }
+        })   
+    }
+    if (!profile) {
+        return Promise.reject('ares-config: arguments are not fulfilled.')
+    }
+    cmd = `${path.join(await getCliPath(), 'ares-config')} -p "${profile}"`;
+    return _execAsync(cmd, (stdout, resolve, reject) => {
+        if (stdout.includes('profile and')) {
+            resolve();
+        } else {
+            reject('ares-config -p: failed!');
+        }
+    });
+}
+
 async function openBrowser(url) {
     const platformOpen = {
         win32: ['cmd', '/c', 'start'],
@@ -692,4 +718,5 @@ module.exports = {
     push:push,
     installListFull:installListFull,
     launchSimulator: launchSimulator,
+    config: config,
 }

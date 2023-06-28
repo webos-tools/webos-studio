@@ -5,7 +5,7 @@
 const vscode = require('vscode');
 const { InputController } = require('./lib/inputController');
 const { InputChecker } = require('./lib/inputChecker');
-const { getDeviceList } = require('./lib/deviceUtils');
+const { getDeviceList, getCurrentDeviceProfile, setCurrentDeviceProfile } = require('./lib/deviceUtils');
 const ares = require('./lib/runCommand');
 
 async function _setDeviceInfo(device) {
@@ -175,7 +175,7 @@ async function removeDevice(deviceList, deviceName) {
     }
 }
 
-module.exports = async function setupDevice(deviceOption, deviceName) {
+async function setupDevice(deviceOption, deviceName) {
     let option;
     let options = [
         'Add Device',
@@ -215,4 +215,29 @@ module.exports = async function setupDevice(deviceOption, deviceName) {
         default:
             break;
     }
+}
+
+async function setDeviceProfile() {
+    const currnetProfile = await getCurrentDeviceProfile();
+    if (currnetProfile == null) {
+        vscode.window.showErrorMessage(`Error! Failed to get currentdevice.`);
+        return;
+    }
+    const controller = new InputController();
+    const profileList = ['ose', 'tv'];
+    
+    controller.addStep({
+        title: 'Choose Device Profile',
+        placeholder: `Select Device Profile`,
+        items: profileList.map(label => ({ label }))
+    });
+
+    const results = await controller.start();
+    const profile = results.shift();
+    await setCurrentDeviceProfile(profile);
+}       
+
+module.exports = {
+    setupDevice: setupDevice,
+    setDeviceProfile: setDeviceProfile
 }

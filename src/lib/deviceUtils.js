@@ -102,6 +102,30 @@ async function getRunningList(device) {
     return appList;
 }
 
+async function setCurrentDeviceProfile(profile) {
+    let result = false;
+    await ares.config(true, profile)
+        .then(() => {
+            result = true;
+        }).catch(err =>{
+            console.error(err);
+            vscode.window.showErrorMessage(`Error! Failed to set device profile.`);
+        });
+    return result;
+}
+
+async function getCurrentDeviceProfile() {
+    let result = null;
+    await ares.config(false)
+        .then(data => {
+            result = data;
+        }).catch(err =>{
+            console.error(err);
+            vscode.window.showErrorMessage(`Error! Failed to get current device profile.`);
+        });
+    return result;
+}
+
 async function _setSimulatorList() {
     try {
         const simulatorDir = getSimulatorDirPath();
@@ -140,5 +164,7 @@ module.exports = {
     getInstalledList: getInstalledList,
     getRunningList: getRunningList,
     updateDeviceStatus:updateDeviceStatus,
-    getSimulatorList: getSimulatorList
+    getSimulatorList: getSimulatorList,
+    getCurrentDeviceProfile: getCurrentDeviceProfile,
+    setCurrentDeviceProfile: setCurrentDeviceProfile,
 }

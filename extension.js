@@ -8,7 +8,7 @@ const previewApp = require('./src/previewApp');
 const {devicePreviewStart, devicePreviewStop} = require('./src/devicePreview');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
-const setupDevice = require('./src/setupDevice');
+const { setupDevice, setDeviceProfile } = require('./src/setupDevice');
 const runApp = require('./src/runApp');
 const installApp = require('./src/installApp');
 const launchApp = require('./src/launchApp');
@@ -517,6 +517,10 @@ function activate(context) {
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installEmulator', () => {
         installEmulatorLauncher();
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('webos.setDeviceProfile', () => {
+        setDeviceProfile();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', (file) => {
