@@ -36,6 +36,7 @@ const extensionPath = __dirname;
 
 let apiObjArray = [];
 let apiObjArrayIndex = 0;
+let myStatusBarItem;
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -334,8 +335,16 @@ function activate(context) {
     });
 
     // statusbar from https://github.com/microsoft/vscode-extension-samples/blob/main/statusbar-sample/src/extension.ts
+    // register a command that is invoked when the status bar
+    // item is selected
+    const myCommandId = 'webos.setProfile';
+    context.subscriptions.push(vscode.commands.registerCommand(myCommandId, () => {
+        setProfile();
+    }));
+
     // create a new status bar item that we can now manage
-    const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+    myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    myStatusBarItem.command = myCommandId;
     context.subscriptions.push(myStatusBarItem);
 
     // update status bar item once at start
@@ -343,7 +352,10 @@ function activate(context) {
     getDeviceProfile()
     .then((profile) => {
         if (profile != null) {
-            myStatusBarItem.text = 'webOS: ' + profile.toUpperCase();
+            myStatusBarItem.text = 'webOS ' + profile.toUpperCase();
+            let tooltip = 'Current profile of webOS Studio is set to ' + profile.toUpperCase();
+            tooltip += 'Click to change profile';
+            myStatusBarItem.tooltip = tooltip;
             myStatusBarItem.show();
         }
     });
@@ -535,20 +547,7 @@ function activate(context) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.setDeviceProfile', () => {
-        setDeviceProfile()
-        .then((info) => {
-            if (info.ret) {
-                myStatusBarItem.text = 'webOS: ' + info.profile.toUpperCase();
-		        myStatusBarItem.show();
-            } else {
-                myStatusBarItem.hide();
-            }
-        }
-        ).catch((err) => {
-            console.log("Error in setDeviceProfile");
-            myStatusBarItem.hide();
-        });
-        
+        setProfile();  
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', (file) => {
@@ -901,6 +900,25 @@ function getResourcePath() {
     const resource = dataPath.with({ scheme: 'vscode-resource' });
 
     return resource;
+}
+
+function setProfile() {
+    setDeviceProfile()
+    .then((info) => {
+        if (info.ret) {
+            myStatusBarItem.text = 'webOS ' + info.profile.toUpperCase();
+            let tooltip = 'Current profile of webOS Studio is set to ' + info.profile.toUpperCase();
+            tooltip += '\nClick to change profile';
+            myStatusBarItem.tooltip = tooltip;
+            myStatusBarItem.show();
+        } else {
+            myStatusBarItem.hide();
+        }
+    }
+    ).catch((err) => {
+        console.log("Error in setDeviceProfile");
+        myStatusBarItem.hide();
+    }); 
 }
 
 function getAppsListinWorkspace(folderPath, type) {
