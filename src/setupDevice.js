@@ -217,12 +217,12 @@ async function setupDevice(deviceOption, deviceName) {
     }
 }
 
-async function setDeviceProfile() {
+async function getDeviceProfile() {
     const currnetProfile = await getCurrentDeviceProfile();
-    if (currnetProfile == null) {
-        vscode.window.showErrorMessage(`Error! Failed to get currentdevice.`);
-        return;
-    }
+    return currnetProfile;
+}
+
+async function setDeviceProfile() {
     const controller = new InputController();
     const profileList = ['ose', 'tv'];
     
@@ -234,10 +234,12 @@ async function setDeviceProfile() {
 
     const results = await controller.start();
     const profile = results.shift();
-    await setCurrentDeviceProfile(profile);
+    const ret = await setCurrentDeviceProfile(profile);
+    return {ret, profile};
 }       
 
 module.exports = {
     setupDevice: setupDevice,
-    setDeviceProfile: setDeviceProfile
+    setDeviceProfile: setDeviceProfile,
+    getDeviceProfile: getDeviceProfile
 }

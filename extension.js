@@ -8,7 +8,7 @@ const previewApp = require('./src/previewApp');
 const {devicePreviewStart, devicePreviewStop} = require('./src/devicePreview');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
-const { setupDevice, setDeviceProfile } = require('./src/setupDevice');
+const { setupDevice, setDeviceProfile, getDeviceProfile } = require('./src/setupDevice');
 const runApp = require('./src/runApp');
 const installApp = require('./src/installApp');
 const launchApp = require('./src/launchApp');
@@ -333,6 +333,21 @@ function activate(context) {
         }
     });
 
+    // statusbar from https://github.com/microsoft/vscode-extension-samples/blob/main/statusbar-sample/src/extension.ts
+    // create a new status bar item that we can now manage
+    const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+    context.subscriptions.push(myStatusBarItem);
+
+    // update status bar item once at start
+    myStatusBarItem.text = 'webOS: initial';
+    getDeviceProfile()
+    .then((profile) => {
+        if (profile != null) {
+            myStatusBarItem.text = 'webOS: ' + profile.toUpperCase();
+            myStatusBarItem.show();
+        }
+    });
+
     context.subscriptions.push(serviceProvider, methodProvider, paramProvider, snippetServiceProvider, snippetMethodProvider, snippetParamProvider);
 
     context.subscriptions.push(
@@ -520,7 +535,20 @@ function activate(context) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.setDeviceProfile', () => {
-        setDeviceProfile();
+        setDeviceProfile()
+        .then((info) => {
+            if (info.ret) {
+                myStatusBarItem.text = 'webOS: ' + info.profile.toUpperCase();
+		        myStatusBarItem.show();
+            } else {
+                myStatusBarItem.hide();
+            }
+        }
+        ).catch((err) => {
+            console.log("Error in setDeviceProfile");
+            myStatusBarItem.hide();
+        });
+        
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', (file) => {

@@ -109,7 +109,7 @@ async function setCurrentDeviceProfile(profile) {
             result = true;
         }).catch(err =>{
             console.error(err);
-            vscode.window.showErrorMessage(`Error! Failed to set device profile.`);
+            // vscode.window.showErrorMessage(`Error! Failed to set device profile.`);
         });
     return result;
 }
@@ -121,7 +121,7 @@ async function getCurrentDeviceProfile() {
             result = data;
         }).catch(err =>{
             console.error(err);
-            vscode.window.showErrorMessage(`Error! Failed to get current device profile.`);
+            // vscode.window.showErrorMessage(`Error! Failed to get current device profile.`);
         });
     return result;
 }
