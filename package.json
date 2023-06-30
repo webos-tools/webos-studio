@@ -175,7 +175,7 @@
             },
             {
                 "command": "webosose.setupDevice",
-                "title": "webOS OSE: Set Up Device"
+                "title": "webOS: Set Up Device"
             },
             {
                 "command": "webosose.installApp",
