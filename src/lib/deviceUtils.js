@@ -115,15 +115,16 @@ async function setCurrentDeviceProfile(profile) {
 }
 
 async function getCurrentDeviceProfile() {
-    let result = null;
-    await ares.config(false)
-        .then(data => {
-            result = data;
-        }).catch(err =>{
-            console.error(err);
-            // vscode.window.showErrorMessage(`Error! Failed to get current device profile.`);
-        });
-    return result;
+    return new Promise((resolve, reject) => {
+        ares.config(false)
+            .then((data) => {
+                resolve(data);
+            }).catch((err) => {
+                console.error(err);
+                // vscode.window.showErrorMessage(`Error! Failed to get current device profile.`);
+                reject(err);
+            });
+    });
 }
 
 async function _setSimulatorList() {

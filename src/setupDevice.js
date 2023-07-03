@@ -217,11 +217,6 @@ async function setupDevice(deviceOption, deviceName) {
     }
 }
 
-async function getDeviceProfile() {
-    const currnetProfile = await getCurrentDeviceProfile();
-    return currnetProfile;
-}
-
 async function setDeviceProfile() {
     const controller = new InputController();
     const profileList = ['ose', 'tv'];
@@ -240,6 +235,5 @@ async function setDeviceProfile() {
 
 module.exports = {
     setupDevice: setupDevice,
-    setDeviceProfile: setDeviceProfile,
-    getDeviceProfile: getDeviceProfile
+    setDeviceProfile: setDeviceProfile
 }

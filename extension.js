@@ -8,7 +8,7 @@ const previewApp = require('./src/previewApp');
 const {devicePreviewStart, devicePreviewStop} = require('./src/devicePreview');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
-const { setupDevice, setDeviceProfile, getDeviceProfile } = require('./src/setupDevice');
+const { setupDevice, setDeviceProfile } = require('./src/setupDevice');
 const runApp = require('./src/runApp');
 const installApp = require('./src/installApp');
 const launchApp = require('./src/launchApp');
@@ -32,6 +32,7 @@ const { SDK_Manager } = require('./src/packageManager');
 const fs = require('fs');
 const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
+const { getCurrentDeviceProfile } = require('./src/lib/deviceUtils');
 const extensionPath = __dirname;
 
 let apiObjArray = [];
@@ -348,16 +349,12 @@ function activate(context) {
     context.subscriptions.push(myStatusBarItem);
 
     // update status bar item once at start
-    myStatusBarItem.text = 'webOS: initial';
-    getDeviceProfile()
-    .then((profile) => {
-        if (profile != null) {
-            myStatusBarItem.text = 'webOS ' + profile.toUpperCase();
-            let tooltip = 'Current profile of webOS Studio is set to ' + profile.toUpperCase();
-            tooltip += 'Click to change profile';
-            myStatusBarItem.tooltip = tooltip;
-            myStatusBarItem.show();
-        }
+    let profile = 'INIT';
+    showProfile(profile);
+    getCurrentDeviceProfile()
+        .then((data) => {
+            profile = data.toUpperCase();
+            showProfile(profile);
     });
 
     context.subscriptions.push(serviceProvider, methodProvider, paramProvider, snippetServiceProvider, snippetMethodProvider, snippetParamProvider);
@@ -902,15 +899,19 @@ function getResourcePath() {
     return resource;
 }
 
+function showProfile(profile) {
+    myStatusBarItem.text = 'webOS ' + profile.toUpperCase();
+    let tooltip = 'Current profile of webOS Studio is set to ' + profile.toUpperCase();
+    tooltip += '\nClick to change profile';
+    myStatusBarItem.tooltip = tooltip;
+    myStatusBarItem.show();
+}
+
 function setProfile() {
     setDeviceProfile()
     .then((info) => {
         if (info.ret) {
-            myStatusBarItem.text = 'webOS ' + info.profile.toUpperCase();
-            let tooltip = 'Current profile of webOS Studio is set to ' + info.profile.toUpperCase();
-            tooltip += '\nClick to change profile';
-            myStatusBarItem.tooltip = tooltip;
-            myStatusBarItem.show();
+            showProfile(info.profile);
         } else {
             myStatusBarItem.hide();
         }
