@@ -349,12 +349,10 @@ function activate(context) {
     context.subscriptions.push(myStatusBarItem);
 
     // update status bar item once at start
-    let profile = 'INIT';
-    showProfile(profile);
+    showProfile('INIT');
     getCurrentDeviceProfile()
         .then((data) => {
-            profile = data.toUpperCase();
-            showProfile(profile);
+            showProfile(data);
     });
 
     context.subscriptions.push(serviceProvider, methodProvider, paramProvider, snippetServiceProvider, snippetMethodProvider, snippetParamProvider);
@@ -900,8 +898,9 @@ function getResourcePath() {
 }
 
 function showProfile(profile) {
-    myStatusBarItem.text = 'webOS ' + profile.toUpperCase();
-    let tooltip = 'Current profile of webOS Studio is set to ' + profile.toUpperCase();
+    const currentProfile = profile.trim().toUpperCase();
+    myStatusBarItem.text = 'webOS ' + currentProfile;
+    let tooltip = 'Current profile of webOS Studio is set to ' + currentProfile;
     tooltip += '\nClick to change profile';
     myStatusBarItem.tooltip = tooltip;
     myStatusBarItem.show();
@@ -911,7 +910,8 @@ function setProfile() {
     setDeviceProfile()
     .then((info) => {
         if (info.ret) {
-            showProfile(info.profile);
+            const currentProfile = info.profile.trim().toUpperCase();
+            showProfile(currentProfile);
         } else {
             myStatusBarItem.hide();
         }
