@@ -2,7 +2,7 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "1.1.2",
+    "version": "1.1.2-beta.0",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
@@ -67,7 +67,7 @@
         "onView:webosose.webososeDevices",
         "onView:webosose.installGlobal",
         "onView:webosose.installEmulator",
-        "onView:webosose.setDeviceProfile",
+        "onView:webos.setDeviceProfile",
         "onView:webos.runSimulator",
         "onView:webosose.apps",
         "onView:webosose.apps.vbox",
@@ -154,7 +154,7 @@
                 "title": "webOS TV: Run on Simulator"
             },
             {
-				"command": "webosos.runSimulatorParams",
+				"command": "webos.runSimulatorParams",
 				"title": "webOS TV: Run on Simulator with Parameters"
 			},
             {
