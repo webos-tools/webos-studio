@@ -686,6 +686,25 @@ async function launchSimulator(appDir, version, params) {
     }
 }
 
+async function novacomGetkey(device, passphrase) {
+    if (!device || !passphrase) {
+        return Promise.reject('ares-novacom --getkey: arguments are not fulfilled.');
+    }
+
+    const cmd = `${path.join(await getCliPath(), 'ares-novacom')} -k -d "${device}" --pass ${passphrase}`;
+
+    return new Promise((resolve, reject) => {
+        _execAsync(cmd, (stderr, stdout) => {
+            if (stderr) {
+                reject(stderr);
+            } else {
+                resolve(stdout);
+            }
+        });
+    });
+}
+
+
 module.exports = {
     generate: generate,
     setupDeviceList: setupDeviceList,
@@ -718,5 +737,6 @@ module.exports = {
     push:push,
     installListFull:installListFull,
     launchSimulator: launchSimulator,
+    novacomGetkey: novacomGetkey,
     config: config,
 }

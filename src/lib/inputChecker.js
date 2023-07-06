@@ -228,6 +228,18 @@ class InputChecker {
         return null;
     }
 
+    static checkPassphrase(value) {
+        if (value === '') {
+            return 'Please enter the passphrase.';
+        }
+
+        if (!matchReg(value, /[A-Z0-9]{6}/)) {
+            return 'Please enter the exact passphrase displayed on the Developer Mode app.';
+        }
+
+        return null;
+    }
+
     static checkPassword(value) {
         value = value.trim();
         if (value === '') {

@@ -26,6 +26,7 @@
         "onCommand:webosose.devicepreviewstart",
         "onCommand:webosose.packageApp",
         "onCommand:webosose.setupDevice",
+        "onCommand:webos.getKey",
         "onCommand:webosose.installApp",
         "onCommand:webosose.launchApp",
         "onCommand:webosose.inspectApp",
@@ -176,6 +177,10 @@
             {
                 "command": "webosose.setupDevice",
                 "title": "webOS: Set Up Device"
+            },
+            {
+                "command": "webos.getKey",
+                "title": "webOS TV: Set Up SSH Key"
             },
             {
                 "command": "webosose.installApp",

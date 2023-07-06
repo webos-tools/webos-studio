@@ -127,6 +127,25 @@ async function getCurrentDeviceProfile() {
     });
 }
 
+async function getDefaultDevice() {
+    //const defaultDevice = vscode.workspace.getConfiguration(WEBOSTV).get(DEFAULT_DEVICE);
+    const defaultDevice = ""; // HACK
+
+    if (defaultDevice) { // if default device exists in configuration
+        // check default device is in the device list
+        const list = await getDeviceList();
+        const deviceNameList = list.map(device => device.name);
+        if (!deviceNameList.includes(defaultDevice)) {
+            vscode.window.showWarningMessage(`Warning! The default device(${defaultDevice}) is not in the device list.`);
+            return null;
+        } else {
+            return defaultDevice;
+        }
+    } else {
+        return defaultDevice;
+    }
+}
+
 async function _setSimulatorList() {
     try {
         const simulatorDir = getSimulatorDirPath();
@@ -164,6 +183,7 @@ module.exports = {
     getDeviceList: getDeviceList,
     getInstalledList: getInstalledList,
     getRunningList: getRunningList,
+    getDefaultDevice: getDefaultDevice,
     updateDeviceStatus:updateDeviceStatus,
     getSimulatorList: getSimulatorList,
     getCurrentDeviceProfile: getCurrentDeviceProfile,
