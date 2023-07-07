@@ -13,12 +13,14 @@ class AppsProvider {
 
     constructor() { }
 
-    refresh(element) {
+    refresh(element, context) {
         if (element) {
             this._onDidChangeTreeData.fire(element);
         } else {
             this._onDidChangeTreeData.fire();
         }
+        if (context)
+            this.storeContextOnExtnLaunch(context);
     }
 
     getTreeItem(element) {

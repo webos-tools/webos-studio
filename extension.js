@@ -501,7 +501,7 @@ function activate(context) {
                             const jsonPath = path.join(projectLocation, `${projectName}/.webosstudio.config`);
                             fs.writeFileSync(jsonPath, levelJSON);
 
-                            webososeAppsProvider.refresh();
+                            webososeAppsProvider.refresh(null, context);
                         });
                     }
                 },
@@ -710,7 +710,7 @@ function activate(context) {
     const webososeAppsProvider = new AppsProvider();
     vscode.window.registerTreeDataProvider('apps', webososeAppsProvider);
     context.subscriptions.push(vscode.commands.registerCommand('apps.refreshList', () => {
-        webososeAppsProvider.refresh();
+        webososeAppsProvider.refresh(null, context);
     }));
     // comment out unused command registration, apps.generateApp
     /*context.subscriptions.push(vscode.commands.registerCommand('apps.generateApp', async () => {
@@ -738,7 +738,7 @@ function activate(context) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.removeApp', async (app) => {
         await removeApp(app);
-        webososeAppsProvider.refresh();
+        webososeAppsProvider.refresh(null, context);
         // webososeAppsProvider.storeContextOnExtnLaunch(context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.installApp', async (app) => {
@@ -776,7 +776,7 @@ function activate(context) {
         lintApp(app.label, collection, false);
     }));
     vscode.workspace.onDidDeleteFiles(() => {
-        webososeAppsProvider.refresh();
+        webososeAppsProvider.refresh(null, context);
     });
     context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(function (doc) {
         // checking saved file is inside a webapp and preview is on 
