@@ -474,7 +474,7 @@ async function config(isSet, profile) {
         cmd = `${path.join(await getCliPath(), 'ares-config')} -c`;
         return _execAsync(cmd, (stdout, resolve, reject) => {
             if (stdout.includes('Current profile')) {
-                const currentProfile = stdout.split(' ').pop();
+                const currentProfile = stdout.split(' ').pop().trim();
                 resolve(currentProfile);
             } else {
                 reject('ares-config -c: failed!');
@@ -693,14 +693,12 @@ async function novacomGetkey(device, passphrase) {
 
     const cmd = `${path.join(await getCliPath(), 'ares-novacom')} -k -d "${device}" --pass ${passphrase}`;
 
-    return new Promise((resolve, reject) => {
-        _execAsync(cmd, (stderr, stdout) => {
-            if (stderr) {
-                reject(stderr);
-            } else {
-                resolve(stdout);
-            }
-        });
+    return _execAsync(cmd, (stdout, resolve, reject) => {
+        if (stdout.includes('SSH Private')) {
+            resolve();
+        } else {
+            reject('ares-novacom : failed!');
+        }
     });
 }
 

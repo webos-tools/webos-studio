@@ -601,7 +601,15 @@ function activate(context) {
   
     context.subscriptions.push(vscode.commands.registerCommand('webosose.packageApp', () => { packageApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setupDevice', () => { setupDevice(); }));
-    context.subscriptions.push(vscode.commands.registerCommand('webos.getKey', () => { getKey(); }));
+    context.subscriptions.push(vscode.commands.registerCommand('webos.getKey', () => {
+        getCurrentDeviceProfile()
+        .then((data) => {
+            if (data === 'tv') {
+                getKey();
+            } else {
+                vscode.window.showInformationMessage(`Only TV Profile supports Set Up SSH Key.`);
+            }});
+    }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installApp', () => {
         installApp()
             .then(() => {
