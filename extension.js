@@ -1338,6 +1338,7 @@ function getWebviewHome(resource) {
                 <select name="selelct-webos-product" id="selelct-webos-product">
                         <option value="none" selected disabled hidden>====== select ======</option>
                         <option value="OSE">OSE</option>
+                        <option value="TV">TV</option>
                 </select>
                 <label class="grid-container-label" for="selelct-api-version">
                     API Version

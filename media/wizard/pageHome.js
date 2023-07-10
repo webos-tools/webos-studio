@@ -30,12 +30,39 @@
     }
     window.onload = onLoadEvent;
 
+    const removeCount = 6;
+    const tvAPI = [["TV_APILevel_23", "APILevel23"]];
+    const oseAPI = [["OSE_APILevel_23", "APILevel23"], ["OSE_APILevel_22", "APILevel22"],
+        ["OSE_APILevel_21", "APILevel21"], ["OSE_APILevel_20", "APILevel20"]];
+    let removeSelect = function() {
+        for (let step = 0; step < removeCount; step++ ) {
+            selelctApiVersion.remove(1);
+        }
+    };
+    let makeAPI = function(product) {
+        for (const api of product) {
+            const opt = document.createElement("option");
+            opt.value = api[0];
+            opt.text = api[1];
+            selelctApiVersion.add(opt,null);
+        }
+    };
     selelctWebosProduct.addEventListener('change', function() {
         webosProductValue = selelctWebosProduct.value;
         selelctApiVersion.disabled = false;
         if (webosProductValue === 'OSE') {
             descriptionValue = 'webOS OSE ';
-        }                    
+            removeSelect();
+            makeAPI(oseAPI);
+            selelctApiVersion.selectedIndex = 0;
+            description.value = "";
+        } else if (webosProductValue === 'TV') {
+            descriptionValue = 'webOS TV ';
+            removeSelect();
+            makeAPI(tvAPI);
+            selelctApiVersion.selectedIndex = 0;
+            description.value = "";
+        }                 
     });
     selelctApiVersion.addEventListener('change', function() {
         apiVersionValue = selelctApiVersion.value;
@@ -49,6 +76,9 @@
             description.value = descriptionValue + '2.20.0';
         } else if (apiVersionValue === 'OSE_APILevel_23') {
             description.value = descriptionValue + '2.21.0';
+        }
+        if (apiVersionValue === 'TV_APILevel_23') {
+            description.value = descriptionValue + '23';
         }
     });
     btnGenerate.addEventListener('click', function() {
