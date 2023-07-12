@@ -367,7 +367,7 @@ function activate(context) {
                 ]
             })
 
-            let apiLevel, appType, appSubType, appTypeIndex, enactTemplate, htmlType, disposeFinish = false;
+            let apiLevel, deviceProfile, appType, appSubType, appTypeIndex, enactTemplate, htmlType, disposeFinish = false;
             let projectLocation, projectName, prop = {}, addWebOSlib = false;
             let checkAllValid, projectLocationValid;
             let msg = 'webOS Project Wizard';
@@ -382,6 +382,7 @@ function activate(context) {
                     case 'Generate':
                         appTypeIndex = 0;
                         apiLevel = message.apiLevel;
+                        deviceProfile = message.deviceProfile;
                         msg = 'Create Project';
                         panel.title = msg;
                         panel.webview.html = getWebviewCreateProject(appTypeIndex, resource); // page2
@@ -509,7 +510,7 @@ function activate(context) {
             panel.onDidDispose(() => {
                 // Handle user closing panel after 'finish' botton clicked on Project Wizard
                 if (disposeFinish) {
-                    generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib)
+                    generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib, deviceProfile)
                         .then(() => {
                             let apiLevelStatus = "", apiLevelNo = "";
                             let apiLevelStatusSplit = [];

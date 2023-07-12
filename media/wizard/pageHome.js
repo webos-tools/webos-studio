@@ -66,6 +66,7 @@
     });
     selelctApiVersion.addEventListener('change', function() {
         apiVersionValue = selelctApiVersion.value;
+        webosProductValue = selelctWebosProduct.value;
         btnGenerate.disabled = false;
         // [REQUIRED] Update the api level when new version of OSE is released.
         if (apiVersionValue === 'OSE_APILevel_20') {
@@ -84,7 +85,8 @@
     btnGenerate.addEventListener('click', function() {
         vscode.postMessage({
             command: 'Generate',
-            apiLevel: apiVersionValue
+            apiLevel: apiVersionValue,
+            deviceProfile: webosProductValue
         });
     });
 }());

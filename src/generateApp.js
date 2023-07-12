@@ -440,7 +440,7 @@ async function generateApp() {
     });
 }
 
-async function generateAppFromProjectWizard(template, projectLocation, projectName, prop, addOS) {
+async function generateAppFromProjectWizard(template, projectLocation, projectName, prop, addOS, deviceProfile) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
         let defaultDir = getDefaultDir();
@@ -450,7 +450,7 @@ async function generateAppFromProjectWizard(template, projectLocation, projectNa
             location = path.join(defaultDir, location);
         }
         let projectPath = path.join(location, projectName);
-        let templateId = templateUtils.getTemplateId(template);
+        let templateId = templateUtils.getTemplateId(template, deviceProfile);
 
         vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,

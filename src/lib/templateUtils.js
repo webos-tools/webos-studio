@@ -19,7 +19,7 @@ function getTemplateList() {
     return templateList.map(template => template.name);
 }
 
-function getTemplateId(name) {
+function getTemplateId(name, deviceProfile = 'OSE') {
     let id;
     for (let i in templateList) {
         if (name === templateList[i].name) {
