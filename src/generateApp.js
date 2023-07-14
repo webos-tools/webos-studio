@@ -1,5 +1,5 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
+  * Copyright (c) 2021-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
@@ -451,6 +451,9 @@ async function generateAppFromProjectWizard(template, projectLocation, projectNa
         }
         let projectPath = path.join(location, projectName);
         let templateId = templateUtils.getTemplateId(template, deviceProfile);
+        if (deviceProfile == 'TV' && templateId == 'webapp') {
+            templateId = 'basic';
+        }
 
         vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,

@@ -1,5 +1,5 @@
 /*
-  * Copyright (c) 2022 LG Electronics Inc.
+  * Copyright (c) 2022-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
 (function() {

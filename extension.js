@@ -33,7 +33,7 @@ const { SDK_Manager } = require('./src/packageManager');
 const fs = require('fs');
 const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
-const { getCurrentDeviceProfile } = require('./src/lib/deviceUtils');
+const { getCurrentDeviceProfile, setCurrentDeviceProfile } = require('./src/lib/deviceUtils');
 const extensionPath = __dirname;
 
 let apiObjArray = [];
@@ -350,7 +350,7 @@ function activate(context) {
     context.subscriptions.push(myStatusBarItem);
 
     // update status bar item once at start
-    showProfile('INIT');
+    // showProfile('INIT');
     getCurrentDeviceProfile()
         .then((data) => {
             showProfile(data);
@@ -510,24 +510,29 @@ function activate(context) {
             panel.onDidDispose(() => {
                 // Handle user closing panel after 'finish' botton clicked on Project Wizard
                 if (disposeFinish) {
-                    generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib, deviceProfile)
-                        .then(() => {
-                            let apiLevelStatus = "", apiLevelNo = "";
-                            let apiLevelStatusSplit = [];
+                    (async () => { 
+                        let result = await setProfile(deviceProfile.toLowerCase());
+                        if (result === 0) {
+                            generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib, deviceProfile)
+                                .then(() => {
+                                    let apiLevelStatus = "", apiLevelNo = "";
+                                    let apiLevelStatusSplit = [];
 
-                            apiLevelStatus = apiLevel;
+                                    apiLevelStatus = apiLevel;
 
-                            apiLevelStatusSplit = apiLevelStatus.split("_");
-                            apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
-                            const level = {
-                                api_level: apiLevelNo
+                                    apiLevelStatusSplit = apiLevelStatus.split("_");
+                                    apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
+                                    const level = {
+                                        api_level: apiLevelNo
+                                    }
+                                    const levelJSON = JSON.stringify(level, null, 2);
+                                    const jsonPath = path.join(projectLocation, `${projectName}/.webosstudio.config`);
+                                    fs.writeFileSync(jsonPath, levelJSON);
+
+                                    webososeAppsProvider.refresh(null, context);
+                                });
                             }
-                            const levelJSON = JSON.stringify(level, null, 2);
-                            const jsonPath = path.join(projectLocation, `${projectName}/.webosstudio.config`);
-                            fs.writeFileSync(jsonPath, levelJSON);
-
-                            webososeAppsProvider.refresh(null, context);
-                        });
+                        })();
                     }
                 },
                 null,
@@ -917,20 +922,15 @@ function showProfile(profile) {
     myStatusBarItem.show();
 }
 
-function setProfile() {
-    setDeviceProfile()
-    .then((info) => {
-        if (info.ret) {
-            const currentProfile = info.profile.trim().toUpperCase();
+async function setProfile(profile) {
+    const result = await setDeviceProfile(profile);
+    if (result.ret) {
+            const currentProfile = result.profile.trim().toUpperCase();
             showProfile(currentProfile);
-        } else {
-            myStatusBarItem.hide();
-        }
+            return 0;
     }
-    ).catch((err) => {
-        console.log("Error in setDeviceProfile");
-        myStatusBarItem.hide();
-    }); 
+    myStatusBarItem.hide();
+    return 1;
 }
 
 function getAppsListinWorkspace(folderPath, type) {

@@ -217,18 +217,20 @@ async function setupDevice(deviceOption, deviceName) {
     }
 }
 
-async function setDeviceProfile() {
-    const controller = new InputController();
-    const profileList = ['ose', 'tv'];
-    
-    controller.addStep({
-        title: 'Choose Device Profile',
-        placeholder: `Select Device Profile`,
-        items: profileList.map(label => ({ label }))
-    });
+async function setDeviceProfile(profile) {
+    if (typeof profile === 'undefined') {
+        const controller = new InputController();
+        const profileList = ['ose', 'tv'];
+        
+        controller.addStep({
+            title: 'Choose Device Profile',
+            placeholder: `Select Device Profile`,
+            items: profileList.map(label => ({ label }))
+        });
 
-    const results = await controller.start();
-    const profile = results.shift();
+        const results = await controller.start();
+        profile = results.shift();
+    }
     const ret = await setCurrentDeviceProfile(profile);
     return {ret, profile};
 }       
