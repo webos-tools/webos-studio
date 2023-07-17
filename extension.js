@@ -522,12 +522,13 @@ function activate(context) {
 
                                     apiLevelStatusSplit = apiLevelStatus.split("_");
                                     apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
-                                    const level = {
-                                        api_level: apiLevelNo
+                                    const webosConfig = {
+                                        api_level: apiLevelNo,
+                                        profile: deviceProfile
                                     }
-                                    const levelJSON = JSON.stringify(level, null, 2);
+                                    const webosConfigJSON = JSON.stringify(webosConfig, null, 2);
                                     const jsonPath = path.join(projectLocation, `${projectName}/.webosstudio.config`);
-                                    fs.writeFileSync(jsonPath, levelJSON);
+                                    fs.writeFileSync(jsonPath, webosConfigJSON);
 
                                     webososeAppsProvider.refresh(null, context);
                                 });
