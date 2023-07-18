@@ -2,7 +2,7 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "1.1.2-beta.1",
+    "version": "1.1.2-beta.2",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
@@ -204,7 +204,7 @@
             },
             {
                 "command": "webosose.projectWizard",
-                "title": "webOS OSE: Create ProjectWizard"
+                "title": "webOS: Create ProjectWizard"
             },
             {
                 "command": "webosose.explorer.installApp",
