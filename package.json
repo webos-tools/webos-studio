@@ -172,7 +172,7 @@
             },
             {
                 "command": "webosose.packageApp",
-                "title": "webOS OSE: Package Application"
+                "title": "webOS: Package Application"
             },
             {
                 "command": "webosose.setupDevice",
@@ -216,7 +216,7 @@
             },
             {
                 "command": "webosose.explorermenu.packageApp",
-                "title": "webOS OSE: Package Application"
+                "title": "webOS: Package Application"
             },
             {
                 "command": "webosose.explorermenu.installApp",
