@@ -345,7 +345,7 @@ async function checkDeviceOnline(device) {
         return Promise.reject('ares-shell: arguments are not fulfilled.')
     }
 
-    let cmd = `${path.join(await getCliPath(), 'ares-shell')} -d "${device}" -r "echo checking online"`;
+    let cmd = `${path.join(await getCliPath(), 'ares-install')} -d "${device}" -l`;
 
     return _execAsync(cmd);
 }
