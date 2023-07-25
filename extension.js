@@ -18,7 +18,7 @@ const lintApp = require('./src/lintApp');
 const installLibrary = require('./src/installLibrary');
 const { installGlobalLibrary, installEmulatorLauncher } = require('./src/installGlobalLibrary');
 const runSimulator = require('./src/lib/runSimulator');
-const { DeviceProvider } = require('./src/webososeDevices');
+const { DeviceProvider, SimulatorProvider } = require('./src/webososeDevices');
 const { AppsProvider } = require('./src/webososeApps');
 const { uninstallApp, closeApp, getDeviceInfo, setDefaultDevice } = require('./src/contextMenus');
 const { InstanceWebviewProvider } = require('./src/instanceWebviewProvider');
@@ -634,7 +634,9 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.debugApp', () => { runApp(true); }));
 
     const webososeDevicesProvider = new DeviceProvider();
+    const webosSimulatorProvider = new SimulatorProvider();
     vscode.window.registerTreeDataProvider('webososeDevices', webososeDevicesProvider);
+    vscode.window.registerTreeDataProvider('webosSimulator', webosSimulatorProvider);
 
     context.subscriptions.push(vscode.commands.registerCommand('webososeDevices.refreshList', () => {
         webososeDevicesProvider.refresh();
@@ -756,6 +758,16 @@ function activate(context) {
                 })
         }
     }));
+    context.subscriptions.push(
+        vscode.commands.registerCommand('webosSimulator.refreshList', () => {
+            webosSimulatorProvider.refresh();
+        })
+	);
+	context.subscriptions.push(
+        vscode.commands.registerCommand('webosSimulator.runApp', (simulator) => {
+            runSimulator(null, simulator.version);
+        })
+	);
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorer.installApp', (file) => {
         installApp(file.fsPath, null);
     }));

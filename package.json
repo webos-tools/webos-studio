@@ -21,6 +21,8 @@
         "onCommand:webos.setDeviceProfile",
         "onCommand:webos.runSimulator",
         "onCommand:webos.runSimulatorParams",
+        "onCommand:webosSimulator.refreshList",
+        "onCommand:webosSimulator.runApp",
         "onCommand:webosose.generateApp",
         "onCommand:webosose.previewApp",
         "onCommand:webosose.devicepreviewstart",
@@ -70,6 +72,7 @@
         "onView:webosose.installEmulator",
         "onView:webos.setDeviceProfile",
         "onView:webos.runSimulator",
+        "onView:webos.webosSimulator",
         "onView:webosose.apps",
         "onView:webosose.apps.vbox",
         "onView:webosose.extensionHelp",
@@ -120,11 +123,27 @@
                     "name": "Emulator Manager"
                 },
                 {
+                    "id": "webosSimulator",
+                    "name": "Simulator"
+                },
+                {
                     "id": "extensionHelp",
                     "name": "Help"
                 }
             ]
         },
+        "viewsWelcome": [
+            {
+                "TODO:": "check UI",
+                "view": "webostvDevices",
+                "when": "webostv.cliInstalled == false",
+                "contents": "webOS TV CLI is not installed.\n[Install CLI](https://webostv.developer.lge.com/develop/tools/cli-installation)"
+            },
+            {
+                "view": "webosSimulator",
+                "contents": "webOS TV Simulator is not installed.\n[Install Simulator](https://webostv.developer.lge.com/develop/tools/simulator-installation)"
+    	    }
+        ],
         "commands": [
             {
                 "command": "ipkanalyze.start",
@@ -158,6 +177,15 @@
 				"command": "webos.runSimulatorParams",
 				"title": "webOS TV: Run on Simulator with Parameters"
 			},
+            {
+                "command": "webosSimulator.refreshList",
+                "title": "Refresh",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "webosSimulator.runApp",
+                "title": "Run Application"
+            },
             {
                 "command": "webosose.generateApp",
                 "title": "webOS OSE: Generate Project"
@@ -446,7 +474,12 @@
                     "command": "vbox.addInstance",
                     "when": "view == vbox",
                     "group": "navigation"
-                }
+                },
+                {
+                    "command": "webosSimulator.refreshList",
+                    "when": "view == webosSimulator",
+                    "group": "navigation"
+				}
             ],
             "view/item/context": [
                 {
@@ -578,7 +611,11 @@
                     "command": "vbox.launchInstance",
                     "when": "view == vbox && viewItem == vboxInsance",
                     "group": "device2@2"
-                }
+                },
+                {
+                    "command": "webosSimulator.runApp",
+                    "when": "view == webosSimulator && viewItem == simulator"
+				}
             ],
             "explorer/context": [
                 {
@@ -959,7 +996,8 @@
         "fast-folder-size": "1.7.0",
         "node-watch": "^0.6.2",
         "socket.io": "^3.1.0",
-        "chalk": "^4.1.0"
+        "chalk": "^4.1.0",
+        "chokidar": "^3.5.2"
     },
     "repository": {
         "type": "git",
