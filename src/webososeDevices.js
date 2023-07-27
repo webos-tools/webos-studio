@@ -1,12 +1,15 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
+  * Copyright (c) 2021-2023 LG Electronics Inc.
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
 const path = require('path');
-const { getDeviceList, getInstalledList, getRunningList,updateDeviceStatus } = require('./lib/deviceUtils');
+const chokidar = require('chokidar');
+const { getDeviceList, getInstalledList, getRunningList, updateDeviceStatus, getSimulatorList } = require('./lib/deviceUtils');
 const { logger } = require('./lib/logger');
+const { getSimulatorDirPath } = require('./lib/configUtils');
 
+const resourcesPath = path.resolve(__dirname, '../../resources');
 class DeviceProvider {
     _onDidChangeTreeData = new vscode.EventEmitter();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -126,4 +129,68 @@ class AppId {
     }
 }
 
+const simulatorDirPath = getSimulatorDirPath();
+class Simulator {
+    contextValue = 'simulator';
+
+    constructor(simulatorName, version) {
+        this.label = simulatorName;
+        this.version = version;
+    }
+
+    refresh(element) {
+        if (element) {
+            this._onDidChangeTreeData.fire(element);
+        } else {
+            this._onDidChangeTreeData.fire();
+        }
+    }
+
+    iconPath = {
+		light: path.resolve(resourcesPath, 'light', 'simul.svg'),
+		dark: path.resolve(resourcesPath, 'dark', 'simul.svg')
+	};
+}
+class SimulatorProvider {
+    _onDidChangeTreeData = new vscode.EventEmitter();
+	onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+    constructor() {
+        if (simulatorDirPath) {
+            chokidar.watch(simulatorDirPath).on('all', (event, dirPath) => {
+                if (event === 'change' || event === 'unlink') {
+                    console.log(`${event}: ${dirPath}`);
+                    this.refresh();
+                }
+            });
+        }
+    }
+
+    refresh(element) {
+        if (element) {
+            this._onDidChangeTreeData.fire(element);
+        } else {
+            this._onDidChangeTreeData.fire();
+        }
+    }
+
+    getTreeItem(element) {
+        return element;
+    }
+
+    getChildren() {
+        return Promise.resolve(this._getSimulatorList());
+    }
+
+    async _getSimulatorList() {
+        const array = [];
+        const simulatorList = await getSimulatorList(true);
+        simulatorList.forEach((device) => {
+            array.push(new Simulator(device.name, device.version));
+        });
+        return array;
+    }
+}
+
 exports.DeviceProvider = DeviceProvider;
+exports.SimulatorProvider = SimulatorProvider;
