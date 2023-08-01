@@ -56,7 +56,7 @@ async function getDefaultDevice() {
 
 function getSimulatorDirPath() {
     let simulatorDir;
-    const sdkHomePath = process.env.LG_WEBOS_TV_SDK_HOME;
+    const sdkHomePath = process.env.LG_WEBOS_TV_SDK_HOME || process.env.LG_WEBOS_CUSTOM_SDK_HOME;
     const cliPath = process.env.WEBOS_CLI_TV;
 
     if (sdkHomePath) {
