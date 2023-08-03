@@ -780,6 +780,10 @@
                 {
                     "command": "webosose.previewApp",
                     "when": "false"
+                },
+				{
+                    "command": "sdkmanager.start",
+                    "when": "false"
                 }
             ],
             "webososeDevices.runApp": [
