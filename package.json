@@ -212,7 +212,7 @@
             },
             {
                 "command": "webosose.installApp",
-                "title": "webOS OSE: Install Application"
+                "title": "webOS: Install Application"
             },
             {
                 "command": "webosose.launchApp",
@@ -224,7 +224,7 @@
             },
             {
                 "command": "webosose.runApp",
-                "title": "webOS OSE: Run Application"
+                "title": "webOS: Run Application"
             },
             {
                 "command": "webosose.debugApp",
@@ -236,11 +236,11 @@
             },
             {
                 "command": "webosose.explorer.installApp",
-                "title": "webOS OSE: Install Application"
+                "title": "webOS: Install Application"
             },
             {
                 "command": "webosose.explorer.runApp",
-                "title": "webOS OSE: Run Application"
+                "title": "webOS: Run Application"
             },
             {
                 "command": "webosose.explorermenu.packageApp",
@@ -248,11 +248,11 @@
             },
             {
                 "command": "webosose.explorermenu.installApp",
-                "title": "webOS OSE: Install Application"
+                "title": "webOS: Install Application"
             },
             {
                 "command": "webosose.explorermenu.runApp",
-                "title": "webOS OSE: Run Application"
+                "title": "webOS: Run Application"
             },
             {
                 "command": "webosose.explorermenu.runSimulator",
