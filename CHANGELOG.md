@@ -4,6 +4,11 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+## [1.1.2] [2023-08-04]
+
+- Disable Package Manager as it is POC version
+- Fix package.json change notification issue
+
 ## [1.1.1] [2023-06-26]
 
 - Fix broken URLs for images in README.md
