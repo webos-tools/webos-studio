@@ -262,8 +262,9 @@ async function pack(appDir, outDir, minify, serviceDir) {
 
     return _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout.includes('Success')) {
-            let ipkIndex = stdout.indexOf('.ipk');
-            let ipkFile = stdout.slice(7, ipkIndex + 4);
+            let ipkIndex = stdout.indexOf('.ipk to');
+            let createIndex = stdout.indexOf('Create');
+            let ipkFile = stdout.slice(createIndex + 7, ipkIndex + 4);
             resolve(ipkFile);
         } else {
             reject('ares-package: failed!');
