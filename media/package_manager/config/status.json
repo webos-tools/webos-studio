@@ -1,0 +1,27 @@
+{
+    "preReq": {
+      
+    },
+    "tv": {
+        "tv_cli_1": [
+            {
+           
+                "sdk_version": "1.0.1",
+                "location": "tv/cli/v1.0.1"
+            }
+        ]
+    },
+    "ose": {
+        "tv_cli_1": [
+            {
+                
+                "sdk_version": "1.0.1",
+                "location": "tv/cli/v1.0.1"
+            }
+        ]
+    }
+}
+
+
+
+

@@ -1,5 +1,6 @@
 .table-wrap{
-  height: 200px;
+  min-height: 200px;
+   max-height: 50%; 
   overflow: auto;
 }
 .treegrid {
@@ -143,6 +144,7 @@
     height: 8px;
     -webkit-animation: spin 1s linear infinite; /* Safari */
     animation: spin 1s linear infinite;
+    margin-top:5px;
   }
   
   /* Safari */

@@ -2,6 +2,7 @@ const vscode = require("vscode");
 
 var outputChannel;
 let extInit = false;
+let extInitMessage ="";
 
 var logLevel = 4; //( 1-error,2-error and warn, 3, error ,war, info, 4, - all)
 const setLogLevel = (logLvl) => {
@@ -25,6 +26,11 @@ const setLogLevel = (logLvl) => {
 const createOutPutChannel = () => {
   outputChannel = vscode.window.createOutputChannel("webOS Studio", "Log");
   outputChannel.show(true);
+  logAny("webOS Studio initializing.");
+  // logAny("Current log level enabled for - " + getLogLevelText(logLevel));
+  // logAny(
+  //   "To change the log level, select 'Set log level' option from command prompt"
+  // );
 };
 const getLogLevelText = (logLevel) => {
   let logLevelText = "";
@@ -108,7 +114,8 @@ const logger = {
   run,
   replaceAnsiColor,
   setLogLevel,
-  extInit
+  extInit,
+  extInitMessage
 };
 
 module.exports = {

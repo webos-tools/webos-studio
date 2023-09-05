@@ -18,6 +18,26 @@ class InstanceWebviewProvider {
         this._extensionUri = _extensionUri;
         this.vboxInstanceProvider = new VboxInstanceProvider();
         this.loadingInstList = false
+        this.webos_emulator = this.getweobosEmulatorPrgm()
+
+    }
+    getweobosEmulatorPrgm() {
+        let osStr = os.platform().toLowerCase();
+        let prg = "";
+        switch (osStr) {
+            case "darwin":
+                prg = " source  ~/.bash_profile && webos-emulator";
+                break;
+            case "linux":
+                prg = " .  ~/.profile && webos-emulator ";
+                break;
+            case "win32":
+                prg = "webos-emulator ";
+                break;
+
+        }
+        return prg;
+
     }
     resolveWebviewView(webviewView) {
         this._view = webviewView;
@@ -30,6 +50,9 @@ class InstanceWebviewProvider {
                 this._extensionUri
             ]
         };
+
+     
+
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
         //   this.sendIcons(webviewView.webview);
         this.setInitialValue();
@@ -73,6 +96,7 @@ class InstanceWebviewProvider {
                     }
             }
         });
+        
     }
     showMessge(data) {
         if (data.isError) {
@@ -90,6 +114,8 @@ class InstanceWebviewProvider {
                     this.filteredInstanceList = [];
                     await this.getSupportedInstance(data).then(() => {
                         this._view.webview.postMessage({ command: 'loadInstnaceList', "data": { "filterdInsance": this.filteredInstanceList, allInstance: data } });
+                    }).catch((e)=>{
+                        console.log(e)
                     })
                 })
             this.loadingInstList = false;
@@ -188,7 +214,7 @@ class InstanceWebviewProvider {
 
                                 commands = [];
                                 if (wemulIntegration) {
-                                    commands = [`webos-emulator -vd ${uuid} --hidden-vce-create --memory ${data.memory} --monitorcount ${data.monitorCount} --vmdk "${data.vmdkFile}" --scalefactor 0.7`]
+                                    commands = [`${this.webos_emulator} -vd ${uuid} --hidden-vce-create --memory ${data.memory} --monitorcount ${data.monitorCount} --vmdk "${data.vmdkFile}" --scalefactor 0.7`]
                                 } else {
                                     switch (data.currentOS) {
                                         case 'Darwin':
@@ -230,7 +256,7 @@ class InstanceWebviewProvider {
                                         case 'Windows_NT':
 
                                             commands = [
-                                                `vboxmanage modifyvm ${uuid} --longmode ${data.os =="Linux"?" off":" on"}`,
+                                                `vboxmanage modifyvm ${uuid} --longmode ${data.os == "Linux" ? " off" : " on"}`,
                                                 `vboxmanage modifyvm ${uuid} --memory ${data.memory} --vram 128 --ioapic on --cpus 2`,
                                                 `vboxmanage modifyvm ${uuid} --graphicscontroller vmsvga`,
                                                 `vboxmanage modifyvm ${uuid} --accelerate3d on`,
@@ -294,10 +320,10 @@ class InstanceWebviewProvider {
                 }
                 let updatecommands = [];
                 if (wemulIntegration) {
-                    updatecommands = [`webos-emulator -vd ${data.uuid} -m --name "${data.instName}" --memory ${data.memory} --monitorcount ${data.monitorCount} --vmdk "${data.vmdkFile}"`]
+                    updatecommands = [`${this.webos_emulator} -vd ${data.uuid} -m --name "${data.instName}" --memory ${data.memory} --monitorcount ${data.monitorCount} --vmdk "${data.vmdkFile}"`]
                 } else {
                     updatecommands = [
-                        `vboxmanage modifyvm ${data.uuid} --longmode ${data.os =="Linux"?" off":" on"}`,
+                        `vboxmanage modifyvm ${data.uuid} --longmode ${data.os == "Linux" ? " off" : " on"}`,
                         `vboxmanage modifyvm ${data.uuid} --name "${data.instName}"`,
                         `vboxmanage modifyvm ${data.uuid} --memory ${data.memory} --vram 128 --ioapic on --cpus 2`,
                         `vboxmanage modifyvm ${data.uuid} --monitorcount ${data.monitorCount}`,
@@ -326,7 +352,7 @@ class InstanceWebviewProvider {
                                             if (answer === "Yes") {
                                                 if (wemulIntegration) {
                                                     commands = [
-                                                        `webos-emulator -vd ${runninguuid} -k`,
+                                                        `${this.webos_emulator} -vd ${runninguuid} -k`,
                                                         `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
                                                     ]
                                                 } else {
@@ -395,9 +421,9 @@ class InstanceWebviewProvider {
                             if (answer === "Yes") {
                                 if (wemulIntegration) {
                                     commands = [
-                                        `webos-emulator -vd ${runninguuid} -k`,
+                                        `${this.webos_emulator} -vd ${runninguuid} -k`,
                                         `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                                        `webos-emulator -vd ${data.uuid} -s`,
+                                        `${this.webos_emulator} -vd ${data.uuid} -s`,
                                     ]
                                 }
                                 else {
@@ -429,7 +455,7 @@ class InstanceWebviewProvider {
                     // no running instance
                     if (wemulIntegration) {
                         commands = [
-                            `webos-emulator -vd ${data.uuid} -s`,
+                            `${this.webos_emulator} -vd ${data.uuid} -s`,
                             `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
                         ]
                     } else {
@@ -459,9 +485,9 @@ class InstanceWebviewProvider {
     }
     async deleteInstance(data) {
         vscode.window
-            .showInformationMessage( (wemulIntegration) ? `Do you want to delete instance '${data.instName}' ?` :
-                 `This will delete 'VMDK file' and 'Saved State', Do you want to delete instance '${data.instName}' ?`,
-                 ...["Yes", "No"])
+            .showInformationMessage((wemulIntegration) ? `Do you want to delete instance '${data.instName}' ?` :
+                `This will delete 'VMDK file' and 'Saved State', Do you want to delete instance '${data.instName}' ?`,
+                ...["Yes", "No"])
             .then(async (answer) => {
                 if (answer === "Yes") {
                     return await vscode.window.withProgress({
@@ -475,9 +501,9 @@ class InstanceWebviewProvider {
                                     //  if (data.isRunning == "true") {
                                     if (wemulIntegration) {
                                         commands = [
-                                            `webos-emulator -vd ${data.uuid} -k`,
+                                            `${this.webos_emulator} -vd ${data.uuid} -k`,
                                             `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                                            `webos-emulator -vd ${data.uuid} --delete`
+                                            `${this.webos_emulator} -vd ${data.uuid} --delete`
                                         ]
                                     } else {
                                         commands = [
@@ -490,7 +516,7 @@ class InstanceWebviewProvider {
                                 } else {
                                     if (wemulIntegration) {
                                         commands = [
-                                            `webos-emulator -vd ${data.uuid} --delete`
+                                            `${this.webos_emulator} -vd ${data.uuid} --delete`
                                         ]
                                     } else {
                                         commands = [
@@ -574,7 +600,7 @@ class InstanceWebviewProvider {
     async exec_commands(commands) {
         let commandstring = commands.join(" && ");
         return new Promise((resolve, reject) => {
-            logger.run(commandstring )
+            logger.run(commandstring)
             logger.log("------------------------------------------------")
             exec(commandstring, (error, stdout, stderr) => {
                 if(stdout){
@@ -583,12 +609,12 @@ class InstanceWebviewProvider {
                     }
                 }
                 if (error) {
-                    logger.error(error )
+                    logger.error(error)
                     reject(error);
                 }
                 if (stderr) {
-                    logger.warn(stderr )
-                  
+                    logger.warn(stderr)
+
                 }
                 resolve(stdout);
             });

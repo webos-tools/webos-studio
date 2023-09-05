@@ -94,7 +94,7 @@
         "onCommand:webosose.explorermenu.debug.ide",
         "onCommand:webosose.explorermenu.debug.browser",
         "onCommand:ipkanalyze.start",
-        "onCommand:sdkmanager.start"
+        "onCommand:packagemanager.start"
     ],
     "main": "./extension.js",
     "contributes": {
@@ -105,9 +105,24 @@
                     "title": "webOS Studio",
                     "icon": "media/display.svg"
                 }
+            ],
+            "panel": [
+                {
+                    "id": "package-manager",
+                    "title": "Package Manager",
+                    "icon": "media/display.svg"
+                }
             ]
         },
         "views": {
+            "package-manager": [
+                {
+                    "type": "webview",
+                    "id": "pkgmgr",
+                    "name": "",
+                    "when": "webosose.showpackagemanager==true"
+                }
+            ],
             "webosose-devices": [
                 {
                     "id": "apps",
@@ -150,8 +165,8 @@
                 "title": "webOS OSE: IPK Analyzer"
             },
             {
-                "command": "sdkmanager.start",
-                "title": "webOS OSE: Package Manager"
+                "command": "packagemanager.start",
+                "title": "webOS: Package Manager"
             },
             {
                 "command": "webapp.reloadPreview",
@@ -858,10 +873,6 @@
                 {
                     "command": "webosose.previewApp",
                     "when": "false"
-                },
-				{
-                    "command": "sdkmanager.start",
-                    "when": "false"
                 }
             ],
             "webososeDevices.runApp": [
@@ -981,23 +992,32 @@
         "pack": "vsce package"
     },
     "dependencies": {
-        "express": "^4.18.1",
-        "portfinder": "^1.0.28",
-        "showdown": "^2.1.0",
-        "tcp-port-used": "^1.0.2",
-        "tree-kill": "^1.2.2",
+        "7zip-min": "^1.4.4",
         "@vscode/codicons": "0.0.20",
-        "default-gateway": "6.0.3",
         "ar-async": "0.1.4",
-        "decompress": "4.2.1",
-        "rimraf": "3.0.2",
         "catalogist": "1.0.4",
-        "get-folder-size": "2.0.1",
-        "fast-folder-size": "1.7.0",
-        "node-watch": "^0.6.2",
-        "socket.io": "^3.1.0",
         "chalk": "^4.1.0",
-        "chokidar": "^3.5.2"
+		"chokidar": "^3.5.2",
+        "check-disk-space": "^3.3.1",
+        "compare-versions": "^6.0.0-rc.1",
+        "create-desktop-shortcuts": "^1.10.1",
+        "decompress": "^4.2.1",
+        "default-gateway": "6.0.3",
+        "execa": "^5.1.1",
+        "express": "^4.18.1",
+        "fast-folder-size": "1.7.0",
+        "get-folder-size": "2.0.1",
+        "node-fetch": "^2.6.9",
+        "node-watch": "^0.6.2",
+        "nodejs-file-downloader": "^4.11.2",
+        "portfinder": "^1.0.28",
+        "request": "^2.88.2",
+        "rimraf": "3.0.2",
+        "showdown": "^2.1.0",
+        "socket.io": "^4.6.1",
+        "sudo-prompt-alt": "^9.3.0",
+        "tcp-port-used": "^1.0.2",
+        "tree-kill": "^1.2.2"
     },
     "repository": {
         "type": "git",

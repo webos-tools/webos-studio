@@ -25,22 +25,29 @@ body {
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 10px 16px;
+  padding: 5px 10px;
   transition: 0.3s;
-  font-size: 17px;
+  font-size: 13px;
+  background-color: var(--vscode-editor-background);
+  opacity: .5;
+  color:var(--vscode-button-foreground)
+
 }
 
 /* Change background color of buttons on hover */
 .tab button:hover {
  
   background-color: var(--vscode-list-deemphasizedForeground);
-  opacity: .5;
+  opacity: .7;
+  color:var(--vscode-button-foreground)
+
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
-
   background-color: var(--vscode-list-deemphasizedForeground);
+   color:var(--vscode-button-foreground);
+   opacity: .9;
   
 }
 
@@ -49,10 +56,11 @@ body {
   display: none;
   padding: 6px 12px;
   border: 1px solid var(--vscode-list-deemphasizedForeground);
+  border-radius: 3px;
  
 }
 .notes {
- 
+ display: none;
   padding: 5px;
   border: 1px solid  var(--vscode-list-deemphasizedForeground);;
   border-radius: 3px;
@@ -65,16 +73,18 @@ body {
 }
 .notecontent{
   padding:5px;
+  height: 20px;
+  overflow: auto;
 }
 .dlg {
-  width: 70%;
+  width: 90%;
   min-width: 50%;
   /* position: absolute; */
-  top: 50%;
+  /* top: 50%; */
   /* min-height: 70%; */
   /* margin: auto; */
   
-  transform: translatey(-50%);
+  /* transform: translatey(-50%); */
   border-radius: 5px;
   background-color: var(--vscode-activityBar-background);
   border: var(--vscode-activityBar-border);
@@ -82,3 +92,4 @@ body {
 
 
 }
+

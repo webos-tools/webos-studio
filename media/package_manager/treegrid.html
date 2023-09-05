@@ -1,10 +1,130 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            #treegrid {
+  width: 100%;
+  white-space: nowrap;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+#treegrid tr {
+  display: table-row;
+  cursor: default;
+}
+
+/* Extra space between columns for readability */
+#treegrid th,
+#treegrid td {
+  padding-bottom: 3px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+#treegrid tbody td {
+  cursor: default;
+}
+
+#treegrid-col1,
+#treegrid-col3 {
+  width: 30%;
+}
+
+#treegrid th {
+  text-align: left;
+  background-color: #eee;
+}
+
+#treegrid a {
+  padding-left: 0.25ch;
+  padding-right: 0.25ch;
+}
+
+#treegrid tr:focus,
+#treegrid td:focus,
+#treegrid a:focus {
+  outline: 2px solid hsl(216deg 94% 70%);
+  background-color: hsl(216deg 80% 97%);
+}
+
+#treegrid tr > td:not(:first-child),
+#treegrid tr > th:not(:first-child) {
+  padding-left: 3ch;
+}
+
+#treegrid a:focus {
+  border-bottom: none;
+}
+
+/* Hide collapsed rows */
+#treegrid tr.hidden {
+  display: none;
+}
+
+/* Indents */
+#treegrid tr[aria-level="2"] > td:first-child {
+  padding-left: 2.5ch;
+}
+
+#treegrid tr[aria-level="3"] > td:first-child {
+  padding-left: 5ch;
+}
+
+#treegrid tr[aria-level="4"] > td:first-child {
+  padding-left: 7.5ch;
+}
+
+#treegrid tr[aria-level="5"] > td:first-child {
+  padding-left: 10ch;
+}
+
+/* Collapse/expand icons */
+#treegrid tr > td:first-child::before {
+  font-family: monospace;
+  content: " ";
+  display: inline-block;
+  width: 2ch;
+  height: 11px;
+  transition: transform 0.3s;
+  transform-origin: 5px 5px;
+}
+
+#treegrid tr[aria-expanded] > td:first-child::before,
+#treegrid td[aria-expanded]:first-child::before {
+  cursor: pointer;
+
+  /* Load both right away so there is no lag when we need the other */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='black' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+}
+
+#treegrid tr[aria-expanded="true"] > td:first-child::before,
+#treegrid td[aria-expanded="true"]:first-child::before {
+  transform: rotate(90deg);
+}
+
+#treegrid tr[aria-expanded]:focus > td:first-child::before,
+#treegrid tr[aria-expanded] > td:focus:first-child::before,
+#treegrid tr:focus > td[aria-expanded]:first-child::before,
+#treegrid tr > td[aria-expanded]:focus:first-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
+}
+
+        </style>
+        <script>
 
 'use strict';
 function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   function initAttributes() {
-   
+    // Make sure focusable elements are not in the tab order
+    // They will be added back in for the active row
     setTabIndexOfFocusableElements(treegridElem, -1);
 
+    // Add tabindex="0" to first row, "-1" to other rows
+    // We will use the roving tabindex method since aria-activedescendant
     var rows = getAllRows();
     var index = rows.length;
     var startRowIndex = doStartRowFocus ? 0 : -1;
@@ -22,6 +142,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
       return;
     }
 
+    // Start with cell focus
     var firstCell = getNavigableCols(rows[0])[0];
     setTabIndexForCell(firstCell);
   }
@@ -45,7 +166,9 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   }
 
   function getFocusableElements(root) {
- 
+    // textarea not supported as a cell widget as it's multiple lines
+    // and needs up/down keys
+    // These should all be descendants of a cell
     var nodeList = root.querySelectorAll('a,button,input,td>[tabindex]');
     return Array.prototype.slice.call(nodeList);
   }
@@ -62,7 +185,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     var nodeList = treegridElem.querySelectorAll(
       'tbody > tr:not([class~="hidden"])'
     );
-  
+    // Convert to array so that we can use array methods on it
     return Array.prototype.slice.call(nodeList);
   }
 
@@ -84,12 +207,14 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   }
 
   function focusCell(cell) {
-  
+    // Check for focusable child such as link or textbox
+    // and use that if available
     var focusableChildren = getFocusableElements(cell);
     focus(focusableChildren[0] || cell);
   }
 
-
+  // Restore tabIndex to what it should be when focus switches from
+  // one treegrid item to another
   function onFocusIn(event) {
     var newTreeGridFocus =
       event.target !== window &&
@@ -106,22 +231,23 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
       onFocusIn.prevTreeGridFocus &&
       onFocusIn.prevTreeGridFocus.localName === 'td'
     ) {
-      
+      // Was focused on td, remove tabIndex so that it's not focused on click
       onFocusIn.prevTreeGridFocus.removeAttribute('tabindex');
     }
 
     if (newTreeGridFocus) {
-     
+      // Stayed in treegrid
       if (oldCurrentRow) {
-       
+        // There will be a different current row that will be
+        // the tabbable one
         oldCurrentRow.tabIndex = -1;
       }
 
-    
+      // The new row
       var currentRow = getRowWithFocus();
       if (currentRow) {
         currentRow.tabIndex = 0;
-      
+        // Items within current row are also tabbable
         enableTabbingInActiveRowDescendants(true, currentRow);
       }
     }
@@ -129,6 +255,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     onFocusIn.prevTreeGridFocus = newTreeGridFocus;
   }
 
+  // Set whether interactive elements within a row are tabbable
   function enableTabbingInActiveRowDescendants(isTabbingOn, row) {
     if (row) {
       setTabIndexOfFocusableElements(row, isTabbingOn ? 0 : -1);
@@ -142,6 +269,8 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     }
   }
 
+  // The row with focus is the row that either has focus or an element
+  // inside of it has focus
   function getRowWithFocus() {
     return getContainingRow(document.activeElement);
   }
@@ -162,6 +291,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     return getRowWithFocus() === document.activeElement;
   }
 
+  // Note: contenteditable not currently supported
   function isEditableFocused() {
     var focusedElem = document.activeElement;
     return focusedElem.localName === 'input';
@@ -185,6 +315,9 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     return row && parseInt(row.getAttribute('aria-level'));
   }
 
+  // Move backwards (direction = -1) or forwards (direction = 1)
+  // If we also need to move down/up a level, requireLevelChange = true
+  // When
   function moveByRow(direction, requireLevelChange) {
     var currentRow = getRowWithFocus();
     var requiredLevel =
@@ -192,12 +325,14 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     var rows = getAllNavigableRows();
     var numRows = rows.length;
     var rowIndex = currentRow ? rows.indexOf(currentRow) : -1;
-    
+    // When moving down a level, only allow moving to next row as the
+    // first child will never be farther than that
     var maxDistance = requireLevelChange && direction === 1 ? 1 : NaN;
 
+    // Move in direction until required level is found
     do {
       if (maxDistance-- === 0) {
-        return; 
+        return; // Failed to find required level, return without focus change
       }
       rowIndex = restrictIndex(rowIndex + direction, numRows);
     } while (requiredLevel && requiredLevel !== getLevel(rows[rowIndex]));
@@ -221,7 +356,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     }
 
     var toCols = getNavigableCols(toRow);
- 
+    // Focus the first focusable element inside the <td>
     focusCell(toCols[currentColIndex]);
     return true;
   }
@@ -235,7 +370,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     if (currentCol) {
       moveToExtremeCol(direction, currentRow);
     } else {
-    
+      // Move to first/last row
       moveToExtremeRow(direction);
     }
   }
@@ -249,10 +384,10 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     var numCols = cols.length;
     var currentCol = getColWithFocus(currentRow);
     var currentColIndex = cols.indexOf(currentCol);
-  
+    // First right arrow moves to first column
     var newColIndex =
       currentCol || direction < 0 ? currentColIndex + direction : 0;
-   
+    // Moving past beginning focuses row
     if (doAllowRowFocus && newColIndex < 0) {
       focus(currentRow);
       return;
@@ -262,7 +397,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   }
 
   function moveToExtremeCol(direction, currentRow) {
-   
+    // Move to first/last col
     var cols = getNavigableCols(currentRow);
     var desiredColIndex = direction < 0 ? 0 : cols.length - 1;
     focusCell(cols[desiredColIndex]);
@@ -282,14 +417,14 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
       return;
     }
 
-  
+    // If row has focus, open message
     if (currentRow === document.activeElement) {
-      // alert(
-      //   'Message from ' +
-      //     currentRow.children[2].innerText +
-      //     ':\n\n' +
-      //     currentRow.children[1].innerText
-      // );
+      alert(
+        'Message from ' +
+          currentRow.children[2].innerText +
+          ':\n\n' +
+          currentRow.children[1].innerText
+      );
       return;
     }
 
@@ -321,9 +456,10 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
       var nextRow = rows[currentRowIndex];
       var rowLevel = getLevel(nextRow);
       if (rowLevel <= currentLevel) {
-        break;
+        break; // Next row is not a level down from current row
       }
-    
+      // Only expand the next level if this level is expanded
+      // and previous level is expanded
       doExpandLevel[rowLevel + 1] =
         doExpandLevel[rowLevel] && isExpanded(nextRow);
       var willHideRow = !doExpandLevel[rowLevel];
@@ -343,6 +479,10 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
       return true;
     }
   }
+
+  // Mirror aria-expanded from the row to the first cell in that row
+  // (TBD is this a good idea? How else will screen reader user hear
+  // that the cell represents the opportunity to collapse/expand rows?)
   function moveAriaExpandedToFirstCell(row) {
     var expandedValue = row.getAttribute('aria-expanded');
     var firstCell = getNavigableCols(row)[0];
@@ -388,7 +528,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     var key = event.keyCode;
 
     if (numModifiersPressed === 1 && event.ctrlKey) {
-      key = -key;
+      key = -key; // Treat as negative key value when ctrl pressed
     } else if (numModifiersPressed) {
       return;
     }
@@ -402,7 +542,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         break;
       case LEFT:
         if (isEditableFocused()) {
-          return; 
+          return; // Leave key for editable area
         }
         if (isRowFocused()) {
           changeExpanded(false) || moveByRow(-1, true);
@@ -412,10 +552,11 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         break;
       case RIGHT:
         if (isEditableFocused()) {
-          return; 
+          return; // Leave key for editable area
         }
 
-    
+        // If row: try to expand
+        // If col or can't expand, move column to right
         if (!isRowFocused() || !changeExpanded(true)) {
           moveByCol(1);
         }
@@ -425,7 +566,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         break;
       case HOME:
         if (isEditableFocused()) {
-          return; 
+          return; // Leave key for editable area
         }
         moveToExtreme(-1);
         break;
@@ -434,7 +575,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         break;
       case END:
         if (isEditableFocused()) {
-          return; 
+          return; // Leave key for editable area
         }
         moveToExtreme(1);
         break;
@@ -445,29 +586,25 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         return;
     }
 
+    // Important: don't use key for anything else, such as scrolling
     event.preventDefault();
-    
-    setReleaseNote( getRowWithFocus(),treegridElem)
   }
 
-
-
+  // Toggle row expansion if the click is over the expando triangle
+  // Since the triangle is a pseudo element we can't bind an event listener
+  // to it. Another option is to have an actual element with role="presentation"
   function onClick(event) {
     var target = event.target;
     if (target.localName !== 'td') {
       return;
     }
 
-    
     var row = getContainingRow(event.target);
-   
-    setReleaseNote(row,treegridElem);
-    
     if (!isExpandable(row)) {
-      focus(row)
       return;
     }
 
+    // Determine if mouse coordinate is just to the left of the start of text
     var range = document.createRange();
     range.selectNodeContents(target.firstChild);
     var left = range.getBoundingClientRect().left;
@@ -476,12 +613,11 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     if (event.clientX < left && event.clientX > left - EXPANDO_WIDTH) {
       changeExpanded(!isExpanded(row), row);
     }
-  
   }
 
+  // Double click on row toggles expansion
   function onDoubleClick(event) {
     var row = getContainingRow(event.target);
-    setReleaseNote(row,treegridElem)
     if (row) {
       if (isExpandable(row)) {
         changeExpanded(!isExpanded(row), row);
@@ -494,7 +630,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   treegridElem.addEventListener('keydown', onKeyDown);
   treegridElem.addEventListener('click', onClick);
   treegridElem.addEventListener('dblclick', onDoubleClick);
- 
+  // Polyfill for focusin necessary for Firefox < 52
   window.addEventListener(
     window.onfocusin ? 'focusin' : 'focus',
     onFocusIn,
@@ -502,6 +638,8 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   );
 }
 
+/* Init Script for TreeGrid */
+/* Get an object where each field represents a URL parameter */
 function getQuery() {
   if (!getQuery.cached) {
     getQuery.cached = {};
@@ -509,7 +647,7 @@ function getQuery() {
     const vars = queryStr.split('&');
     for (let i = 0; i < vars.length; i++) {
       const pair = vars[i].split('=');
-    
+      // If first entry with this name
       getQuery.cached[pair[0]] = pair[1] && decodeURIComponent(pair[1]);
     }
   }
@@ -517,24 +655,85 @@ function getQuery() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
+  // Supports url parameter ?cell=force or ?cell=start (or leave out parameter)
   var cellParam = getQuery().cell;
   var doAllowRowFocus = cellParam !== 'force';
   var doStartRowFocus = doAllowRowFocus && cellParam !== 'start';
   TreeGrid(
-    document.getElementById('treegrid_tv'),
+    document.getElementById('treegrid'),
     doAllowRowFocus,
     doStartRowFocus
   );
-  TreeGrid(
-    document.getElementById('treegrid_ose'),
-    doAllowRowFocus,
-    doStartRowFocus
-  );
- 
 //   var choiceElem = document.getElementById(
 //     'option-cell-focus-' + (cellParam || 'allow')
 //   );
 //   console.log("choiceElem",choiceElem)
-//    choiceElem.setAttribute('aria-current', 'true');
+//   choiceElem.setAttribute('aria-current', 'true');
 });
+
+
+        </script>
+</head>
+<body>
+  
+<div class="table-wrap"><table id="treegrid" role="treegrid" aria-label="Inbox">
+    <colgroup>
+      <col id="treegrid-col1">
+      <col id="treegrid-col2">
+      <col id="treegrid-col3">
+    </colgroup>
+    <thead>
+      <tr>
+        <th scope="col">Subject</th>
+        <th scope="col">Summary</th>
+        <th scope="col">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+        <td role="gridcell">Treegrids are awesome</td>
+        <td role="gridcell">Want to learn how to use them?</td>
+        <td role="gridcell"><a href="mailto:aaron@thegoogle.rocks">aaron@thegoogle.rocks</a></td>
+      </tr>
+      <tr role="row" aria-level="2" aria-posinset="1" aria-setsize="3">
+        <td role="gridcell">re: Treegrids are awesome</td>
+        <td role="gridcell">I agree with you, they are the shizzle</td>
+        <td role="gridcell"><a href="mailto:joe@blahblahblah.blahblah">joe@blahblahblah.blahblah</a></td>
+      </tr>
+      <tr role="row" aria-level="2" aria-posinset="2" aria-setsize="3" aria-expanded="false">
+        <td role="gridcell">re: Treegrids are awesome</td>
+        <td role="gridcell">They are great for showing a lot of data, like a grid</td>
+        <td role="gridcell"><a href="mailto:billy@dangerous.fish">billy@dangerous.fish</a></td>
+      </tr>
+      <tr role="row" aria-level="3" aria-posinset="1" aria-setsize="1" class="hidden">
+        <td role="gridcell">re: Treegrids are awesome</td>
+        <td role="gridcell">Cool, we've been needing an example and documentation</td>
+        <td role="gridcell"><a href="mailto:doris@rufflazydogs.sleep">doris@rufflazydogs.sleep</a></td>
+      </tr>
+      <tr role="row" aria-level="2" aria-posinset="3" aria-setsize="3" aria-expanded="false">
+        <td role="gridcell">re: Treegrids are awesome</td>
+        <td role="gridcell">I hear the Fancytree library is going to align with this example!</td>
+        <td role="gridcell"><a href="mailto:someone@please-do-it.company">someone@please-do-it.company</a></td>
+      </tr>
+      <tr role="row" aria-level="3" aria-posinset="1" aria-setsize="1" aria-expanded="false" class="hidden">
+        <td role="gridcell">re: Treegrids are awesome</td>
+        <td role="gridcell">Sometimes they are more like trees, others are more like grids</td>
+        <td role="gridcell"><a href="mailto:mari@beingpractical.com">mari@beingpractical.com</a></td>
+      </tr>
+      <tr role="row" aria-level="4" aria-posinset="1" aria-setsize="2" class="hidden">
+        <td role="gridcell">re: Treegrids are awesome</td>
+        <td role="gridcell">Cool, when it's a tree, let's keep left/right to collapse/expand</td>
+        <td role="gridcell"><a href="mailto:issie@imadeadcatsadly.wascute">issie@imadeadcatsadly.wascute</a></td>
+      </tr>
+      <tr role="row" aria-level="4" aria-posinset="2" aria-setsize="2" class="hidden">
+        <td role="gridcell">re: Treegrids are awesome</td>
+        <td role="gridcell">I see, sometimes right arrow moves by column</td>
+        <td role="gridcell"><a href="mailto:kitten@kittenseason.future">kitten@kittenseason.future</a></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+
+</body>
+</html> 
+          

@@ -29,7 +29,7 @@ const { HelpProvider, renderReadMe, renderChangeLog } = require('./src/helpProvi
 const { IPK_ANALYZER } = require('./src/ipkAnalyzer');
 const { logger,createOutPutChannel } = require('./src/lib/logger');
 const { InputController } = require('./src/lib/inputController');
-const { SDK_Manager } = require('./src/packageManager');
+const { PackageManagerPanel } = require('./src/packageManagerPanel');
 const fs = require('fs');
 const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
@@ -47,7 +47,7 @@ function activate(context) {
     createOutPutChannel();
    
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
-
+    let packageManagerObj = {webPanel :null};
     const serviceProvider = vscode.languages.registerCompletionItemProvider(
         ['plaintext','javascript', 'typescript', 'html'],
         {
@@ -907,16 +907,56 @@ function activate(context) {
         ipkAnalyzer.startEditor();
 
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('sdkmanager.start', async () => {
+    context.subscriptions.push(vscode.commands.registerCommand('packagemanager.start', async () => {
 
-        const sdkManager = new SDK_Manager(context);
-        sdkManager.loadSDKManager();
-
+        vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', true);
+        vscode.commands.executeCommand("workbench.action.alignPanelCenter");
+        vscode.commands.executeCommand("pkgmgr.focus");
+        if(!this.packageMgrWebviewProvider){
+            this.packageMgrWebviewProvider = new PackageManagerPanel(context);
+            vscode.window.registerWebviewViewProvider(PackageManagerPanel.viewType, this.packageMgrWebviewProvider, { webviewOptions: { retainContextWhenHidden: true } });
+        }
+       
     }));
-
-    vscode.commands.executeCommand('webososeDevices.refreshList');
-    webososeAppsProvider.storeContextOnExtnLaunch(context);
    
+
+    vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
+    vscode.commands.executeCommand('webososeDevices.refreshList');
+    // vscode.commands.executeCommand('vbox.refreshList');
+    
+    webososeAppsProvider.storeContextOnExtnLaunch(context);
+    initExtViews();
+   
+}
+function initExtViews(){
+    vscode.commands.executeCommand('vbox.focus');
+    vscode.commands.executeCommand('apps.focus');
+    vscode.commands.executeCommand('webososeDevices.focus');
+    // vscode.commands.executeCommand('workbench.explorer.fileView.focus');
+    
+
+    setTimeout(()=>{
+        if(logger.extInit == false){
+            // logger.logAny("webOS Studio initialized"+ (logger.extInitMessage==""?  " successfully.":" with warning") ) ;
+            logger.logAny("webOS Studio initialized successfully." ) ;
+            logger.log("------------------------------------------------")
+        
+            logger.extInit = true;
+            // if(logger.extInitMessage!=""){
+            //     logger.warn(logger.extInitMessage)
+            //     logger.log("------------------------------------------------")
+            //     logger.extInitMessage =""
+            // }
+          
+        
+        }
+    },5000)
+    
+    
+    
+   
+    
+    
 }
 
 function getResourcePath() {

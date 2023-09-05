@@ -1,54 +1,128 @@
-
 .tg_button {
-	border: none;
-	/* padding: var(--input-padding-vertical) var(--input-padding-horizontal); */
-    padding:5px;
-	width: 90%;
-	text-align: center;
-	outline: 1px solid transparent;
-	outline-offset: 2px !important;
-	color: var(--vscode-button-foreground);
-	background: var(--vscode-button-background);
-    margin-top: 2px;
-    border-radius: 2px;
-    margin-right: 5px;
-    
+  border: none;
+  /* padding: var(--input-padding-vertical) var(--input-padding-horizontal); */
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+  outline: 1px solid transparent;
+  outline-offset: 2px !important;
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+  margin-top: 2px;
+  border-radius: 2px;
+  /* margin-right: 5px; */
+  
 }
 
 .tg_button:hover {
-	cursor: pointer;
-	background: var(--vscode-button-hoverBackground);
+  cursor: pointer;
+  background: var(--vscode-button-hoverBackground);
 }
 
 .tg_button:focus {
-	outline-color: var(--vscode-focusBorder);
+  outline-color: var(--vscode-focusBorder);
 }
 
 .tg_button.secondary {
-	color: var(--vscode-button-secondaryForeground);
-	background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
 }
 
 .tg_button.secondary:hover {
-	background: var(--vscode-button-secondaryHoverBackground);
+  /* background: var(--vscode-button-secondaryHoverBackground); */
+  background: var(--vscode-inputValidation-errorBackground);
 }
+
+.tg_cancelbutton {
+  border: none;
+  padding: 5px;
+  text-align: center;
+  outline: 1px solid transparent;
+  outline-offset: 2px !important;
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
+  margin-top: 2px;
+  border-radius: 2px;
+  margin-right: 5px;
+  cursor: pointer;
+  background: var(--vscode-inputValidation-errorBackground);
+  height: 24px;
+}
+
+.tg_cancelbutton:hover {
+  border: 1px;
+  /* background: var(--vscode-inputValidation-errorBackground); */
+}
+
 .rowIcon {
-    padding:5px;
-	cursor: pointer;
-	color:yellow
+  padding: 5px;
+  cursor: pointer;
+  color: yellow;
 }
 .rowIconText {
-    /* display:none; */
-	    /* display: none; */
-		color: var(--vscode-notifications-foreground);
-		position: absolute;
-		background-color: var(--vscode-list-deemphasizedForeground);
-		border-radius: 5px;
-		padding: 10px;
-		background-color: var(--vscode-notifications-background);
-		border-style: solid;
-		border-width: 1px;
-		border-color: var(--vscode-notifications-border);
-	
-    
+  /* display:none; */
+  /* display: none; */
+  color: var(--vscode-notifications-foreground);
+  position: absolute;
+  background-color: var(--vscode-list-deemphasizedForeground);
+  border-radius: 5px;
+  padding: 10px;
+  background-color: var(--vscode-notifications-background);
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--vscode-notifications-border);
+  max-width: 300px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5; /* start showing ellipsis when 3rd line is reached */
+  white-space: pre-wrap;
+}
+.loadContainer {
+  overflow: hidden;
+}
+.hpbarContiner {
+  overflow: hidden;
+  align-items: center;
+}
+.hpbarOuter {
+}
+.hpbar {
+  width: 0px;
+  height: 24px;
+  background-color: green;
+  margin-right: auto;
+  text-align: center;
+}
+.hpbarNoBG {
+  width: 0px;
+  height: 24px;
+  margin-right: auto;
+  text-align: center;
+}
+.hpbarRightArea {
+  height: 24px;
+}
+.hpbarMsg {
+  position: absolute;
+  padding-left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@keyframes pbarcolor {
+  0%   { background: green; }
+  20%  { background: rgb(1, 103, 1); }
+  100% { background: rgb(0, 89, 0); }
+  60%  { background: rgb(1, 103, 1); }
+  80%  { background: rgb(0, 89, 0); }
+  100% { background: green; }
+}
+
+.hpbar_continues {
+  background: green; 
+  animation: pbarcolor 9s infinite linear;
+  width: 0px;
+  height: 24px;
+  margin-right: auto;
+
 }

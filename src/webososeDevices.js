@@ -51,9 +51,9 @@ class DeviceProvider {
             description += `${device.username}@${device.ip}:${device.port}`
             array.push(new Device(device.name, description,device["isOnline"]));
         });
-        if(logger.extInit == false)
-            logger.logAny("webOS Studio Initialized successfully.");
-        logger.extInit = true;
+        // if(logger.extInit == false)
+        //     logger.logAny("webOS Studio Initialized successfully.");
+        // logger.extInit = true;
         return array;
     }
 
