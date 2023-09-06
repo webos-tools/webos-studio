@@ -2,7 +2,7 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "1.2.0-beta.0",
+    "version": "1.2.0-beta.1",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
@@ -157,7 +157,7 @@
             {
                 "view": "webosSimulator",
                 "contents": "webOS TV Simulator is not installed.\n[Install Simulator](https://webostv.developer.lge.com/develop/tools/simulator-installation)"
-    	    }
+            }
         ],
         "commands": [
             {
@@ -189,9 +189,9 @@
                 "title": "webOS TV: Run on Simulator"
             },
             {
-				"command": "webos.runSimulatorParams",
-				"title": "webOS TV: Run on Simulator with Parameters"
-			},
+                "command": "webos.runSimulatorParams",
+                "title": "webOS TV: Run on Simulator with Parameters"
+            },
             {
                 "command": "webosSimulator.refreshList",
                 "title": "Refresh",
@@ -494,7 +494,7 @@
                     "command": "webosSimulator.refreshList",
                     "when": "view == webosSimulator",
                     "group": "navigation"
-				}
+                }
             ],
             "view/item/context": [
                 {
@@ -630,7 +630,7 @@
                 {
                     "command": "webosSimulator.runApp",
                     "when": "view == webosSimulator && viewItem == simulator"
-				}
+                }
             ],
             "explorer/context": [
                 {
@@ -992,13 +992,13 @@
         "pack": "vsce package"
     },
     "dependencies": {
-        "7zip-min": "^1.4.4",
         "@vscode/codicons": "0.0.20",
+        "7zip-min": "^1.4.4",
         "ar-async": "0.1.4",
         "catalogist": "1.0.4",
         "chalk": "^4.1.0",
-		"chokidar": "^3.5.2",
         "check-disk-space": "^3.3.1",
+        "chokidar": "^3.5.2",
         "compare-versions": "^6.0.0-rc.1",
         "create-desktop-shortcuts": "^1.10.1",
         "decompress": "^4.2.1",
@@ -1024,9 +1024,9 @@
         "url": "https://github.com/webosose/webos-studio.git"
     },
     "devDependencies": {
-        "typescript": "4.4.4",
         "@typescript-eslint/parser": "4.33.0",
         "eslint": "6.8.0",
-        "eslint-plugin-import": "2.22.0"
+        "eslint-plugin-import": "2.22.0",
+        "typescript": "4.4.4"
     }
 }
