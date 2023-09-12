@@ -15,6 +15,7 @@
     "icon": "media/webOS.png",
     "activationEvents": [
         "onStartupFinished",
+        "onCommand:webosose.resourceMonitoring",
         "onCommand:webosose.projectWizard",
         "onCommand:webosose.installGlobal",
         "onCommand:webosose.installEmulator",
@@ -244,6 +245,10 @@
             {
                 "command": "webosose.debugApp",
                 "title": "webOS OSE: Debug Application"
+            },
+            {
+                "command": "webosose.resourceMonitoring",
+                "title": "webOS OSE: Launch Resource Monitoring"
             },
             {
                 "command": "webosose.projectWizard",
@@ -938,6 +943,16 @@
             "type": "object",
             "title": "webOS Studio Configuration",
             "properties": {
+                "webosose.resourceMonitoring.influxdbInstallPath": {
+                    "type": "string",
+                    "default": null,
+                    "description": "(Required) InfluxDB Install Path"
+                },
+                "webosose.resourceMonitoring.grafanaInstallPath": {
+                    "type": "string",
+                    "default": null,
+                    "description": "(Required) Grafana Install Path"
+                },
                 "webosose.chromeExecutable": {
                     "type": [
                         "string",
