@@ -5,7 +5,7 @@
 const vscode = require('vscode');
 const { generateApp, generateAppFromProjectWizard, removeApp } = require('./src/generateApp');
 const previewApp = require('./src/previewApp');
-const {devicePreviewStart, devicePreviewStop} = require('./src/devicePreview');
+const { devicePreviewStart, devicePreviewStop } = require('./src/devicePreview');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
 const { setupDevice, setDeviceProfile } = require('./src/setupDevice');
@@ -27,7 +27,7 @@ const { getDefaultDir, isAppDir } = require('./src/lib/workspaceUtils');
 const { InputChecker } = require('./src/lib/inputChecker');
 const { HelpProvider, renderReadMe, renderChangeLog } = require('./src/helpProvider');
 const { IPK_ANALYZER } = require('./src/ipkAnalyzer');
-const { logger,createOutPutChannel } = require('./src/lib/logger');
+const { logger, createOutPutChannel } = require('./src/lib/logger');
 const { InputController } = require('./src/lib/inputController');
 const { PackageManagerPanel } = require('./src/packageManagerPanel');
 const fs = require('fs');
@@ -45,11 +45,11 @@ let myStatusBarItem;
  */
 function activate(context) {
     createOutPutChannel();
-   
+
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
-    let packageManagerObj = {webPanel :null};
+    let packageManagerObj = { webPanel: null };
     const serviceProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript', 'html'],
+        ['plaintext', 'javascript', 'typescript', 'html'],
         {
             provideCompletionItems(document, position) {
                 const linePrefix = document.lineAt(position).text.substring(0, position.character);
@@ -69,7 +69,7 @@ function activate(context) {
                     const urlName = `http://www.webosose.org/docs/reference/ls2-api/${urlServiceName}`;
                     const urlServiceSite = `<a href='${urlName}'>Site link of service(${serviceItemName})</a>`
 
-                    const serviceItemInterface = {label:serviceItemName, description: "Luna API Service"};
+                    const serviceItemInterface = { label: serviceItemName, description: "Luna API Service" };
                     const serviceItemSummary = apiServiceArray[i].summary + urlServiceSite;
                     const commitCharacterCompletion = new vscode.CompletionItem(serviceItemInterface, vscode.CompletionItemKind.Method);
                     commitCharacterCompletion.sortText = "0";
@@ -88,7 +88,7 @@ function activate(context) {
     );
 
     const methodProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript', 'html'],
+        ['plaintext', 'javascript', 'typescript', 'html'],
         {
             provideCompletionItems(document, position) {
                 let serviceName = "";
@@ -102,7 +102,7 @@ function activate(context) {
                 for (const i in apiServiceArray) {
                     serviceName = apiServiceArray[i].name;
                     const endKeyword = serviceName.split(".");
-                    const endService = endKeyword[endKeyword.length-1];
+                    const endService = endKeyword[endKeyword.length - 1];
 
                     if (linePrefix.endsWith(`${endService}/`)) {
                         found = true;
@@ -110,7 +110,7 @@ function activate(context) {
                     }
                 }
 
-                if (found === false ) {
+                if (found === false) {
                     return undefined;
                 }
 
@@ -119,7 +119,7 @@ function activate(context) {
                     const methodItemName = methodNameArr[i].substring(1);
                     // eslint-disable-next-line no-async-promise-executor
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
-                    const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
+                    const methodItemInterface = { label: methodItemName, description: "Luna API Method" };
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
                     const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Method);
                     commitCharacterCompletion.sortText = "0";
@@ -137,7 +137,7 @@ function activate(context) {
     );
 
     const paramProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript', 'html'], {
+        ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
             const returnItemArray = [];
@@ -151,7 +151,7 @@ function activate(context) {
                 const linelength = lineSplit.length;
                 serviceName = lineSplit[2];
 
-                if(linelength > 4) { //case : method (a/b) linelength:5
+                if (linelength > 4) { //case : method (a/b) linelength:5
                     const blankSplit = lineSplit[4].split(" ");
                     methodName = [lineSplit[3], blankSplit[0]].join("/");
                 }
@@ -167,7 +167,7 @@ function activate(context) {
                 const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodName);
                 for (const i in paramNameArr) {
                     const paramItemName = paramNameArr[i];
-                    const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
+                    const paramItemInterface = { label: paramItemName, description: "Luna API Param" };
                     const paramItemDesc = paramDescArr[i];
                     const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Method);
                     commitCharacterCompletion.sortText = "0";
@@ -185,11 +185,11 @@ function activate(context) {
     });
 
     const snippetServiceProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript', 'html'], {
+        ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems() {
             const stringFirstMain = 'new LS2Request()';
-            const snippetFirstItemInterface = {label:stringFirstMain, description: "Luna API Snippet"};
+            const snippetFirstItemInterface = { label: stringFirstMain, description: "Luna API Snippet" };
             const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface, vscode.CompletionItemKind.Snippet);
             firstSnippetCompletion.sortText = "1";
 
@@ -209,12 +209,12 @@ function activate(context) {
                 + '\t' + 'service: \'luna://' + '${1}\',' + '\n'
                 + '\t' + 'method: \'${2}\',' + '\n'
                 + '\t' + 'parameters: {${3}}' + '\n'
-            + '});';
+                + '});';
 
             firstSnippetCompletion.insertText = new vscode.SnippetString(stringFirstSub);
 
             const stringSecondMain = 'webOS.service.request()';
-            const snippetSecondItemInterface = {label:stringSecondMain, description: "Luna API Snippet"};
+            const snippetSecondItemInterface = { label: stringSecondMain, description: "Luna API Snippet" };
             const secondSnippetCompletion = new vscode.CompletionItem(snippetSecondItemInterface, vscode.CompletionItemKind.Snippet);
             //secondSnippetCompletion.sortText = "2";
 
@@ -235,7 +235,7 @@ function activate(context) {
                 + '\t' + 'parameters: {${3}},' + '\n'
                 + '\t' + 'onSuccess: {},' + '\n'
                 + '\t' + 'onFailure: {},' + '\n'
-            + '});';
+                + '});';
 
             secondSnippetCompletion.insertText = new vscode.SnippetString(stringSecondSub);
 
@@ -247,17 +247,17 @@ function activate(context) {
     });
 
     const snippetMethodProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript', 'html'], {
+        ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
             const returnItemArray = [];
             let serviceName = "";
 
-            const linePrefix = document.lineAt(position.line-1).text;
+            const linePrefix = document.lineAt(position.line - 1).text;
 
             if (linePrefix.includes("service:") || linePrefix.includes("webOS.service.request")) {
                 const lineSplit = linePrefix.split("luna://");
-                const lineSplitEnd = lineSplit[lineSplit.length-1];
+                const lineSplitEnd = lineSplit[lineSplit.length - 1];
                 if (lineSplitEnd.includes('/')) {
                     serviceName = lineSplitEnd.split("/")[0];
                 }
@@ -270,7 +270,7 @@ function activate(context) {
                     const methodItemName = methodNameArr[i].substring(1);
                     // eslint-disable-next-line no-async-promise-executor
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
-                    const methodItemInterface = {label:methodItemName, description: "Luna API Method"};
+                    const methodItemInterface = { label: methodItemName, description: "Luna API Method" };
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
                     const commitCharacterCompletion = new vscode.CompletionItem(methodItemInterface, vscode.CompletionItemKind.Method);
 
@@ -288,7 +288,7 @@ function activate(context) {
     });
 
     const snippetParamProvider = vscode.languages.registerCompletionItemProvider(
-        ['plaintext','javascript', 'typescript', 'html'], {
+        ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
 
@@ -296,13 +296,13 @@ function activate(context) {
             let serviceName = "";
             let methodName = "";
 
-            const linePrefix = document.lineAt(position.line-1).text;
-            const linePrefix2 = document.lineAt(position.line-2).text;
+            const linePrefix = document.lineAt(position.line - 1).text;
+            const linePrefix2 = document.lineAt(position.line - 2).text;
 
             if (linePrefix.includes("method:")) {
                 if (linePrefix2.includes("service:") || linePrefix2.includes("webOS.service.request")) {
                     const lineSplit = linePrefix2.split("luna://");
-                    const lineSplitEnd = lineSplit[lineSplit.length-1];
+                    const lineSplitEnd = lineSplit[lineSplit.length - 1];
 
                     if (lineSplitEnd.includes('/')) {
                         serviceName = lineSplitEnd.split("/")[0];
@@ -312,7 +312,7 @@ function activate(context) {
                     }
                 }
                 const lineSplit = linePrefix.split("method: ");
-                const lineSplitEnd = lineSplit[lineSplit.length-1];
+                const lineSplitEnd = lineSplit[lineSplit.length - 1];
 
                 methodName = lineSplitEnd.split("'")[1];
 
@@ -320,7 +320,7 @@ function activate(context) {
                 const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodName);
                 for (const i in paramNameArr) {
                     const paramItemName = paramNameArr[i];
-                    const paramItemInterface = {label:paramItemName, description: "Luna API Param"};
+                    const paramItemInterface = { label: paramItemName, description: "Luna API Param" };
                     const paramItemDesc = paramDescArr[i];
                     const commitCharacterCompletion = new vscode.CompletionItem(paramItemInterface, vscode.CompletionItemKind.Method);
                     const content = new vscode.MarkdownString(paramItemDesc);
@@ -354,7 +354,7 @@ function activate(context) {
     getCurrentDeviceProfile()
         .then((data) => {
             showProfile(data);
-    });
+        });
 
     context.subscriptions.push(serviceProvider, methodProvider, paramProvider, snippetServiceProvider, snippetMethodProvider, snippetParamProvider);
 
@@ -363,7 +363,7 @@ function activate(context) {
             const panel = vscode.window.createWebviewPanel('Wizard', 'Create Project', vscode.ViewColumn.One, {
                 enableScripts: true,
                 localResourceRoots: [
-                  vscode.Uri.file(extensionPath)
+                    vscode.Uri.file(extensionPath)
                 ]
             })
 
@@ -395,8 +395,8 @@ function activate(context) {
                         msg = 'Set ' + appSubType + ' of ' + appType + ' property';
                         panel.title = msg;
                         if (appType === 'Enact App') {
-                             // Enact App type's sub Type is one of 'Sandstone' and 'Moonstone'
-                             enactTemplate = appSubType.toLowerCase();
+                            // Enact App type's sub Type is one of 'Sandstone' and 'Moonstone'
+                            enactTemplate = appSubType.toLowerCase();
                         }
                         panel.webview.html = getWebviewPropertyPage(appSubType, appTypeIndex, resource);
                         break;
@@ -432,7 +432,7 @@ function activate(context) {
                             canSelectFolders: true
                         }).then(fileUri => {
                             if (fileUri && fileUri[0]) {
-                                panel.webview.postMessage({ command: 'SetLocation', location : fileUri[0].fsPath});
+                                panel.webview.postMessage({ command: 'SetLocation', location: fileUri[0].fsPath });
                             }
                         });
                         break;
@@ -447,8 +447,8 @@ function activate(context) {
                                 // Set project name text color to origin color
                                 await panel.webview.postMessage({
                                     command: 'UpdateValidList',
-                                    valueType : message['validcheckList'][i].valueType,
-                                    validResult : true
+                                    valueType: message['validcheckList'][i].valueType,
+                                    validResult: true
                                 });
                                 continue;
                             } else {
@@ -466,8 +466,8 @@ function activate(context) {
                             }
                             await panel.webview.postMessage({
                                 command: 'UpdateValidList',
-                                valueType : message['validcheckList'][i].valueType,
-                                validResult : ( !msg ? true : false)
+                                valueType: message['validcheckList'][i].valueType,
+                                validResult: (!msg ? true : false)
                             });
                         }
 
@@ -491,7 +491,7 @@ function activate(context) {
                             if (message.addWebOSlib) {
                                 addWebOSlib = message.addWebOSlib;
                             }
-                            if (appType === 'Enact App'){
+                            if (appType === 'Enact App') {
                                 appSubType = 'Basic Enact App';
                                 prop.template = enactTemplate;
                             }
@@ -510,7 +510,7 @@ function activate(context) {
             panel.onDidDispose(() => {
                 // Handle user closing panel after 'finish' botton clicked on Project Wizard
                 if (disposeFinish) {
-                    (async () => { 
+                    (async () => {
                         let result = await setProfile(deviceProfile.toLowerCase());
                         if (result === 0) {
                             generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib, deviceProfile)
@@ -521,7 +521,7 @@ function activate(context) {
                                     apiLevelStatus = apiLevel;
 
                                     apiLevelStatusSplit = apiLevelStatus.split("_");
-                                    apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
+                                    apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length - 1];
                                     const webosConfig = {
                                         api_level: apiLevelNo,
                                         profile: deviceProfile
@@ -532,15 +532,15 @@ function activate(context) {
 
                                     webososeAppsProvider.refresh(null, context);
                                 });
-                            }
-                        })();
-                    }
-                },
+                        }
+                    })();
+                }
+            },
                 null,
                 context.subscriptions
             );
-		})
-	);
+        })
+    );
 
     let resourceMonitoringPanel;
     let process_influxdb;
@@ -661,7 +661,7 @@ function activate(context) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.setDeviceProfile', () => {
-        setProfile();  
+        setProfile();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', (file) => {
@@ -674,10 +674,10 @@ function activate(context) {
     }));
 
     context.subscriptions.push(
-		vscode.commands.registerCommand('webosos.runSimulatorParams', () => {
-			runSimulator(null, null, true);
-		})
-	);
+        vscode.commands.registerCommand('webosos.runSimulatorParams', () => {
+            runSimulator(null, null, true);
+        })
+    );
 
     // Help Provide
     const helpPanels = new Map();
@@ -714,19 +714,20 @@ function activate(context) {
         previewApp(null, previewPanelInfo);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstart', () => {
-        devicePreviewStart(null,context);
+        devicePreviewStart(null, context);
     }));
-  
+
     context.subscriptions.push(vscode.commands.registerCommand('webosose.packageApp', () => { packageApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setupDevice', () => { setupDevice(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webos.getKey', () => {
         getCurrentDeviceProfile()
-        .then((data) => {
-            if (data === 'tv') {
-                getKey();
-            } else {
-                vscode.window.showInformationMessage(`Only TV Profile supports Set Up SSH Key.`);
-            }});
+            .then((data) => {
+                if (data === 'tv') {
+                    getKey();
+                } else {
+                    vscode.window.showInformationMessage(`Only TV Profile supports Set Up SSH Key.`);
+                }
+            });
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installApp', () => {
         installApp()
@@ -873,12 +874,12 @@ function activate(context) {
         vscode.commands.registerCommand('webosSimulator.refreshList', () => {
             webosSimulatorProvider.refresh();
         })
-	);
-	context.subscriptions.push(
+    );
+    context.subscriptions.push(
         vscode.commands.registerCommand('webosSimulator.runApp', (simulator) => {
             runSimulator(null, simulator.version);
         })
-	);
+    );
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorer.installApp', (file) => {
         installApp(file.fsPath, null);
     }));
@@ -938,7 +939,7 @@ function activate(context) {
         previewApp(app.label, previewPanelInfo);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.devicepreviewstart', async (app) => {
-        devicePreviewStart(app.label,context);
+        devicePreviewStart(app.label, context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp', async (app) => {
         inspectApp(app.label, undefined, true, 'IDE');
@@ -1023,51 +1024,51 @@ function activate(context) {
         vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', true);
         vscode.commands.executeCommand("workbench.action.alignPanelCenter");
         vscode.commands.executeCommand("pkgmgr.focus");
-        if(!this.packageMgrWebviewProvider){
+        if (!this.packageMgrWebviewProvider) {
             this.packageMgrWebviewProvider = new PackageManagerPanel(context);
             vscode.window.registerWebviewViewProvider(PackageManagerPanel.viewType, this.packageMgrWebviewProvider, { webviewOptions: { retainContextWhenHidden: true } });
         }
-       
+
     }));
-   
+
 
     vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
     vscode.commands.executeCommand('webososeDevices.refreshList');
     // vscode.commands.executeCommand('vbox.refreshList');
-    
+
     webososeAppsProvider.storeContextOnExtnLaunch(context);
     initExtViews();
-   
+
 }
-function initExtViews(){
+function initExtViews() {
     vscode.commands.executeCommand('vbox.focus');
     vscode.commands.executeCommand('apps.focus');
     vscode.commands.executeCommand('webososeDevices.focus');
     // vscode.commands.executeCommand('workbench.explorer.fileView.focus');
-    
 
-    setTimeout(()=>{
-        if(logger.extInit == false){
+
+    setTimeout(() => {
+        if (logger.extInit == false) {
             // logger.logAny("webOS Studio initialized"+ (logger.extInitMessage==""?  " successfully.":" with warning") ) ;
-            logger.logAny("webOS Studio initialized successfully." ) ;
+            logger.logAny("webOS Studio initialized successfully.");
             logger.log("------------------------------------------------")
-        
+
             logger.extInit = true;
             // if(logger.extInitMessage!=""){
             //     logger.warn(logger.extInitMessage)
             //     logger.log("------------------------------------------------")
             //     logger.extInitMessage =""
             // }
-          
-        
+
+
         }
-    },5000)
-    
-    
-    
-   
-    
-    
+    }, 5000)
+
+
+
+
+
+
 }
 
 function getResourcePath() {
@@ -1089,9 +1090,9 @@ function showProfile(profile) {
 async function setProfile(profile) {
     const result = await setDeviceProfile(profile);
     if (result.ret) {
-            const currentProfile = result.profile.trim().toUpperCase();
-            showProfile(currentProfile);
-            return 0;
+        const currentProfile = result.profile.trim().toUpperCase();
+        showProfile(currentProfile);
+        return 0;
     }
     myStatusBarItem.hide();
     return 1;
@@ -1125,35 +1126,35 @@ function chooseAPILevel(filepath) {
         return Promise.resolve();
     } else {
         return vscode.window
-        .showInformationMessage(`There is no API level information in the folder of this project.
+            .showInformationMessage(`There is no API level information in the folder of this project.
                                 Do you want to create it?\n If you select "Yes", create ".webosstuido.config" file.
                                 If not, you can't use the Luna API Auto Completion.`, ...["Yes", "No"])
-        .then(async (answer) => {
-            if (answer === "Yes") {
-                let controller = new InputController();
-                let apiList = ['20', '21', '22', '23'];  // [REQUIRED] Update the api level when new version of OSE is released.
+            .then(async (answer) => {
+                if (answer === "Yes") {
+                    let controller = new InputController();
+                    let apiList = ['20', '21', '22', '23'];  // [REQUIRED] Update the api level when new version of OSE is released.
 
-                controller.addStep({
-                    title: 'Choose API Level',
-                    placeholder: `Select API Level`,
-                    items: apiList.map(label => ({ label }))
-                });
+                    controller.addStep({
+                        title: 'Choose API Level',
+                        placeholder: `Select API Level`,
+                        items: apiList.map(label => ({ label }))
+                    });
 
-                let results = await controller.start();
-                let apiLevelNo = results.shift();
+                    let results = await controller.start();
+                    let apiLevelNo = results.shift();
 
-                const level = {
-                    api_level: apiLevelNo
+                    const level = {
+                        api_level: apiLevelNo
+                    }
+                    const levelJSON = JSON.stringify(level, null, 2);
+
+                    fs.writeFileSync(filepath, levelJSON);
                 }
-                const levelJSON = JSON.stringify(level, null, 2);
-
-                fs.writeFileSync(filepath, levelJSON);
-            }
-            else {
-                //console.log("No");
-            }
-            return Promise.resolve();
-        });
+                else {
+                    //console.log("No");
+                }
+                return Promise.resolve();
+            });
     }
 }
 
@@ -1182,9 +1183,9 @@ function setFromConvertCacheAPI() {
             const workspaceFloder = vscode.workspace.getWorkspaceFolder(parent);
             const appList = getAppsListinWorkspace(workspaceFloder.uri.fsPath);
 
-            for(let appName of appList) {
+            for (let appName of appList) {
                 if (appName instanceof fs.Dirent && parent.fsPath.indexOf(appName.name) > 0) {
-                    const file =  vscode.Uri.file(path.join(workspaceFloder.uri.fsPath, appName.name, ".webosstudio.config"));
+                    const file = vscode.Uri.file(path.join(workspaceFloder.uri.fsPath, appName.name, ".webosstudio.config"));
                     filepath = file.fsPath;
                 }
             }
@@ -1199,12 +1200,12 @@ function setFromConvertCacheAPI() {
         chooseAPILevel(filepath);
         return;
     }
-    if(fileData) {
+    if (fileData) {
         jsonData = JSON.parse(fileData);
         apiData = jsonData.api_level;
     }
 
-    if(!apiData) {
+    if (!apiData) {
         let apiLevelStatus = "";
         let apiLevelStatusSplit = [];
         apiLevelStatus = vscode.workspace.getConfiguration().get("webosose.lunaApiLevel");
@@ -1213,7 +1214,7 @@ function setFromConvertCacheAPI() {
             vscode.workspace.getConfiguration().update("webosose.lunaApiLevel", apiLevelStatus);
         }
         apiLevelStatusSplit = apiLevelStatus.split("_");
-        apiLevel = apiLevelStatusSplit[apiLevelStatusSplit.length-1];
+        apiLevel = apiLevelStatusSplit[apiLevelStatusSplit.length - 1];
     }
     else {
         apiLevel = apiData;
@@ -1237,7 +1238,7 @@ function setFromConvertCacheAPI() {
             console.log("err " + e);
         }
 
-        jsonData= JSON.parse(fileData);
+        jsonData = JSON.parse(fileData);
         const jsonDataServices = jsonData.services;
         const jsonDataMethods = jsonData.methods;
 
@@ -1249,7 +1250,7 @@ function setFromConvertCacheAPI() {
 
             serviceName = jsonDataServices[key].uri;
             serviceName = changeServiceName(serviceName);
-            if(serviceName == "remove") {
+            if (serviceName == "remove") {
                 continue;
             }
 
@@ -1257,13 +1258,13 @@ function setFromConvertCacheAPI() {
 
             const findSummaryIndex = serviceSummary.match(replaceRegex);
 
-            if(findSummaryIndex) {
+            if (findSummaryIndex) {
                 serviceSummary = serviceSummary.replace(replaceRegex, replaceString);
             }
 
             const serviceObj = {
-                "name" : serviceName,
-                "summary" : serviceSummary
+                "name": serviceName,
+                "summary": serviceSummary
             };
 
             const findServiceIndex = serviceObjArray.findIndex((element) => element["name"] === serviceName);
@@ -1299,9 +1300,9 @@ function setFromConvertCacheAPI() {
                     typeName = paramsArray[key].type;
 
                     const paramsObj = {
-                        "name" : paramName,
-                        "required" : requireName,
-                        "type" : typeName
+                        "name": paramName,
+                        "required": requireName,
+                        "type": typeName
                     };
                     paramsList.push(paramsObj);
                 }
@@ -1309,19 +1310,19 @@ function setFromConvertCacheAPI() {
                 const findServiceIndex = methodObjArray.findIndex((element) => element["name"] === serviceName);
                 const findDescriptionIndex = methodDesc.match(replaceRegex);
 
-                if(findDescriptionIndex) {
+                if (findDescriptionIndex) {
                     methodDesc = methodDesc.replace(replaceRegex, replaceString);
                 }
 
                 const methodObj = {
-                    "name" : methodName,
-                    "description" : methodDesc,
-                    "acg" : acgName
+                    "name": methodName,
+                    "description": methodDesc,
+                    "acg": acgName
                 };
 
                 const paramObj = {
-                    "name" : methodName,
-                    "params" : paramsList
+                    "name": methodName,
+                    "params": paramsList
                 };
 
                 if (findServiceIndex != -1) {
@@ -1334,14 +1335,14 @@ function setFromConvertCacheAPI() {
                     // Add new serviceMethodObject including serviceName and method array.
                     // Add new serviceMethodParamObject including serviceName and method and param array.
                     const serviceMethodObj = {
-                        "name" : serviceName,
-                        "methods" : [methodObj]
+                        "name": serviceName,
+                        "methods": [methodObj]
                     };
                     methodObjArray.push(serviceMethodObj);
 
                     const serviceMethodParamObj = {
-                        "name" : serviceName,
-                        "methods" : [paramObj]
+                        "name": serviceName,
+                        "methods": [paramObj]
                     };
                     paramObjArray.push(serviceMethodParamObj);
                 }
@@ -1350,14 +1351,14 @@ function setFromConvertCacheAPI() {
         serviceObjArray.sort(compareFn);
         methodObjArray.sort(compareFn);
         paramObjArray.sort(compareFn);
-        const apiObj =  {
-			"level" : apiLevel,
-			"service" : serviceObjArray,
-			"method" : methodObjArray,
-			"param" : paramObjArray
-		};
-		apiObjArray.push(apiObj);
-		apiIndex = apiObjArray.length - 1;
+        const apiObj = {
+            "level": apiLevel,
+            "service": serviceObjArray,
+            "method": methodObjArray,
+            "param": paramObjArray
+        };
+        apiObjArray.push(apiObj);
+        apiIndex = apiObjArray.length - 1;
     }
 
     const date_end = new Date();
@@ -1365,7 +1366,7 @@ function setFromConvertCacheAPI() {
     const elapsedMSec = date_end.getTime() - date_start.getTime();
     const elapsedSec = elapsedMSec / 1000;
     console.log(`Excution time of converting data function : ${elapsedSec} (s)`);
-	return apiIndex;
+    return apiIndex;
 }
 
 function compareFn(a, b) {
@@ -1457,7 +1458,7 @@ function findParamInArray(serviceName, methodName) {
 
         for (const i in paramNameArr) {
             let requiredString;
-            if(paramRequiredArr[i] === "yes") {
+            if (paramRequiredArr[i] === "yes") {
                 requiredString = "Required";
             }
             else {
@@ -1624,7 +1625,7 @@ function getWebviewCreateProject(appTypeIndex, resource) {
 }
 
 // this method is called when your extension is deactivated
-function deactivate() {}
+function deactivate() { }
 
 function appClone(app) {
     if (app != null && app.label != null) {
