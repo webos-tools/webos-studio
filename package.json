@@ -244,7 +244,7 @@
             },
             {
                 "command": "webosose.debugApp",
-                "title": "webOS OSE: Debug Application"
+                "title": "webOS: Debug"
             },
             {
                 "command": "webosose.resourceMonitoring",
@@ -288,15 +288,15 @@
             },
             {
                 "command": "webosose.explorermenu.debug",
-                "title": "webOS OSE: Debug App/Service"
+                "title": "webOS: Debug"
             },
             {
                 "command": "webosose.explorermenu.debug.ide",
-                "title": "IDE"
+                "title": "VS Code"
             },
             {
                 "command": "webosose.explorermenu.debug.browser",
-                "title": "BROWSER"
+                "title": "inspector"
             },
             {
                 "command": "webososeDevices.refreshList",
@@ -408,15 +408,15 @@
             },
             {
                 "command": "apps.debugApp",
-                "title": "Debug App/Service"
+                "title": "Debug on"
             },
             {
                 "command": "apps.debugApp.ide",
-                "title": "IDE"
+                "title": "VS Code"
             },
             {
                 "command": "apps.debugApp.browser",
-                "title": "BROWSER"
+                "title": "inspector"
             },
             {
                 "command": "apps.lintApp",
@@ -932,11 +932,11 @@
             },
             {
                 "id": "webosose.explorermenu.debug",
-                "label": "webOS OSE: Debug App/Service"
+                "label": "webOS: Debug"
             },
             {
                 "id": "apps.debugApp",
-                "label": "Debug App/Service"
+                "label": "Debug on"
             }
         ],
         "configuration": {
