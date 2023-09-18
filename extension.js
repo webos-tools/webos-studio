@@ -666,7 +666,10 @@ function activate(context) {
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.runSimulator', (file) => {
         console.log("runSimulator!");
-        if (file && fs.statSync(file).isDirectory()) {
+        if (file && file.label) {
+            runSimulator(file.label);
+        }
+        else if (file && fs.statSync(file).isDirectory()) {
             runSimulator(file);
         } else {
             runSimulator();
