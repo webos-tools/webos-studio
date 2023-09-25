@@ -32,6 +32,7 @@
         "onCommand:webos.getKey",
         "onCommand:webosose.installApp",
         "onCommand:webosose.launchApp",
+        "onCommand:webos.launchParams",
         "onCommand:webosose.inspectApp",
         "onCommand:webosose.runApp",
         "onCommand:webosose.debugApp",
@@ -232,8 +233,12 @@
             },
             {
                 "command": "webosose.launchApp",
-                "title": "webOS OSE: Launch Application"
+                "title": "webOS: Launch Application"
             },
+            {
+				"command": "webos.launchParams",
+				"title": "webOS: Launch Application with Parameters"
+			},
             {
                 "command": "webosose.inspectApp",
                 "title": "webOS OSE: Inspect Application"

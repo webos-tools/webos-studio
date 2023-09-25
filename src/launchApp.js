@@ -7,8 +7,10 @@ const { InputController } = require('./lib/inputController');
 const { getDeviceList, getInstalledList } = require('./lib/deviceUtils');
 const notify = require('./lib/notificationUtils');
 const ares = require('./lib/runCommand');
+const { getLaunchParams } = require('./lib/commonInput');
 
-module.exports = async function launchApp(id, deviceName, displayId) {
+module.exports = async function launchApp(id, deviceName, displayId, withParams) {
+    const title = withParams ? 'Launch Application with Parameters' : 'Launch Application';
     let appId = id;
     let device = deviceName;
     let deviceList;
@@ -37,7 +39,7 @@ module.exports = async function launchApp(id, deviceName, displayId) {
         let controller = new InputController();
         if (!device) {
             controller.addStep({
-                title: 'Launch Application',
+                title,
                 placeholder: 'Select Target Device',
                 items: deviceList.map(device => `${device.name} (${device.username}@${device.ip}:${device.port})`).map(label => ({ label }))
             });
@@ -49,7 +51,7 @@ module.exports = async function launchApp(id, deviceName, displayId) {
         let controller2 = new InputController();
         let installed = await getInstalledList(device);
         controller2.addStep({
-            title: 'Launch Application',
+            title,
             placeholder: 'Select App ID',
             items: installed.map(label => ({ label }))
         });
@@ -59,7 +61,7 @@ module.exports = async function launchApp(id, deviceName, displayId) {
         let controller3 = new InputController();
         let displayArr = ['display 0', 'display 1'];
         controller3.addStep({
-            title: 'Launch Application',
+            title,
             placeholder: 'Select Display Id',
             items: displayArr.map(label => ({ label }))
         });
@@ -71,11 +73,12 @@ module.exports = async function launchApp(id, deviceName, displayId) {
             dp = 1;
         }
     }
+    const params = withParams ? await getLaunchParams(title) : {};
 
     return new Promise((resolve, reject) => {
         vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
-            title: "Launch Application",
+            title,
             cancellable: false
         }, async (progress, token) => {
             token.onCancellationRequested(() => {
@@ -84,9 +87,10 @@ module.exports = async function launchApp(id, deviceName, displayId) {
             });
             // let progress = await notify.initProgress("generate application", true);
             await notify.showProgress(progress, 20, `Preparing to launch ${appId}`);
-            await ares.launch(appId, device, undefined, dp)
+            await ares.launch(appId, device, params, dp)
                 .then(async () => {
-                    await notify.clearProgress(progress, `Success! Launched ${appId} on ${device}.`);
+                    const paramsMsg = JSON.stringify(params) === '{}' ? '' : ` with parameters ${JSON.stringify(params)}`;
+                    await notify.clearProgress(progress, `Success! Launched ${appId} on ${device}${paramsMsg}.`);
                     resolve();
                 }).catch(async (err) => {
                     let errMsg = `Failed to launch ${appId} on ${device}.`

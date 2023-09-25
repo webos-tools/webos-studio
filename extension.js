@@ -639,6 +639,12 @@ function activate(context) {
                 webososeDevicesProvider.refresh();
             });
     }));
+    context.subscriptions.push(vscode.commands.registerCommand('webos.launchParams', () => {
+		launchApp(null, null, null, true)
+            .then(() => {
+                webososeDevicesProvider.refresh();
+            });
+	}));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.inspectApp', () => { inspectApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.runApp', () => { runApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.debugApp', () => { runApp(true); }));
