@@ -5,7 +5,7 @@
 const vscode = require('vscode');
 const { generateApp, generateAppFromProjectWizard, removeApp } = require('./src/generateApp');
 const previewApp = require('./src/previewApp');
-const { devicePreviewStart, devicePreviewStop } = require('./src/devicePreview');
+const { runWithoutInstall} = require('./src/runWithoutInstallation');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
 const { setupDevice, setDeviceProfile } = require('./src/setupDevice');
@@ -611,8 +611,8 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.previewApp', () => {
         previewApp(null, previewPanelInfo);
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('webosose.devicepreviewstart', () => {
-        devicePreviewStart(null, context);
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.runWithoutInstall', () => {
+        runWithoutInstall(null, context);
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.packageApp', () => { packageApp(); }));
@@ -644,7 +644,7 @@ function activate(context) {
             .then(() => {
                 webososeDevicesProvider.refresh();
             });
-	}));
+    }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.inspectApp', () => { inspectApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.runApp', () => { runApp(); }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.debugApp', () => { runApp(true); }));
@@ -842,8 +842,8 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('apps.previewApp', async (app) => {
         previewApp(app.label, previewPanelInfo);
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('apps.devicepreviewstart', async (app) => {
-        devicePreviewStart(app.label, context);
+    context.subscriptions.push(vscode.commands.registerCommand('apps.runWithoutInstall', async (app) => {
+        runWithoutInstall(app.label, context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp', async (app) => {
         inspectApp(app.label, undefined, true, 'IDE');
@@ -914,8 +914,8 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.debug.browser', async (resource) => {
         explorerMenuMgr.debugApp(resource, 'BROWSER')
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.devicepreviewstart', async (resource) => {
-        explorerMenuMgr.devicePreview(resource)
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.runWithoutInstall', async (resource) => {
+        explorerMenuMgr.runWithoutInstall(resource)
     }));
     context.subscriptions.push(vscode.commands.registerCommand('ipkanalyze.start', async () => {
 

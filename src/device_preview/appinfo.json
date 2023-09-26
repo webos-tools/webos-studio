@@ -4,7 +4,7 @@
   "vendor": "LG Soft",
   "type": "web",
   "main": "index.html",
-  "title": "Preview Application",
+  "title": "Auto Reload Application",
   "icon": "icon.png",
   "requiredPermissions": [
     "time.query",

@@ -26,7 +26,7 @@
         "onCommand:webosSimulator.runApp",
         "onCommand:webosose.generateApp",
         "onCommand:webosose.previewApp",
-        "onCommand:webosose.devicepreviewstart",
+        "onCommand:webosose.runWithoutInstall",
         "onCommand:webosose.packageApp",
         "onCommand:webosose.setupDevice",
         "onCommand:webos.getKey",
@@ -62,7 +62,7 @@
         "onCommand:apps.installWebOS",
         "onCommand:apps.installApp",
         "onCommand:apps.previewApp",
-        "onCommand:apps.devicepreviewstart",
+        "onCommand:apps.runWithoutInstall",
         "onCommand:webapp.reloadPreview",
         "onCommand.apps.debugApp",
         "onCommand.apps.debugApp.ide",
@@ -91,7 +91,7 @@
         "onCommand:webosose.explorermenu.runApp",
         "onCommand:webosose.explorermenu.runSimulator",
         "onCommand:webosose.explorermenu.appPreview",
-        "onCommand:webosose.explorermenu.devicepreviewstart",
+        "onCommand:webosose.explorermenu.runWithoutInstall",
         "onCommand:webosose.explorermenu.debug",
         "onCommand:webosose.explorermenu.debug.ide",
         "onCommand:webosose.explorermenu.debug.browser",
@@ -172,7 +172,7 @@
             },
             {
                 "command": "webapp.reloadPreview",
-                "title": "webOS OSE: Reload WebApp Preview"
+                "title": "webOS: Reload WebApp Preview"
             },
             {
                 "command": "webosose.installGlobal",
@@ -209,11 +209,11 @@
             },
             {
                 "command": "webosose.previewApp",
-                "title": "webOS OSE: Preview Application [Local]"
+                "title": "webOS: Preview Application"
             },
             {
-                "command": "webosose.devicepreviewstart",
-                "title": "webOS OSE: Preview Application [Device]"
+                "command": "webosose.runWithoutInstall",
+                "title": "webOS: Auto Reload"
             },
             {
                 "command": "webosose.packageApp",
@@ -285,11 +285,11 @@
             },
             {
                 "command": "webosose.explorermenu.appPreview",
-                "title": "webOS OSE: Preview Application [Local]"
+                "title": "webOS: Preview Application"
             },
             {
-                "command": "webosose.explorermenu.devicepreviewstart",
-                "title": "webOS OSE: Preview Application [Device]"
+                "command": "webosose.explorermenu.runWithoutInstall",
+                "title": "webOS: Auto Reload"
             },
             {
                 "command": "webosose.explorermenu.debug",
@@ -405,11 +405,11 @@
             },
             {
                 "command": "apps.previewApp",
-                "title": "Preview Application [Local]"
+                "title": "Preview Application"
             },
             {
-                "command": "apps.devicepreviewstart",
-                "title": "Preview Application [Device]"
+                "command": "apps.runWithoutInstall",
+                "title": "Auto Reload"
             },
             {
                 "command": "apps.debugApp",
@@ -588,7 +588,7 @@
                     "group": "app2@2"
                 },
                 {
-                    "command": "apps.devicepreviewstart",
+                    "command": "apps.runWithoutInstall",
                     "when": "view == apps && viewItem == web-app || viewItem == enact-app",
                     "group": "app2@2"
                 },
@@ -677,7 +677,7 @@
                     "group": "device2@1"
                 },
                 {
-                    "command": "webosose.explorermenu.devicepreviewstart",
+                    "command": "webosose.explorermenu.runWithoutInstall",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
                     "group": "device2@1"
                 },
@@ -701,7 +701,7 @@
                     "when": "false"
                 },
                 {
-                    "command": "webosose.explorermenu.devicepreviewstart",
+                    "command": "webosose.explorermenu.runWithoutInstall",
                     "when": "false"
                 },
                 {
@@ -849,7 +849,7 @@
                     "when": "false"
                 },
                 {
-                    "command": "apps.devicepreviewstart",
+                    "command": "apps.runWithoutInstall",
                     "when": "false"
                 },
                 {

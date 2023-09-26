@@ -28,8 +28,8 @@ class ExplorerMenuMgr {
     appPreview(resource) {
         vscode.commands.executeCommand('apps.previewApp', this.getAppObject(resource));
     }
-    devicePreview(resource) {
-        vscode.commands.executeCommand('apps.devicepreviewstart',this.getAppObject(resource));
+    runWithoutInstall(resource) {
+        vscode.commands.executeCommand('apps.runWithoutInstall',this.getAppObject(resource));
     }
     debugApp(resource, debugoption) {
         if(debugoption === 'IDE'){

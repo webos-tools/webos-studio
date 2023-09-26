@@ -65,7 +65,7 @@ class DevPreview {
       console.log("socket on::::connection_resp", data);
       if (data.status == "connected") {
         this.setStatus(true)
-        this.dp_subtitle_status.innerText ="App Preview : Loading"
+        this.dp_subtitle_status.innerText ="Auto Reload Application : Loading"
         socket.emit("app_url_req", {
           orgin: "onConnection",
         });
@@ -75,7 +75,7 @@ class DevPreview {
     socket.on("app_url_resp",  (data)=> {
     
       console.log("socket on::::app_url_resp", data);
-      this.dp_subtitle_status.innerText ="App Preview : Loaded";
+      this.dp_subtitle_status.innerText ="Auto Reload Application : Loaded";
       this.progress_bar.value =100;
       this.loadApp(data.url)
     

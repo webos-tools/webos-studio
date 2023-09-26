@@ -132,7 +132,7 @@ function _execServer(cmd, params) {
         child.on('close', (code, signal) => {
             console.log(
                 `child process terminated due to receipt of signal ${signal}`);
-            reject(signal);
+            //reject(signal);
         });
     })
 }
@@ -172,7 +172,7 @@ function _execPreviewServer(cmd, params, cwd, port) {
         // @ts-ignore
         child.stderr.on('data', (data) => {
             logger.warn(data);
-            console.error("preview data on error ->",data);
+            console.error("Auto reload data on error ->",data);
             // reject(data);
         });
         child.on('error', (err) => {
@@ -705,6 +705,22 @@ async function novacomGetkey(device, passphrase) {
     });
 }
 
+async function launchHosted(appDir, device, hostIp) {
+    if (!appDir) {
+        return Promise.reject('ares-launch --hosted: argument is not fulfilled.');
+    }
+
+    let hostIpString = '';
+    if (hostIp) {
+        hostIpString = `-I ${hostIp}`;
+    }
+    let params = `-H "${appDir}" -d "${device}" ${hostIpString}`;
+
+    const cmd = `${path.join(await getCliPath(), 'ares-launch')}`;
+
+    return _execServer(cmd, params);
+}
+
 
 module.exports = {
     generate: generate,
@@ -740,4 +756,5 @@ module.exports = {
     launchSimulator: launchSimulator,
     novacomGetkey: novacomGetkey,
     config: config,
+    launchHosted: launchHosted
 }

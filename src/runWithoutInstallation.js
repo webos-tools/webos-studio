@@ -56,9 +56,8 @@ let dpContext = {
 let containerAppInfo = null;
 
  let gContext =null;
-async function devicePreviewStart(appSelectedDir, context) {
+async function runWithoutInstall(appSelectedDir, context) {
    gContext =context;
-  dp_appInfo = getDevicePreviewAppId(context);
 
   let device = null;
 
@@ -96,9 +95,9 @@ async function devicePreviewStart(appSelectedDir, context) {
 
   let controller = new InputController();
   controller.addStep({
-    title: "Application Preview [Device]",
+    title: "Auto reload Application",
     placeholder: `App Directory${defaultString}`,
-    prompt: "Enter Directory/Path to Preview on Device",
+    prompt: "Enter Directory/Path to Auto reload Application on Device",
     buttons: [folderBtn],
     validator: function (value) {
       if (value === "") {
@@ -174,6 +173,30 @@ async function devicePreviewStart(appSelectedDir, context) {
     targetDevice = device;
     isEnact = await enactUtils.isEnactApp(appDir);
 
+    if(!isEnact){
+      const title = 'Auto Reload Application';
+      const prompt = 'Enter Directory Path to Run';
+      const hostIp = sysIP;
+      const deviceName = device.name;
+    
+      // ares-launch --hosted --host-ip
+      ares.launchHosted(appDir, deviceName, hostIp)
+          .then(() => {
+              vscode.window.showInformationMessage(`Success! ${appDir} is running on ${device}.`);
+          }).catch((err) => {
+              let errMsg = `Failed to run ${appDir} on ${device}.`;
+              if (typeof err === 'string' && err.includes(`Unknown method`) && err.includes(`for category "/dev"`)) {
+                  errMsg = `Please make sure the 'Developer Mode' is on.`;
+              } else if (typeof err === 'string' && err.includes(`Connection time`)) {
+                  errMsg = `Please check ${device}'s IP address or port.`;
+              }
+              vscode.window.showErrorMessage(`Error! ${errMsg}`);
+          });
+          return;
+    }
+    //In case of Enact Auto Reload App
+    dp_appInfo = getRunWithoutInstallAppId(context);
+
     containerAppInfo = await getExistingContainerAppInfo(device);
 
     dpContext.isEnact = isEnact;
@@ -185,7 +208,7 @@ async function devicePreviewStart(appSelectedDir, context) {
     ) {
       onlyLaunchContainerApp(context, device);
     } else {
-      await devicePreviewStop(context, false);
+      await stopServerAndClearResources(context, false);
       dpContext.userAppDir = userAppDir;
       dpContext.targetDevice = targetDevice;
       if (containerAppInfo) {
@@ -197,6 +220,7 @@ async function devicePreviewStart(appSelectedDir, context) {
     }
   }
 }
+
 async function getExistingContainerAppInfo(device) {
   let installedAppInfoObj = {};
 
@@ -249,7 +273,7 @@ async function getRunningAppJson(device) {
   return runningAppIdJson;
 }
 
-function getDevicePreviewAppId(context) {
+function getRunWithoutInstallAppId(context) {
   let rawdata = fs.readFileSync(
     path.join(context.extensionPath, "src", "device_preview", "appinfo.json")
   );
@@ -279,7 +303,7 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Setting Up Application Preview on Device",
+          title: "Setting Up Application Auto reload on Device",
           cancellable: false,
         },
         
@@ -305,7 +329,7 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                         containerAppInfo["isRunning"] = true;
                       await notify.clearProgress(
                         progress,
-                        "App Preview Launched"
+                        "App Launched without Installation"
                       );
 
                      
@@ -401,7 +425,7 @@ async function startSocketAndLaunchContainerApp(context, device) {
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Starting Application Preview on Device",
+          title: "Starting Auto reload Application on Device",
           cancellable: false,
         },
         async (progress) => {
@@ -422,7 +446,7 @@ async function startSocketAndLaunchContainerApp(context, device) {
               if (containerAppInfo) containerAppInfo["isRunning"] = true;
               await notify.clearProgress(
                 progress,
-                "App Preview  Launched"
+                "App Launched without Installation"
               );
        
             })
@@ -449,7 +473,7 @@ async function onlyLaunchContainerApp(context, device) {
   vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: "Starting Application Preview on Device",
+      title: "Auto reload Application on Device",
       cancellable: false,
     },
     async (progress) => {
@@ -467,7 +491,7 @@ async function onlyLaunchContainerApp(context, device) {
         .launch(dp_appInfo["id"], device.name, param, 0)
         .then(async () => {
           if (containerAppInfo) containerAppInfo["isRunning"] = true;
-          await notify.clearProgress(progress, "Preview App Launched");
+          await notify.clearProgress(progress, "App Launched without Installation");
         })
         .catch(async (err) => {
           let errMsg = `Failed to launch ${dp_appInfo["id"]} on ${device.name}.`;
@@ -537,7 +561,7 @@ async function startLocalPreview() {
   let pvalue = 10;
   if (socketClient) {
     socketClient.emit("preview_progress", {
-      statusText: "App Preview : Starting Development Server",
+      statusText: "App Launch : Starting Development Server",
       progress: pvalue,
     });
   }
@@ -548,7 +572,7 @@ async function startLocalPreview() {
       if (pvalue < 60) {
         if (socketClient) {
           socketClient.emit("preview_progress", {
-            statusText: "App Preview : Starting Development Server",
+            statusText: "App Launch : Starting Development Server",
             progress: pvalue,
           });
         }
@@ -576,7 +600,7 @@ async function startLocalPreview() {
             // pvalue =60;
             if (socketClient) {
               socketClient.emit("preview_progress", {
-                statusText: "App Preview : Compiling",
+                statusText: "App Launch : Compiling",
                 progress: pvalue,
               });
             }
@@ -586,7 +610,7 @@ async function startLocalPreview() {
               if (pvalue < 95) {
                 if (socketClient) {
                   socketClient.emit("preview_progress", {
-                    statusText: "App Preview : Compiling",
+                    statusText: "App Launch : Compiling",
                     progress: pvalue,
                   });
                 }
@@ -617,7 +641,7 @@ async function startLocalPreview() {
 
                     dpContext.isPreviewUrlSent = true;
                     socketClient.emit("preview_progress", {
-                      statusText: "App Preview : Loading App",
+                      statusText: "App Launch : Loading App",
                       progress: 100,
                     });
                     socketClient.emit("app_url_resp", {
@@ -630,7 +654,7 @@ async function startLocalPreview() {
           } else {
             if (socketClient) {
               socketClient.emit("preview_progress", {
-                statusText: "App Preview : Loading App",
+                statusText: "App Launch : Loading App",
                 progress: 100,
               });
 
@@ -689,8 +713,8 @@ function isWebappExcludedFiles(fileName){
   
 }
 
-async function devicePreviewStop(context, isFromCommand) {
-  dp_appInfo = getDevicePreviewAppId(context);
+async function stopServerAndClearResources(context, isFromCommand) {
+  dp_appInfo = getRunWithoutInstallAppId(context);
 
   if (targetDevice == null) {
     let deviceList = await getDeviceList();
@@ -724,19 +748,19 @@ async function devicePreviewStop(context, isFromCommand) {
         .installRemove(dp_appInfo["id"], deviceName)
         .then(async () => {
           vscode.window.showInformationMessage(
-            "Application Preview on Device has been stoped."
+            "Application Launch on Device has been stoped."
           );
         })
         .catch((err) => {
-          console.log("Error on removing  Preview App on " + deviceName);
+          console.log("Error on removing  Launch App on " + deviceName);
           vscode.window.showErrorMessage(
-            "Error on removing  Preview App on " + deviceName
+            "Error on removing  Launch App on " + deviceName
           );
         });
     } else {
       if (isFromCommand)
         vscode.window.showErrorMessage(
-          `Unable to connect to device to stop preview `
+          `Unable to connect to device to stop App Launch `
         );
     }
   }
@@ -772,7 +796,30 @@ function clearProcess() {
     io.close();
   }
 }
+
+/* async function runWithoutInstall(selectedDir) {
+  const title = 'Run Application without Installation';
+  const prompt = 'Enter Directory Path to Run';
+  const device = await getDefaultDevice() || await getDevice(title);
+  const appDir = selectedDir || await getAppDir(title, prompt);
+  const hostIp = await getHostIp() || await _getHostIp(title);
+
+  // ares-launch --hosted --host-ip
+  ares.launchHosted(appDir, device, hostIp)
+      .then(() => {
+          vscode.window.showInformationMessage(`Success! ${appDir} is running on ${device}.`);
+      }).catch((err) => {
+          let errMsg = `Failed to run ${appDir} on ${device}.`;
+          if (typeof err === 'string' && err.includes(`Unknown method`) && err.includes(`for category "/dev"`)) {
+              errMsg = `Please make sure the 'Developer Mode' is on.`;
+          } else if (typeof err === 'string' && err.includes(`Connection time`)) {
+              errMsg = `Please check ${device}'s IP address or port.`;
+          }
+          vscode.window.showErrorMessage(`Error! ${errMsg}`);
+      });
+}; */
+
 module.exports = {
-  devicePreviewStart: devicePreviewStart,
-  devicePreviewStop: devicePreviewStop,
+  runWithoutInstall: runWithoutInstall,
+  stopServerAndClearResources: stopServerAndClearResources
 };
