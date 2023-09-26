@@ -115,7 +115,7 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
     if (hostOS.includes("Windows")) {
         influxdbBinFile = influxdbBinFile + ".exe";
         grafanaBinFile = grafanaBinFile + ".exe";
-    } else {
+    } else if (hostOS.includes("Darwin")) {
         influxdbBinFile = "/usr/bin/" + influxdbBinFile;
         influxdbConfFile = "/etc/influxdb" + influxdbConfFile;
     }
