@@ -48,7 +48,7 @@ function activate(context) {
     createOutPutChannel();
 
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
-    let packageManagerObj = {webPanel :null};
+    let packageManagerObj = { webPanel: null };
     const serviceProvider = vscode.languages.registerCompletionItemProvider(
         ['plaintext', 'javascript', 'typescript', 'html'],
         {
@@ -923,37 +923,56 @@ function activate(context) {
         ipkAnalyzer.startEditor();
 
     }));
-  
-    this.packageMgrWebviewProvider = new PackageManagerSidebar(context);
-    vscode.window.registerWebviewViewProvider(PackageManagerSidebar.viewType, this.packageMgrWebviewProvider, { webviewOptions: { retainContextWhenHidden: true } });
+    context.subscriptions.push(vscode.commands.registerCommand('packagemanager.start', async () => {
 
-  vscode.commands.executeCommand('webososeDevices.refreshList');
+        vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', true);
+        vscode.commands.executeCommand("workbench.action.alignPanelCenter");
+        vscode.commands.executeCommand("pkgmgr.focus");
+        if (!this.packageMgrWebviewProvider) {
+            this.packageMgrWebviewProvider = new PackageManagerPanel(context);
+            vscode.window.registerWebviewViewProvider(PackageManagerPanel.viewType, this.packageMgrWebviewProvider, { webviewOptions: { retainContextWhenHidden: true } });
+        }
+
+    }));
+
+
+    vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
+    vscode.commands.executeCommand('webososeDevices.refreshList');
+    // vscode.commands.executeCommand('vbox.refreshList');
+
     webososeAppsProvider.storeContextOnExtnLaunch(context);
     initExtViews();
 
 }
-function initExtViews(){
+function initExtViews() {
     vscode.commands.executeCommand('vbox.focus');
     vscode.commands.executeCommand('apps.focus');
     vscode.commands.executeCommand('webososeDevices.focus');
-    
+    // vscode.commands.executeCommand('workbench.explorer.fileView.focus');
 
-    setTimeout(()=>{
-        if(logger.extInit == false){
-            logger.logAny("webOS Studio initialized successfully." ) ;
+
+    setTimeout(() => {
+        if (logger.extInit == false) {
+            // logger.logAny("webOS Studio initialized"+ (logger.extInitMessage==""?  " successfully.":" with warning") ) ;
+            logger.logAny("webOS Studio initialized successfully.");
             logger.log("------------------------------------------------")
-        
+
             logger.extInit = true;
-          
-        
+            // if(logger.extInitMessage!=""){
+            //     logger.warn(logger.extInitMessage)
+            //     logger.log("------------------------------------------------")
+            //     logger.extInitMessage =""
+            // }
+
+
         }
-    },5000)
-    
-    
-    
-   
-    
-    
+    }, 5000)
+
+
+
+
+
+
 }
 
 function getResourcePath() {

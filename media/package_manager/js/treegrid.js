@@ -276,25 +276,26 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     }
   }
 
-  function doPrimaryAction() {
+  function doPrimaryAction(event) {
     var currentRow = getRowWithFocus();
     if (!currentRow) {
       return;
     }
 
-  
-    if (currentRow === document.activeElement) {
-      // alert(
-      //   'Message from ' +
-      //     currentRow.children[2].innerText +
-      //     ':\n\n' +
-      //     currentRow.children[1].innerText
-      // );
+
+    
+    
+    if (!isExpandable(currentRow)) {
+      focus(currentRow)
       return;
     }
 
-    // If first col has focused, toggle expand/collapse
-    toggleExpanded(currentRow);
+      changeExpanded(!isExpanded(currentRow), currentRow);
+ 
+
+    return
+  
+  
   }
 
   function toggleExpanded(row) {
@@ -401,25 +402,30 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         moveByRow(-1);
         break;
       case LEFT:
-        if (isEditableFocused()) {
-          return; 
-        }
-        if (isRowFocused()) {
-          changeExpanded(false) || moveByRow(-1, true);
-        } else {
-          moveByCol(-1);
-        }
+        moveByRow(-1);
         break;
+
+        // if (isEditableFocused()) {
+        //   return; 
+        // }
+        // if (isRowFocused()) {
+        //   changeExpanded(false) || moveByRow(-1, true);
+        // } else {
+        //   moveByCol(-1);
+        // }
+        // break;
       case RIGHT:
-        if (isEditableFocused()) {
-          return; 
-        }
+        moveByRow(1);
+        break;
+        // if (isEditableFocused()) {
+        //   return; 
+        // }
 
     
-        if (!isRowFocused() || !changeExpanded(true)) {
-          moveByCol(1);
-        }
-        break;
+        // if (!isRowFocused() || !changeExpanded(true)) {
+        //   moveByCol(1);
+        // }
+        // break;
       case CTRL_HOME:
         moveToExtremeRow(-1);
         break;
@@ -439,7 +445,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         moveToExtreme(1);
         break;
       case ENTER:
-        doPrimaryAction();
+        doPrimaryAction(event);
         break;
       default:
         return;
@@ -447,7 +453,6 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
 
     event.preventDefault();
     
-    setReleaseNote( getRowWithFocus(),treegridElem)
   }
 
 
@@ -461,7 +466,6 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     
     var row = getContainingRow(event.target);
    
-    setReleaseNote(row,treegridElem);
     
     if (!isExpandable(row)) {
       focus(row)
@@ -473,15 +477,15 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     var left = range.getBoundingClientRect().left;
     var EXPANDO_WIDTH = 20;
 
-    if (event.clientX < left && event.clientX > left - EXPANDO_WIDTH) {
+    // if (event.clientX < left && event.clientX > left - EXPANDO_WIDTH) {
       changeExpanded(!isExpanded(row), row);
-    }
+    // }
   
   }
 
   function onDoubleClick(event) {
     var row = getContainingRow(event.target);
-    setReleaseNote(row,treegridElem)
+    // setReleaseNote(row,treegridElem)
     if (row) {
       if (isExpandable(row)) {
         changeExpanded(!isExpanded(row), row);
@@ -493,7 +497,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   initAttributes();
   treegridElem.addEventListener('keydown', onKeyDown);
   treegridElem.addEventListener('click', onClick);
-  treegridElem.addEventListener('dblclick', onDoubleClick);
+  // treegridElem.addEventListener('dblclick', onDoubleClick);
  
   window.addEventListener(
     window.onfocusin ? 'focusin' : 'focus',
@@ -522,19 +526,9 @@ document.addEventListener('DOMContentLoaded', function () {
   var doAllowRowFocus = cellParam !== 'force';
   var doStartRowFocus = doAllowRowFocus && cellParam !== 'start';
   TreeGrid(
-    document.getElementById('treegrid_tv'),
-    doAllowRowFocus,
-    doStartRowFocus
-  );
-  TreeGrid(
-    document.getElementById('treegrid_ose'),
+    document.getElementById('treegrid__all'),
     doAllowRowFocus,
     doStartRowFocus
   );
  
-//   var choiceElem = document.getElementById(
-//     'option-cell-focus-' + (cellParam || 'allow')
-//   );
-//   console.log("choiceElem",choiceElem)
-//    choiceElem.setAttribute('aria-current', 'true');
 });

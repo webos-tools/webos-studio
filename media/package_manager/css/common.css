@@ -1,7 +1,6 @@
 .tg_button {
   border: none;
-  /* padding: var(--input-padding-vertical) var(--input-padding-horizontal); */
-  padding: 5px;
+  padding: 3px;
   width: 100%;
   text-align: center;
   outline: 1px solid transparent;
@@ -10,7 +9,6 @@
   background: var(--vscode-button-background);
   margin-top: 2px;
   border-radius: 2px;
-  /* margin-right: 5px; */
   
 }
 
@@ -29,7 +27,6 @@
 }
 
 .tg_button.secondary:hover {
-  /* background: var(--vscode-button-secondaryHoverBackground); */
   background: var(--vscode-inputValidation-errorBackground);
 }
 
@@ -46,22 +43,18 @@
   margin-right: 5px;
   cursor: pointer;
   background: var(--vscode-inputValidation-errorBackground);
-  height: 24px;
+  height: 18px;
 }
 
 .tg_cancelbutton:hover {
   border: 1px;
-  /* background: var(--vscode-inputValidation-errorBackground); */
 }
 
 .rowIcon {
-  padding: 5px;
   cursor: pointer;
-  color: yellow;
+  color: var(--vscode-notificationsWarningIcon-foreground);
 }
 .rowIconText {
-  /* display:none; */
-  /* display: none; */
   color: var(--vscode-notifications-foreground);
   position: absolute;
   background-color: var(--vscode-list-deemphasizedForeground);
@@ -71,7 +64,7 @@
   border-style: solid;
   border-width: 1px;
   border-color: var(--vscode-notifications-border);
-  max-width: 300px;
+  max-width: 400px;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5; /* start showing ellipsis when 3rd line is reached */
@@ -88,26 +81,27 @@
 }
 .hpbar {
   width: 0px;
-  height: 24px;
+  height: 18px;
   background-color: green;
   margin-right: auto;
   text-align: center;
 }
 .hpbarNoBG {
   width: 0px;
-  height: 24px;
+  height: 18px;
   margin-right: auto;
   text-align: center;
 }
 .hpbarRightArea {
-  height: 24px;
+  height: 18px;
 }
 .hpbarMsg {
   position: absolute;
-  padding-left: 5px;
+  padding-left: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 10px;
 }
 @keyframes pbarcolor {
   0%   { background: green; }
@@ -122,7 +116,7 @@
   background: green; 
   animation: pbarcolor 9s infinite linear;
   width: 0px;
-  height: 24px;
+  height: 18px;
   margin-right: auto;
 
 }

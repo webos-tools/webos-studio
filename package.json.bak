@@ -278,7 +278,7 @@
             },
             {
                 "command": "webosose.explorermenu.debug",
-                "title": "webOS OSE: Debug"
+                "title": "webOS: Debug"
             },
             {
                 "command": "webosose.explorermenu.debug.ide",

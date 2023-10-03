@@ -8,42 +8,7 @@ const vscode = acquireVsCodeApi();
 let isChecking = false;
 let pbarJson = {};
 
-
-function setReleaseNote(row, treegridElem) {
-  let rNoteElement = null;
-  switch (treegridElem.id) {
-    case "treegrid_tv":
-      rNoteElement = document.getElementById("tvnotecontent");
-      break;
-    case "treegrid_ose":
-      rNoteElement = document.getElementById("osenotecontent");
-
-      break;
-
-  }
-  if (rNoteElement) {
-    if (treegridElem.id == "treegrid_progress") {
-      let plog = row.getAttribute("data-processLog");
-      if (plog != "") {
-        rNoteElement.innerText = atob(plog);
-      }
-    } else {
-      let rowObj = row.getAttribute("data-rowobj");
-      if (rowObj == null) {
-        // clear release note
-        rNoteElement.innerText = "";
-      } else {
-        if (JSON.parse(atob(rowObj))["compInfo"]) {
-          rNoteElement.innerText = JSON.parse(atob(rowObj))["compInfo"][
-            "description"
-          ];
-        } else {
-          rNoteElement.innerText = JSON.parse(atob(rowObj))["description"];
-        }
-      }
-    }
-  }
-}
+console.log("hellow");
 
 
 function cancelDownload(comp_uid, isComp) {
@@ -141,7 +106,13 @@ function hideCancelBtn(comp_uid) {
 }
 function showProgressBarInSDKTab(comp_uid, message, val, step, displayName, isComp) {
 
-  pbarJson[comp_uid].showProgressBar(val, displayName + "- " + message, step, isComp)
+  if (isComp) {
+    pbarJson[comp_uid].showProgressBar(val, message, step, isComp)
+
+  } else {
+    pbarJson[comp_uid].showProgressBar(val, displayName + "- " + message, step, isComp)
+  }
+
 }
 
 function hideProgressBarInSDKTab(comp_uid) {
@@ -187,7 +158,14 @@ function hideTooltipMsg(comp_uid) {
 }
 
 function showRowIcon(comp_uid, msg) {
-  document.getElementById(comp_uid + "_rowIcon").style.display = "block";
+  // document.getElementById(comp_uid + "_rowIcon").style.color = "red"
+  if (msg == "Request Cancelled") {
+    document.getElementById(comp_uid + "_rowIcon").style.color = "yellow"
+  }else{
+    document.getElementById(comp_uid + "_rowIcon").style.color = "red"
+    
+  }
+  document.getElementById(comp_uid + "_rowIcon").style.display = "inline";
   document.getElementById(comp_uid + "_rowIconText").innerText = msg;
 }
 function hideRowIcon(comp_uid) {
@@ -196,7 +174,13 @@ function hideRowIcon(comp_uid) {
 }
 
 function showRowIconSDK(comp_uid, msg) {
-  document.getElementById(comp_uid + "_rowIcon").style.display = "block";
+  if (msg == "Request Cancelled") {
+    document.getElementById(comp_uid + "_rowIcon").style.color = "yellow"
+  }else{
+    document.getElementById(comp_uid + "_rowIcon").style.color = "red"
+    
+  }
+  document.getElementById(comp_uid + "_rowIcon").style.display = "inline";
   document.getElementById(comp_uid + "_rowIconText").innerText = msg;
 }
 
@@ -220,8 +204,6 @@ function showActionButton(comp_uid, sdk) {
 function handleMsg() {
   window.addEventListener("message", (event) => {
     const message = event.data; // The json data that the extension sent
-
-
 
     switch (message.command) {
       case "SET_CONFIG_JSON": {
@@ -331,12 +313,14 @@ function handleMsg() {
 
 
       case "PRG_UPDATE": {
+        let isComp = message.data["comp_uid"] == message.data["row_uid"] ? true : false
+
         if (!message.data["isError"]) {
 
           hideRowIconSDK(message.data["comp_uid"]);
           showProgressBarInSDKTab(
             message.data["comp_uid"],
-            message.data["message"], message.data["val"], message.data["step"], message.data["displayName"], message.data["isComp"]);
+            message.data["message"], message.data["val"], message.data["step"], message.data["displayName"], isComp);
         } else {
 
           hideProgressBarInSDKTab(message.data["comp_uid"]);
@@ -385,10 +369,11 @@ function handleMsg() {
   });
 }
 function handlePauseStartPrgBar(message) {
-  if (message.data["isPaused"]) {
-    pbarJson[message.data.componentInfo["comp_uid"]].pausePbar(message.data)
-  } else {
-    pbarJson[message.data.componentInfo["comp_uid"]].restartPbar(message.data)
+  let pbar =pbarJson[message.data.componentInfo["comp_uid"]];
+  if (message.data["isPaused"] && pbar) {
+    pbar.pausePbar(message.data)
+  } else if(pbar) {
+    pbar.restartPbar(message.data)
   }
 }
 function init() {
@@ -450,10 +435,12 @@ class HProgressBar {
     this.hpbarRightArea.setAttribute("class", "hpbarRightArea");
     this.hpbarContiner.appendChild(this.hpbarRightArea);
 
-    this.cancelBtn = document.createElement("button");
-    this.cancelBtn.setAttribute("class", "tg_cancelbutton");
+    this.cancelBtn = document.createElement("i");
+    this.cancelBtn.setAttribute("class", "codicon codicon-chrome-close");
+    this.cancelBtn.setAttribute("style", "cursor:pointer;float:right;padding-top:2px");
+    this.cancelBtn.setAttribute("title", "Cancel Download");
     this.hpbarRightArea.appendChild(this.cancelBtn);
-    this.cancelBtn.innerText = "Cancel";
+
     this.cancelBtn.onclick = this.doCancelDownload.bind(this)
 
   }
@@ -472,9 +459,6 @@ class HProgressBar {
     this.hpbar.style.marginLeft = "0%"
     this.setPBarMsg("")
 
-
-
-
   }
   showMessageWithoutProgressBar(message) {
     // will be called on error or update end
@@ -486,10 +470,6 @@ class HProgressBar {
     this.hpbar.style.width = "0%"
     this.hpbar.style.marginLeft = "0%"
     this.setPBarMsg(message)
-
-
-
-
   }
   showProgressBar(val, message, step, isComp) {
     this.parentEle.style.display = "block"
@@ -509,6 +489,7 @@ class HProgressBar {
         {
           let msg = val != null && val != "" ? message + " " + val + "%" : message
           this.hpbarMsg.innerText = msg;
+          this.hpbarMsg.setAttribute("title", msg)
 
 
           this.hideButtonArea()
@@ -636,8 +617,9 @@ class HProgressBar {
       right = this.hpbarContiner.getBoundingClientRect().right
     }
 
-    this.hpbarMsg.style.width = (right - this.hpbarMsg.getBoundingClientRect().left) - 2 + "px"
+    this.hpbarMsg.style.width = (right - this.hpbarMsg.getBoundingClientRect().left) - 5 + "px"
     this.hpbarMsg.innerText = message
+    this.hpbarMsg.setAttribute("title", message)
 
   }
   clearIndefProgress() {

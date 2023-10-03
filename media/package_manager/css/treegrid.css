@@ -1,7 +1,5 @@
 .table-wrap{
-  min-height: 200px;
-   max-height: 50%; 
-  overflow: auto;
+ overflow: auto;
 }
 .treegrid {
     width: 100%;
@@ -13,44 +11,45 @@
   .treegrid tr {
     display: table-row;
     cursor: default;
-
+    height: 20px;
   }
   .trhover:hover{
-    opacity: .8;
-    background-color: var(--vscode-list-deemphasizedForeground);
+      background: var(--vscode-list-hoverBackground);
+   
   }
   
   /* Extra space between columns for readability */
-  .treegrid th,
+  .treegrid_prow{
+    padding-bottom: 1px;
+     
+  }
   .treegrid td {
-    padding-bottom: 3px;
-    overflow-x: hidden;
+    padding-bottom: 1px;
+    /* overflow: hidden; */
     text-overflow: ellipsis;
+  }
+  .treegrid td :hover{
+    overflow-x: visible;
+   
   }
   
   .treegrid tbody td {
     cursor: default;
     
   }
-  /* .treegrid tbody {
-    height: 200px;
-    overflow: auto;
+ .treegrid tbody {
     
-  } */
- 
-/*   
+  }  
   
   .treegrid-col1 {
-    width: 40%;
   }
   .treegrid-col2
   .treegrid-col3
   .treegrid-col4 {
-    width: 20%;
-  } */
+  } 
+  
   .treegrid th {
     text-align: left;
-    /* background-color: #eee; */
   }
   
   .treegrid a {
@@ -59,24 +58,29 @@
   }
   
 
-  /* .treegrid tr:focus,
-  .treegrid td:focus,
-  .treegrid a:focus  */
-
+  *:focus {
+    outline: none;
+    }
   .childrow:focus
  {
-    /* outline: 2px solid hsl(216deg 94% 70%);
-    background-color: hsl(216deg 80% 97%); */
-    background-color: var(--vscode-list-deemphasizedForeground);
+    background: var(--vscode-list-hoverBackground);
+
   }
-  
+  .treegrid tr:focus
+  {
+     background: var(--vscode-list-hoverBackground);
+     border: none;
+ 
+   }
   .treegrid tr > td:not(:first-child),
   .treegrid tr > th:not(:first-child) {
-    padding-left: 3ch;
+    padding-left: 0.5ch;
+   
   }
   
   .treegrid a:focus {
     border-bottom: none;
+
   }
   
   /* Hide collapsed rows */
@@ -85,12 +89,18 @@
   }
   
   /* Indents */
+  .treegrid tr[aria-level="1"] > td:first-child {
+   
+    cursor: pointer;
+  }
+ 
   .treegrid tr[aria-level="2"] > td:first-child {
-    padding-left: 2.5ch;
+    padding-left: 1.5ch;
+    cursor: pointer;
   }
   
   .treegrid tr[aria-level="3"] > td:first-child {
-    padding-left: 5ch;
+    padding-left: 2.5ch;
   }
   
   .treegrid tr[aria-level="4"] > td:first-child {
@@ -116,12 +126,11 @@
   .treegrid td[aria-expanded]:first-child::before {
     cursor: pointer;
   
-    /* Load both right away so there is no lag when we need the other */
-    /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='black' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
-    */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
-      background-repeat: no-repeat;
+      font-family: "codicon";
+      content: "\eab6";
+      padding-right:15px;
+      vertical-align: sub;
+      font-weight: 900;
   }
   
   .treegrid tr[aria-expanded="true"] > td:first-child::before,
@@ -133,7 +142,7 @@
   .treegrid tr[aria-expanded] > td:focus:first-child::before,
   .treegrid tr:focus > td[aria-expanded]:first-child::before,
   .treegrid tr > td[aria-expanded]:focus:first-child::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
+   
   }
 
   .loader {

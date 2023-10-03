@@ -8,8 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 const { ComponentMgr } = require("./componentManager");
-
-class PackageManagerPanel {
+class PackageManagerSidebar {
   constructor(context) {
     this.context = context;
     this.compMangerObj = new ComponentMgr(context);
@@ -21,6 +20,13 @@ class PackageManagerPanel {
   resolveWebviewView(panel) {
     this.panel = panel;
     this.compMangerObj.panel = panel
+    panel.webview.options = {
+      // Allow scripts in the webview
+      enableScripts: true,
+      retainContextWhenHidden: true,
+      enableForms: true,
+      localResourceRoots: [this.context.extensionUri]
+    };
     this.handle7zipBinPermissionAndResolveWebView(panel)
 
   }
@@ -43,15 +49,10 @@ class PackageManagerPanel {
 
 
   doResolveWebview(panel) {
+
     this.loadSDKManager().then(() => {
 
-      panel.webview.options = {
-        // Allow scripts in the webview
-        enableScripts: true,
-        retainContextWhenHidden: true,
-        enableForms: true,
-        localResourceRoots: [this.context.extensionUri]
-      };
+
 
       panel.webview.html = this.getHtmlForWebview(this.panel.webview);
 
@@ -89,13 +90,13 @@ class PackageManagerPanel {
               };
               this.panel.webview.postMessage(msgComp)
               this.compMangerObj.checkPreReqOnCompInstall(msg.data, this.panel)
-              break; // msg.text
+              break;
             }
 
             case "INSTALL_COMP": {
               this.compMangerObj.installCompAndDependancy(msg.data, this.panel)
 
-              break; // msg.text
+              break;
             }
             case "UNINSTALL_COMP":
               this.compMangerObj.unInstallComp(msg.data, this.panel);
@@ -103,7 +104,7 @@ class PackageManagerPanel {
               break;
             case "CANCEL_DOWNLOAD": {
               this.compMangerObj.cancelDownload(msg.data)
-              break; // msg.text
+              break;
             }
           }
         } catch (error) {
@@ -137,7 +138,6 @@ class PackageManagerPanel {
       .showInformationMessage(header, options, ...["Select Folder"])
       .then((answer) => {
         if (answer === "Select Folder") {
-          // return Promise.resolve();
           this.openFolderDlg();
         } else {
           // do nothing
@@ -270,91 +270,32 @@ class PackageManagerPanel {
       return null;
     }
   }
+
+
   getLoaderHtml() {
+    const loadingUri = this.panel.webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "media",
+        "loading.gif"
+      )
+    );
     return `
-    <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-.center {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background:var(--vscode-activityBar-background);
-}
-.wave {
-  width: 5px;
-  height: 50px;
-  background: linear-gradient(45deg, var(--vscode-textLink-foreground), #fff);
-  margin: 10px;
-  animation: wave 1s linear infinite;
-  border-radius: 20px;
-}
-.wave:nth-child(2) {
-  animation-delay: 0.1s;
-}
-.wave:nth-child(3) {
-  animation-delay: 0.2s;
-}
-.wave:nth-child(4) {
-  animation-delay: 0.3s;
-}
-.wave:nth-child(5) {
-  animation-delay: 0.4s;
-}
-.wave:nth-child(6) {
-  animation-delay: 0.5s;
-}
-.wave:nth-child(7) {
-  animation-delay: 0.6s;
-}
-.wave:nth-child(8) {
-  animation-delay: 0.7s;
-}
-.wave:nth-child(9) {
-  animation-delay: 0.8s;
-}
-.wave:nth-child(10) {
-  animation-delay: 0.9s;
-}
-
-@keyframes wave {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0);
-  }
-}
-}
-</style>
-</head>
-<body>
-
-<div class="center">
- <div style ="font-size:20px;color:white;position:absolute ">Loading</div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
-  <div class="wave"></div>
- 
-</div>
-
-
-
-</body>
-</html>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      </head>
+			<body >
+    
+    <div  style =" display:flex;  justify-content: center; ">
+                <img src="${loadingUri}" style ="width:30px;"></img>
+                </div>
+      </body>
+                </html>
     `
+
   }
   getNoAdminHtml() {
     return `
@@ -396,15 +337,7 @@ class PackageManagerPanel {
         "tabview.css"
       )
     );
-    const tabviewJs = webview.asWebviewUri(
-      vscode.Uri.joinPath(
-        this.context.extensionUri,
-        "media",
-        "package_manager",
-        "js",
-        "tabview.js"
-      )
-    );
+
     const commonJs = webview.asWebviewUri(
       vscode.Uri.joinPath(
         this.context.extensionUri,
@@ -452,6 +385,7 @@ class PackageManagerPanel {
         "all.css"
       )
     );
+    const codiconsUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
 
     return `
         <html lang="en">
@@ -460,48 +394,16 @@ class PackageManagerPanel {
         <link href="${tabviewCss}" rel="stylesheet">
         <link href="${treGridCss}" rel="stylesheet">
         <link href="${faCss}" rel="stylesheet">
+        <link href="${codiconsUri}" rel="stylesheet" />
      
         <dialog open  class="dlg" >
        
-          <div id = "tabs">
-              <div class="tab">
-                <button id="tvhead" class="tablinks" onclick="openTab(event, 'tv')">webOS TV </button>
-                <button id="osehead" class="tablinks" onclick="openTab(event, 'ose')">webOS OSE</button>
-              </div>
-
-              <div id="tv" class="tabcontent">
-           
-                ${this.getCompTreeGridView("tv")}
-                
-                <fieldset id="tvnotes" class="notes">
-                  <legend class="notelegend" >Release Notes</legend>
-                  <div class ="notecontent" id="tvnotecontent"> 
-                   
-                  </div>
-                </fieldset>
-    
-              </div>
-
-              <div id="ose" class="tabcontent">
-       
-              ${this.getCompTreeGridView("ose")}
-             
-                <fieldset id="osenotes" class="notes">
-                <legend class="notelegend" >Release Notes</legend>
-                <div class ="notecontent" id="osenotecontent"> 
-               
-                </div>
-              </fieldset>
-              </div>
-
-                <div style ="padding-top:10px; display: flex; justify-content: space-between;">
-                <div>SDK Location : ${this.compMangerObj.envPath.replace(this.compMangerObj.envPath.charAt(0), this.compMangerObj.envPath.charAt(0).toUpperCase())}</div>
-                <div id ="avlDskSpace"></div>
-              </div>
-              
+        ${this.getAllTreeGridView(["tv", "ose"], ["TV SDK", "OSE SDK"])}
+        <div style ="padding-top:10px">SDK Location : ${this.compMangerObj.envPath.replace(this.compMangerObj.envPath.charAt(0), this.compMangerObj.envPath.charAt(0).toUpperCase())}</div>
+        <div style ="padding-top:5px" id ="avlDskSpace"></div>
+      
       </dialog>
       <script type='text/javascript' src="${commonJs}"></script>
-      <script type='text/javascript' src="${tabviewJs}"></script>
       <script type='text/javascript' src="${treeGridJS}"></script>    
 `;
   }
@@ -510,20 +412,12 @@ class PackageManagerPanel {
       <div class="table-wrap"><table id="${"treegrid_" + id
       }" class="treegrid" role="treegrid" aria-label="sdk">
       <colgroup>
-        <col id="treegrid-col1" style="width:40%">
-        <col id="treegrid-col2" style="width:15%" >
-        <col id="treegrid-col3" style="width:70px" >
-        <col id="treegrid-col4" style="width:15%" >
-        <col id="treegrid-col5" style="width:20px" >
-        <col id="treegrid-col6" style="width:30%" >
+        <col id="treegrid-col1" style="width:20%">
+        <col id="treegrid-col2" style="width:80%" >
       </colgroup>
-      <thead>
+      <thead style="display:none">
         <tr>
-          <th scope="col" >Component</th>
-          <th scope="col" >Version</th>
-          <th scope="col">Status</th>
-          <th scope="col">Disk Space</th>
-          <th scope="col"></th>
+          <th scope="col" ></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -539,12 +433,18 @@ class PackageManagerPanel {
   }
   getTreeTableParentRowHTML(compName, displayName) {
     return `
-      <tr data-compname="${compName}"role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
-        <td role="gridcell">${displayName}</td>
+      <tr class ="trhover" data-compname="${compName}"role="row" aria-level="2" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+        <td role="gridcell" style="width:100%;overflow-x:visibile">${displayName}</td>
+       
         <td role="gridcell"></td>
-        <td role="gridcell"></td>
-        <td role="gridcell"></td>
-        <td role="gridcell"></td>
+      </tr>
+      `;
+  }
+  getTreeTableCatRowHTML(catName) {
+    return `
+      <tr class ="trhover" role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+        <td role="gridcell" style="width:100%;overflow-x:visibile">${catName}</td>
+        
         <td role="gridcell"></td>
       </tr>
       `;
@@ -552,24 +452,13 @@ class PackageManagerPanel {
   getTreeTableChildRowHTML(rowObj, statusJson) {
 
     let rowObjB64 = Buffer.from(JSON.stringify(rowObj)).toString("base64");
+    let prerow = ` ${this.getActionInfoHTML(rowObj["compInfo"]["comp_uid"]
+    )}`
     return `
       <tr class="trhover childrow" data-comp_uid="${rowObj["compInfo"]["comp_uid"]
-      }"  data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="2" aria-posinset="1" aria-setsize="3" >
-      <td role="gridcell">${rowObj["compInfo"].displayName}</td>
-      <td role="gridcell"> ${rowObj["compInfo"].sdk_version}</td>
-     
-      <td role="gridcell"><div id="${rowObj["compUID"]}_check">${statusJson &&
-        statusJson != "" &&
-        statusJson[rowObj["sdk"]] &&
-        statusJson[rowObj["sdk"]][rowObj["compInfo"]["comp_uid"]]
-        ? `<i class="fa fa-check" ></i>`
-        : ""
-      }</div></td>
-      <td role="gridcell"> ${this.convertSize(rowObj["compInfo"].expFileSizeInMB)}</td>
-      <td role="gridcell" style="padding-left:0px">${this.getActionInfoHTML(
-        rowObj["compInfo"]["comp_uid"]
-      )}</td>
-      <td role="gridcell">${this.getActionHTML(
+      }"  data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="3" aria-posinset="1" aria-setsize="3" >
+      <td role="gridcell" title ="Disk Space: ${this.convertSize(rowObj["compInfo"].expFileSizeInMB)}">${prerow}V${rowObj["compInfo"]["sdk_version"]} </td>
+       <td role="gridcell">${this.getActionHTML(
         rowObj,
         rowObj["sdk"],
         statusJson
@@ -598,63 +487,76 @@ class PackageManagerPanel {
       isInstalled = true;
     }
 
-    let html = `<button style="display:${isInstalled ? "none" : "block"}" id="${rowObj["compInfo"]["comp_uid"] + "_install"
+    let html = `<span style="display:${isInstalled ? "none" : "block"}" id="${rowObj["compInfo"]["comp_uid"] + "_install"
 
-      }"  class="tg_button" onclick ="doRowAction('INSTALL_COMP','${Buffer.from(JSON.stringify(rowObj)).toString('base64')}')">Install</button>
-      <button style="display:${isInstalled ? "block" : "none"}"  id="${rowObj["compInfo"]["comp_uid"] + "_uninstall"
-      }" class="tg_button secondary" onclick ="doRowAction('UNINSTALL_COMP','${Buffer.from(JSON.stringify(rowObj)).toString('base64')}')">Uninstall</button>
+      }"   onclick ="doRowAction('INSTALL_COMP','${Buffer.from(JSON.stringify(rowObj)).toString('base64')}')"><i title ="Install" style="cursor:pointer;float:right" class="  codicon codicon-empty-window"></i></span>
+      <span style="display:${isInstalled ? "block" : "none"}"  id="${rowObj["compInfo"]["comp_uid"] + "_uninstall"
+      }" class="" onclick ="doRowAction('UNINSTALL_COMP','${Buffer.from(JSON.stringify(rowObj)).toString('base64')}')"><i title ="Uninstall" style="cursor:pointer;float:right" class=" codicon codicon-trash"></i></span>
         <div class ="loadContainer" data-comp_uid = "${rowObj["compInfo"]["comp_uid"]}"  id="${rowObj["compInfo"]["comp_uid"] + "_loaderContainer"
       }">
        
         </div>
       `;
     return html;
+
   }
   getActionInfoHTML(comp_uid) {
     return `
-    <div style="display:none" id ="${comp_uid + "_rowIcon"}" class="rowIcon"
+    <span style="display:none" id ="${comp_uid + "_rowIcon"}" class="rowIcon"
       onmouseover ="showTooltipMsg('${comp_uid}')" onmouseout ="hideTooltipMsg('${comp_uid}')"> 
       <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
      <div style="display:none" id="${comp_uid + "_rowIconText"
       }" class="rowIconText"></div>
-    </div>
+    </span>
     `;
   }
-  getCompTreeGridView(sdk) {
+
+  getAllTreeGridView(sdks, sdkNames) {
+
     let configData = this.configData;
     let statusJson = this.compMangerObj.getStatusJson();
     if (configData != "") {
-      let config = configData[sdk];
-
       let treeHTML = "";
-      for (let i = 0; i < config["components"].length; i++) {
-        let compName = config["components"][i]["type"];
-        treeHTML =
-          treeHTML +
-          this.getTreeTableParentRowHTML(
-            compName,
-            config["components"][i]["displayName"]
-          );
-        for (let j = 0; j < config[compName].length; j++) {
-          let rowObj = {};
-          rowObj["sdk"] = sdk;
-          rowObj["sdkDirName"] = config["subDirName"];
-          rowObj["compName"] = compName;
-          rowObj["displayName"] = config["components"][i]["displayName"];
-          rowObj["compDirName"] = config["components"][i]["subDirName"];
-          rowObj["compUID"] = config[compName][j]["comp_uid"];
-          rowObj["compInfo"] = config[compName][j];
+      for (let k = 0; k < sdks.length; k++) {
+        let config = configData[sdks[k]];
+
+        treeHTML = treeHTML + this.getTreeTableCatRowHTML(sdkNames[k]);
+
+        for (let i = 0; i < config["components"].length; i++) {
+          let compName = config["components"][i]["type"];
           treeHTML =
-            treeHTML + this.getTreeTableChildRowHTML(rowObj, statusJson);
+            treeHTML +
+            this.getTreeTableParentRowHTML(
+              compName,
+              config["components"][i]["displayName"]
+            );
+
+          for (let j = 0; j < config[compName].length; j++) {
+            let rowObj = {};
+            rowObj["sdk"] = sdks[k];
+            rowObj["sdkDirName"] = config["subDirName"];
+            rowObj["compName"] = compName;
+            rowObj["displayName"] = config["components"][i]["displayName"];
+            rowObj["compDirName"] = config["components"][i]["subDirName"];
+            rowObj["compUID"] = config[compName][j]["comp_uid"];
+            rowObj["compInfo"] = config[compName][j];
+
+            treeHTML =
+              treeHTML + this.getTreeTableChildRowHTML(rowObj, statusJson);
+          }
         }
+
       }
       treeHTML =
-        this.getTreeTableHeaderHTML(sdk) +
+        this.getTreeTableHeaderHTML("_all") +
         treeHTML +
         this.getTreeTableFooterHTML();
       return treeHTML;
     }
+
   }
+
+
 }
-PackageManagerPanel.viewType = 'pkgmgr';
-exports.PackageManagerPanel = PackageManagerPanel;
+PackageManagerSidebar.viewType = 'packageMgr';
+exports.PackageManagerSidebar = PackageManagerSidebar;

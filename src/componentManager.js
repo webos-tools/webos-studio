@@ -9,7 +9,8 @@ const fs = require("fs");
 const sudoExec = util.promisify(require("sudo-prompt-alt").exec);
 const os = require("os");
 const { isElevated } = require("./lib/isElevated");
-const Downloader = require("nodejs-file-downloader");
+
+const { DownloaderHelper } = require('node-downloader-helper');
 const createDesktopShortcut = require("create-desktop-shortcuts");
 const fetch = require("node-fetch");
 const path = require("path");
@@ -886,7 +887,7 @@ class ComponentMgr {
         this.saveStatusJson(this.statusJson);
 
       } catch (e) {
-        // console.log("error-", e);
+        console.log("error-", e);
 
       }
     }
@@ -1294,6 +1295,7 @@ class ComponentMgr {
 
   }
   clearAllDirOnCancel(msgData) {
+
     let compInfo = null;
     if (msgData["comp_uid"] == "ose_resourcemonitor_1") {
       compInfo = {
@@ -1372,7 +1374,9 @@ class ComponentMgr {
     let sdkErrMsg = {
       command: "ERROR_PACKAGE_MANAGER",
       data: { ...msgData },
-      errMsg: error.message,
+      errMsg: error.message
+
+
     };
     this.panel.webview.postMessage(sdkErrMsg);
     logger.error(`${selComp.displayName} - ${error.message}`)
@@ -2026,7 +2030,7 @@ class InstallManager {
     this.processingQIndex = -1;
     this.installingDep = [];
     this.downloaders = {}
-    this.sudoPWD =null;
+    this.sudoPWD = null;
   }
   removeQItem(qItem) {
     qItem["isProcessed"] = true;
@@ -2041,7 +2045,7 @@ class InstallManager {
     this.componentMgr.updateInstallingStatusPreReqAndDepJsonOfOtherDepOnError(false, qItem.msgData.sdk, qItem.msgData.component, qItem.msgData.componentInfo.comp_uid, qItem);
     // update inst status for other prequest and compoonents
     this.removeQItem(qItem);
-    logger.error(`${depInstallItem.displayName} ${depInstallItem["downloadInfo"]["version"]} ${err} `)
+    logger.error(`${depInstallItem.displayName} ${depInstallItem["downloadInfo"]["version"]} ${err.message} `)
     this.componentMgr.clearAllDirOnCancel({ comp_uid: qItem.msgData.componentInfo.comp_uid, isComp: false })
 
   }
@@ -2082,7 +2086,7 @@ class InstallManager {
     // send error msg
 
     this.removeQItem(qItem);
-    logger.error(`${qItem.msgData.componentInfo.displayName} ${err}`)
+    logger.error(`${qItem.msgData.componentInfo.displayName} ${err.message}`)
     this.componentMgr.clearAllDirOnCancel({ comp_uid: qItem.msgData.componentInfo.comp_uid, isComp: true })
   }
   qCompletionHandlerForComp(msgComp, qItem) {
@@ -2124,7 +2128,6 @@ class InstallManager {
   async processQue() {
     for (let i = 0; i < this.downloadQue.length; i++) {
       let qItem = this.downloadQue[i];
-      //  qItem.msgData.componentInfo.displayName
       this.processingQIndex = i;
       if (qItem.isProcessing) {
         continue;
@@ -2286,21 +2289,12 @@ class InstallManager {
                   let command = "";
                   switch (osStr) {
                     case "linux":
-                      // command = `chmod -R  a+rwx /home/$USER`;
                       command = `chmod -R  777 /home/.nvm`;
                       break;
                     case "darwin":
-                      // command = `chmod -R  a+rwx /usr/local`;
-                      // command = `echo 'export PATH=/usr/local/bin:$PATH' >>~/.bash\_profile && source ~/.bashrc`
-                      //   command = `echo 'export NVM_DIR="$HOME/.nvm"
-                      //  [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"  
-                      //  [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion" '  >> ~/.bash_profile `
                       command = `echo 'source $(brew --prefix nvm)/nvm.sh ' >> ~/.bash_profile `
 
                       await this.executeSudoCommand(command, true);
-                      //   command = `echo 'export NVM_DIR="$HOME/.nvm"
-                      //  [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" 
-                      //  [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"'  >> ~/.bashrc `
                       command = `echo 'source $(brew --prefix nvm)/nvm.sh ' >> ~/.bashrc `
 
                       break;
@@ -3579,7 +3573,7 @@ class InstallManager {
                 });
               if (!respBaseUrl) return;
               const data = await respBaseUrl.json();
-              let fileId = this.getSimulatorFileId(data, qItem.msgData.componentInfo.sdk_version, qItem.msgData.componentInfo.tvos_version);
+              let fileId = this.getSimulatorFileId(data, qItem.msgData.componentInfo.sdk_version_act, qItem.msgData.componentInfo.tvos_version);
 
               const respCompUrl = await fetch("https://developer.lge.com/resource/tv/RetrieveToolDownloadUrl.dev?fileId=" + fileId)
                 .catch((err) => {
@@ -4489,7 +4483,6 @@ class InstallManager {
         linux: {
           filePath: `/usr/bin/gnome-terminal`,
           arguments: ` -- sh  "${path.join(filePath, "LG_webOS_TV_Emulator.sh")}" `,
-          // filePath: path.join(filePath, "LG_webOS_TV_Emulator.sh"),
           name: displayName + " " + version,
           icon: path.join(filePath, "DTVEmulator.png"),
         },
@@ -4681,9 +4674,10 @@ class InstallManager {
     }
     return "";
   }
-  async downloadDepItem(downladInfo, comp_uid, key, qItem, depInstallItem) {
-    return new Promise(async (resolve, reject) => {
 
+  async downloadDepItem(downladInfo, comp_uid, key, qItem, depInstallItem) {
+
+    return new Promise(async (resolve, reject) => {
       let msgComp = {
         command: "PRG_UPDATE",
         data: {
@@ -4696,57 +4690,73 @@ class InstallManager {
         },
       };
       logger.info(`Downloading ${depInstallItem.displayName} from ${downladInfo.location}`)
-      const downloader = new Downloader({
-        url: downladInfo.location,
-        directory: path.join(this.componentMgr.envPath, "Downloads"),
-        cloneFiles: false,
-        timeout: 10000,
-        maxAttempts: 2,
-        onProgress: (percentage, chunk, remainingSize) => {
-          if (percentage == 100) {
-            logger.info(`Downloaded ${depInstallItem.displayName} from ${downladInfo.location}`)
-          }
-          percentage = parseInt(percentage);// / 2
-          msgComp.data.message = "Downloading"
-          msgComp.data.val = parseInt(percentage);
-          this.panel.webview.postMessage(msgComp);
 
-        },
-        onBeforeSave: (deducedName) => {
-          qItem["downloadedFileName"] = deducedName;
-        },
-        onError: (err) => {
-          logger.error(`${depInstallItem.displayName} - ${err}`)
-          // console.log(err)
+      const downloader = new DownloaderHelper(downladInfo.location, path.join(this.componentMgr.envPath, "Downloads"),
+        {
+          timeout: 10000,
+          resumeOnIncompleteMaxRetry: 5,
+          resumeOnIncomplete: true, // Resume download if the file is incomplete (set false if using any pipe that modifies the file)
+          retry: { maxRetries: 12, delay: 5000 }, // { maxRetries: number, delay: number in ms } or false to disable (default)
+          forceResume: true, // If the server does not return the "accept-ranges" header, can be force if it does support it
+          progressThrottle: 1000, // interval time of the 'progress.throttled' event will be emitted
+          override: true
         }
-      });
-      try {
-
-        this.downloaders[comp_uid] = downloader
-        await downloader.download();
+      );
+      downloader.on('end', (downladInfo) => {
         delete this.downloaders[comp_uid]
-
+        logger.info(`Downloaded ${depInstallItem.displayName} from ${downladInfo.location}`)
         resolve();
-      } catch (error) {
-        let dlCancel = {
-          command: "DOWNLOAD_CANCELED",
-          data: {
-            row_uid: comp_uid + "_" + key,
-            comp_uid: comp_uid,
-            isComp: false,
+      });
+      downloader.on('error', (err) => {
+        logger.error(`${depInstallItem.displayName} - ${err.message}`)
+      });
 
-          },
-        };
+      downloader.on('start', () => {
+      });
+      downloader.on('retry', (attempt, retryOpts, err) => {
+        logger.info(`Retrying Download ${depInstallItem.displayName} from ${downladInfo.location}`)
+      });
+      downloader.on('resume', () => {
+      });
+      downloader.on('timeout', () => {
+      });
+      downloader.on('stop', () => {
+        logger.info(`Download ${depInstallItem.displayName} cancelled `)
+        delete this.downloaders[comp_uid]
+        reject({ "code": "ERR_REQUEST_CANCELLED", "message": "Request Cancelled" })
+      });
+      downloader.on('progress.throttled', (stats) => {
 
-        if (error.code === "ERR_REQUEST_CANCELLED") {
-          logger.info(`Download ${depInstallItem.displayName} cancelled `)
-        } else {
-
+        if (stats.progress == 100) {
+          logger.info(`Downloaded ${depInstallItem.displayName} from ${downladInfo.location}`)
         }
-        reject(error);
-      }
+        let percentage = parseInt(stats.progress);/// 2
+        msgComp.data.message = "Downloading";
+        msgComp.data.val = parseInt(percentage);
+        this.panel.webview.postMessage(msgComp);
+
+      });
+
+      downloader.on('download', (downloadInfo) => {
+        qItem["downloadedFileName"] = downloadInfo.fileName;
+        logger.info(`Downloading ${depInstallItem.displayName} to  ${downloadInfo.filePath}`)
+
+      });
+
+      this.downloaders[comp_uid] = downloader
+
+      await downloader.start()
+        .catch((err) => {
+          logger.error(`${depInstallItem.displayName} - ${err}`)
+          delete this.downloaders[comp_uid]
+          reject(err);
+        });
+
+
     });
   }
+
+
   downloadCompItem(url, comp_uid, qItem) {
 
     return new Promise(async (resolve, reject) => {
@@ -4762,52 +4772,69 @@ class InstallManager {
         },
       };
       logger.info(`Downloading ${qItem.msgData.componentInfo.displayName} from ${url}`)
-      const downloader = new Downloader({
-        url: url,
-        directory: path.join(this.componentMgr.envPath, "Downloads"),
-        cloneFiles: false,
-        timeout: 10000,
-        maxAttempts: 2,
-        onProgress: (percentage, chunk, remainingSize) => {
-          if (percentage == 100) {
-            logger.info(`Downloaded ${qItem.msgData.componentInfo.displayName} from ${url}`)
-          }
-          percentage = parseInt(percentage);/// 2
-          msgComp.data.message = "Downloading";
-          msgComp.data.val = parseInt(percentage);
-          this.panel.webview.postMessage(msgComp);
-        },
-        onBeforeSave: (deducedName) => {
-          qItem["downloadedFileName"] = deducedName;
-        },
-        onError: (err) => {
-          logger.error(`${qItem.msgData.componentInfo.displayName} - ${err}`)
-          // console.log(err)
+
+      const downloader = new DownloaderHelper(url, path.join(this.componentMgr.envPath, "Downloads"),
+        {
+          timeout: 10000,
+          resumeOnIncompleteMaxRetry: 5,
+          resumeOnIncomplete: true, // Resume download if the file is incomplete (set false if using any pipe that modifies the file)
+          retry: { maxRetries: 12, delay: 5000 }, // { maxRetries: number, delay: number in ms } or false to disable (default)
+          forceResume: true, // If the server does not return the "accept-ranges" header, can be force if it does support it
+          progressThrottle: 1000, // interval time of the 'progress.throttled' event will be emitted
+          override: true
         }
+      );
+      downloader.on('end', (downladInfo) => {
+        delete this.downloaders[comp_uid]
+        logger.info(`Downloaded ${qItem.msgData.componentInfo.displayName} from ${url}`)
+        resolve();
+      });
+      downloader.on('error', (err) => {
+        logger.error(`${qItem.msgData.componentInfo.displayName} - ${err.message}`)
       });
 
-      try {
-        this.downloaders[comp_uid] = downloader
-        await downloader.download();
+      downloader.on('start', () => {
+      });
+      downloader.on('retry', (attempt, retryOpts, err) => {
+        logger.info(`Retrying Download ${qItem.msgData.componentInfo.displayName} from ${url}`)
+      });
+      downloader.on('resume', () => {
+      });
+      downloader.on('timeout', () => {
+      });
+      downloader.on('stop', () => {
+        logger.info(`Download ${qItem.msgData.componentInfo.displayName} cancelled `)
         delete this.downloaders[comp_uid]
-        resolve();
-      } catch (error) {
-        let dlCancel = {
-          command: "DOWNLOAD_CANCELED",
-          data: {
-            row_uid: comp_uid,
-            comp_uid: comp_uid,
-            isComp: true,
-          },
-        };
+        reject({ "code": "ERR_REQUEST_CANCELLED", "message": "Request Cancelled" })
+      });
+      downloader.on('progress.throttled', (stats) => {
 
-        if (error.code === "ERR_REQUEST_CANCELLED") {
-          logger.info(`Download ${qItem.msgData.componentInfo.displayName} cancelled `)
-        } else {
-
+        if (stats.progress == 100) {
+          logger.info(`Downloaded ${qItem.msgData.componentInfo.displayName} from ${url}`)
         }
-        reject(error);
-      }
+        let percentage = parseInt(stats.progress);
+        msgComp.data.message = "Downloading";
+        msgComp.data.val = parseInt(percentage);
+        this.panel.webview.postMessage(msgComp);
+
+      });
+
+      downloader.on('download', (downloadInfo) => {
+        qItem["downloadedFileName"] = downloadInfo.fileName;
+        logger.info(`Downloading ${qItem.msgData.componentInfo.displayName} to  ${downloadInfo.filePath}`)
+
+      });
+
+      this.downloaders[comp_uid] = downloader
+
+      await downloader.start()
+        .catch((err) => {
+          logger.error(`${qItem.msgData.componentInfo.displayName} - ${err}`)
+          delete this.downloaders[comp_uid]
+          reject(err);
+        });
+
+
     });
   }
 
@@ -4815,7 +4842,8 @@ class InstallManager {
     let msgComp = {
       command: "ERROR_PACKAGE_MANAGER",
       data: { ...qItem["msgData"] },
-      errMsg: error["code"] == "ERR_REQUEST_CANCELLED" ? "" : error.message,
+      errMsg: error["code"] == "ERR_REQUEST_CANCELLED" ? "" : error.message
+
     };
     this.panel.webview.postMessage(msgComp);
   }
@@ -4868,8 +4896,7 @@ class InstallManager {
 
   }
   cancelDownloader(msgData) {
-    this.downloaders[msgData["comp_uid"]].cancel();
-
+    this.downloaders[msgData["comp_uid"]].stop();
 
   }
 
@@ -4905,17 +4932,14 @@ class InstallManager {
 
         }
         if (error) {
-          // console.log(error);
           reject(error);
         }
         if (stderr) {
-          // console.log(stderr);
         }
         resolve(stdout);
       });
     });
   }
- 
 
   async executeSudoCommand(command, isSilent) {
     return new Promise(async (resolve, reject) => {
