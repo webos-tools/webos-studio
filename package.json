@@ -157,7 +157,7 @@
             },
             {
                 "command": "webapp.reloadPreview",
-                "title": "webOS OSE: Reload WebApp Preview"
+                "title": "webOS: Reload WebApp Preview"
             },
             {
                 "command": "webosose.installGlobal",
@@ -194,11 +194,11 @@
             },
             {
                 "command": "webosose.previewApp",
-                "title": "webOS OSE: Preview Application"
+                "title": "webOS: Preview Application"
             },
             {
                 "command": "webosose.runWithoutInstall",
-                "title": "webOS OSE: Auto Reload"
+                "title": "webOS: Auto Reload"
             },
             {
                 "command": "webosose.packageApp",
@@ -270,11 +270,11 @@
             },
             {
                 "command": "webosose.explorermenu.appPreview",
-                "title": "webOS OSE: Preview Application"
+                "title": "webOS: Preview Application"
             },
             {
                 "command": "webosose.explorermenu.runWithoutInstall",
-                "title": "webOS OSE: Auto Reload"
+                "title": "webOS: Auto Reload"
             },
             {
                 "command": "webosose.explorermenu.debug",
