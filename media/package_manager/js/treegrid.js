@@ -404,28 +404,10 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
       case LEFT:
         moveByRow(-1);
         break;
-
-        // if (isEditableFocused()) {
-        //   return; 
-        // }
-        // if (isRowFocused()) {
-        //   changeExpanded(false) || moveByRow(-1, true);
-        // } else {
-        //   moveByCol(-1);
-        // }
-        // break;
       case RIGHT:
         moveByRow(1);
         break;
-        // if (isEditableFocused()) {
-        //   return; 
-        // }
 
-    
-        // if (!isRowFocused() || !changeExpanded(true)) {
-        //   moveByCol(1);
-        // }
-        // break;
       case CTRL_HOME:
         moveToExtremeRow(-1);
         break;
@@ -477,15 +459,12 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     var left = range.getBoundingClientRect().left;
     var EXPANDO_WIDTH = 20;
 
-    // if (event.clientX < left && event.clientX > left - EXPANDO_WIDTH) {
       changeExpanded(!isExpanded(row), row);
-    // }
   
   }
 
   function onDoubleClick(event) {
     var row = getContainingRow(event.target);
-    // setReleaseNote(row,treegridElem)
     if (row) {
       if (isExpandable(row)) {
         changeExpanded(!isExpanded(row), row);
@@ -497,7 +476,6 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   initAttributes();
   treegridElem.addEventListener('keydown', onKeyDown);
   treegridElem.addEventListener('click', onClick);
-  // treegridElem.addEventListener('dblclick', onDoubleClick);
  
   window.addEventListener(
     window.onfocusin ? 'focusin' : 'focus',
