@@ -52,8 +52,6 @@ class PackageManagerSidebar {
 
     this.loadSDKManager().then(() => {
 
-
-
       panel.webview.html = this.getHtmlForWebview(this.panel.webview);
 
       setTimeout(() => {
@@ -126,7 +124,7 @@ class PackageManagerSidebar {
       }
 
     });
-
+  
   }
   promptForSDKDir() {
     const header = "Configuring Package Manager";
@@ -253,12 +251,13 @@ class PackageManagerSidebar {
     this.compMangerObj.addDirectoriesIfNotAvl();
     this.compMangerObj.addStatusJsonIfNotAvl();
     this.compMangerObj.getStatusJson();
-    await this.compMangerObj.updateCompStatus()
-    await this.compMangerObj.updatePreReqStatus()
+    await this.compMangerObj.updateCompStatus();
+    await this.compMangerObj.updatePreReqStatus();
     this.compMangerObj.getDependancyJson();
-    this.compMangerObj.clearDownloadDir()
+    this.compMangerObj.clearDownloadDir();
     this.compMangerObj.updateAvailableDiskspaceOnEnvPath();
     this.compMangerObj.addEnvIfMissing();
+    this.compMangerObj.promptIfTVSDKInstallerIsAvailable();
 
   }
 
@@ -270,7 +269,6 @@ class PackageManagerSidebar {
       return null;
     }
   }
-
 
   getLoaderHtml() {
     const loadingUri = this.panel.webview.asWebviewUri(

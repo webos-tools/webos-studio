@@ -124,6 +124,33 @@ class ComponentMgr {
     }
 
   }
+  promptIfTVSDKInstallerIsAvailable() {
+    let tvsdk = this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
+    let sdkHome = this.getEnvVarValue("LG_WEBOS_STUDIO_SDK_HOME");
+
+    if (sdkHome && tvsdk) {
+
+      if (fs.existsSync(tvsdk) && !tvsdk.includes(sdkHome)) {
+        let isEmpty = false
+        let files = fs.readdirSync(tvsdk)
+        if (!files.length) {
+          isEmpty = true;
+        }
+        if (!isEmpty) {
+          vscode.window.showInformationMessage("webOS Studio",
+         {
+            detail: `Found TV SDK in ${tvsdk}, Please uninstall TV SDK to install TV components in Package Manager`,
+            modal: true,
+          }
+          );
+
+        }
+
+      }
+
+    }
+
+  }
   addDirectoriesIfNotAvl() {
     // on Loading of the Package manager this will be called to create required dir if not available
 
@@ -1411,28 +1438,98 @@ class ComponentMgr {
       }
     }
     logger.info(`${selComp.displayName} - Uninstalling.`)
-    switch (selComp.uninstallMethod) {
-      case "OSE_CLI_UNINSTALL_FORALL": {
-        let osStr = os.platform().toLowerCase();
-        let command = ` npm uninstall -g @webosose/ares-cli `;
-        if (osStr == "darwin") {
-          command = "source ~/.bashrc && " + command;
-        } else if (osStr == "linux") {
-          command = ". ~/.bashrc && " + command;
-        }
-        msgComp["data"]["message"] = "Uninstalling via NPM";
-        this.panel.webview.postMessage(msgComp);
 
-        await this.uninstallFromNPM(command, msgComp)
-          .then(() => {
+    // moved to timer functin as logger prints(above line )after finising in the uninstallation operaton
+    setTimeout(async () => {
+      switch (selComp.uninstallMethod) {
+        case "OSE_CLI_UNINSTALL_FORALL": {
+          let osStr = os.platform().toLowerCase();
+          let command = ` npm uninstall -g @webosose/ares-cli `;
+          if (osStr == "darwin") {
+            command = "source ~/.bashrc && " + command;
+          } else if (osStr == "linux") {
+            command = ". ~/.bashrc && " + command;
+          }
+          msgComp["data"]["message"] = "Uninstalling via NPM";
+          this.panel.webview.postMessage(msgComp);
+
+          await this.uninstallFromNPM(command, msgComp)
+            .then(() => {
+              msgComp["command"] = "PRG_UPDATE_COMP";
+              msgComp["data"]["message"] = "Uninstalled successfully";
+              this.panel.webview.postMessage(msgComp);
+
+              let instCompMsg = {
+                command: "UNINSTALL_COMP_COMPLETE",
+                data: {
+
+                  sdk: msgData.sdk,
+                  component: msgData.component,
+                  componentInfo: {
+                    sdk_version: msgData.componentInfo.sdk_version,
+                    apiLevel: msgData.componentInfo.apiLevel,
+                    comp_uid: msgData.componentInfo.comp_uid,
+                  },
+                },
+              };
+              this.panel.webview.postMessage(instCompMsg);
+              logger.info(`${selComp.displayName} - Uninstalled.`)
+              delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
+              this.saveStatusJson(this.statusJson);
+            })
+            .catch((error) => {
+              msgComp["data"]["message"] = error.message;
+              msgComp["data"]["isError"] = true;
+              this.panel.webview.postMessage(msgComp);
+              this.handleCompUnInstallMsg(error, msgData, selComp)
+            });
+
+          break;
+        }
+        case "TV_CLI_UNINSTALL_FORALL": {
+          try {
+            let tvPath = this.envPath_TV;//this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
+            const desktopDir = path.join(os.homedir(), "Desktop");
+            let osStr = os.platform().toLowerCase();
+
+            if (tvPath) {
+              let ext = ".lnk";
+              if (osStr == "darwin") {
+                ext = "";
+
+              } else if (osStr == 'linux') {
+                ext = ".desktop"
+              }
+
+              let tvCLIPath = path.join(tvPath, "CLI");
+              this.removeDir(tvCLIPath);
+              let linkfile = selComp.displayName + ext
+              let shortcutPath = path.join(
+                desktopDir,
+                selComp.displayName + ext
+              );
+
+              fs.readdirSync(desktopDir).forEach((file) => {
+                if (file == linkfile) {
+                  fs.unlinkSync(shortcutPath);
+                }
+              });
+
+            }
+
+            // remove environment variable
+            this.deleteEnvPathVariableSync(path.join(tvPath, "CLI"));
+            this.deleteEnvPathVariableSync(path.join(tvPath, "CLI", "bin"));
             msgComp["command"] = "PRG_UPDATE_COMP";
             msgComp["data"]["message"] = "Uninstalled successfully";
             this.panel.webview.postMessage(msgComp);
+            delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
+            this.saveStatusJson(this.statusJson);
 
+            // send complete msg
             let instCompMsg = {
               command: "UNINSTALL_COMP_COMPLETE",
               data: {
-
                 sdk: msgData.sdk,
                 component: msgData.component,
                 componentInfo: {
@@ -1444,359 +1541,294 @@ class ComponentMgr {
             };
             this.panel.webview.postMessage(instCompMsg);
             logger.info(`${selComp.displayName} - Uninstalled.`)
+          } catch (error) {
+            this.handleCompUnInstallMsg(error, msgData, selComp)
+          }
+          break;
+        }
+        case "OSE_EMULATOR_UNINSTALL_FORALL":
+        case "TV_EMULATOR_UNINSTALL_FORALL": {
+          let instName = compInstallInfo["instName"];
+
+          await this.installManager
+            .vbox_getRunningInstance()
+            .then(async (runningInstance) => {
+              let commands = [];
+              let vboxcmd = this.getVboxCommandPath();
+              if (runningInstance.includes(`"${instName}"`)) {
+                commands = [
+                  `${vboxcmd} controlvm "${instName}" pause`,
+                  `${vboxcmd} controlvm "${instName}" poweroff`,
+                  `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                  `${vboxcmd} unregistervm "${instName}" --delete`,
+                ];
+              } else {
+                commands = [`${vboxcmd} unregistervm "${instName}" --delete`];
+              }
+
+              await this.installManager
+                .exec_commands(commands.join(" && "))
+                .then(async () => {
+                  try {
+                    this.removeVmdk(selComp, instName);
+                  } catch { }
+                  msgComp["command"] = "PRG_UPDATE_COMP";
+                  msgComp["data"]["message"] = "Uninstalled successfully";
+                  this.panel.webview.postMessage(msgComp);
+                  delete this.statusJson[msgData.sdk][
+                    msgData.componentInfo.comp_uid
+                  ];
+                  this.saveStatusJson(this.statusJson);
+                  // send complete msg
+                  let instCompMsg = {
+                    command: "UNINSTALL_COMP_COMPLETE",
+                    data: {
+                      sdk: msgData.sdk,
+                      component: msgData.component,
+                      componentInfo: {
+                        sdk_version: msgData.componentInfo.sdk_version,
+                        apiLevel: msgData.componentInfo.apiLevel,
+                        comp_uid: msgData.componentInfo.comp_uid,
+                      },
+                    },
+                  };
+                  this.panel.webview.postMessage(instCompMsg);
+                  logger.info(`${selComp.displayName} - Uninstalled.`)
+                })
+                .catch((err) => {
+                  this.handleCompUnInstallMsg(err, msgData, selComp)
+                  logger.error(`${selComp.displayName} - ${err}`)
+
+                });
+            });
+
+
+          break;
+        }
+        case "TV_SIMULATOR_UNINSTALL_FORALL": {
+          try {
+            let tvPath = this.envPath_TV;// this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
+            const desktopDir = path.join(os.homedir(), "Desktop");
+            let osStr = os.platform().toLowerCase();
+
+            if (tvPath) {
+              let ext = ".lnk";
+              if (osStr == "darwin") {
+                ext = "";
+
+              } else if (osStr == 'linux') {
+                ext = ".desktop"
+              }
+
+              let tvEmulatorPath = path.join(tvPath, msgData.componentSubDirName, msgData.componentInfo.subDirName);
+              this.removeDir(tvEmulatorPath);
+
+              if (fs.readdirSync(path.join(tvPath, msgData.componentSubDirName)).length === 0) {
+                this.removeDir(path.join(tvPath, msgData.componentSubDirName));
+              }
+              let linkfile = selComp.displayName + ext
+              let shortcutPath = path.join(
+                desktopDir,
+                selComp.displayName + ext
+              );
+
+              fs.readdirSync(desktopDir).forEach((file) => {
+                if (file == linkfile) {
+                  fs.unlinkSync(shortcutPath);
+                }
+              });
+
+            }
+
+
+
+            msgComp["command"] = "PRG_UPDATE_COMP";
+            msgComp["data"]["message"] = "Uninstalled successfully";
+            this.panel.webview.postMessage(msgComp);
             delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
             this.saveStatusJson(this.statusJson);
-          })
-          .catch((error) => {
-            msgComp["data"]["message"] = error.message;
-            msgComp["data"]["isError"] = true;
-            this.panel.webview.postMessage(msgComp);
+
+            // send complete msg
+            let instCompMsg = {
+              command: "UNINSTALL_COMP_COMPLETE",
+              data: {
+                sdk: msgData.sdk,
+                component: msgData.component,
+                componentInfo: {
+                  sdk_version: msgData.componentInfo.sdk_version,
+                  apiLevel: msgData.componentInfo.apiLevel,
+                  comp_uid: msgData.componentInfo.comp_uid,
+                },
+              },
+            };
+            this.panel.webview.postMessage(instCompMsg);
+            logger.info(`${selComp.displayName} - Uninstalled.`)
+          } catch (error) {
             this.handleCompUnInstallMsg(error, msgData, selComp)
-          });
-
-        break;
-      }
-      case "TV_CLI_UNINSTALL_FORALL": {
-        try {
-          let tvPath = this.envPath_TV;//this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
-          const desktopDir = path.join(os.homedir(), "Desktop");
-          let osStr = os.platform().toLowerCase();
-
-          if (tvPath) {
-            let ext = ".lnk";
-            if (osStr == "darwin") {
-              ext = "";
-
-            } else if (osStr == 'linux') {
-              ext = ".desktop"
-            }
-
-            let tvCLIPath = path.join(tvPath, "CLI");
-            this.removeDir(tvCLIPath);
-            let linkfile = selComp.displayName + ext
-            let shortcutPath = path.join(
-              desktopDir,
-              selComp.displayName + ext
-            );
-
-            fs.readdirSync(desktopDir).forEach((file) => {
-              if (file == linkfile) {
-                fs.unlinkSync(shortcutPath);
-              }
-            });
-
           }
-
-          // remove environment variable
-          this.deleteEnvPathVariableSync(path.join(tvPath, "CLI"));
-          this.deleteEnvPathVariableSync(path.join(tvPath, "CLI", "bin"));
-          msgComp["command"] = "PRG_UPDATE_COMP";
-          msgComp["data"]["message"] = "Uninstalled successfully";
-          this.panel.webview.postMessage(msgComp);
-          delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
-          this.saveStatusJson(this.statusJson);
-
-          // send complete msg
-          let instCompMsg = {
-            command: "UNINSTALL_COMP_COMPLETE",
-            data: {
-              sdk: msgData.sdk,
-              component: msgData.component,
-              componentInfo: {
-                sdk_version: msgData.componentInfo.sdk_version,
-                apiLevel: msgData.componentInfo.apiLevel,
-                comp_uid: msgData.componentInfo.comp_uid,
-              },
-            },
-          };
-          this.panel.webview.postMessage(instCompMsg);
-          logger.info(`${selComp.displayName} - Uninstalled.`)
-        } catch (error) {
-          this.handleCompUnInstallMsg(error, msgData, selComp)
+          break;
         }
-        break;
-      }
-      case "OSE_EMULATOR_UNINSTALL_FORALL":
-      case "TV_EMULATOR_UNINSTALL_FORALL": {
-        let instName = compInstallInfo["instName"];
+        case "TV_BEANVISER_UNINSTALL_FORALL": {
+          try {
+            let tvPath = this.envPath_TV;
+            const desktopDir = path.join(os.homedir(), "Desktop");
+            let osStr = os.platform().toLowerCase();
 
-        await this.installManager
-          .vbox_getRunningInstance()
-          .then(async (runningInstance) => {
-            let commands = [];
-            let vboxcmd = this.getVboxCommandPath();
-            if (runningInstance.includes(`"${instName}"`)) {
-              commands = [
-                `${vboxcmd} controlvm "${instName}" pause`,
-                `${vboxcmd} controlvm "${instName}" poweroff`,
-                `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                `${vboxcmd} unregistervm "${instName}" --delete`,
-              ];
-            } else {
-              commands = [`${vboxcmd} unregistervm "${instName}" --delete`];
-            }
+            if (tvPath) {
+              let ext = ".lnk";
+              if (osStr == "darwin") {
+                ext = "";
 
-            await this.installManager
-              .exec_commands(commands.join(" && "))
-              .then(async () => {
-                try {
-                  this.removeVmdk(selComp, instName);
-                } catch { }
-                msgComp["command"] = "PRG_UPDATE_COMP";
-                msgComp["data"]["message"] = "Uninstalled successfully";
-                this.panel.webview.postMessage(msgComp);
-                delete this.statusJson[msgData.sdk][
-                  msgData.componentInfo.comp_uid
-                ];
-                this.saveStatusJson(this.statusJson);
-                // send complete msg
-                let instCompMsg = {
-                  command: "UNINSTALL_COMP_COMPLETE",
-                  data: {
-                    sdk: msgData.sdk,
-                    component: msgData.component,
-                    componentInfo: {
-                      sdk_version: msgData.componentInfo.sdk_version,
-                      apiLevel: msgData.componentInfo.apiLevel,
-                      comp_uid: msgData.componentInfo.comp_uid,
-                    },
-                  },
-                };
-                this.panel.webview.postMessage(instCompMsg);
-                logger.info(`${selComp.displayName} - Uninstalled.`)
-              })
-              .catch((err) => {
-                this.handleCompUnInstallMsg(err, msgData, selComp)
-                logger.error(`${selComp.displayName} - ${err}`)
+              } else if (osStr == 'linux') {
+                ext = ".desktop"
+              }
 
+              let tvBeanviserPath = path.join(tvPath, msgData.componentSubDirName);
+              this.removeDir(tvBeanviserPath);
+              let linkfile = selComp.displayName + ext
+              let shortcutPath = path.join(
+                desktopDir,
+                selComp.displayName + ext
+              );
+
+              fs.readdirSync(desktopDir).forEach((file) => {
+                if (file == linkfile) {
+                  fs.unlinkSync(shortcutPath);
+                }
               });
-          });
 
-
-        break;
-      }
-      case "TV_SIMULATOR_UNINSTALL_FORALL": {
-        try {
-          let tvPath = this.envPath_TV;// this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
-          const desktopDir = path.join(os.homedir(), "Desktop");
-          let osStr = os.platform().toLowerCase();
-
-          if (tvPath) {
-            let ext = ".lnk";
-            if (osStr == "darwin") {
-              ext = "";
-
-            } else if (osStr == 'linux') {
-              ext = ".desktop"
             }
 
-            let tvEmulatorPath = path.join(tvPath, msgData.componentSubDirName, msgData.componentInfo.subDirName);
-            this.removeDir(tvEmulatorPath);
+            // remove environment variable
 
-            if (fs.readdirSync(path.join(tvPath, msgData.componentSubDirName)).length === 0) {
-              this.removeDir(path.join(tvPath, msgData.componentSubDirName));
-            }
-            let linkfile = selComp.displayName + ext
-            let shortcutPath = path.join(
-              desktopDir,
-              selComp.displayName + ext
-            );
+            msgComp["command"] = "PRG_UPDATE_COMP";
+            msgComp["data"]["message"] = "Uninstalled successfully";
+            this.panel.webview.postMessage(msgComp);
+            delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
+            this.saveStatusJson(this.statusJson);
 
-            fs.readdirSync(desktopDir).forEach((file) => {
-              if (file == linkfile) {
-                fs.unlinkSync(shortcutPath);
+            // send complete msg
+            let instCompMsg = {
+              command: "UNINSTALL_COMP_COMPLETE",
+              data: {
+                sdk: msgData.sdk,
+                component: msgData.component,
+                componentInfo: {
+                  sdk_version: msgData.componentInfo.sdk_version,
+                  apiLevel: msgData.componentInfo.apiLevel,
+                  comp_uid: msgData.componentInfo.comp_uid,
+                },
+              },
+            };
+            this.panel.webview.postMessage(instCompMsg);
+            logger.info(`${selComp.displayName} - Uninstalled.`)
+          } catch (error) {
+            this.handleCompUnInstallMsg(error, msgData, selComp)
+          }
+          break;
+        }
+        case "OSE_WFDESIGNER_UNINSTALL_FORALL": {
+          try {
+            let sdkPath = this.envPath;//this.getEnvVarValue("LG_WEBOS_STUDIO_SDK_HOME");
+            const desktopDir = path.join(os.homedir(), "Desktop");
+            let osStr = os.platform().toLowerCase();
+
+            if (sdkPath) {
+              let ext = ".lnk";
+              if (osStr == "darwin") {
+                ext = "";
+
+              } else if (osStr == 'linux') {
+                ext = ".desktop"
               }
-            });
 
-          }
+              let toolPath = path.join(sdkPath, "OSE", msgData.componentSubDirName);
+              this.removeDir(toolPath);
+              let linkfile = selComp.displayName + ext
+              let shortcutPath = path.join(
+                desktopDir,
+                selComp.displayName + ext
+              );
 
+              fs.readdirSync(desktopDir).forEach((file) => {
+                if (file == linkfile) {
+                  fs.unlinkSync(shortcutPath);
+                }
+              });
 
-
-          msgComp["command"] = "PRG_UPDATE_COMP";
-          msgComp["data"]["message"] = "Uninstalled successfully";
-          this.panel.webview.postMessage(msgComp);
-          delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
-          this.saveStatusJson(this.statusJson);
-
-          // send complete msg
-          let instCompMsg = {
-            command: "UNINSTALL_COMP_COMPLETE",
-            data: {
-              sdk: msgData.sdk,
-              component: msgData.component,
-              componentInfo: {
-                sdk_version: msgData.componentInfo.sdk_version,
-                apiLevel: msgData.componentInfo.apiLevel,
-                comp_uid: msgData.componentInfo.comp_uid,
-              },
-            },
-          };
-          this.panel.webview.postMessage(instCompMsg);
-          logger.info(`${selComp.displayName} - Uninstalled.`)
-        } catch (error) {
-          this.handleCompUnInstallMsg(error, msgData, selComp)
-        }
-        break;
-      }
-      case "TV_BEANVISER_UNINSTALL_FORALL": {
-        try {
-          let tvPath = this.envPath_TV;
-          const desktopDir = path.join(os.homedir(), "Desktop");
-          let osStr = os.platform().toLowerCase();
-
-          if (tvPath) {
-            let ext = ".lnk";
-            if (osStr == "darwin") {
-              ext = "";
-
-            } else if (osStr == 'linux') {
-              ext = ".desktop"
             }
+            msgComp["command"] = "PRG_UPDATE_COMP";
+            msgComp["data"]["message"] = "Uninstalled successfully";
+            this.panel.webview.postMessage(msgComp);
+            delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
+            this.saveStatusJson(this.statusJson);
 
-            let tvBeanviserPath = path.join(tvPath, msgData.componentSubDirName);
-            this.removeDir(tvBeanviserPath);
-            let linkfile = selComp.displayName + ext
-            let shortcutPath = path.join(
-              desktopDir,
-              selComp.displayName + ext
-            );
-
-            fs.readdirSync(desktopDir).forEach((file) => {
-              if (file == linkfile) {
-                fs.unlinkSync(shortcutPath);
-              }
-            });
-
-          }
-
-          // remove environment variable
-
-          msgComp["command"] = "PRG_UPDATE_COMP";
-          msgComp["data"]["message"] = "Uninstalled successfully";
-          this.panel.webview.postMessage(msgComp);
-          delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
-          this.saveStatusJson(this.statusJson);
-
-          // send complete msg
-          let instCompMsg = {
-            command: "UNINSTALL_COMP_COMPLETE",
-            data: {
-              sdk: msgData.sdk,
-              component: msgData.component,
-              componentInfo: {
-                sdk_version: msgData.componentInfo.sdk_version,
-                apiLevel: msgData.componentInfo.apiLevel,
-                comp_uid: msgData.componentInfo.comp_uid,
+            // send complete msg
+            let instCompMsg = {
+              command: "UNINSTALL_COMP_COMPLETE",
+              data: {
+                sdk: msgData.sdk,
+                component: msgData.component,
+                componentInfo: {
+                  sdk_version: msgData.componentInfo.sdk_version,
+                  apiLevel: msgData.componentInfo.apiLevel,
+                  comp_uid: msgData.componentInfo.comp_uid,
+                },
               },
-            },
-          };
-          this.panel.webview.postMessage(instCompMsg);
-          logger.info(`${selComp.displayName} - Uninstalled.`)
-        } catch (error) {
-          this.handleCompUnInstallMsg(error, msgData, selComp)
+            };
+            this.panel.webview.postMessage(instCompMsg);
+            logger.info(`${selComp.displayName} - Uninstalled.`)
+          } catch (error) {
+            this.handleCompUnInstallMsg(error, msgData, selComp)
+          }
+          break;
         }
-        break;
-      }
-      case "OSE_WFDESIGNER_UNINSTALL_FORALL": {
-        try {
-          let sdkPath = this.envPath;//this.getEnvVarValue("LG_WEBOS_STUDIO_SDK_HOME");
-          const desktopDir = path.join(os.homedir(), "Desktop");
-          let osStr = os.platform().toLowerCase();
+        case "OSE_RESMONITOR_UNINSTALL_FORALL": {
+          try {
+            let sdkPath = this.envPath;
+            let osStr = os.platform().toLowerCase();
 
-          if (sdkPath) {
-            let ext = ".lnk";
-            if (osStr == "darwin") {
-              ext = "";
+            if (sdkPath) {
 
-            } else if (osStr == 'linux') {
-              ext = ".desktop"
+              let toolPath = path.join(sdkPath, "OSE", msgData.componentSubDirName);//, msgData.componentInfo.subDirName
+              this.removeDir(toolPath);
+
             }
+            msgComp["command"] = "PRG_UPDATE_COMP";
+            msgComp["data"]["message"] = "Uninstalled successfully";
+            this.panel.webview.postMessage(msgComp);
+            delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
+            this.dependancyJson[msgData.sdk]["ose-resourcemonitor"][msgData.componentInfo.comp_uid]["influxdb"]["downloadInfo"]["isInstalled"] = false
+            this.dependancyJson[msgData.sdk]["ose-resourcemonitor"][msgData.componentInfo.comp_uid]["influxdb"]["isInstalledReqVer"] = false
 
-            let toolPath = path.join(sdkPath, "OSE", msgData.componentSubDirName);
-            this.removeDir(toolPath);
-            let linkfile = selComp.displayName + ext
-            let shortcutPath = path.join(
-              desktopDir,
-              selComp.displayName + ext
-            );
 
-            fs.readdirSync(desktopDir).forEach((file) => {
-              if (file == linkfile) {
-                fs.unlinkSync(shortcutPath);
-              }
-            });
+            this.saveStatusJson(this.statusJson);
 
-          }
-          msgComp["command"] = "PRG_UPDATE_COMP";
-          msgComp["data"]["message"] = "Uninstalled successfully";
-          this.panel.webview.postMessage(msgComp);
-          delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
-          this.saveStatusJson(this.statusJson);
-
-          // send complete msg
-          let instCompMsg = {
-            command: "UNINSTALL_COMP_COMPLETE",
-            data: {
-              sdk: msgData.sdk,
-              component: msgData.component,
-              componentInfo: {
-                sdk_version: msgData.componentInfo.sdk_version,
-                apiLevel: msgData.componentInfo.apiLevel,
-                comp_uid: msgData.componentInfo.comp_uid,
+            // send complete msg
+            let instCompMsg = {
+              command: "UNINSTALL_COMP_COMPLETE",
+              data: {
+                sdk: msgData.sdk,
+                component: msgData.component,
+                componentInfo: {
+                  sdk_version: msgData.componentInfo.sdk_version,
+                  apiLevel: msgData.componentInfo.apiLevel,
+                  comp_uid: msgData.componentInfo.comp_uid,
+                },
               },
-            },
-          };
-          this.panel.webview.postMessage(instCompMsg);
-          logger.info(`${selComp.displayName} - Uninstalled.`)
-        } catch (error) {
-          this.handleCompUnInstallMsg(error, msgData, selComp)
-        }
-        break;
-      }
-      case "OSE_RESMONITOR_UNINSTALL_FORALL": {
-        try {
-          let sdkPath = this.envPath;
-          let osStr = os.platform().toLowerCase();
-
-          if (sdkPath) {
-
-            let toolPath = path.join(sdkPath, "OSE", msgData.componentSubDirName);//, msgData.componentInfo.subDirName
-            this.removeDir(toolPath);
-
+            };
+            this.panel.webview.postMessage(instCompMsg);
+            logger.info(`${selComp.displayName} - Uninstalled.`)
+          } catch (error) {
+            this.handleCompUnInstallMsg(error, msgData, selComp)
           }
-          msgComp["command"] = "PRG_UPDATE_COMP";
-          msgComp["data"]["message"] = "Uninstalled successfully";
-          this.panel.webview.postMessage(msgComp);
-          delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
-          this.dependancyJson[msgData.sdk]["ose-resourcemonitor"][msgData.componentInfo.comp_uid]["influxdb"]["downloadInfo"]["isInstalled"] = false
-          this.dependancyJson[msgData.sdk]["ose-resourcemonitor"][msgData.componentInfo.comp_uid]["influxdb"]["isInstalledReqVer"] = false
+          break;
 
-
-          this.saveStatusJson(this.statusJson);
-
-          // send complete msg
-          let instCompMsg = {
-            command: "UNINSTALL_COMP_COMPLETE",
-            data: {
-              sdk: msgData.sdk,
-              component: msgData.component,
-              componentInfo: {
-                sdk_version: msgData.componentInfo.sdk_version,
-                apiLevel: msgData.componentInfo.apiLevel,
-                comp_uid: msgData.componentInfo.comp_uid,
-              },
-            },
-          };
-          this.panel.webview.postMessage(instCompMsg);
-          logger.info(`${selComp.displayName} - Uninstalled.`)
-        } catch (error) {
-          this.handleCompUnInstallMsg(error, msgData, selComp)
         }
-        break;
-
       }
-    }
-    this.updateAvailableDiskspaceOnEnvPath();
+      this.updateAvailableDiskspaceOnEnvPath();
+
+    }, 1);
   }
   removeVmdk(selComp, instName) {
     let fileLocation = "";
@@ -1858,11 +1890,14 @@ class ComponentMgr {
     }
 
   }
-  async removeDir(installedPath) {
+  removeDir(installedPath) {
     try {
       fs.rmSync(installedPath, { recursive: true, force: true });
+      return true;
     } catch (e) {
-      console.log(e)
+      logger.info("Unable to remove the folder -" + installedPath + " , Please remove manually ")
+      logger.error("Error removing -" + installedPath + " - " + e.message)
+      return false;
     }
 
   }
@@ -4696,7 +4731,7 @@ class InstallManager {
           timeout: 10000,
           resumeOnIncompleteMaxRetry: 5,
           resumeOnIncomplete: true, // Resume download if the file is incomplete (set false if using any pipe that modifies the file)
-          retry: { maxRetries: 12, delay: 5000 }, // { maxRetries: number, delay: number in ms } or false to disable (default)
+          retry: { maxRetries: 4, delay: 5000 }, // { maxRetries: number, delay: number in ms } or false to disable (default)
           forceResume: true, // If the server does not return the "accept-ranges" header, can be force if it does support it
           progressThrottle: 1000, // interval time of the 'progress.throttled' event will be emitted
           override: true
@@ -4704,7 +4739,7 @@ class InstallManager {
       );
       downloader.on('end', (downladInfo) => {
         delete this.downloaders[comp_uid]
-        logger.info(`Downloaded ${depInstallItem.displayName} from ${downladInfo.location}`)
+        // logger.info(`Downloaded ${depInstallItem.displayName} from ${downladInfo.location}`)
         resolve();
       });
       downloader.on('error', (err) => {
@@ -4721,7 +4756,7 @@ class InstallManager {
       downloader.on('timeout', () => {
       });
       downloader.on('stop', () => {
-        logger.info(`Download ${depInstallItem.displayName} cancelled `)
+  //      logger.info(`Download ${depInstallItem.displayName} cancelled `)
         delete this.downloaders[comp_uid]
         reject({ "code": "ERR_REQUEST_CANCELLED", "message": "Request Cancelled" })
       });
@@ -4778,7 +4813,7 @@ class InstallManager {
           timeout: 10000,
           resumeOnIncompleteMaxRetry: 5,
           resumeOnIncomplete: true, // Resume download if the file is incomplete (set false if using any pipe that modifies the file)
-          retry: { maxRetries: 12, delay: 5000 }, // { maxRetries: number, delay: number in ms } or false to disable (default)
+          retry: { maxRetries: 4, delay: 5000 }, // { maxRetries: number, delay: number in ms } or false to disable (default)
           forceResume: true, // If the server does not return the "accept-ranges" header, can be force if it does support it
           progressThrottle: 1000, // interval time of the 'progress.throttled' event will be emitted
           override: true
@@ -4803,7 +4838,7 @@ class InstallManager {
       downloader.on('timeout', () => {
       });
       downloader.on('stop', () => {
-        logger.info(`Download ${qItem.msgData.componentInfo.displayName} cancelled `)
+        // logger.info(`Download ${qItem.msgData.componentInfo.displayName} cancelled `)
         delete this.downloaders[comp_uid]
         reject({ "code": "ERR_REQUEST_CANCELLED", "message": "Request Cancelled" })
       });
