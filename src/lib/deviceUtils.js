@@ -68,7 +68,7 @@ async function getInstalledList(device) {
     await ares.installList(device)
         .then(value => {
             appList = value.split(/\r?\n/);
-            appList = appList.filter(id => id !== '');
+            appList = appList.filter(id => id !== '' && !id.includes('[Info]'));
         }).catch(err => {
             let errMsg = `Failed to list the applications installed on ${device}`;
             if (err.includes(`Unknown method "running" for category "/dev"`)) {
