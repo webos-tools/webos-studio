@@ -110,6 +110,22 @@ async function showPrompt() {
         });
 }
 
+async function showEmulatorPrompt() {
+    await vscode.window.showInformationMessage(
+        `This extension needs webos-emulator.
+             Click 𝐘𝐞𝐬 to approve installing this, else install this manually by referring to
+             https://webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-launcher/.`,
+        ...["Yes", "No"]
+    )
+        .then(async (answer) => {
+            if (answer === "Yes") {
+                installEmulatorLauncher();
+            } else {
+                vscode.window.showInformationMessage(`Please install webos-emulator manually.`);
+            }
+        });
+}
+
 async function getSudoPassword() {
     return new Promise((resolve, reject) => {
         vscode.window.showInputBox({
@@ -133,5 +149,6 @@ module.exports = {
     installGlobalLibrary: installGlobalLibrary,
     installEmulatorLauncher: installEmulatorLauncher,
     showPrompt: showPrompt,
+    showEmulatorPrompt: showEmulatorPrompt,
     getSudoPassword: getSudoPassword
 }

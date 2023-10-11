@@ -7,6 +7,7 @@ const path = require('path');
 const { exec } = require('child_process');
 const { getCliPath } = require('./configUtils');
 const { logger } = require('./logger');
+const { showEmulatorPrompt } = require('../installGlobalLibrary');
 let instanceList = [];
 
 function _sortByName(a, b) {
@@ -41,9 +42,7 @@ function _execAsync(cmd, option, next) {
                         vscode.window.showWarningMessage(`Warning! Unable to find the VirtualBox.`)
                         reject("Unable to find the installed  VirtualBox");
                     } else {
-                        vscode.window.showWarningMessage(`Warning! Unable to find the webos-emulator.\
-                            Please install webos-emulator by referring to \
-                            https://webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-launcher/`)
+                        showEmulatorPrompt();
                         reject("Unable to find the installed  webos-emulator");
                     }
                 } else {
