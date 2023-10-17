@@ -254,18 +254,35 @@
 		}
 	},
 	"dependencies": {
-		"tv": {
-			"tv-cli": {
+		"common": {
+			"int-cli": {
 				"win32": {
-					"-default-": {}
+					"-default-": {
+						"nvm": ">=0.0.1",
+						"node": ">=10.24.1"
+					}
 				},
 				"linux": {
-					"-default-": {}
+					"-default-": {
+						"nvm": ">=0.0.1",
+						"node": ">=10.24.1"
+					},
+					"18.04": {
+						"nvm": ">=0.0.1",
+						"node": ">=10.24.1"
+					}
 				},
 				"darwin": {
-					"-default-": {}
+					"-default-": {
+						"brew":">=0.0.1",
+						"nvm": ">=0.0.1",
+						"node": ">=10.24.1"
+					}
 				}
-			},
+			}
+		},
+		"tv": {
+		
 			"tv-emulator": {
 				"win32": {
 					"-default-": {
@@ -310,31 +327,7 @@
 			}
 		},
 		"ose": {
-			"ose-cli": {
-				"win32": {
-					"-default-": {
-						"nvm": ">=0.0.1",
-						"node": ">=10.24.1"
-					}
-				},
-				"linux": {
-					"-default-": {
-						"nvm": ">=0.0.1",
-						"node": ">=10.24.1"
-					},
-					"18.04": {
-						"nvm": ">=0.0.1",
-						"node": ">=10.24.1"
-					}
-				},
-				"darwin": {
-					"-default-": {
-						"brew":">=0.0.1",
-						"nvm": ">=0.0.1",
-						"node": ">=10.24.1"
-					}
-				}
-			},
+		
 			"ose-emulator": {
 				"win32": {
 					"-default-": {

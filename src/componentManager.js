@@ -22,6 +22,38 @@ const _7z = require("7zip-min");
 const { logger } = require('./lib/logger');
 
 
+const ignoreList = [
+  // # All
+  '^npm-debug\\.log$', // Error log for npm
+  '^\\..*\\.swp$', // Swap file for vim state
+  // # macOS
+  '^\\.DS_Store$', // Stores custom folder attributes
+  '^\\.AppleDouble$', // Stores additional file resources
+  '^\\.LSOverride$', // Contains the absolute path to the app to be used
+  '^Icon\\r$', // Custom Finder icon: http://superuser.com/questions/298785/icon-file-on-os-x-desktop
+  '^\\._.*', // Thumbnail
+  '^\\.Spotlight-V100(?:$|\\/)', // Directory that might appear on external disk
+  '\\.Trashes', // File that might appear on external disk
+  '^__MACOSX$', // Resource fork
+  // # Linux
+  '~$', // Backup file
+  // # Windows
+  '^Thumbs\\.db$', // Image file cache
+  '^ehthumbs\\.db$', // Folder config file
+  '^[Dd]esktop\\.ini$', // Stores custom folder attributes
+  '@eaDir$', // Synology Diskstation "hidden" folder where the server stores thumbnails
+];
+let junkRegex = new RegExp(ignoreList.join('|'));
+
+function isNotJunk(filename) {
+  return !isJunk(filename);
+}
+function isJunk(filename) {
+  return junkRegex.test(filename);
+}
+
+
+
 
 class ComponentMgr {
   constructor(context) {
@@ -93,6 +125,7 @@ class ComponentMgr {
 
     this.dependancyJson["tv"] = this.getCompPreReqJsonStatusCompreWithVersion("tv")["tv"];
     this.dependancyJson["ose"] = this.getCompPreReqJsonStatusCompreWithVersion("ose")["ose"];
+    this.dependancyJson["common"] = this.getCompPreReqJsonStatusCompreWithVersion("common")["common"];
   }
   addStatusJsonIfNotAvl() {
     // this will copy the Status json in the Config Dir
@@ -100,29 +133,25 @@ class ComponentMgr {
       preReq: {},
       tv: {},
       ose: {},
+      common: {}
     };
 
     let filePath = path.join(this.envPath, "Config", "status.json");
-    if (!fs.existsSync(filePath)) {
-      var dirname = path.dirname(filePath);
-      if (!fs.existsSync(dirname)) {
-        fs.mkdirSync(dirname, { recursive: true });
-      }
-
-      fs.writeFileSync(filePath, JSON.stringify(statusJson), "utf8");
+    //  if (!fs.existsSync(filePath)) {
+    var dirname = path.dirname(filePath);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
     }
+
+    fs.writeFileSync(filePath, JSON.stringify(statusJson), "utf8");
+    //}
   }
   addEnvIfMissing() {
     let tvsdk = this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
     if (!tvsdk) {
       this.setAnyEnvVariable("LG_WEBOS_TV_SDK_HOME", path.join(this.envPath, "TV"))
     }
-    let tvclisdk = this.getEnvVarValue("WEBOS_CLI_TV");
-    if (!tvclisdk) {
-      this.setAnyEnvVariable("WEBOS_CLI_TV", path.join(this.envPath, "TV", "CLI", "bin"))
-
-    }
-
+  
   }
   promptIfTVSDKInstallerIsAvailable() {
     let tvsdk = this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
@@ -132,16 +161,16 @@ class ComponentMgr {
 
       if (fs.existsSync(tvsdk) && !tvsdk.includes(sdkHome)) {
         let isEmpty = false
-        let files = fs.readdirSync(tvsdk)
+        let files = fs.readdirSync(tvsdk).filter(isNotJunk)
         if (!files.length) {
           isEmpty = true;
         }
         if (!isEmpty) {
           vscode.window.showInformationMessage("webOS Studio",
-         {
-            detail: `Found TV SDK in ${tvsdk}, Please uninstall TV SDK to install TV components in Package Manager`,
-            modal: true,
-          }
+            {
+              detail: `Found TV SDK in ${tvsdk}, Please uninstall TV SDK to install TV components in Package Manager`,
+              modal: true,
+            }
           );
 
         }
@@ -174,6 +203,10 @@ class ComponentMgr {
       fs.mkdirSync(dirname, { recursive: true });
     }
     dirname = path.join(this.envPath, "OSE");
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
+    }
+    dirname = path.join(this.envPath, "Common");
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
@@ -645,7 +678,7 @@ class ComponentMgr {
 
     // get the comp installed status and update status json 
     let osStr = os.platform().toLowerCase();
-    let sdkLst = ["tv", "ose"];
+    let sdkLst = ["common", "tv", "ose"];
 
     for (let j = 0; j < sdkLst.length; j++) {
       try {
@@ -655,30 +688,7 @@ class ComponentMgr {
             this.configJson[sdkLst[j]][components[k]["type"]];
           let command = "";
           switch (components[k]["type"]) {
-            case "tv-cli":
-              // ONLY ONE TV CLI
-              {
-                let comp_uid = compDetailsJsonArray[0]["comp_uid"];
-                command = `"${path.join(this.envPath_TV, "CLI", "bin", "ares")}"` + " -V";
-
-                let stdout = this.executeCommandSync(command);
-                if (stdout) {
-                  let ver = stdout
-                    .replace("Version:", "")
-                    .replace("webOS TV CLI", "")
-                    .replace("\r:", "")
-                    .trim();
-
-                  this.statusJson[sdkLst[j]][comp_uid] = {
-                    sdk_version: ver,
-                    location: path.join(this.envPath_TV, "CLI", "bin")//this.getEnvVarValue("WEBOS_CLI_TV"),
-                  };
-                } else {
-                  delete this.statusJson[sdkLst[j]][comp_uid];
-                }
-
-              }
-              break;
+          
             case "ose-cli":
               {
                 command = "ares -V";
@@ -689,6 +699,33 @@ class ComponentMgr {
                   command = ". ~/.bashrc && " + command;
                 }
                 // ONLY ONE OSE CLI
+                let comp_uid = compDetailsJsonArray[0]["comp_uid"];
+
+                let stdout = this.executeCommandSync(command);
+                if (stdout) {
+                  let ver = stdout
+                    .replace("Version:", "")
+                    .replace("\r:", "")
+                    .trim();
+                  this.statusJson[sdkLst[j]][comp_uid] = {
+                    sdk_version: ver,
+                    location: "NPM_GLOBAL",
+                  };
+                } else {
+                  delete this.statusJson[sdkLst[j]][comp_uid];
+                }
+              }
+              break;
+            case "int-cli":
+              {
+                command = "ares -V";
+
+                if (osStr == "darwin") {
+                  command = "source ~/.bashrc && " + command;
+                } else if (osStr == "linux") {
+                  command = ". ~/.bashrc && " + command;
+                }
+                // ONLY ONE Intgrated CLI
                 let comp_uid = compDetailsJsonArray[0]["comp_uid"];
 
                 let stdout = this.executeCommandSync(command);
@@ -1133,6 +1170,12 @@ class ComponentMgr {
         ...msgData,
       },
     };
+
+    // if (msgData.component == "tv-emulator" && !this.statusJson["tv"]["tv_cli_1"]) {
+
+    //   logger.info("TV CLI not found, Please install TV CLI before launching TV Emulator")
+
+    // }
     // check Admin previlate
     if (await isElevated()) {
       // ask for confiration for pre req install  if yes send   complete req
@@ -1319,7 +1362,6 @@ class ComponentMgr {
   async cancelDownload(msgData) {
     this.installManager.cancelDownloader(msgData);
     this.clearAllDirOnCancel(msgData)
-
   }
   clearAllDirOnCancel(msgData) {
 
@@ -1340,9 +1382,12 @@ class ComponentMgr {
 
       if (fs.existsSync(dirPath)) {
         try {
+
+
           fs.rmSync(dirPath, { recursive: true, force: true });
           var dirname = path.dirname(dirPath);
-          if (path.basename(dirname) != "TV" && path.basename(dirname) != "OSE" && fs.readdirSync(dirname).length === 0) {
+
+          if (path.basename(dirname) != "TV" && path.basename(dirname) != "OSE" && fs.readdirSync(dirname).filter(isNotJunk).length == 0) {
             this.removeDir(dirname);
           }
           if (msgData["comp_uid"] == "ose_resourcemonitor_1") {
@@ -1486,66 +1531,56 @@ class ComponentMgr {
 
           break;
         }
-        case "TV_CLI_UNINSTALL_FORALL": {
-          try {
-            let tvPath = this.envPath_TV;//this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
-            const desktopDir = path.join(os.homedir(), "Desktop");
-            let osStr = os.platform().toLowerCase();
+        case "INT_CLI_UNINSTALL_FORALL": {
+          let osStr = os.platform().toLowerCase();
+          let command = ` npm unlink @webosose/ares-cli -g`;
+          // let command = ` npm uninstall -g @webosose/ares-cli `;
 
-            if (tvPath) {
-              let ext = ".lnk";
-              if (osStr == "darwin") {
-                ext = "";
-
-              } else if (osStr == 'linux') {
-                ext = ".desktop"
-              }
-
-              let tvCLIPath = path.join(tvPath, "CLI");
-              this.removeDir(tvCLIPath);
-              let linkfile = selComp.displayName + ext
-              let shortcutPath = path.join(
-                desktopDir,
-                selComp.displayName + ext
-              );
-
-              fs.readdirSync(desktopDir).forEach((file) => {
-                if (file == linkfile) {
-                  fs.unlinkSync(shortcutPath);
-                }
-              });
-
-            }
-
-            // remove environment variable
-            this.deleteEnvPathVariableSync(path.join(tvPath, "CLI"));
-            this.deleteEnvPathVariableSync(path.join(tvPath, "CLI", "bin"));
-            msgComp["command"] = "PRG_UPDATE_COMP";
-            msgComp["data"]["message"] = "Uninstalled successfully";
-            this.panel.webview.postMessage(msgComp);
-            delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
-            this.saveStatusJson(this.statusJson);
-
-            // send complete msg
-            let instCompMsg = {
-              command: "UNINSTALL_COMP_COMPLETE",
-              data: {
-                sdk: msgData.sdk,
-                component: msgData.component,
-                componentInfo: {
-                  sdk_version: msgData.componentInfo.sdk_version,
-                  apiLevel: msgData.componentInfo.apiLevel,
-                  comp_uid: msgData.componentInfo.comp_uid,
-                },
-              },
-            };
-            this.panel.webview.postMessage(instCompMsg);
-            logger.info(`${selComp.displayName} - Uninstalled.`)
-          } catch (error) {
-            this.handleCompUnInstallMsg(error, msgData, selComp)
+          if (osStr == "darwin") {
+            command = "source ~/.bashrc && " + command;
+          } else if (osStr == "linux") {
+            command = ". ~/.bashrc && " + command;
           }
+          msgComp["data"]["message"] = "Uninstalling via NPM";
+          this.panel.webview.postMessage(msgComp);
+
+          await this.uninstallFromNPM(command, msgComp)
+            .then(() => {
+              let compLocation = path.join(this.envPath, "Common", "CLI");
+              this.removeDir(compLocation);
+
+              msgComp["command"] = "PRG_UPDATE_COMP";
+              msgComp["data"]["message"] = "Uninstalled successfully";
+              this.panel.webview.postMessage(msgComp);
+
+              let instCompMsg = {
+                command: "UNINSTALL_COMP_COMPLETE",
+                data: {
+
+                  sdk: msgData.sdk,
+                  component: msgData.component,
+                  componentInfo: {
+                    sdk_version: msgData.componentInfo.sdk_version,
+                    apiLevel: msgData.componentInfo.apiLevel,
+                    comp_uid: msgData.componentInfo.comp_uid,
+                  },
+                },
+              };
+              this.panel.webview.postMessage(instCompMsg);
+              logger.info(`${selComp.displayName} - Uninstalled.`)
+              delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
+              this.saveStatusJson(this.statusJson);
+            })
+            .catch((error) => {
+              msgComp["data"]["message"] = error.message;
+              msgComp["data"]["isError"] = true;
+              this.panel.webview.postMessage(msgComp);
+              this.handleCompUnInstallMsg(error, msgData, selComp)
+            });
+
           break;
         }
+
         case "OSE_EMULATOR_UNINSTALL_FORALL":
         case "TV_EMULATOR_UNINSTALL_FORALL": {
           let instName = compInstallInfo["instName"];
@@ -1623,7 +1658,7 @@ class ComponentMgr {
               let tvEmulatorPath = path.join(tvPath, msgData.componentSubDirName, msgData.componentInfo.subDirName);
               this.removeDir(tvEmulatorPath);
 
-              if (fs.readdirSync(path.join(tvPath, msgData.componentSubDirName)).length === 0) {
+              if (fs.readdirSync(path.join(tvPath, msgData.componentSubDirName)).filter(isNotJunk).length === 0) {
                 this.removeDir(path.join(tvPath, msgData.componentSubDirName));
               }
               let linkfile = selComp.displayName + ext
@@ -1859,7 +1894,8 @@ class ComponentMgr {
     if (fileLocation != "") {
       try {
         this.removeDir(fileLocation);
-        if (fs.readdirSync(compLocation).length === 0) {
+
+        if (fs.readdirSync(compLocation).filter(isNotJunk).length == 0) {
           this.removeDir(compLocation);
         }
         const desktopDir = path.join(os.homedir(), "Desktop");
@@ -1926,7 +1962,7 @@ class ComponentMgr {
       });
     });
   }
-  getNPMProgram() {
+  getNPMProgram(withoutProfileLoader) {
     let osStr = os.platform().toLowerCase();
     let profileLoader = "";
     if (osStr == "linux") {
@@ -1953,8 +1989,13 @@ class ComponentMgr {
     } else {
       npmPrg = `"${npmPrg}"`
     }
+    if (withoutProfileLoader) {
+      return npmPrg.replace(/\"/g, '')
 
-    return `${profileLoader} ${npmPrg}`
+    } else {
+      return `${profileLoader} ${npmPrg}`
+
+    }
   }
   getNpmGloablFolder() {
     let command = `${this.getNPMProgram()} root -g `;
@@ -3064,7 +3105,7 @@ class InstallManager {
                         ), desPathForextact, comp_uid + "_" + key, depInstallItem)
                         .then(async () => {
 
-                          let exFile = fs.readdirSync(desPathForextact);
+                          let exFile = fs.readdirSync(desPathForextact).filter(isNotJunk);
                           await this.unzipFile(
                             path.join(desPathForextact, exFile[0]),
                             destPath,
@@ -3077,7 +3118,7 @@ class InstallManager {
                               `chmod -R 777 "${path.join(destPath)}"`, true
                             );
                             if (fs.existsSync(destPath)) {
-                              let subdir = fs.readdirSync(destPath);
+                              let subdir = fs.readdirSync(destPath).filter(isNotJunk);
                               if (subdir.length > 0) {
 
                                 this.updateSettingJson("influxdb", path.join(destPath, subdir[0]))
@@ -3108,7 +3149,7 @@ class InstallManager {
                           msgComp["data"]["message"] = "Extracted successfully";
                           this.panel.webview.postMessage(msgComp);
                           if (fs.existsSync(destPath)) {
-                            let subdir = fs.readdirSync(destPath);
+                            let subdir = fs.readdirSync(destPath).filter(isNotJunk);
                             if (subdir.length > 0) {
                               this.updateSettingJson("influxdb", path.join(destPath, subdir[0]))
 
@@ -3147,168 +3188,7 @@ class InstallManager {
 
 
       switch (qItem.msgData.componentInfo.installMethod) {
-        case "TV_CLI_INSTALL_FORALL":
-          try {
-            let msgComp = {
-              command: "PRG_UPDATE",
-              data: {
-                row_uid: comp_uid,
-                comp_uid: comp_uid,
-                displayName: qItem.msgData.componentInfo.shortName,
-                message: "Downloading",
-                step: "DOWNLOADING",
-                val: 0,
-                isError: false,
-              },
-            };
-            this.panel.webview.postMessage(msgComp);
-            const respBaseUrl = await fetch(qItem.msgData.componentInfo.repository)
-              .catch((err) => {
-                this.qRejectHandlerForComp(err, msgComp, qItem);
-              });
-            if (!respBaseUrl) return;
-            const data = await respBaseUrl.json();
-            let fileId = this.getFileId(data);
 
-            const respCompUrl = await fetch("https://developer.lge.com/resource/tv/RetrieveToolDownloadUrl.dev?fileId=" + fileId)
-              .catch((err) => {
-                this.qRejectHandlerForComp(err, msgComp, qItem);
-              });
-            if (!respCompUrl) return;
-            const respCompUrlData = await respCompUrl.json();
-            this.panel.webview.postMessage(msgComp);
-            let url = respCompUrlData["gftsUrl"].replace("http:", "https:");
-            await this.downloadCompItem(url, comp_uid, qItem)
-              .then(async () => {
-                msgComp["data"]["val"] = 50;
-                msgComp["data"]["message"] = "Downloaded successfully";
-                this.panel.webview.postMessage(msgComp);
-
-                let destPath = path.join(
-                  this.componentMgr.envPath,
-                  qItem.msgData.sdkSubDirName
-                );
-                msgComp["data"]["step"] = "EXTRACTING"
-                msgComp["data"]["message"] = "Extracting";
-                this.panel.webview.postMessage(msgComp);
-
-                let osStr = os.platform().toLowerCase();
-                switch (osStr) {
-                  case "darwin":
-                  case "linux":
-                    {
-                      let desPathForextact = path.join(
-                        this.componentMgr.envPath,
-                        "Downloads",
-                        "tvCliTemp"
-                      );
-                      if (fs.existsSync(desPathForextact)) {
-                        fs.rmSync(desPathForextact, { recursive: true, force: true, });
-                      }
-
-                      // first unzip
-
-                      await this.unzipFile(
-                        path.join(
-                          this.componentMgr.envPath,
-                          "Downloads",
-                          qItem["downloadedFileName"]
-                        ), desPathForextact, comp_uid, qItem)
-                        .then(async () => {
-                          // extract again
-                          let exMSIFileName = fs.readdirSync(desPathForextact);
-                          await this.unzipFile(
-                            desPathForextact,
-                            destPath,
-                            comp_uid, qItem
-                          )
-                            .then(async () => {
-                              await this.componentMgr.setAnyEnvVariable(
-                                "WEBOS_CLI_TV",
-                                path.join(destPath, "CLI", "bin")
-                              );
-                              await this.executeAnyCommand(
-                                `chmod -R 777 "${path.join(destPath, "CLI")}"`
-                              );
-                              msgComp["data"]["message"] =
-                                "Extracted successfully";
-                              this.panel.webview.postMessage(msgComp);
-
-                              this.componentMgr.statusJson[qItem.msgData.sdk][
-                                qItem.msgData.componentInfo.comp_uid
-                              ] = {
-                                sdk_version:
-                                  qItem.msgData.componentInfo.sdk_version,
-                                location: destPath,
-                              };
-                              try {
-                                this.addShortcut(path.join(destPath, "CLI", "bin"), null, "TV_CLI", qItem.msgData.componentInfo.displayName);
-                              } catch { }
-
-                              this.qCompletionHandlerForComp(msgComp, qItem);
-                            })
-                            .catch((err) => {
-                              this.qRejectHandlerForComp(err, msgComp, qItem);
-                            });
-                        })
-                        .catch((err) => {
-                          this.qRejectHandlerForComp(err, msgComp, qItem);
-                        });
-                    }
-                    break;
-                  case "win32":
-                    {
-                      // only one unzip operation
-                      await this.unzipFile(
-                        path.join(
-                          this.componentMgr.envPath,
-                          "Downloads",
-                          qItem["downloadedFileName"]
-                        ),
-                        destPath,
-                        comp_uid,
-                        qItem
-                      )
-                        .then(async () => {
-                          await this.componentMgr.setAnyEnvVariable("WEBOS_CLI_TV", path.join(destPath, "CLI", "bin"));
-
-                          msgComp["data"]["message"] = "Extracted successfully";
-                          this.panel.webview.postMessage(msgComp);
-
-                          this.componentMgr.statusJson[qItem.msgData.sdk][qItem.msgData.componentInfo.comp_uid] = {
-                            sdk_version: qItem.msgData.componentInfo.sdk_version,
-                            location: destPath,
-                          };
-                          try {
-                            this.addShortcut(path.join(destPath, "CLI", "bin"), null, "TV_CLI", qItem.msgData.componentInfo.displayName);
-                          } catch { }
-                          this.qCompletionHandlerForComp(msgComp, qItem);
-                        })
-                        .catch((err) => {
-                          this.qRejectHandlerForComp(err, msgComp, qItem);
-                        });
-                    }
-                    break;
-                }
-              })
-              .catch((err) => {
-                this.qRejectHandlerForComp(err, msgComp, qItem);
-              });
-          } catch (err) {
-            let msgComp = {
-              command: "PRG_UPDATE",
-              data: {
-                row_uid: comp_uid,
-                comp_uid: comp_uid,
-                displayName: qItem.msgData.componentInfo.shortName,
-                message: "",
-                isError: false,
-              },
-            };
-            this.qRejectHandlerForComp(err, msgComp, qItem);
-          }
-
-          break;
         case "OSE_CLI_INSTALL_FORALL":
           {
             let msgComp = {
@@ -3362,6 +3242,69 @@ class InstallManager {
                   this.qRejectHandlerForComp(error, msgComp, qItem);
                 });
             }
+
+          }
+          break;
+        case "INT_CLI_INSTALL_FORALL":
+          {
+            let msgComp = {
+              command: "PRG_UPDATE",
+              data: {
+                row_uid: comp_uid,
+                comp_uid: comp_uid,
+                displayName: qItem.msgData.componentInfo.shortName,
+                message: "Installing via NPM",
+                step: "INSTALLING",
+                isError: false,
+              },
+            };
+            this.panel.webview.postMessage(msgComp);
+            let destPath = path.join(
+              this.componentMgr.envPath,
+              qItem.msgData.sdkSubDirName,
+              qItem.msgData.componentSubDirName
+            );
+            let osStr = os.platform().toLowerCase();
+            let profileLoader = "";
+            if (osStr == "linux") {
+              profileLoader = " . ~/.profile && ";
+            } else if (osStr == "darwin") {
+              profileLoader = " source ~/.bashrc && ";
+            }
+            let npmPrg = this.componentMgr.getNPMProgram()
+
+            let gitPath = path.join(destPath, qItem.msgData.componentInfo.subDirName)
+            let linkCommand = `${npmPrg} install &&  ${npmPrg} link `;
+            let uninstallCommand = ` ${npmPrg} uninstall @webosose/ares-cli -g `
+            let gitCommand = ` git clone ${qItem.msgData.componentInfo.repository}   `;
+            logger.run(`${qItem.msgData.componentInfo.shortName} - ${gitCommand} `)
+            if (fs.existsSync(gitPath)) {
+              fs.rmSync(gitPath, { recursive: true, force: true, });
+            }
+            await this.executeAnyCommand(uninstallCommand)
+
+            await this.executeAnyCommand(gitCommand, { cwd: destPath })
+              .then(async () => {
+
+                await this.executeAnyCommand(linkCommand, { cwd: gitPath })
+                  .then(async () => {
+                    this.componentMgr.statusJson[qItem.msgData.sdk][qItem.msgData.componentInfo.comp_uid] = {
+                      sdk_version: qItem.msgData.componentInfo.sdk_version,
+                      location: "NPM_GLOBAL",
+                    };
+                    this.componentMgr.setAnyEnvVariable("WEBOS_CLI_TV", path.dirname(path.join(this.componentMgr.getNPMProgram(true))))
+
+
+                    this.qCompletionHandlerForComp(msgComp, qItem);
+                  })
+                  .catch((error) => {
+                    this.qRejectHandlerForComp(error, msgComp, qItem);
+                  });
+              })
+              .catch((error) => {
+                this.qRejectHandlerForComp(error, msgComp, qItem);
+              });
+
 
           }
           break;
@@ -3511,7 +3454,7 @@ class InstallManager {
                           msgComp["data"]["message"] = "Adding Emulator";
                           this.panel.webview.postMessage(msgComp);
                           let vmdkfileName = "";
-                          fs.readdirSync(destPath).forEach((file) => {
+                          fs.readdirSync(destPath).filter(isNotJunk).forEach((file) => {
                             if (file.toLowerCase().includes(".vmdk")) {
                               vmdkfileName = file;
                             }
@@ -3764,7 +3707,7 @@ class InstallManager {
                           ), desPathForextact, comp_uid, qItem)
                           .then(async () => {
                             // extract again
-                            let exFile = fs.readdirSync(desPathForextact);
+                            let exFile = fs.readdirSync(desPathForextact).filter(isNotJunk);
                             await this.unzipFile(
                               path.join(desPathForextact, exFile[0]),
                               destPath,
@@ -3926,7 +3869,7 @@ class InstallManager {
                           ), desPathForextact, comp_uid, qItem)
                           .then(async () => {
                             // extract again
-                            let exFile = fs.readdirSync(desPathForextact);
+                            let exFile = fs.readdirSync(desPathForextact).filter(isNotJunk);
                             await this.unzipFile(
                               path.join(desPathForextact, exFile[0]),
                               destPath,
@@ -4087,7 +4030,7 @@ class InstallManager {
                           ), desPathForextact, comp_uid, qItem)
                           .then(async () => {
                             // extract again
-                            let exFile = fs.readdirSync(desPathForextact);
+                            let exFile = fs.readdirSync(desPathForextact).filter(isNotJunk);
                             await this.unzipFile(
                               path.join(desPathForextact, exFile[0]),
                               destPath,
@@ -4108,7 +4051,7 @@ class InstallManager {
                                 );
 
                                 if (fs.existsSync(destPath)) {
-                                  let subdir = fs.readdirSync(destPath);
+                                  let subdir = fs.readdirSync(destPath).filter(isNotJunk);
                                   if (subdir.length > 0) {
                                     this.updateSettingJson("grafana", path.join(destPath, subdir[0]))
 
@@ -4149,7 +4092,7 @@ class InstallManager {
                             };
 
                             if (fs.existsSync(destPath)) {
-                              let subdir = fs.readdirSync(destPath);
+                              let subdir = fs.readdirSync(destPath).filter(isNotJunk);
                               if (subdir.length > 0) {
                                 this.updateSettingJson("grafana", path.join(destPath, subdir[0]))
 
@@ -4756,7 +4699,7 @@ class InstallManager {
       downloader.on('timeout', () => {
       });
       downloader.on('stop', () => {
-  //      logger.info(`Download ${depInstallItem.displayName} cancelled `)
+        //      logger.info(`Download ${depInstallItem.displayName} cancelled `)
         delete this.downloaders[comp_uid]
         reject({ "code": "ERR_REQUEST_CANCELLED", "message": "Request Cancelled" })
       });
@@ -4953,9 +4896,9 @@ class InstallManager {
       }
     });
   }
-  executeAnyCommand(command) {
+  executeAnyCommand(command, option) {
     return new Promise(async (resolve, reject) => {
-      cp.exec(command, (error, stdout, stderr) => {
+      cp.exec(command, option, (error, stdout, stderr) => {
 
         if (stdout) {
           if (

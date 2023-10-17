@@ -96,9 +96,37 @@ class PackageManagerSidebar {
 
               break;
             }
-            case "UNINSTALL_COMP":
-              this.compMangerObj.unInstallComp(msg.data, this.panel);
 
+            case "UNINSTALL_COMP":
+            {
+              this.compMangerObj.unInstallComp(msg.data, this.panel);
+               break;
+
+            }
+            case "UNINSTALL_COMP_REQ":
+              vscode.window.showInformationMessage( `Do you want to uninstall  '${msg.data.componentInfo.displayName} v${msg.data.componentInfo.sdk_version}' `,
+                ...["Yes", "No"])
+            .then(async (answer) => {
+                if (answer === "Yes") {
+                  // this.compMangerObj.unInstallComp(msg.data, this.panel);
+                  msg.command = "UNINSTALL_CONFIRMED";
+                  this.panel.webview.postMessage(msg);
+                 
+                }else{
+               
+                  let msgComp = {
+                    command: "UNINSTALL_CANCELLED",
+                    data: {
+                      comp_uid: msg.data.componentInfo.comp_uid,
+                      sdk: msg.data.sdk
+                    
+                    },
+                  };
+                  this.panel.webview.postMessage(msgComp);
+                 
+                  
+                }})
+              
               break;
             case "CANCEL_DOWNLOAD": {
               this.compMangerObj.cancelDownload(msg.data)
@@ -199,8 +227,7 @@ class PackageManagerSidebar {
         if (msgData.isSet) {
 
           await this.compMangerObj.setAnyEnvVariable("LG_WEBOS_TV_SDK_HOME", path.join(filePath.fsPath, "TV"))
-          await this.compMangerObj.setAnyEnvVariable("WEBOS_CLI_TV", path.join(filePath.fsPath, "TV", "CLI", "bin"))
-
+      
 
           await this.doStartEditor();
           this.doResolveWebview(this.panel)
@@ -396,7 +423,7 @@ class PackageManagerSidebar {
      
         <dialog open  class="dlg" >
        
-        ${this.getAllTreeGridView(["tv", "ose"], ["TV SDK", "OSE SDK"])}
+        ${this.getAllTreeGridView(["common","tv", "ose"], ["COMMON TOOLS","TV SDK", "OSE SDK"])}
         <div style ="padding-top:10px">SDK Location : ${this.compMangerObj.envPath.replace(this.compMangerObj.envPath.charAt(0), this.compMangerObj.envPath.charAt(0).toUpperCase())}</div>
         <div style ="padding-top:5px" id ="avlDskSpace"></div>
       

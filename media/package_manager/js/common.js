@@ -7,10 +7,7 @@ let statusJson = {};
 const vscode = acquireVsCodeApi();
 let isChecking = false;
 let pbarJson = {};
-
-console.log("hellow");
-
-
+console.log("hellow")
 function cancelDownload(comp_uid, isComp) {
 
   let msg = {
@@ -45,10 +42,11 @@ function doRowAction(command, rowObj) {
     };
     isChecking = true;
     vscode.postMessage(msg);
-
+    hideRowIcon(rowObj["compInfo"]["comp_uid"]);
+    doShowProgressBar(rowObj["compInfo"]["comp_uid"], "Verifying", null, "CHECKING");
   } else {
     let msg = {
-      command: "UNINSTALL_COMP",
+      command: "UNINSTALL_COMP_REQ",
       data: {
         sdk: rowObj["sdk"],
         sdkSubDirName: rowObj["sdkDirName"],
@@ -60,13 +58,18 @@ function doRowAction(command, rowObj) {
           subDirName: rowObj["compInfo"]["subDirName"],
           sdk_version: rowObj["compInfo"]["sdk_version"],
           apiLevel: rowObj["compInfo"]["apiLevel"],
+          displayName: rowObj["compInfo"]["displayName"],
         },
       },
     };
+    hideRowIcon(rowObj["compInfo"]["comp_uid"]);
     vscode.postMessage(msg);
+
+    // doShowProgressBar(rowObj["compInfo"]["comp_uid"], "Verifying", null, "CHECKING");
+
   }
-  hideRowIcon(rowObj["compInfo"]["comp_uid"]);
-  doShowProgressBar(rowObj["compInfo"]["comp_uid"], "Verifying", null, "CHECKING");
+  // hideRowIcon(rowObj["compInfo"]["comp_uid"]);
+  // doShowProgressBar(rowObj["compInfo"]["comp_uid"], "Verifying", null, "CHECKING");
 }
 function getRowObj(comp_uid) {
   let element = document.querySelector(`tr[data-comp_uid='${comp_uid}']`);
@@ -161,9 +164,9 @@ function showRowIcon(comp_uid, msg) {
   // document.getElementById(comp_uid + "_rowIcon").style.color = "red"
   if (msg == "Request Cancelled") {
     document.getElementById(comp_uid + "_rowIcon").style.color = "yellow"
-  }else{
+  } else {
     document.getElementById(comp_uid + "_rowIcon").style.color = "red"
-    
+
   }
   document.getElementById(comp_uid + "_rowIcon").style.display = "inline";
   document.getElementById(comp_uid + "_rowIconText").innerText = msg;
@@ -176,9 +179,9 @@ function hideRowIcon(comp_uid) {
 function showRowIconSDK(comp_uid, msg) {
   if (msg == "Request Cancelled") {
     document.getElementById(comp_uid + "_rowIcon").style.color = "yellow"
-  }else{
+  } else {
     document.getElementById(comp_uid + "_rowIcon").style.color = "red"
-    
+
   }
   document.getElementById(comp_uid + "_rowIcon").style.display = "inline";
   document.getElementById(comp_uid + "_rowIconText").innerText = msg;
@@ -306,6 +309,18 @@ function handleMsg() {
 
         break;
       }
+      case "UNINSTALL_CANCELLED":
+        // hideProgressBarInSDKTab(message.data["comp_uid"]);
+        showActionButton(message.data["comp_uid"], message.data["sdk"])
+        break;
+      case "UNINSTALL_CONFIRMED":
+        message.command = "UNINSTALL_COMP"
+      
+        hideRowIcon(message.data.componentInfo["comp_uid"]);
+        doShowProgressBar(message.data.componentInfo["comp_uid"], "Verifying", null, "CHECKING");
+        vscode.postMessage(message);
+        break;
+
       case "PAUSE_START_PRGBAR": {
         handlePauseStartPrgBar(message)
         break;
@@ -369,10 +384,10 @@ function handleMsg() {
   });
 }
 function handlePauseStartPrgBar(message) {
-  let pbar =pbarJson[message.data.componentInfo["comp_uid"]];
+  let pbar = pbarJson[message.data.componentInfo["comp_uid"]];
   if (message.data["isPaused"] && pbar) {
     pbar.pausePbar(message.data)
-  } else if(pbar) {
+  } else if (pbar) {
     pbar.restartPbar(message.data)
   }
 }
