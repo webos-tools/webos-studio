@@ -153,7 +153,7 @@
         "commands": [
             {
                 "command": "ipkanalyze.start",
-                "title": "webOS OSE: IPK Analyzer"
+                "title": "webOS: IPK Analyzer"
             },
             {
                 "command": "webapp.reloadPreview",
@@ -161,7 +161,7 @@
             },
             {
                 "command": "webosose.installGlobal",
-                "title": "webOS OSE: Install Global Packages"
+                "title": "webOS: Install Global Packages"
             },
             {
                 "command": "webosose.installEmulator",

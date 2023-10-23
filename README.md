@@ -72,7 +72,7 @@ Navigate to **File** > **Open Folder** and select a directory. This directory is
 
 ### Installing Global Packages
 
-Execute `webOS OSE: Install Global Packages` in the Command Palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>). This task is only required the first time you install the webOS Studio extension.
+Execute `webOS: Install Global Packages` in the Command Palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>). This task is only required the first time you install the webOS Studio extension.
 
 ![Installing global packages](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/install-global-packages.png)
 
@@ -405,7 +405,7 @@ You can manage webOS emulator (VirtualBox) images in VS Code. By default, any we
 
 You can analyze the file size of the app or services in the IPK file.
 
-1. Open the **Command Palette** (Ctrl+Shift+P) and type **webOS OSE: IPK Analyzer**.
+1. Open the **Command Palette** (Ctrl+Shift+P) and type **webOS: IPK Analyzer**.
 2. Click **Import IPK**.
 3. Choose the IPK file to analyze. After the file is loaded, you can see the following screen:
 
@@ -426,7 +426,7 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 | Category                   | Command                            | Description                                                         |
 |----------------------------|------------------------------------|---------------------------------------------------------------------|
 | Project Wizard             | webOS OSE: Create Project Wizard   | Generates source code templates.                                    |
-| Developing apps/services   | webOS OSE: Install Global Packages | Installs essential global packages to run this extension.           |
+| Developing apps/services   | webOS: Install Global Packages | Installs essential global packages to run this extension.           |
 |                            | webOS OSE: Install Emulator Launcher | Installs webOS Emulator Launcher.                                 |
 |                            | webOS OSE: Generate Project        | Creates a web app, Enact App, JavaScript Service from a template.   |
 |                            | webOS OSE: Package Application     | Packages the app into a package file (IPK).                         |
@@ -435,7 +435,7 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 |                            | webOS OSE: Launch Application      | Runs an app installed on the device.                                |
 | Batch commands             | webOS OSE: Run Application         | Package, Install, and Launch operations are executed sequentially.  |
 |                            | webOS OSE: Debug Application       | Package, Install, and Inspect operations are executed sequentially. |
-| Analyzing an IPK           | webOS OSE: IPK Analyzer            | Analyzes a selected IPK.                                            |
+| Analyzing an IPK           | webOS: IPK Analyzer            | Analyzes a selected IPK.                                            |
 
 ## Miscellaneous Information
 
