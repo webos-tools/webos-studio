@@ -35,6 +35,7 @@ const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
 const { getCurrentDeviceProfile, setCurrentDeviceProfile } = require('./src/lib/deviceUtils');
 const { PackageManagerSidebar } = require('./src/packageManagerSidebar');
+const { getSimulatorDirPath } = require('./src/lib/configUtils');
 const extensionPath = __dirname;
 
 let apiObjArray = [];
@@ -571,6 +572,10 @@ function activate(context) {
         }
     }));
 
+    context.subscriptions.push(vscode.commands.registerCommand('webos.updateSDKPath', (sdkPath) => {
+        getSimulatorDirPath(sdkPath);
+        webosSimulatorProvider.refresh();
+    }));
     context.subscriptions.push(
         vscode.commands.registerCommand('webosos.runSimulatorParams', () => {
             runSimulator(null, null, true);

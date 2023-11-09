@@ -54,12 +54,20 @@ async function getDefaultDevice() {
     return "";
 }
 
-function getSimulatorDirPath() {
+let simulatorPath;
+function getSimulatorDirPath(sdkPath) {
+    if (sdkPath) {
+        simulatorPath = path.join(sdkPath , 'TV', 'Simulator');
+        return simulatorPath;
+    }
+
     let simulatorDir;
     const sdkHomePath = process.env.LG_WEBOS_TV_SDK_HOME || process.env.LG_WEBOS_CUSTOM_SDK_HOME;
     const cliPath = process.env.WEBOS_CLI_TV;
 
-    if (sdkHomePath) {
+    if (simulatorPath) {
+        simulatorDir = simulatorPath;
+    } else if (sdkHomePath) {
         simulatorDir = path.join(sdkHomePath, 'Simulator');
     } else if (cliPath) {
         simulatorDir = path.resolve(cliPath, '../../Simulator');

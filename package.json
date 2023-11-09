@@ -176,6 +176,10 @@
                 "title": "webOS TV: Run on Simulator"
             },
             {
+                "command": "webos.updateSDKPath",
+                "title": "webOS: Update SDK Path"
+            },
+            {
                 "command": "webos.runSimulatorParams",
                 "title": "webOS TV: Run on Simulator with Parameters"
             },

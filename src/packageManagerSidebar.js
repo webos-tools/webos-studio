@@ -181,6 +181,7 @@ class PackageManagerSidebar {
         return false;
       }
 
+      vscode.commands.executeCommand("webos.updateSDKPath", msgData.envVarValue);
       return true;
     } else {
       return false;
@@ -227,8 +228,8 @@ class PackageManagerSidebar {
         if (msgData.isSet) {
 
           await this.compMangerObj.setAnyEnvVariable("LG_WEBOS_TV_SDK_HOME", path.join(filePath.fsPath, "TV"))
-      
 
+          vscode.commands.executeCommand("webos.updateSDKPath", filePath.fsPath);
           await this.doStartEditor();
           this.doResolveWebview(this.panel)
         } else {
