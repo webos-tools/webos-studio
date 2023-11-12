@@ -147,7 +147,7 @@
             },
             {
                 "view": "webosSimulator",
-                "contents": "webOS TV Simulator is not installed.\n[Install Simulator](https://webostv.developer.lge.com/develop/tools/simulator-installation)"
+                "contents": "webOS TV Simulator is not installed.\nThis can be installed with Package Manager above."
             }
         ],
         "commands": [
