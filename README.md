@@ -88,7 +88,7 @@ This section explains a typical development flow of webOS apps and services usin
 
 ### Creating an App/Service
 
-You can create an app or service using the project wizard. Click the **+** button in the **APPS IN WORKSPACE** view or execute `webOS OSE: Create ProjectWizard` in the **Command Palette**.
+You can create an app or service using the project wizard. Click the **+** button in the **APPS IN WORKSPACE** view or execute `webOS: Create ProjectWizard` in the **Command Palette**.
 
 ![Creating an app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/creating-an-app.gif)
 
@@ -191,15 +191,15 @@ In the debugging session, you can set breakpoints, check variables, callstack, e
 
 - Apps or services that are installed on target devices or emulators
     - The target devices or emulators should be registered as [the known devices](#adding-known-devices).
-- (For browser debugging) Chromium-based browser
+- (For inspector debugging) Chromium-based browser
 
 #### Start a Debugging Session - App 
 
 1. Right-click an installed app.
-2. Click **Debug App/Service**. 
-3. Click **Browser** or **IDE**. 
+2. Click **Debug on**. 
+3. Click **inspector** or **VS Code**. 
     
-    **[Browser]**
+    **[inspector]**
 
     Enter a path for the browser executable.
     
@@ -209,7 +209,7 @@ In the debugging session, you can set breakpoints, check variables, callstack, e
 
     ![Debugging an app with browser](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debugging-app-with-browser.png)
 
-    **[IDE]**
+    **[VS Code]**
         
     The **DEBUG CONSOLE** panel will be activated automatically. In the panel, you can check the console messages from the app or service.
 
@@ -218,12 +218,12 @@ In the debugging session, you can set breakpoints, check variables, callstack, e
 #### Start a Debugging Session - Service 
 
 1. Right-click an installed service.
-2. Click **Debug App/Service**. 
-3. Click **Browser** or **IDE**. 
+2. Click **Debug on**. 
+3. Click **inspector** or **VS Code**. 
     
-    **[Browser]**
+    **[inspector]**
 
-    1. After clicking the **Browser** button, a URL for the debugging session will be displayed in the **OUTPUT** panel. Copy the URL.
+    1. After clicking the **inspector** button, a URL for the debugging session will be displayed in the **OUTPUT** panel. Copy the URL.
     
         ![URL for debugging service](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/url-for-debugging-service.png)
 
@@ -241,7 +241,7 @@ In the debugging session, you can set breakpoints, check variables, callstack, e
 
         ![Debugging a service with browser](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/debugging-service-with-browser.png)
 
-    **[IDE]**
+    **[VS Code]**
         
     The **DEBUG CONSOLE** panel will be activated automatically.
 
@@ -260,7 +260,7 @@ In the debugging session, you can set breakpoints, check variables, callstack, e
   </dd>
   <dt>The debugging session is not launched</dt>
   <dd>
-    <p>Close all running apps on the webOS device and re-try to click <b>Debug App/Service</b>.</p>
+    <p>Close all running apps on the webOS device and re-try to click <b>Debug on</b>.</p>
   </dd>
   <dt>(Very rare to happen) A notification says the debugging session is already activated</dt>
   <dd>
@@ -425,16 +425,15 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 
 | Category                   | Command                            | Description                                                         |
 |----------------------------|------------------------------------|---------------------------------------------------------------------|
-| Project Wizard             | webOS OSE: Create Project Wizard   | Generates source code templates.                                    |
+| Project Wizard             | webOS: Create Project Wizard   | Generates source code templates.                                    |
 | Developing apps/services   | webOS: Install Global Packages | Installs essential global packages to run this extension.           |
 |                            | webOS OSE: Install Emulator Launcher | Installs webOS Emulator Launcher.                                 |
-|                            | webOS OSE: Generate Project        | Creates a web app, Enact App, JavaScript Service from a template.   |
-|                            | webOS OSE: Package Application     | Packages the app into a package file (IPK).                         |
-| Connecting devices         | webOS OSE: Set Up Device           | Adds, modifies, or removes devices from the device list.            |
-| Testing apps on the device | webOS OSE: Install Application     | Installs an app on the device.                                      |
-|                            | webOS OSE: Launch Application      | Runs an app installed on the device.                                |
-| Batch commands             | webOS OSE: Run Application         | Package, Install, and Launch operations are executed sequentially.  |
-|                            | webOS OSE: Debug Application       | Package, Install, and Inspect operations are executed sequentially. |
+|                            | webOS: Package Application     | Packages the app into a package file (IPK).                         |
+| Connecting devices         | webOS: Set Up Device           | Adds, modifies, or removes devices from the device list.            |
+| Testing apps on the device | webOS: Install Application     | Installs an app on the device.                                      |
+|                            | webOS: Launch Application      | Runs an app installed on the device.                                |
+| Batch commands             | webOS: Run Application         | Package, Install, and Launch operations are executed sequentially.  |
+|                            | webOS: Debug       | Package, Install, and Inspect operations are executed sequentially. |
 | Analyzing an IPK           | webOS: IPK Analyzer            | Analyzes a selected IPK.                                            |
 
 ## Miscellaneous Information
@@ -462,7 +461,7 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 
 Unless otherwise specified, all content, including all source code files and documentation files in this repository are:
 
-Copyright (c) 2021-2022 LG Electronics, Inc.
+Copyright (c) 2021-2023 LG Electronics, Inc.
 
 All content, including all source code files and documentation files in this repository except otherwise noted are:
 
