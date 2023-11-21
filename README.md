@@ -374,7 +374,7 @@ You can manage webOS emulator (VirtualBox) images in VS Code. By default, any we
 
 - [VirtualBox](https://www.virtualbox.org/) must be installed on your computer. (Supported version: 6.1 or higher)
 - webOS emulator image (`.vmdk`) is required. For how to make the image, refer to [Emulator User Guide](https://www.webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-user-guide/).
-- [Emulator Launcher](https://www.webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-launcher/) is required. Execute `webOS OSE: Install Emulator Launcher` in the Command Palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
+- [Emulator Launcher](https://www.webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-launcher/) is required. Execute `webOS: Install Emulator Launcher` in the Command Palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
 
 #### How to Manage Emulator Images
 
@@ -427,7 +427,7 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 |----------------------------|------------------------------------|---------------------------------------------------------------------|
 | Project Wizard             | webOS: Create Project Wizard   | Generates source code templates.                                    |
 | Developing apps/services   | webOS: Install Global Packages | Installs essential global packages to run this extension.           |
-|                            | webOS OSE: Install Emulator Launcher | Installs webOS Emulator Launcher.                                 |
+|                            | webOS: Install Emulator Launcher | Installs webOS Emulator Launcher.                                 |
 |                            | webOS: Package Application     | Packages the app into a package file (IPK).                         |
 | Connecting devices         | webOS: Set Up Device           | Adds, modifies, or removes devices from the device list.            |
 | Testing apps on the device | webOS: Install Application     | Installs an app on the device.                                      |

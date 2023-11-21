@@ -165,7 +165,7 @@
             },
             {
                 "command": "webosose.installEmulator",
-                "title": "webOS OSE: Install Emulator Launcher"
+                "title": "webOS: Install Emulator Launcher"
             },
             {
                 "command": "webos.setDeviceProfile",

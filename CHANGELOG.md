@@ -17,7 +17,7 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 ## [1.1.0] [2023-06-12]
 
 - Improve logging output for user's perspective
-- Add a new command: `webOS OSE: Install Emulator Launcher`
+- Add a new command: `webOS: Install Emulator Launcher`
 
 ## [1.0.8] [2023-05-15]
 
