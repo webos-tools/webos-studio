@@ -4217,8 +4217,10 @@ class InstallManager {
         break;
 
     }
-
-    let configData = fs.readFileSync(settingFPath, "utf8");
+    let configData ="{}"
+    if (fs.existsSync(settingFPath)) {
+      configData = fs.readFileSync(settingFPath, "utf8")  
+    }
     configData = JSON.parse(configData);
     if (dbType == "influxdb") {
       configData["webosose.resourceMonitoring.influxdbInstallPath"] = value
