@@ -1,6 +1,6 @@
 const vscode = require('vscode');
 
-let resourceMonitoringPanel;
+let resourceMonitoringPanelCnt = 0;
 let process_influxdb;
 let process_grafana;
 
@@ -95,12 +95,15 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
     if (typeof vscode.env.remoteName !== 'undefined') {
         vscode.window.showErrorMessage('Cannot launch Resource Monitoring in ssh-remote');
         return;
-    } else if (isRunning("grafana")) {
-        vscode.window.showErrorMessage('Please terminate the grafana process.');
-        return;
-    } else if (resourceMonitoringPanel) {
-        resourceMonitoringPanel.reveal();
-        return;
+    } else if (resourceMonitoringPanelCnt == 0) {
+        if (isRunning("grafana")) {
+            vscode.window.showErrorMessage('Please terminate the external "grafana" process.');
+            return;
+        }
+        if (isRunning("influxd")) {
+            vscode.window.showErrorMessage('Please terminate the external "influxd" process.');
+            return;
+        }
     }
 
     // Prepare for each hosts
@@ -108,16 +111,13 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
     console.log("hostOS : " + hostOS);
     console.log("extensionPath : " + extensionPath);
     console.log("remoteName : " + vscode.env.remoteName);
-    let influxdbBinFile = "/influxd";
-    let influxdbConfFile = "/influxdb.conf";
-    let grafanaBinFile = "/bin/grafana";
-    let grafanaConfFile = "/conf/defaults.ini";
+    let influxdbBinFile = "influxd";
+    let influxdbConfFile = "influxdb.conf";
+    let grafanaBinFile = "bin/grafana";
+    let grafanaConfFile = "conf/defaults.ini";
     if (hostOS.includes("Windows")) {
         influxdbBinFile = influxdbBinFile + ".exe";
         grafanaBinFile = grafanaBinFile + ".exe";
-    } else if (hostOS.includes("Darwin")) {
-        influxdbBinFile = "/usr/bin/" + influxdbBinFile;
-        influxdbConfFile = "/etc/influxdb" + influxdbConfFile;
     }
 
     const webosose_config = vscode.workspace.getConfiguration('webosose');
@@ -127,12 +127,18 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         vscode.window.showErrorMessage('InfluxDB Install Path is empty.');
         return;
     }
-    influxdb_install_path = influxdb_install_path.replace(/\\/g, "/");
+    influxdb_install_path = influxdb_install_path.replace(/\\/g, "/") + "/";
+    console.log(influxdb_install_path);
     if (!isExistPath(influxdb_install_path)
         || !isExistPath(influxdb_install_path + influxdbBinFile)
         || !isExistPath(influxdb_install_path + influxdbConfFile)) {
-        vscode.window.showErrorMessage('InfluxDB Install Path is wrong.');
-        return;
+        influxdbBinFile = "/usr/bin/" + influxdbBinFile;
+        influxdbConfFile = "/etc/influxdb/" + influxdbConfFile;
+        if (!isExistPath(influxdb_install_path + influxdbBinFile)
+            || !isExistPath(influxdb_install_path + influxdbConfFile)) {
+            vscode.window.showErrorMessage('InfluxDB Install Path is wrong.');
+            return;
+        }
     }
     // Check grafana install path
     let grafana_install_path = webosose_config.get('resourceMonitoring.grafanaInstallPath');
@@ -140,7 +146,8 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         vscode.window.showErrorMessage('Grafana Install Path is empty.');
         return;
     }
-    grafana_install_path = grafana_install_path.replace(/\\/g, "/");
+    grafana_install_path = grafana_install_path.replace(/\\/g, "/") + "/";
+    console.log(grafana_install_path);
     if (!isExistPath(grafana_install_path)
         || !isExistPath(grafana_install_path + grafanaBinFile)
         || !isExistPath(grafana_install_path + grafanaConfFile)) {
@@ -151,14 +158,14 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
     replaceStringFromFile(influxdb_install_path + influxdbConfFile,
         influxdb_install_path + influxdbConfFile + ".vscode",
         ['dir = "/var/lib/influxdb'],
-        ['dir = "' + influxdb_install_path + '/var/lib/influxdb']);
+        ['dir = "' + influxdb_install_path + 'var/lib/influxdb']);
     replaceStringFromFile(grafana_install_path + grafanaConfFile,
         grafana_install_path + grafanaConfFile + ".vscode",
         ["allow_embedding = false", "# enable anonymous access\r?\nenabled = false", "# specify role for unauthenticated users\r?\norg_role = Viewer"],
         ["allow_embedding = true", "# enable anonymous access\r\nenabled = true", "# specify role for unauthenticated users\r\norg_role = Admin"]);
 
     // Create webview panel
-    resourceMonitoringPanel = vscode.window.createWebviewPanel('resourceMonitoring', 'Resource Monitoring', vscode.ViewColumn.One, {
+    let resourceMonitoringPanel = vscode.window.createWebviewPanel('resourceMonitoring', 'Resource Monitoring', vscode.ViewColumn.One, {
         enableScripts: true,
         retainContextWhenHidden: true,
         localResourceRoots: [
@@ -167,32 +174,39 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
     });
     resourceMonitoringPanel.onDidDispose(
         () => {
-            resourceMonitoringPanel = undefined;
-            var kill = require('tree-kill');
-            kill(process_influxdb.pid);
-            kill(process_grafana.pid);
+            resourceMonitoringPanelCnt -= 1;
+            if (resourceMonitoringPanelCnt == 0) {
+                var kill = require('tree-kill');
+                kill(process_influxdb.pid);
+                kill(process_grafana.pid);
+            }
         },
         null,
         context.subscriptions
     );
     resourceMonitoringPanel.webview.html = isRunning("grafana") ? getGrafanaHTML() : getLoadingHTML();
+    resourceMonitoringPanelCnt += 1;
 
-    // Launch influxdb and grafana
-    const influxdbArgs = ["-config", influxdb_install_path + influxdbConfFile + ".vscode"];
-    process_influxdb = launchCommand(influxdb_install_path + influxdbBinFile, influxdbArgs);
-    // process_influxdb.stderr.on("data", function (data) {
-    //     console.error("influxdb stderr : " + data.toString());
-    // });
-    const grafanaArgs = ["server", "--homepath", grafana_install_path, "--config", grafana_install_path + grafanaConfFile + ".vscode"];
-    process_grafana = launchCommand(grafana_install_path + grafanaBinFile, grafanaArgs);
-    // process_grafana.stderr.on("data", function (data) {
-    //     console.error("grafana stderr : " + data.toString());
-    // });
-    // Change webview panel to grafana after loading grafana service
-    process_grafana.stdout.on("data", function (data) {
-        if (data.toString().includes("msg=\"HTTP Server Listen\"")) {
-            resourceMonitoringPanel.webview.html = getGrafanaHTML();
-            process_grafana.stdout.removeAllListeners();
-        }
-    });
+    if (!isRunning("influxd")) {
+        // Launch influxdb and grafana
+        const influxdbArgs = ["-config", influxdb_install_path + influxdbConfFile + ".vscode"];
+        process_influxdb = launchCommand(influxdb_install_path + influxdbBinFile, influxdbArgs);
+        // process_influxdb.stderr.on("data", function (data) {
+        //     console.error("influxdb stderr : " + data.toString());
+        // });
+    }
+    if (!isRunning("grafana")) {
+        const grafanaArgs = ["server", "--homepath", grafana_install_path, "--config", grafana_install_path + grafanaConfFile + ".vscode"];
+        process_grafana = launchCommand(grafana_install_path + grafanaBinFile, grafanaArgs);
+        // process_grafana.stderr.on("data", function (data) {
+        //     console.error("grafana stderr : " + data.toString());
+        // });
+        // Change webview panel to grafana after loading grafana service
+        process_grafana.stdout.on("data", function (data) {
+            if (data.toString().includes("msg=\"HTTP Server Listen\"")) {
+                resourceMonitoringPanel.webview.html = getGrafanaHTML();
+                process_grafana.stdout.removeAllListeners();
+            }
+        });
+    }
 }
