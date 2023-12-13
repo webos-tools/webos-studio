@@ -20,7 +20,7 @@
                 "shortName": "CLI",
                 "sdk_version": "2.4.0",
                 "apiLevel": "21",
-                "repository": "http://mod.lge.com/hub/emulator/ares-cli-integrated -b Merged_develop",
+                "repository": "http://mod.lge.com/hub/emulator/ares-cli-integrated -b develop",
                 "description": "",
                 "userid": "sdk",
                 "password": "sdk",
