@@ -1,6 +1,6 @@
 # webOS Studio
 
-This extension helps develop apps and services for [webOS Open Source Edition (OSE)](https://webosose.org).
+This extension helps develop apps and services for [webOS Open Source Edition (OSE)](https://webosose.org) and [webOS TV](https://webostv.developer.lge.com).
 
 > **IMPORTANT NOTICE:** 
 > - If you installed the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose), please uninstall it first. Then install this extension.
@@ -41,7 +41,7 @@ This extension helps develop apps and services for [webOS Open Source Edition (O
 
 ## Requirements
 
-This extension helps the users develop webOS web apps, Enact apps, and JavaScript services. So the users need a basic understanding of webOS OSE developments. If you are not familiar with webOS, please refer to [www.webosose.org/docs/tutorials/](https://www.webosose.org/docs/tutorials/).
+This extension helps the users develop webOS web apps, Enact apps, and JavaScript services. So the users need a basic understanding of webOS developments. If you are not familiar with webOS, please refer to [www.webosose.org/docs/tutorials/](https://www.webosose.org/docs/tutorials/).
 
 ### Hardware
 
@@ -49,7 +49,6 @@ Emulator-related features are not supported in Apple Silicon Mac.
 
 ### Software
 
-> 🚨 **Warning:** If you have installed [webOS TV CLI](https://webostv.developer.lge.com/develop/tools/cli-installation), you MUST delete it before installing this extension.
 
 | Software | Required version |
 |----------|------------------|
@@ -70,7 +69,7 @@ Navigate to **File** > **Open Folder** and select a directory. This directory is
 
 > **Note:** The workspace in webOS Studio is different from that of VS Code. webOS Studio can only have one root directory as a workspace at a time.
 
-### Installing Global Packages
+### (TBM) Installing Global Packages
 
 Execute `webOS: Install Global Packages` in the Command Palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>). This task is only required the first time you install the webOS Studio extension.
 
@@ -86,6 +85,10 @@ npm install -g @enact/cli @webosose/ares-cli patch-package
 
 This section explains a typical development flow of webOS apps and services using this extension.
 
+### Selecting Device Profile
+
+You can select Device Profile as webOS OSE or webOS TV by command webOS: Set Device Profile
+
 ### Creating an App/Service
 
 You can create an app or service using the project wizard. Click the **+** button in the **APPS IN WORKSPACE** view or execute `webOS: Create ProjectWizard` in the **Command Palette**.
@@ -95,7 +98,7 @@ You can create an app or service using the project wizard. Click the **+** butto
 | Item | Description |
 |------|-------------|
 | API Version | This is an API level of webOS OSE. webOS OSE supports many useful features through [LS2 API](https://www.webosose.org/docs/reference/#ls2-api). And the API level is a unique indicator for managing LS2 APIs. See [LS2 API Index](https://www.webosose.org/docs/reference/ls2-api/ls2-api-index/). |
-| Supported Types | <p>Supported types are as follows:</p> <dl> <dt>Basic Web App</dt><dd>A basic web app for webOS OSE.</dd> <dt>Hosted Web App</dt><dd>A hosted web app.</dd> <dt>Web App Info</dt><dd>Configuration file for a web app (<code>appinfo.json</code>). See <a href="https://www.webosose.org/docs/guides/development/configuration-files/appinfo-json/">appinfo.json</a>.</dd> <dt>JS Service</dt><dd>A JavaScript service for webOS OSE. <strong>This service must be packaged and installed with an app.</strong></dd> <dt>JS Service Info</dt><dd>Configuration files for a JS service (<code>services.json</code> and <code>package.json</code>). See <a href="https://www.webosose.org/docs/guides/development/configuration-files/services-json/">services.json</a>.</dd> <dt>Sandstone, Moonstone</dt><dd>Enact apps with the Sandstone library or the Moonstone library. For more details about Enact apps, visit <a href="https://enactjs.com/">the Enact website</a>.</dd> </dl> |
+| Supported Types | <p>Supported types are as follows:</p> <dl> <dt>Basic Web App</dt><dd>A basic web app for webOS.</dd> <dt>Hosted Web App</dt><dd>A hosted web app.</dd> <dt>Web App Info</dt><dd>Configuration file for a web app (<code>appinfo.json</code>). See <a href="https://www.webosose.org/docs/guides/development/configuration-files/appinfo-json/">appinfo.json</a>.</dd> <dt>JS Service</dt><dd>A JavaScript service for webOS. <strong>This service must be packaged and installed with an app.</strong></dd> <dt>JS Service Info</dt><dd>Configuration files for a JS service (<code>services.json</code> and <code>package.json</code>). See <a href="https://www.webosose.org/docs/guides/development/configuration-files/services-json/">services.json</a>.</dd> <dt>Sandstone, Moonstone</dt><dd>Enact apps with the Sandstone library or the Moonstone library. For more details about Enact apps, visit <a href="https://enactjs.com/">the Enact website</a>.</dd> </dl> |
 
 To use [webos-service library](https://www.webosose.org/docs/reference/webos-service-library/webos-service-library-api-reference/) in JavaScript service or Enact app projects, check the **Yes** button for **Add webOS library**.
  
@@ -135,7 +138,7 @@ The known device is a webOS device that the user can access.
 
     ![Set the default device](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/set-default-device.jpg)
 
-### Previewing with Live Reload
+### Previewing with Auto Reload
 
 You can preview web apps or Enact apps before installing them.
 
@@ -171,7 +174,7 @@ You can uninstall the apps in the **KNOWN DEVICE** view.
 
 ![Uninstall the app](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/uninstall-the-app.jpg)
 
-Or You can uninstall the app manually using the [appInstallService](https://www.webosose.org/docs/reference/ls2-api/com-webos-appinstallservice) API or [webOS OSE CLI](https://www.webosose.org/docs/tools/sdk/cli/cli-user-guide/).
+Or You can uninstall the app manually using the [appInstallService](https://www.webosose.org/docs/reference/ls2-api/com-webos-appinstallservice) API or [webOS CLI](https://www.webosose.org/docs/tools/sdk/cli/cli-user-guide/).
 
 ### Debugging
 
