@@ -4223,9 +4223,17 @@ class InstallManager {
     }
     configData = JSON.parse(configData);
     if (dbType == "influxdb") {
+      if(configData["webosose.resourceMonitoring.influxdbInstallPath"]){
+        logger.info("Resource Monitor - Overriden the Influxdb install path in settings")
+      }
+
       configData["webosose.resourceMonitoring.influxdbInstallPath"] = value
 
     } else {
+      if(configData["webosose.resourceMonitoring.grafanaInstallPath"]){
+        logger.info("Resource Monitor - Overriden the Grafana install path in settings")
+      }
+
       configData["webosose.resourceMonitoring.grafanaInstallPath"] = value
     }
     fs.writeFileSync(settingFPath, JSON.stringify(configData), "utf8");
