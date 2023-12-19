@@ -10,7 +10,7 @@ This is an integrated release for OSE and TV of the webOS Studio extension.
 
 - Introducing Device Profile for OSE and TV as a command, webOS: Set Device Profile
 - Integrating common commands between OSE and TV as follows:
-  - webOS: Generate ProjectWizard
+  - webOS: Create ProjectWizard
   - webOS: Preview Application
   - webOS: Package Application
   - webOS: Set Up Device
