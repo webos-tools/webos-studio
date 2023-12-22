@@ -191,16 +191,19 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         // Launch influxdb and grafana
         const influxdbArgs = ["-config", influxdb_install_path + influxdbConfFile + ".vscode"];
         process_influxdb = launchCommand(influxdb_install_path + influxdbBinFile, influxdbArgs);
-        // process_influxdb.stderr.on("data", function (data) {
-        //     console.error("influxdb stderr : " + data.toString());
-        // });
+        process_influxdb.stderr.on("data", function (data) {
+            // console.error("influxdb stderr : " + data.toString());
+        });
+        process_influxdb.stdout.on("data", function (data) {
+            // console.error("influxdb stdout : " + data.toString());
+        });
     }
     if (!isRunning("grafana")) {
         const grafanaArgs = ["server", "--homepath", grafana_install_path, "--config", grafana_install_path + grafanaConfFile + ".vscode"];
         process_grafana = launchCommand(grafana_install_path + grafanaBinFile, grafanaArgs);
-        // process_grafana.stderr.on("data", function (data) {
-        //     console.error("grafana stderr : " + data.toString());
-        // });
+        process_grafana.stderr.on("data", function (data) {
+            // console.error("grafana stderr : " + data.toString());
+        });
         // Change webview panel to grafana after loading grafana service
         process_grafana.stdout.on("data", function (data) {
             if (data.toString().includes("msg=\"HTTP Server Listen\"")) {
