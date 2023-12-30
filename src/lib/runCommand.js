@@ -6,7 +6,7 @@ const vscode = require('vscode');
 const path = require('path');
 const { exec, spawn } = require('child_process');
 const systemPlatform = require('os').platform();
-const { getCliPath, getBrowserPath } = require('./configUtils');
+const { getCliPath, getBrowserPath, getSimulatorDirPath } = require('./configUtils');
 const os = require('os');
 const tcpPortUsed = require('tcp-port-used');
 const defaultGateway = require('default-gateway');
@@ -672,14 +672,18 @@ async function launchSimulator(appDir, version, params) {
         const terminal = vscode.window.createTerminal({
             name: terminalName,
             env: {
-                path: cliPath
+                //path: cliPath
             }
         });
         const paramsStr = params ? `-p "${JSON.stringify(params).replace(/"/g, "'")}"` : "";
-        const cmd = `ares-launch ${appDir.replace(/\\/g, '/')} -s ${version} ${paramsStr}`;
-        console.log(`runCommand: ${cmd}`);
+        const launchCmd = os.type() == "Windows_NT" ? 'ares-launch.cmd' : 'ares-launch';
+        const cmd = `${launchCmd} ${appDir.replace(/\\/g, '/')} -s ${version} ${paramsStr}`;
+        const dirSimulator = 'webOS_TV_' + version + '_Simulator_1.3.0';
+        const sp = path.join(getSimulatorDirPath(), dirSimulator);
+        const cmd2 = cmd + ' -sp ' + sp;
+        console.log(`runCommand: ${cmd2}`);
 
-        terminal.sendText(cmd);
+        terminal.sendText(cmd2, true);
         setTimeout(() => {
             terminal.dispose();
             return Promise.resolve();
