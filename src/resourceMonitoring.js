@@ -4,6 +4,8 @@ let resourceMonitoringPanelCnt = 0;
 let process_influxdb;
 let process_grafana;
 
+let isStartingGrafana = false;
+
 function isRunning(processName) {
     let command = 'ps -ef';
     if (require("os").type().includes("Windows")) {
@@ -19,8 +21,8 @@ function isRunning(processName) {
 }
 
 function isExistPath(path) {
-    const Fs = require('fs')
-    return Fs.existsSync(path);
+    const fs = require('fs')
+    return fs.existsSync(path);
 }
 
 function launchCommand(cmd, args) {
@@ -49,7 +51,7 @@ function replaceStringFromFile(readPath, writePath, oriStr, destStr) {
 }
 
 function getGrafanaHTML() {
-    return `<!DOCTYPE html>
+    var tmpStr = `<!DOCTYPE html>
     <html lang="en">
     <head>
     <title>Resource Monitoring</title>
@@ -68,7 +70,9 @@ function getGrafanaHTML() {
     <body style="background-color: black;">
         <iframe src="http://localhost:3000"></iframe>
     </body>
-    </html>`
+    </html>`;
+    resourceMonitoringPanelCnt += 1;
+    return tmpStr;
 }
 
 function getLoadingHTML() {
@@ -84,7 +88,7 @@ function getLoadingHTML() {
     </head>
     <body style="background-color: black;">
         <td style="width:100%; height:100%;">
-        <h1 style="position:absolute;top: 40%; left: 40%; color:white;">Loading...</h1>
+        <h1 style="position:absolute;top: 40%; left: 40%; color:white;">Starting services...</h1>
         </td>
     </body>
     </html>`
@@ -96,6 +100,10 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         vscode.window.showErrorMessage('Cannot launch Resource Monitoring in ssh-remote');
         return;
     } else if (resourceMonitoringPanelCnt == 0) {
+        if (isStartingGrafana) {
+            vscode.window.showInformationMessage('Grafana service is starting...');
+            return;
+        }
         if (isRunning("grafana")) {
             vscode.window.showErrorMessage('Please terminate the external "grafana" process.');
             return;
@@ -128,7 +136,6 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         return;
     }
     influxdb_install_path = influxdb_install_path.replace(/\\/g, "/") + "/";
-    console.log(influxdb_install_path);
     if (!isExistPath(influxdb_install_path)
         || !isExistPath(influxdb_install_path + influxdbBinFile)
         || !isExistPath(influxdb_install_path + influxdbConfFile)) {
@@ -147,22 +154,12 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         return;
     }
     grafana_install_path = grafana_install_path.replace(/\\/g, "/") + "/";
-    console.log(grafana_install_path);
     if (!isExistPath(grafana_install_path)
         || !isExistPath(grafana_install_path + grafanaBinFile)
         || !isExistPath(grafana_install_path + grafanaConfFile)) {
         vscode.window.showErrorMessage('Grafana Install Path is wrong.');
         return;
     }
-    // Edit configuration for vscode
-    replaceStringFromFile(influxdb_install_path + influxdbConfFile,
-        influxdb_install_path + influxdbConfFile + ".vscode",
-        ['dir = "/var/lib/influxdb'],
-        ['dir = "' + influxdb_install_path + 'var/lib/influxdb']);
-    replaceStringFromFile(grafana_install_path + grafanaConfFile,
-        grafana_install_path + grafanaConfFile + ".vscode",
-        ["allow_embedding = false", "# enable anonymous access\r?\nenabled = false", "# specify role for unauthenticated users\r?\norg_role = Viewer"],
-        ["allow_embedding = true", "# enable anonymous access\r\nenabled = true", "# specify role for unauthenticated users\r\norg_role = Admin"]);
 
     // Create webview panel
     let resourceMonitoringPanel = vscode.window.createWebviewPanel('resourceMonitoring', 'Resource Monitoring', vscode.ViewColumn.One, {
@@ -184,10 +181,13 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         null,
         context.subscriptions
     );
-    resourceMonitoringPanel.webview.html = isRunning("grafana") ? getGrafanaHTML() : getLoadingHTML();
-    resourceMonitoringPanelCnt += 1;
 
     if (!isRunning("influxd")) {
+        // Edit configuration for vscode
+        replaceStringFromFile(influxdb_install_path + influxdbConfFile,
+            influxdb_install_path + influxdbConfFile + ".vscode",
+            ['dir = "/var/lib/influxdb'],
+            ['dir = "' + influxdb_install_path + 'var/lib/influxdb']);
         // Launch influxdb and grafana
         const influxdbArgs = ["-config", influxdb_install_path + influxdbConfFile + ".vscode"];
         process_influxdb = launchCommand(influxdb_install_path + influxdbBinFile, influxdbArgs);
@@ -199,6 +199,12 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         });
     }
     if (!isRunning("grafana")) {
+        // Edit configuration for vscode
+        replaceStringFromFile(grafana_install_path + grafanaConfFile,
+            grafana_install_path + grafanaConfFile + ".vscode",
+            ["allow_embedding = false", "# enable anonymous access\r?\nenabled = false", "# specify role for unauthenticated users\r?\norg_role = Viewer"],
+            ["allow_embedding = true", "# enable anonymous access\r\nenabled = true", "# specify role for unauthenticated users\r\norg_role = Admin"]);
+        isStartingGrafana = true;
         const grafanaArgs = ["server", "--homepath", grafana_install_path, "--config", grafana_install_path + grafanaConfFile + ".vscode"];
         process_grafana = launchCommand(grafana_install_path + grafanaBinFile, grafanaArgs);
         process_grafana.stderr.on("data", function (data) {
@@ -209,7 +215,11 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
             if (data.toString().includes("msg=\"HTTP Server Listen\"")) {
                 resourceMonitoringPanel.webview.html = getGrafanaHTML();
                 process_grafana.stdout.removeAllListeners();
+                isStartingGrafana = false;
             }
         });
+        resourceMonitoringPanel.webview.html = getLoadingHTML();
+    } else {
+        resourceMonitoringPanel.webview.html = getGrafanaHTML();
     }
 }
