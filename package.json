@@ -77,15 +77,15 @@
         "onView:webos.webosSimulator",
         "onView:webosose.apps",
         "onView:webosose.apps.vbox",
-        "onView:webosose.extensionHelp",
+        "onView:webosose.quickLauncher",
         "onCommand:vbox.refreshList",
         "onCommand:vbox.addInstance",
         "onCommand:vbox.modifyInstance",
         "onCommand:vbox.removeInstance",
         "onCommand:vbox.launchInstance",
-        "onCommand:extensionHelp.initHelp",
-        "onCommand:extensionHelp.readme",
-        "onCommand:extensionHelp.changeLog",
+        "onCommand:quickLauncher.initHelp",
+        "onCommand:quickLauncher.readme",
+        "onCommand:quickLauncher.changeLog",
         "onCommand:webosose.explorermenu.packageApp",
         "onCommand:webosose.explorermenu.installApp",
         "onCommand:webosose.explorermenu.runApp",
@@ -133,8 +133,8 @@
                     "name": "Simulator"
                 },
                 {
-                    "id": "extensionHelp",
-                    "name": "Help"
+                    "id": "quickLauncher",
+                    "name": "Quick Launcher"
                 }
             ]
         },
@@ -445,15 +445,15 @@
                 "title": "Launch Instance"
             },
             {
-                "command": "extensionHelp.initHelp",
+                "command": "quickLauncher.initHelp",
                 "title": "Init Help"
             },
             {
-                "command": "extensionHelp.readme",
+                "command": "quickLauncher.readme",
                 "title": "Readme"
             },
             {
-                "command": "extensionHelp.changeLog",
+                "command": "quickLauncher.changeLog",
                 "title": "Change Log"
             }
         ],

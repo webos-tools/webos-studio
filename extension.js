@@ -584,13 +584,13 @@ function activate(context) {
 
     // Help Provide
     const helpPanels = new Map();
-    const readmeCommand = vscode.commands.registerCommand('extensionHelp.readme', async () => {
+    const readmeCommand = vscode.commands.registerCommand('quickLauncher.readme', async () => {
         renderReadMe(helpPanels);
     });
-    const changeLogCommand = vscode.commands.registerCommand('extensionHelp.changeLog', async () => {
+    const changeLogCommand = vscode.commands.registerCommand('quickLauncher.changeLog', async () => {
         renderChangeLog(helpPanels);
     });
-    const initHelpCommand = vscode.commands.registerCommand('extensionHelp.initHelp', async () => {
+    const initHelpCommand = vscode.commands.registerCommand('quickLauncher.initHelp', async () => {
         await webososeHelpProvider.refresh();
     })
 
@@ -599,10 +599,11 @@ function activate(context) {
     context.subscriptions.push(initHelpCommand);
 
     const webososeHelpProvider = new HelpProvider([
-        { "label": "Readme", "onSelectCommand": "extensionHelp.readme", "icon": "info" },
-        { "label": "Change Log", "onSelectCommand": "extensionHelp.changeLog", "icon": "versions" }
+        { "label": "Resource Monitoring", "onSelectCommand": "webosose.resourceMonitoring", "icon": "resource_monitoring" },
+        { "label": "Readme", "onSelectCommand": "quickLauncher.readme", "icon": "info" },
+        { "label": "Change Log", "onSelectCommand": "quickLauncher.changeLog", "icon": "versions" }        
     ]);
-    vscode.window.registerTreeDataProvider('extensionHelp', webososeHelpProvider);
+    vscode.window.registerTreeDataProvider('quickLauncher', webososeHelpProvider);
 
     // comment out unused command registration, webosose.generateApp
     /*context.subscriptions.push(vscode.commands.registerCommand('webosose.generateApp', async () => {
