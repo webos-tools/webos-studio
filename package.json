@@ -180,6 +180,10 @@
                 "title": "webOS: Update SDK Path"
             },
             {
+                "command": "webos.updateProfile",
+                "title": "webOS: Update Profile"
+            },
+            {
                 "command": "webos.runSimulatorParams",
                 "title": "webOS TV: Run on Simulator with Parameters"
             },

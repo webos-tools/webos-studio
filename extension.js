@@ -351,12 +351,8 @@ function activate(context) {
     myStatusBarItem.command = myCommandId;
     context.subscriptions.push(myStatusBarItem);
 
-    // update status bar item once at start
-    // showProfile('INIT');
-    getCurrentDeviceProfile()
-        .then((data) => {
-            showProfile(data);
-        });
+	// update status bar item once at start
+	updateStatusBarItem();
 
     context.subscriptions.push(serviceProvider, methodProvider, paramProvider, snippetServiceProvider, snippetMethodProvider, snippetParamProvider);
 
@@ -550,6 +546,7 @@ function activate(context) {
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installGlobal', () => {
         installGlobalLibrary();
+        vscode.commands.executeCommand('webos.updateProfile');
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installEmulator', () => {
@@ -570,6 +567,10 @@ function activate(context) {
         } else {
             runSimulator();
         }
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('webos.updateProfile', () => {
+        updateStatusBarItem();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.updateSDKPath', (sdkPath) => {
@@ -978,14 +979,29 @@ function showProfile(profile) {
     myStatusBarItem.show();
 }
 
+function updateStatusBarItem() {
+    console.log("heen : updateStatusBarItem");
+    (async () => {
+        let profile, tooltip, text;
+        try {
+            profile = await getCurrentDeviceProfile();
+            profile = profile.trim().toUpperCase();
+            text = 'webOS ' + profile;
+            tooltip = 'Current profile of webOS Studio is set to ' + profile;
+            tooltip += '\nClick to change profile';
+        } catch (error) {
+            text = "webOS INIT...";
+            tooltip = 'Please install CLI to set webOS Studio Profile';
+        }
+        myStatusBarItem.text = text;
+        myStatusBarItem.tooltip = tooltip;
+        myStatusBarItem.show();
+    })();
+}
+
 async function setProfile(profile) {
     const result = await setDeviceProfile(profile);
-    if (result.ret) {
-        const currentProfile = result.profile.trim().toUpperCase();
-        showProfile(currentProfile);
-        return 0;
-    }
-    myStatusBarItem.hide();
+    updateStatusBarItem();
     return 1;
 }
 
