@@ -2,7 +2,7 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "2.2.0-beta.0",
+    "version": "2.2.0-beta.1",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
