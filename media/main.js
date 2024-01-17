@@ -176,10 +176,10 @@
                  </div>
                 <div class ="InstlistItemIcons">
                 
-                <span class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowPlayIcon codicon codicon-play"></i></span> 
-                <span class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowEditIcon codicon codicon-edit"></i></span>    
+                <div title="Launch" class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowPlayIcon codicon codicon-play"></i></div> 
+                <div title="Edit" class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowEditIcon codicon codicon-edit"></i></div>    
                 
-                    <span class ="InstlistItemIcon"> <i  isRunning= ${this.instListData[i].isRunning} uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowDelIcon codicon codicon-trash"></i></span>
+                    <div title="Delete" class ="InstlistItemIcon"> <i  isRunning= ${this.instListData[i].isRunning} uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowDelIcon codicon codicon-trash"></i></div>
                 </div>
                 `
             }

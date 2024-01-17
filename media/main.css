@@ -48,6 +48,7 @@ body {
 }
 .listLayout{
 	display: none;
+	width: 100%;
 }
 .addLayout{
 	display: none;
@@ -57,9 +58,7 @@ body {
 	justify-content: space-between; 
 	cursor: pointer;
 }
-.InstlistItem div:nth-child(1) {
-	flex:1;
-  }
+
 .InstlistItem:focus{
 	background: var(--vscode-list-focusBackground); 
 	color: var(--vscode-list-focusForeground);
@@ -69,7 +68,7 @@ body {
 
 }
 .InstlistItem:hover .InstlistItemIcons {
-	display: block;
+	display: flex;
 }
 
 .InstlistItemTitleContainer{
@@ -90,6 +89,9 @@ body {
 .InstlistItemIcon{
 	padding-left: 2px;
 	padding-right: 2px;
+	display: flex;
+	justify-content: center;
+  	align-items: center;
 	
 }
 .InstlistItemIcon:hover  {
