@@ -36,7 +36,7 @@ function _execAsync(cmd, option, next) {
 
             if (err) {
                 logger.error(err)
-                if (stderr.includes('not recognized') || stderr.includes('not found')) {
+                if (stderr.includes('not recognized') || stderr.includes('not found') || err.toString().includes('Command failed')) {
                     const { showPrompt } = require('../installGlobalLibrary');
                     showPrompt();
                     reject("Global Package needed");
@@ -74,7 +74,7 @@ function _execAsyncLauncher(cmd, option, next) {
             }
             if (err) {
                 logger.error(err)
-                if (stderr.includes('not recognized') || stderr.includes('not found')) {
+                if (stderr.includes('not recognized') || stderr.includes('not found') || err.toString().includes('Command failed')) {
                     reject("python3 and VirtualBox are needed");
                 } else {
                     reject(stderr);

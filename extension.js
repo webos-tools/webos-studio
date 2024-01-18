@@ -980,7 +980,6 @@ function showProfile(profile) {
 }
 
 function updateStatusBarItem() {
-    console.log("heen : updateStatusBarItem");
     (async () => {
         let profile, tooltip, text;
         try {
