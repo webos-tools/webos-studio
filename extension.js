@@ -1001,7 +1001,7 @@ function updateStatusBarItem() {
 async function setProfile(profile) {
     const result = await setDeviceProfile(profile);
     updateStatusBarItem();
-    return 1;
+    return result.ret ? 0 : 1;
 }
 
 function getAppsListinWorkspace(folderPath, type) {
