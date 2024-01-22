@@ -104,7 +104,7 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stdout.on('data', (data) => {
-            logger.log(data)
+            logger.log(data.toString())
             if (data.includes('http://localhost')) {
                 let startIndex = data.indexOf('http');
                 let finishIndex = data.indexOf('\n');
@@ -119,8 +119,9 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stderr.on('data', (data) => {
-            logger.warn(data)
-            console.error(data);
+            if(!data.toString().includes("uncaughtException")) {
+             logger.warn(data)
+            }
             reject(data);
         });
         child.on('error', (err) => {

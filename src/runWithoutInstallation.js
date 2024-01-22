@@ -182,14 +182,18 @@ async function runWithoutInstall(appSelectedDir, context) {
       // ares-launch --hosted --host-ip
       ares.launchHosted(appDir, deviceName, hostIp)
           .then(() => {
-              vscode.window.showInformationMessage(`Success! ${appDir} is running on ${device}.`);
-          }).catch((err) => {
-              let errMsg = `Failed to run ${appDir} on ${device}.`;
+              vscode.window.showInformationMessage(`Success! ${appDir} is running on ${deviceName}.`);
+            }).catch((err) => {
+            console.log(err.toString())
+              let errMsg = `Failed to run ${appDir} on ${deviceName}.`;
+           
               if (typeof err === 'string' && err.includes(`Unknown method`) && err.includes(`for category "/dev"`)) {
                   errMsg = `Please make sure the 'Developer Mode' is on.`;
               } else if (typeof err === 'string' && err.includes(`Connection time`)) {
-                  errMsg = `Please check ${device}'s IP address or port.`;
-              }
+                  errMsg = `Please check ${deviceName}'s IP address or port.`;
+              }else if(err.toString().includes("uncaughtException")) {
+                errMsg = `Please check ${deviceName}'s IP address or port.`;
+              };
               vscode.window.showErrorMessage(`Error! ${errMsg}`);
           });
           return;
