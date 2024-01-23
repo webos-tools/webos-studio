@@ -6,7 +6,7 @@ const vscode = require('vscode');
 let { addLibrary, installEnactTemplate, addEmulatorLauncher } = require('./lib/runCommand');
 const notify = require('./lib/notificationUtils');
 const { InputChecker } = require('./lib/inputChecker');
-const libraryList = ["@enact/cli", "@webosose/ares-cli", "patch-package"];
+const libraryList = ["@enact/cli", "http://10.177.227.123/cli/webosose-ares-cli-2.4.0-develop-updatedPackageJson.tgz", "patch-package"];
 const libraryPrompt = {
     "@enact/cli": `@enact/cli Global package adding in progress. This may take few minutes, Please wait...`,
     "@webosose/ares-cli": `@webosose/ares-cli Global package adding in progress...`,
@@ -96,7 +96,8 @@ async function installEmulatorLauncher() {
 
 async function showPrompt() {
     await vscode.window.showInformationMessage(
-        `This extension needs following packages to be installed globally, ${libraryList}.
+        `Warnning! If you have already installed OSE/TV vs code extensions and CLIs, you should remove them before using this extension.
+             This extension needs following packages to be installed globally, ${libraryList}.
              Click 𝐘𝐞𝐬 to approve installing them, else install them manually using following command,
              ${command}`,
         ...["Yes", "No"]
