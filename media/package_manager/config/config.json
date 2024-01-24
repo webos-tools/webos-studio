@@ -3,33 +3,7 @@
     "env": {
      
     },
-    "common":{
-        "subDirName": "Common",
-        "components": [
-            {
-                "type": "int-cli",
-                "displayName": "Command Line Interface (CLI)",
-                "subDirName": "CLI"
-            }
-        ],
-        "int-cli": [
-            {
-                "comp_uid": "int_cli_1",
-                "subDirName": "ares-cli-integrated",
-                "displayName": "webOS Integrated CLI",
-                "shortName": "CLI",
-                "sdk_version": "2.4.0",
-                "apiLevel": "21",
-                "repository": "http://mod.lge.com/hub/emulator/ares-cli-integrated -b develop",
-                "description": "",
-                "userid": "sdk",
-                "password": "sdk",
-                "expFileSizeInMB": "50",
-                "installMethod": "INT_CLI_INSTALL_FORALL",
-                "uninstallMethod": "INT_CLI_UNINSTALL_FORALL"
-            }
-        ]
-    },
+   
     "tv": {
         "subDirName": "TV",
         "components": [

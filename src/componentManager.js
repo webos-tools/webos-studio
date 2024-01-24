@@ -125,15 +125,13 @@ class ComponentMgr {
 
     this.dependancyJson["tv"] = this.getCompPreReqJsonStatusCompreWithVersion("tv")["tv"];
     this.dependancyJson["ose"] = this.getCompPreReqJsonStatusCompreWithVersion("ose")["ose"];
-    this.dependancyJson["common"] = this.getCompPreReqJsonStatusCompreWithVersion("common")["common"];
   }
   addStatusJsonIfNotAvl() {
     // this will copy the Status json in the Config Dir
     let statusJson = {
       preReq: {},
       tv: {},
-      ose: {},
-      common: {}
+      ose: {}
     };
 
     let filePath = path.join(this.envPath, "Config", "status.json");
@@ -206,11 +204,7 @@ class ComponentMgr {
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
-    dirname = path.join(this.envPath, "Common");
-    if (!fs.existsSync(dirname)) {
-      fs.mkdirSync(dirname, { recursive: true });
-    }
-  }
+}
 
   getStatusJson() {
     if (!this.statusJson) {
@@ -678,8 +672,7 @@ class ComponentMgr {
 
     // get the comp installed status and update status json 
     let osStr = os.platform().toLowerCase();
-    let sdkLst = ["common", "tv", "ose"];
-
+    let sdkLst = [ "tv", "ose"];
     for (let j = 0; j < sdkLst.length; j++) {
       try {
         let components = this.configJson[sdkLst[j]]["components"];
@@ -1570,7 +1563,6 @@ class ComponentMgr {
               logger.info(`${selComp.displayName} - Uninstalled.`)
               delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
               this.saveStatusJson(this.statusJson);
-              vscode.commands.executeCommand('webos.updateProfile');
             })
             .catch((error) => {
               msgComp["data"]["message"] = error.message;
@@ -3305,7 +3297,7 @@ class InstallManager {
               .catch((error) => {
                 this.qRejectHandlerForComp(error, msgComp, qItem);
               });
-              vscode.commands.executeCommand('webos.updateProfile');
+
 
           }
           break;

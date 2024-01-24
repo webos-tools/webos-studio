@@ -429,7 +429,7 @@ class PackageManagerSidebar {
      
         <dialog open  class="dlg" >
        
-        ${this.getAllTreeGridView(["common","tv", "ose"], ["COMMON TOOLS","TV SDK", "OSE SDK"])}
+        ${this.getAllTreeGridView(["tv", "ose"], ["TV SDK", "OSE SDK"])}
         <div style ="padding-top:10px">SDK Location : ${this.compMangerObj.envPath.replace(this.compMangerObj.envPath.charAt(0), this.compMangerObj.envPath.charAt(0).toUpperCase())}</div>
         <div style ="padding-top:5px" id ="avlDskSpace"></div>
       
