@@ -636,7 +636,7 @@ function addQuotes(name) {
 async function isInstalledService(serviceId, device) {
     const profile = await config(false);
     const command = (profile === "tv") ? "ares-novacom" : "ares-shell";
-    let cmd = command + ' --run "test -d /media/developer/apps/usr/palm/services/' + serviceId + '"  2&>1 > /dev/null  && echo 1 || echo 0 -d ' + addQuotes(device);
+    let cmd = command + ' --run "test -d /media/developer/apps/usr/palm/services/' + serviceId + '  2>&1 > /dev/null  && echo 1 || echo 0" -d ' + addQuotes(device);
   
     return await _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout) {
