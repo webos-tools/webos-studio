@@ -191,8 +191,6 @@ async function runWithoutInstall(appSelectedDir, context) {
                   errMsg = `Please make sure the 'Developer Mode' is on.`;
               } else if (typeof err === 'string' && err.includes(`Connection time`)) {
                   errMsg = `Please check ${deviceName}'s IP address or port.`;
-              }else if(err.toString().includes("uncaughtException")) {
-                errMsg = `Please check ${deviceName}'s IP address or port.`;
               };
               vscode.window.showErrorMessage(`Error! ${errMsg}`);
           });

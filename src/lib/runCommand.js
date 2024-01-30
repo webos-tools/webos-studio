@@ -93,6 +93,7 @@ function _execAsyncLauncher(cmd, option, next) {
 function _execServer(cmd, params) {
     logger.run(cmd +" "+ params)
     logger.log("------------------------------------------------")
+    let errMsg ="";
     return new Promise((resolve, reject) => {
       
         const myArr = params.split(" ");
@@ -119,21 +120,23 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stderr.on('data', (data) => {
-            if(!data.toString().includes("uncaughtException")) {
-             logger.warn(data)
-            }
+            errMsg = errMsg+data.toString();
             reject(data);
         });
         child.on('error', (err) => {
+          
             logger.error(err)
             console.error('Failed to start subprocess.');
             console.error(err);
             reject(err);
         });
         child.on('close', (code, signal) => {
+        if(errMsg !=""){
+            logger.warn(errMsg)
+
+        }
             console.log(
                 `child process terminated due to receipt of signal ${signal}`);
-            //reject(signal);
         });
     })
 }
