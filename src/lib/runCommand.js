@@ -670,12 +670,7 @@ async function launchSimulator(appDir, version, params) {
     const terminalName = 'webOS TV Simulator';
     const cliPath = await getCliPath();
     try {
-        const terminal = vscode.window.createTerminal({
-            name: terminalName,
-            env: {
-                //path: cliPath
-            }
-        });
+        const terminal = vscode.window.createTerminal(terminalName, os.type() == "Windows_NT" ? "${env:windir}\\System32\\cmd.exe" : null);
         const paramsStr = params ? `-p "${JSON.stringify(params).replace(/"/g, "'")}"` : "";
         const launchCmd = os.type() == "Windows_NT" ? 'ares-launch.cmd' : 'ares-launch';
         const cmd = `${launchCmd} ${appDir.replace(/\\/g, '/')} -s ${version} ${paramsStr}`;
