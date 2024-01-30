@@ -10,6 +10,7 @@ const { InputChecker } = require('./lib/inputChecker');
 const { getDefaultDir, getIpkArray } = require('./lib/workspaceUtils');
 const ares = require('./lib/runCommand');
 const notify = require('./lib/notificationUtils');
+const ga4Util = require('./ga4Util');
 
 const folderBtn = InputController.FileBrowser;
 folderBtn.bindAction(async function (thisInput) {
@@ -36,6 +37,7 @@ function _install(appFilePath, device) {
             });
             // let progress = await notify.initProgress("generate application", true);
             await notify.showProgress(progress, 20, `Installation of IPK to device in progress...`);
+            ga4Util.mpGa4Event("InstallApp", {category:"Commands"});
             await ares.install(appFilePath, device)
                 .then(async () => {
                     await notify.clearProgress(progress, `Success! Installed ${appFilePath} on ${device}.`);

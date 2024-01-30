@@ -504,6 +504,7 @@ async function generateAppFromProjectWizard(template, projectLocation, projectNa
 }
 
 function _removeAppDir(appDirPath) {
+    require('./ga4Util').mpGa4Event("RemoveAppDir", {category:"Commands"});
     try {
         if (!fs.existsSync(appDirPath)) {
             return "REMOVE_SUCCESS";

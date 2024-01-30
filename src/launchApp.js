@@ -8,6 +8,7 @@ const { getDeviceList, getInstalledList } = require('./lib/deviceUtils');
 const notify = require('./lib/notificationUtils');
 const ares = require('./lib/runCommand');
 const { getLaunchParams } = require('./lib/commonInput');
+const ga4Util = require('./ga4Util');
 
 module.exports = async function launchApp(id, deviceName, displayId, withParams) {
     const title = withParams ? 'Launch Application with Parameters' : 'Launch Application';
@@ -87,6 +88,7 @@ module.exports = async function launchApp(id, deviceName, displayId, withParams)
             });
             // let progress = await notify.initProgress("generate application", true);
             await notify.showProgress(progress, 20, `Preparing to launch ${appId}`);
+            ga4Util.mpGa4Event("LaunchApp", {category:"Commands", target:device});
             await ares.launch(appId, device, params, dp)
                 .then(async () => {
                     const paramsMsg = JSON.stringify(params) === '{}' ? '' : ` with parameters ${JSON.stringify(params)}`;

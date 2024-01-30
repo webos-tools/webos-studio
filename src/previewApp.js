@@ -14,8 +14,10 @@ const enactUtils = require('./lib/enactUtils');
 const portfinder = require('portfinder');
 const notify = require('./lib/notificationUtils');
 const http = require('http');
+const ga4Util = require('./ga4Util');
 
 module.exports = async function previewApp(appSelectedDir, previewPanelInfo) {
+    ga4Util.mpGa4Event("PreviewApp", {category:"Commands"});
     let defaultDir = getDefaultDir();
     let defaultString = '';
     let appDir;

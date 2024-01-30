@@ -37,6 +37,7 @@ const { getCurrentDeviceProfile, setCurrentDeviceProfile } = require('./src/lib/
 const { PackageManagerSidebar } = require('./src/packageManagerSidebar');
 const { getSimulatorDirPath } = require('./src/lib/configUtils');
 const extensionPath = __dirname;
+const ga4Util = require('./src/ga4Util');
 
 let apiObjArray = [];
 let apiObjArrayIndex = 0;
@@ -47,7 +48,10 @@ let myStatusBarItem;
  */
 function activate(context) {
     createOutPutChannel();
-
+    ga4Util.initLocalStorage(context);
+    ga4Util.sendLaunchEvent(context.extension.packageJSON.version);
+    ga4Util.sendPageView(`webOSStudio ${context.extension.packageJSON.version}`);
+   
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
     let packageManagerObj = {webPanel :null};
     const serviceProvider = vscode.languages.registerCompletionItemProvider(
@@ -83,6 +87,8 @@ function activate(context) {
 
                     returnItemArray.push(commitCharacterCompletion);
                 }
+                // too many event rised
+                //ga4Util.mpGa4Event("autoCompletion", {category:"features", type: "service_name"});
                 return returnItemArray;
             }
         },
@@ -132,6 +138,8 @@ function activate(context) {
                     commitCharacterCompletion.documentation = content;
                     returnItemArray.push(commitCharacterCompletion);
                 }
+                // too many event rised
+                //ga4Util.mpGa4Event("autoCompletion", {category:"features", type: "method_name"});
                 return returnItemArray;
             }
         },
@@ -182,6 +190,8 @@ function activate(context) {
                 }
             }
 
+            // too many event rised
+            //ga4Util.mpGa4Event("autoCompletion", {category:"features", type: "params_name"});
             return returnItemArray;
         }
     });
@@ -241,6 +251,8 @@ function activate(context) {
 
             secondSnippetCompletion.insertText = new vscode.SnippetString(stringSecondSub);
 
+            // too many event rised
+            //ga4Util.mpGa4Event("autoCompletion", {category:"features", type: "snippet_service"});
             return [
                 firstSnippetCompletion,
                 secondSnippetCompletion
@@ -285,6 +297,8 @@ function activate(context) {
                 }
             }
 
+            // too many event rised
+            //ga4Util.mpGa4Event("autoCompletion", {category:"features", type: "snippet_method"});
             return returnItemArray;
         }
     });
@@ -334,6 +348,8 @@ function activate(context) {
                 }
             }
 
+            // too many event rised
+            //ga4Util.mpGa4Event("autoCompletion", {category:"features", type: "snippet_params"});
             return returnItemArray;
         }
     });
@@ -511,6 +527,7 @@ function activate(context) {
                     (async () => {
                         let result = await setProfile(deviceProfile.toLowerCase());
                         if (result === 0) {
+                            ga4Util.mpGa4Event("LaunchProjectWizard", {category:"Commands", type: appSubType, apiLevel: apiLevel});
                             generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib, deviceProfile)
                                 .then(() => {
                                     let apiLevelStatus = "", apiLevelNo = "";
@@ -547,13 +564,16 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installGlobal', () => {
         installGlobalLibrary();
         vscode.commands.executeCommand('webos.updateProfile');
+        ga4Util.mpGa4Event("installGlobal", {category:"Commands"});
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installEmulator', () => {
+        ga4Util.mpGa4Event("installEmulator", {category:"Commands"});
         installEmulatorLauncher();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.setDeviceProfile', () => {
+        ga4Util.mpGa4Event("setDeviceProfile", {category:"Commands"});
         setProfile();
     }));
 
@@ -586,12 +606,15 @@ function activate(context) {
     // Help Provide
     const helpPanels = new Map();
     const readmeCommand = vscode.commands.registerCommand('quickLauncher.readme', async () => {
+        ga4Util.mpGa4Event("quickLauncher_readme", {category:"Commands"});
         renderReadMe(helpPanels);
     });
     const changeLogCommand = vscode.commands.registerCommand('quickLauncher.changeLog', async () => {
+        ga4Util.mpGa4Event("quickLauncher_changeLog", {category:"Commands"});
         renderChangeLog(helpPanels);
     });
     const initHelpCommand = vscode.commands.registerCommand('quickLauncher.initHelp', async () => {
+        ga4Util.mpGa4Event("quickLauncher_refresh", {category:"Commands"});
         await webososeHelpProvider.refresh();
     })
 
@@ -613,6 +636,7 @@ function activate(context) {
         webososeAppsProvider.storeContextOnExtnLaunch(context);
     }));*/
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setloglevel', () => {
+        ga4Util.mpGa4Event("setLogLevel", {category:"Commands"});
         setLogLevel();
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.previewApp', () => {
@@ -926,6 +950,7 @@ function activate(context) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('ipkanalyze.start', async () => {
 
+        ga4Util.sendPageView("IpkAnalyzer");
         const ipkAnalyzer = new IPK_ANALYZER(context);
         ipkAnalyzer.startEditor();
 

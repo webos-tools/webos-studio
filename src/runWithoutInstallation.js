@@ -222,6 +222,7 @@ async function runWithoutInstall(appSelectedDir, context) {
         installContainerAndStartSocketAndLaunch(context, device);
       }
     }
+    require('./ga4Util').mpGa4Event("runWithoutInstall", {category:"Commands"});
   }
 }
 

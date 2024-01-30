@@ -218,6 +218,7 @@ module.exports = function packageApp(appSelectedDir, isSkip) {
                             });
                     }
                     await notify.showProgress(progress, 50, `IPK creation is in progress...`);
+                    require('./ga4Util').mpGa4Event("PackageApp", {category:"Commands"});
                     await ares.package(appDir, outDir, minify, serviceDir)
                         .then(async (ipkFile) => {
                             await notify.clearProgress(progress, `Success! Created ${ipkFile} at ${outDir}.`);

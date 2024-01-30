@@ -5,6 +5,8 @@ This extension helps develop apps and services for [webOS Open Source Edition (O
 > **IMPORTANT NOTICE:** 
 > - If you installed the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose), please uninstall it first. Then install this extension.
 > - Read [Requirements](#requirements) and [Setup](#setup) sections.
+> - This extension collects usage data of webOS Studio features to understand how it is performing, where improvements need to be made, and how features are being used.<br />
+>   It doesn't contain any persnal data, but if you don't want to send, uncheck Settings - **Webosose: Enable User Data Collection**, then it won't send any usage data.
 
 ---
 

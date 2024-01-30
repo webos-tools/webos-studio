@@ -107,6 +107,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
             resolve();
             return;
         }
+        require('./ga4Util').mpGa4Event("InspectApp", {category:"Commands", debugoption: debugoption});
         ares.inspect(appId, device, isService)
             .then(([url, child]) => {
                 child.stdout.on('data', (data) => {

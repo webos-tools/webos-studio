@@ -7,6 +7,8 @@ const fs = require('fs');
 const { getDefaultDir, getAppsList } = require('./lib/workspaceUtils');
 const path = require('path');
 const { execAsync } = require('./lib/runCommand');
+const ga4Util = require('./ga4Util');
+
 class AppsProvider {
     _onDidChangeTreeData = new vscode.EventEmitter();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -14,6 +16,7 @@ class AppsProvider {
     constructor() { }
 
     refresh(element, context) {
+        ga4Util.mpGa4Event("RefreshAppsInWorkspace", {category:"Commands"});
         if (element) {
             this._onDidChangeTreeData.fire(element);
         } else {

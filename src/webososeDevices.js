@@ -8,6 +8,7 @@ const chokidar = require('chokidar');
 const { getDeviceList, getInstalledList, getRunningList, updateDeviceStatus, getSimulatorList } = require('./lib/deviceUtils');
 const { logger } = require('./lib/logger');
 const { getSimulatorDirPath } = require('./lib/configUtils');
+const ga4Util = require('./ga4Util');
 
 const resourcesPath = path.resolve(__dirname, '../../resources');
 class DeviceProvider {
@@ -17,6 +18,7 @@ class DeviceProvider {
     constructor() { }
 
     refresh(element) {
+        ga4Util.mpGa4Event("RefreshKnownDevice", {category:"Commands"});
         if (element) {
             this._onDidChangeTreeData.fire(element);
         } else {
@@ -139,6 +141,7 @@ class Simulator {
     }
 
     refresh(element) {
+        ga4Util.mpGa4Event("RefreshSimulator", {category:"Commands"});
         if (element) {
             this._onDidChangeTreeData.fire(element);
         } else {

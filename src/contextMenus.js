@@ -7,6 +7,7 @@ const ares = require('./lib/runCommand');
 
 function uninstallApp(appId, device) {
     return new Promise((resolve, reject) => {
+        require('./ga4Util').mpGa4Event("UninstallApp", {category:"Commands"});
         ares.installRemove(appId, device)
             .then(() => {
                 vscode.window.showInformationMessage(`Uninstalled ${appId} on ${device}.`);
@@ -27,6 +28,7 @@ function uninstallApp(appId, device) {
 function closeApp(appId, device, dp) {
     return new Promise((resolve, reject) => {
         appId = appId.split(/\s+/)[0];
+        require('./ga4Util').mpGa4Event("CloseApp", {category:"Commands"});
         ares.launchClose(appId, device, dp)
             .then(() => {
                 vscode.window.showInformationMessage(`Closed ${appId} on ${device}.`);

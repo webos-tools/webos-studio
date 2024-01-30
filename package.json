@@ -2,7 +2,7 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "2.2.0-beta.3",
+    "version": "2.2.0-beta.3.udc",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
@@ -13,6 +13,7 @@
         "Other"
     ],
     "icon": "media/webOS.png",
+    "type": "commonjs",
     "activationEvents": [
         "onStartupFinished",
         "onCommand:webosose.resourceMonitoring",
@@ -969,8 +970,13 @@
                 },
                 "webosose.lunaApiLevel": {
                     "type": "string",
-                    "default": "OSE_APILevel_21",
-                    "description": "(Required) Set the level of LUNA API, e.g OSE_APILevel_21"
+                    "default": "OSE_APILevel_27",
+                    "description": "(Required) Set the level of LUNA API, e.g OSE_APILevel_27"
+                },
+                "webosose.enableUserDataCollection": {
+                    "type": "boolean",
+                    "default": "true",
+                    "markdownDescription": "Enable User Data Collection for the webOS Studio Extension to send product usage.\n\n_**Note**: The UDC is different with telemetry, disabling telemetry is not affect to UDC._"
                 }
             }
         },
@@ -1022,6 +1028,8 @@
         "get-folder-size": "2.0.1",
         "node-downloader-helper": "^2.1.9",
         "node-fetch": "^2.6.9",
+        "got": "^11.8.6",
+        "node-gtag4": "^0.1.2",
         "node-watch": "^0.6.2",
         "portfinder": "^1.0.28",
         "request": "^2.88.2",
@@ -1038,7 +1046,7 @@
     },
     "devDependencies": {
         "@typescript-eslint/parser": "4.33.0",
-        "eslint": "6.8.0",
+        "eslint": "^6.8.0",
         "eslint-plugin-import": "2.22.0",
         "typescript": "4.4.4"
     }

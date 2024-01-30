@@ -80,6 +80,7 @@ async function addDevice(deviceList) {
         let name = results.shift();
         let info = await _setDeviceInfo();
 
+        require('./ga4Util').mpGa4Event("AddDevice", {category:"Commands"});
         await ares.setupDeviceAdd(name, info)
             .then(() => {
                 vscode.window.showInformationMessage(`Success! Added the device '${name}'.`);
@@ -114,6 +115,7 @@ async function modifyDevice(deviceList, deviceName) {
     }
     let info = await _setDeviceInfo(device);
 
+    require('./ga4Util').mpGa4Event("ModifyDevice", {category:"Commands"});
     await ares.setupDeviceModify(name, info)
         .then(() => {
             vscode.window.showInformationMessage(`Success! Modified the device '${name}'.`);
@@ -165,6 +167,7 @@ async function removeDevice(deviceList, deviceName) {
     }
 
     if (isConfirmed) {
+        require('./ga4Util').mpGa4Event("RemoveDevice", {category:"Commands"});
         await ares.setupDeviceRemove(name)
             .then(() => {
                 vscode.window.showInformationMessage(`Success! Removed the device '${name}'.`);

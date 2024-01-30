@@ -92,6 +92,7 @@ class PackageManagerSidebar {
             }
 
             case "INSTALL_COMP": {
+              require("./ga4Util").mpGa4Event("PackageManager_Install", {category:"Commands", name: msg.data.displayname, version: msg.data.sdk_version});
               this.compMangerObj.installCompAndDependancy(msg.data, this.panel)
 
               break;
@@ -99,8 +100,9 @@ class PackageManagerSidebar {
 
             case "UNINSTALL_COMP":
             {
+              require("./ga4Util").mpGa4Event("PackageManager_UnInstall", {category:"Commands", name: msg.data.displayname, version: msg.data.sdk_version});
               this.compMangerObj.unInstallComp(msg.data, this.panel);
-               break;
+              break;
 
             }
             case "UNINSTALL_COMP_REQ":

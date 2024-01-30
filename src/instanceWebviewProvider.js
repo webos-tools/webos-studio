@@ -10,6 +10,7 @@ const { resolve } = require("path");
 const { getRunningInstance } = require('./lib/vboxUtils');
 const fs = require('fs')
 const { logger } = require('./lib/logger');
+const ga4Util = require('./ga4Util');
 const wemulIntegration = true;
 class InstanceWebviewProvider {
 
@@ -66,11 +67,13 @@ class InstanceWebviewProvider {
                     }
                 case 'addInstance':
                     {
+                        ga4Util.mpGa4Event("EmulatorManager_add", {category:"Commands", action:"Add instance"});
                         this.addNewInstance(msg.data)
                         break;
                     }
                 case 'updateInstance':
                     {
+                        ga4Util.mpGa4Event("EmulatorManager_update", {category:"Commands", action:"Update instance"});
                         this.updateInstance(msg.data)
                         break;
                     }
@@ -81,16 +84,19 @@ class InstanceWebviewProvider {
                     }
                 case 'launchInstance':
                     {
+                        ga4Util.mpGa4Event("EmulatorManager_launch", {category:"Commands", action:"Launch instance"});
                         this.launchSelectedInstance(msg.data)
                         break;
                     }
                 case 'deleteInstance':
                     {
+                        ga4Util.mpGa4Event("EmulatorManager_delete", {category:"Commands", action:"Delete instance"});
                         this.deleteInstance(msg.data)
                         break;
                     }
                 case 'editInstance':
                     {
+                        ga4Util.mpGa4Event("EmulatorManager_edit", {category:"Commands", action:"Edit instance"});
                         this.editInstance(msg.data)
                         break;
                     }

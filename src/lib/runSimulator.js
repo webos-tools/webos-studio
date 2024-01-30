@@ -51,6 +51,7 @@ async function _runSimulator(selectedDir, selectedVersion, withParams) {
  * @param {boolean} withParams whether to run an app with parameters or not
  */
 module.exports = function runSimulator(selectedDir, selectedVersion, withParams) {
+    require('../ga4Util').mpGa4Event("runSimulator", {category:"Commands"});
     _runSimulator(selectedDir, selectedVersion, withParams)
         .then((obj) => {
             ares.launchSimulator(obj.appDir, obj.simulatorVersion, obj.params)

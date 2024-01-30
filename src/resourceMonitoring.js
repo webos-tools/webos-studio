@@ -222,4 +222,5 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
     } else {
         resourceMonitoringPanel.webview.html = getGrafanaHTML();
     }
+    require('./ga4Util').mpGa4Event("LaunchResourceMonitor", {category:"Commands"});
 }

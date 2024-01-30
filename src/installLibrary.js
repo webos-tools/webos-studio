@@ -40,6 +40,7 @@ module.exports = async function installLibrary(appDirName, type) {
                 }
             }
             await notify.clearProgress(progress, `Success! Package installed for ${appDirName}`);
+            require('./ga4Util').mpGa4Event("InstallLibrary", {category:"Commands", type:type});
             return Promise.resolve();
         } catch (err) {
             let erMsg = err.toString();
