@@ -279,7 +279,7 @@
         "ose-resourcemonitor": [
             {
                 "comp_uid": "ose_resourcemonitor_1",
-                "subDirName": "grafana-9.4.7",
+                "subDirName": "grafana-9.4.17",
                 "displayName": "Resource Monitor",
                 "shortName": "Grafana",
                 "sdk_version": "1.0.0",
@@ -288,7 +288,7 @@
                 "description": "",
                 "userid": "sdk",
                 "password": "sdk",
-                "expFileSizeInMB": "461",
+                "expFileSizeInMB": "600",
                 "installMethod": "OSE_RESMONITOR_INSTALL_FORALL",
                 "uninstallMethod": "OSE_RESMONITOR_UNINSTALL_FORALL"
             }

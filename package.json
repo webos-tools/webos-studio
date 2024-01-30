@@ -952,6 +952,11 @@
                     "default": null,
                     "description": "(Required) Grafana Install Path"
                 },
+                "webosose.resourceMonitoring.provisionedDashboard": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable/Disable provisioned webOS dashboard at first"
+                },
                 "webosose.chromeExecutable": {
                     "type": [
                         "string",

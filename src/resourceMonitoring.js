@@ -68,7 +68,13 @@ function getGrafanaHTML() {
     </style>
     </head>
     <body style="background-color: black;">
-        <iframe src="http://localhost:3000"></iframe>
+        <iframe src="http://localhost:3000`
+    const webosose_config = vscode.workspace.getConfiguration('webosose');
+    let isEnableProvisionedDashboard = webosose_config.get('resourceMonitoring.provisionedDashboard');
+    if (isEnableProvisionedDashboard && (resourceMonitoringPanelCnt == 0)) {
+        tmpStr += `/d/vLUkW0RSk`;
+    }
+    tmpStr += `"></iframe>
     </body>
     </html>`;
     resourceMonitoringPanelCnt += 1;
@@ -204,6 +210,36 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
             grafana_install_path + grafanaConfFile + ".vscode",
             ["allow_embedding = false", "# enable anonymous access\r?\nenabled = false", "# specify role for unauthenticated users\r?\norg_role = Viewer"],
             ["allow_embedding = true", "# enable anonymous access\r\nenabled = true", "# specify role for unauthenticated users\r\norg_role = Admin"]);
+
+        const fs = require('fs');
+        fs.writeFileSync(grafana_install_path + "conf/provisioning/datasources/webOS.datasources.vscode.yaml",
+            `# # config file version
+apiVersion: 1
+
+deleteDatasources:
+  - name: InfluxDB
+    orgId: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    url: http://localhost:8086
+    database: telegraf
+    editable: true`, 'utf-8');
+
+        fs.writeFileSync(grafana_install_path + "conf/provisioning/dashboards/webOS.dashboards.vscode.yaml",
+            `# # config file version
+apiVersion: 1
+
+providers:
+ - name: 'dashboards'
+   orgId: 1
+   type: 'file'
+   options:
+     path: ` + grafana_install_path + "conf/provisioning/dashboards", 'utf-8');
+
+        fs.copyFileSync(extensionPath + "/media/webOS_dashboard.json", grafana_install_path + "conf/provisioning/dashboards/webOS_dashboard.json");
+
         isStartingGrafana = true;
         const grafanaArgs = ["server", "--homepath", grafana_install_path, "--config", grafana_install_path + grafanaConfFile + ".vscode"];
         process_grafana = launchCommand(grafana_install_path + grafanaBinFile, grafanaArgs);

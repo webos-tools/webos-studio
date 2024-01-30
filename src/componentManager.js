@@ -149,7 +149,7 @@ class ComponentMgr {
     if (!tvsdk) {
       this.setAnyEnvVariable("LG_WEBOS_TV_SDK_HOME", path.join(this.envPath, "TV"))
     }
-  
+
   }
   promptIfTVSDKInstallerIsAvailable() {
     let tvsdk = this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
@@ -681,7 +681,7 @@ class ComponentMgr {
             this.configJson[sdkLst[j]][components[k]["type"]];
           let command = "";
           switch (components[k]["type"]) {
-          
+
             case "ose-cli":
               {
                 command = "ares -V";
@@ -3967,18 +3967,17 @@ class InstallManager {
               },
             };
             try {
-              let downloadURL = ""
+              let version = qItem["msgData"]["componentInfo"]["subDirName"].split("-")[1];
+              let downloadURL = "https://dl.grafana.com/enterprise/release/grafana-enterprise-" + version;
               switch (osStr) {
                 case "win32":
-                  downloadURL = "https://dl.grafana.com/enterprise/release/grafana-enterprise-9.4.7.windows-amd64.zip"
+                  downloadURL += ".windows-amd64.zip"
                   break;
                 case "linux":
-                  downloadURL = "https://dl.grafana.com/enterprise/release/grafana-enterprise-9.4.7.linux-amd64.tar.gz"
-
+                  downloadURL += ".linux-amd64.tar.gz"
                   break;
                 case "darwin":
-                  downloadURL = "https://dl.grafana.com/enterprise/release/grafana-enterprise-9.4.7.darwin-amd64.tar.gz"
-
+                  downloadURL += ".darwin-amd64.tar.gz"
                   break;
               }
 
@@ -3997,8 +3996,6 @@ class InstallManager {
                   msgComp["data"]["step"] = "EXTRACTING"
                   msgComp["data"]["message"] = "Extracting";
                   this.panel.webview.postMessage(msgComp);
-
-
 
                   switch (osStr) {
                     case "darwin":
@@ -4211,20 +4208,20 @@ class InstallManager {
         break;
 
     }
-    let configData ="{}"
+    let configData = "{}"
     if (fs.existsSync(settingFPath)) {
-      configData = fs.readFileSync(settingFPath, "utf8")  
+      configData = fs.readFileSync(settingFPath, "utf8")
     }
     configData = JSON.parse(configData);
     if (dbType == "influxdb") {
-      if(configData["webosose.resourceMonitoring.influxdbInstallPath"]){
+      if (configData["webosose.resourceMonitoring.influxdbInstallPath"]) {
         logger.info("Resource Monitor - Overriden the Influxdb install path in settings")
       }
 
       configData["webosose.resourceMonitoring.influxdbInstallPath"] = value
 
     } else {
-      if(configData["webosose.resourceMonitoring.grafanaInstallPath"]){
+      if (configData["webosose.resourceMonitoring.grafanaInstallPath"]) {
         logger.info("Resource Monitor - Overriden the Grafana install path in settings")
       }
 
