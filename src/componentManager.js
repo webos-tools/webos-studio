@@ -1563,6 +1563,7 @@ class ComponentMgr {
               logger.info(`${selComp.displayName} - Uninstalled.`)
               delete this.statusJson[msgData.sdk][msgData.componentInfo.comp_uid];
               this.saveStatusJson(this.statusJson);
+              vscode.commands.executeCommand('webos.updateProfile');
             })
             .catch((error) => {
               msgComp["data"]["message"] = error.message;
@@ -3297,7 +3298,7 @@ class InstallManager {
               .catch((error) => {
                 this.qRejectHandlerForComp(error, msgComp, qItem);
               });
-
+              vscode.commands.executeCommand('webos.updateProfile');
 
           }
           break;
