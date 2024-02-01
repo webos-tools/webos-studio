@@ -31,6 +31,7 @@ This extension helps develop apps and services for [webOS Open Source Edition (O
   - [Emulator Manager](#emulator-manager)
   - [IPK Analyzer](#ipk-analyzer)
   - [Process Log](#process-log)
+  - [Resource Monitoring](#resource-monitoring)
 - [Command Palette](#command-palette)
 - [Miscellaneous Information](#miscellaneous-information)
 - [References](#references)
@@ -426,6 +427,13 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 
 ![Process log in the output panel](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/vs-code-extension-webos-studio/output-panel.png)
 
+### Resource Monitoring
+
+The Resource Monitoring tracks and visualizes system and memory usage, CPU consumption, and so on. 
+This enables developers to test their apps or services and identify resource consumption trends and patterns.
+
+![Resource Monitoring](/media/vscode_resourcemonitoring.png)
+
 ## Command Palette
 
 | Category                   | Command                            | Description                                                         |
@@ -440,6 +448,7 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 | Batch commands             | webOS: Run Application         | Package, Install, and Launch operations are executed sequentially.  |
 |                            | webOS: Debug       | Package, Install, and Inspect operations are executed sequentially. |
 | Analyzing an IPK           | webOS: IPK Analyzer            | Analyzes a selected IPK.                                            |
+| Resource Monitoring        | webOS: Launch Resource Monitoring          | Launch Resource Monitoring panel.                                          |
 
 ## Miscellaneous Information
 
