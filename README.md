@@ -448,7 +448,7 @@ This enables developers to test their apps or services and identify resource con
 | Batch commands             | webOS: Run Application         | Package, Install, and Launch operations are executed sequentially.  |
 |                            | webOS: Debug       | Package, Install, and Inspect operations are executed sequentially. |
 | Analyzing an IPK           | webOS: IPK Analyzer            | Analyzes a selected IPK.                                            |
-| Resource Monitoring        | webOS: Launch Resource Monitoring          | Launch Resource Monitoring panel.                                          |
+| Resource Monitoring        | webOS OSE: Launch Resource Monitoring          | Launch Resource Monitoring panel.                                          |
 
 ## Miscellaneous Information
 
