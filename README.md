@@ -431,6 +431,7 @@ webOS Studio has many internal utility commands including ares-cli, enact-cli, a
 
 The Resource Monitoring tracks and visualizes system and memory usage, CPU consumption, and so on. 
 This enables developers to test their apps or services and identify resource consumption trends and patterns.
+Currently, it supports only webOS OSE.
 
 ![Resource Monitoring](/media/vscode_resourcemonitoring.png)
 
