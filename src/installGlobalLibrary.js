@@ -39,6 +39,7 @@ async function installGlobalLibrary() {
                     await installEnactTemplate();
                     vscode.commands.executeCommand('webososeDevices.refreshList');
                     await notify.clearProgress(progress, `Success! All Package installed`);
+                    vscode.commands.executeCommand('webos.updateProfile');
                     return Promise.resolve();
                 }
             } else {
@@ -51,6 +52,7 @@ async function installGlobalLibrary() {
                 await installEnactTemplate();
                 vscode.commands.executeCommand('webososeDevices.refreshList');
                 await notify.clearProgress(progress, `Success! All Package installed`);
+                vscode.commands.executeCommand('webos.updateProfile');
                 return Promise.resolve();
             }
         } catch (err) {
@@ -94,7 +96,10 @@ async function installEmulatorLauncher() {
     });
 }
 
+let handlingPrompt = false;
 async function showPrompt() {
+    if (handlingPrompt) return;
+    handlingPrompt = true;
     await vscode.window.showInformationMessage(
         `Warnning! If you have already installed OSE/TV vs code extensions and CLIs, you should remove them before using this extension.
              This extension needs following packages to be installed globally, ${libraryList}.
@@ -108,6 +113,7 @@ async function showPrompt() {
             } else {
                 vscode.window.showInformationMessage(`Please install manually these packages using NPM command, ${command}`);
             }
+            handlingPrompt = false;
         });
 }
 
