@@ -598,7 +598,7 @@ function activate(context) {
         webosSimulatorProvider.refresh();
     }));
     context.subscriptions.push(
-        vscode.commands.registerCommand('webosos.runSimulatorParams', () => {
+        vscode.commands.registerCommand('webos.runSimulatorParams', () => {
             runSimulator(null, null, true);
         })
     );

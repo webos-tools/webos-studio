@@ -50,7 +50,7 @@ async function _runSimulator(selectedDir, selectedVersion, withParams) {
  * @param {string} selectedVersion webOS TV version of the simulator
  * @param {boolean} withParams whether to run an app with parameters or not
  */
-module.exports = function runSimulator(selectedDir, selectedVersion, withParams) {
+module.exports = function runSimulator(selectedDir = null, selectedVersion = null, withParams = null) {
     require('../ga4Util').mpGa4Event("runSimulator", {category:"Commands"});
     _runSimulator(selectedDir, selectedVersion, withParams)
         .then((obj) => {

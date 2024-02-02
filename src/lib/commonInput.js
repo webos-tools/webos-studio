@@ -8,6 +8,7 @@ const path = require('path');
 const { InputController } = require('./inputController');
 const { InputChecker } = require('./inputChecker');
 const { getDefaultDir, getIpkArray } = require('./workspaceUtils');
+const { fileURLToPath } = require('url');
 
 const folderBtn = InputController.FileBrowser;
 
@@ -16,7 +17,7 @@ const LAUNCHPARAMS_FILE = '.launchparams.json';
 /**
  * @param {string} title
  * @param {string} prompt optional prompt string
- * @returns {string} selected app directory path
+ * @returns {Promise<string>} selected app directory path
  */
 async function getAppDir(title, prompt) {
     if (!title) {
@@ -28,6 +29,15 @@ async function getAppDir(title, prompt) {
     if (defaultDir) {
         defaultString = ` (default: ${defaultDir})`;
     }
+    folderBtn.bindAction(async function (thisInput) {
+        let file = await vscode.window.showOpenDialog({
+            canSelectFiles: false,
+            canSelectFolders: true
+        });
+        if (file) {
+            thisInput.value = fileURLToPath(file[0].toString(true));
+        }
+    });
 
     const controller = new InputController();
     controller.addStep({
