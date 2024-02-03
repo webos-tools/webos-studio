@@ -6,7 +6,7 @@ const vscode = require('vscode');
 let { addLibrary, installEnactTemplate, addEmulatorLauncher } = require('./lib/runCommand');
 const notify = require('./lib/notificationUtils');
 const { InputChecker } = require('./lib/inputChecker');
-const libraryList = ["@enact/cli", "http://10.177.227.123/cli/webosose-ares-cli-2.4.0-develop-e92b-updatedPackageJson.tgz", "patch-package"];
+const libraryList = ["@enact/cli", "http://10.177.227.123/cli/webosose-ares-cli-2.4.0-INT-T.2.tgz", "patch-package"];
 const libraryPrompt = {
     "@enact/cli": `@enact/cli Global package adding in progress. This may take few minutes, Please wait...`,
     "@webosose/ares-cli": `@webosose/ares-cli Global package adding in progress...`,
