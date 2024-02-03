@@ -1026,6 +1026,7 @@ function updateStatusBarItem() {
 async function setProfile(profile) {
     const result = await setDeviceProfile(profile);
     updateStatusBarItem();
+    vscode.commands.executeCommand('webososeDevices.refreshList');
     return result.ret ? 0 : 1;
 }
 
