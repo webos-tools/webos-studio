@@ -5,7 +5,7 @@
 const vscode = require('vscode');
 const { InputController } = require('./inputController');
 const { getSimulatorDirPath } = require('./configUtils');
-const { getSimulatorList } = require('./deviceUtils');
+const { getSimulatorList, getCurrentDeviceProfile } = require('./deviceUtils');
 const { getAppDir, getLaunchParams } = require('./commonInput');
 const ares = require('./runCommand');
 
@@ -52,20 +52,28 @@ async function _runSimulator(selectedDir, selectedVersion, withParams) {
  */
 module.exports = function runSimulator(selectedDir = null, selectedVersion = null, withParams = null) {
     require('../ga4Util').mpGa4Event("runSimulator", {category:"Commands"});
-    _runSimulator(selectedDir, selectedVersion, withParams)
-        .then((obj) => {
-            ares.launchSimulator(obj.appDir, obj.simulatorVersion, obj.params)
-                .then(() => {
-                    const paramsMsg = JSON.stringify(obj.params) === '{}' ? '' : ` with parameters ${JSON.stringify(obj.params)}`;
-                    vscode.window.showInformationMessage(`Success! ${obj.appDir} is running on webOS_TV_${obj.simulatorVersion}_Simulator${paramsMsg}.`);
-                }).catch((err) => {
-                    let errMsg = `Failed to run a simulator.`;
-                    if (err) errMsg = err;
-                    vscode.window.showErrorMessage(`Error! ${errMsg}`);
-                });
-        }).catch((err) => {
-            let errMsg = `Failed to run a simulator.`;
-            if (err) errMsg = err;
-            vscode.window.showErrorMessage(`Error! ${errMsg}`);
-        });
+    getCurrentDeviceProfile()
+            .then((data) => {
+                if (data === 'tv') {
+                    _runSimulator(selectedDir, selectedVersion, withParams)
+                        .then((obj) => {
+                            ares.launchSimulator(obj.appDir, obj.simulatorVersion, obj.params)
+                                .then(() => {
+                                    const paramsMsg = JSON.stringify(obj.params) === '{}' ? '' : ` with parameters ${JSON.stringify(obj.params)}`;
+                                    vscode.window.showInformationMessage(`Success! ${obj.appDir} is running on webOS_TV_${obj.simulatorVersion}_Simulator${paramsMsg}.`);
+                                }).catch((err) => {
+                                    let errMsg = `Failed to run a simulator.`;
+                                    if (err) errMsg = err;
+                                    vscode.window.showErrorMessage(`Error! ${errMsg}`);
+                                });
+                        }).catch((err) => {
+                            let errMsg = `Failed to run a simulator.`;
+                            if (err) errMsg = err;
+                            vscode.window.showErrorMessage(`Error! ${errMsg}`);
+                        });
+                } else {
+                    vscode.window.showInformationMessage(`Only TV Profile supports Simulator.`);
+                    return;
+                }
+            });
 };
