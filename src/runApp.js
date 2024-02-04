@@ -13,11 +13,11 @@ async function _getDebugOption(title) {
     const controller = new InputController();
     controller.addStep({
         title: title,
-        placeholder: 'Debug in IDE or Browser?',
-        items: ['IDE', 'BROWSER'].map(label => ({ label }))
+        placeholder: 'Debug in VS Code or inspector?',
+        items: ['VS Code', 'inspector'].map(label => ({ label }))
     });
     const results = await controller.start();
-    const debugoption = results.shift() === 'IDE';
+    const debugoption = results.shift() === 'VS Code';
     return debugoption;
 }
 
