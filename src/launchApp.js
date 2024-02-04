@@ -51,6 +51,11 @@ module.exports = async function launchApp(id, deviceName, displayId, withParams)
 
         let controller2 = new InputController();
         let installed = await getInstalledList(device);
+        if (installed.length === 0) {
+            vscode.window.showErrorMessage(`ERROR! No apps are installed on ${device}.`);
+            vscode.commands.executeCommand('webososeDevices.focus');
+            return;
+        }
         controller2.addStep({
             title,
             placeholder: 'Select App ID',
