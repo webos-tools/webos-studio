@@ -167,8 +167,20 @@
             for (let i = 0; i < this.instListData.length; i++) {
                 let row = document.createElement('div');
                 row.setAttribute("class", "InstlistItem");
-                instanceList.appendChild(row)
-                row.innerHTML = `
+                instanceList.appendChild(row);
+                if (this.instListData[i].label.startsWith('LG webOS TV')) {
+                    row.innerHTML = `
+                <div class="InstlistItemTitleContainer">
+                    <div class="InstlistItemTitle">
+                        <i  style="padding-right:5px"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
+                    </div>
+                 </div>
+                <div class ="InstlistItemIcons">
+                <div title="Launch" class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowPlayIcon codicon codicon-play"></i></div>
+                </div>
+                `
+                } else {
+                    row.innerHTML = `
                 <div class="InstlistItemTitleContainer">
                     <div class="InstlistItemTitle">
                         <i  style="padding-right:5px"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
@@ -181,7 +193,7 @@
                 
                     <div title="Delete" class ="InstlistItemIcon"> <i  isRunning= ${this.instListData[i].isRunning} uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowDelIcon codicon codicon-trash"></i></div>
                 </div>
-                `
+                ` }
             }
         }
         setInitialValue(data) {
