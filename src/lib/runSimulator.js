@@ -8,6 +8,9 @@ const { getSimulatorDirPath } = require('./configUtils');
 const { getSimulatorList, getCurrentDeviceProfile } = require('./deviceUtils');
 const { getAppDir, getLaunchParams } = require('./commonInput');
 const ares = require('./runCommand');
+const path = require('path');
+const fs = require('fs');
+const { getDefaultDir } = require('./workspaceUtils');
 
 async function _getSimulatorVersion(title) {
     const simulatorDir = getSimulatorDirPath();
@@ -45,6 +48,22 @@ async function _runSimulator(selectedDir, selectedVersion, withParams) {
     });
 }
 
+function isEnactApp(appDir) {
+    if (!appDir) {
+        console.log('is Enact: arguments are not fulfilled.');
+        return false;   
+    }
+    let packagePath = path.join(appDir, "package.json");
+    if (fs.existsSync(packagePath)) {
+        let rawdata = fs.readFileSync(packagePath, 'utf8');
+        let packageData = JSON.parse(rawdata);
+        if (packageData && Object.prototype.hasOwnProperty.call(packageData, 'enact')) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * @param {string} selectedDir directory path to run on the simulator
  * @param {string} selectedVersion webOS TV version of the simulator
@@ -57,6 +76,25 @@ module.exports = function runSimulator(selectedDir = null, selectedVersion = nul
                 if (data === 'tv') {
                     _runSimulator(selectedDir, selectedVersion, withParams)
                         .then((obj) => {
+                            //if path is not absolute path, change it to absolute path(workspace dir/obj.appDir)
+                            //else just use obj.appDir
+                            if(!path.isAbsolute(obj.appDir)){
+                                let absolutePath = getDefaultDir();
+                                //workspace default dir/app_dir
+                                absolutePath = path.join(absolutePath,obj.appDir);
+                                obj.appDir = absolutePath;
+                            }
+
+                            //if enact app, add dist dir. workspace dir/obj.appDir/dist
+                            const isEnact = isEnactApp(obj.appDir);
+                            if (isEnact) {
+                                obj.appDir = path.join(obj.appDir, 'dist');
+                                // check dist directory is exists
+                                if (!fs.existsSync(obj.appDir)) {
+                                    vscode.window.showInformationMessage(`Please package enact app before launching TV Simulator!`);
+                                    return;
+                                }
+                            }
                             ares.launchSimulator(obj.appDir, obj.simulatorVersion, obj.params)
                                 .then(() => {
                                     const paramsMsg = JSON.stringify(obj.params) === '{}' ? '' : ` with parameters ${JSON.stringify(obj.params)}`;
