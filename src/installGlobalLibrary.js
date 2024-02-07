@@ -4,6 +4,8 @@
 */
 const vscode = require('vscode');
 let { addLibrary, installEnactTemplate, addEmulatorLauncher } = require('./lib/runCommand');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 const notify = require('./lib/notificationUtils');
 const { InputChecker } = require('./lib/inputChecker');
 const libraryList = ["@enact/cli", "http://10.177.227.123/cli/webosose-ares-cli-2.4.0-INT-T.2.tgz", "patch-package"];
@@ -13,6 +15,17 @@ const libraryPrompt = {
     "patch-package": `patch-package Global package adding in progress...`
 }
 const command = "npm install -g @enact/cli @webosose/ares-cli patch-package"
+
+async function isNodeInstalledRoot() {
+    try {
+        const { stdout, stderr } = await exec('stat -f "%Su"  `npm config get prefix`');
+        if (stdout.trim() === 'root') {
+            return true;
+        }
+    } catch (e) {
+    }
+    return false;
+}
 
 async function installGlobalLibrary() {
     vscode.window.withProgress({
@@ -26,7 +39,7 @@ async function installGlobalLibrary() {
         try {
             await notify.showProgress(progress, 1, `Instalation initiated..`);
             let pw = "";
-            if (process.platform == "darwin") {
+            if (process.platform == "nodarwin") {
                 await notify.showProgress(progress, 5, `Please enter Sudo password in top input field.`);
                 pw = await getSudoPassword();
                 if (pw) {
@@ -99,6 +112,13 @@ async function installEmulatorLauncher() {
 let handlingPrompt = false;
 async function showPrompt() {
     if (handlingPrompt) return;
+    if (process.platform == "darwin") {
+        const isRoot = await isNodeInstalledRoot();
+        if (isRoot === true) {
+            vscode.window.showInformationMessage(`node permission problem. Please refer to option 2 in https://npm.github.io/installation-setup-docs/installing/a-note-on-permissions.html`);
+            return;
+        }
+    }
     handlingPrompt = true;
     await vscode.window.showInformationMessage(
         `Warnning! If you have already installed OSE/TV vs code extensions and CLIs, you should remove them before using this extension.
