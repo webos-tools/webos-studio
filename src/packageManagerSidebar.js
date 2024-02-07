@@ -213,10 +213,11 @@ class PackageManagerSidebar {
             cmd = "chmod 777  ~/.bashrc &&  chmod 777  ~/.profile"
           } else {
             // cmd = "chmod 777  ~/.bash_profile"
-            if(fs.existsSync("~/.bash_profile")){
+           
+            if(fs.existsSync( path.join(os.homedir(),".bash_profile"))){
               cmd = "chmod 777  ~/.bash_profile"
             }else{
-              cmd = "touch ~/.bash_profile && chmod 777  ~/.bash_profile"
+              cmd = `touch ${ path.join(os.homedir(),".bash_profile")} && chmod 777  ~/.bash_profile`
             }
           }
           await this.compMangerObj.installManager.executeSudoCommand(cmd, false).catch((error) => {
