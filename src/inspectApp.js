@@ -143,6 +143,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                             "port": emulport,
                             "localRoot": serviceDir,
                             "remoteRoot": "\\media\\developer\\apps\\usr\\palm\\services\\" + appId,
+                            "restart": true,
                             "protocol": "inspector"
                         };
                         vscode.debug.startDebugging(defaultWorkFolder, launchConfiguration);

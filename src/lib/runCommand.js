@@ -643,7 +643,9 @@ async function isInstalledService(serviceId, device) {
   
     return await _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout) {
-            stdout = parseInt(stdout);
+            let output =stdout.split(/\r?\n/);
+            output = output.filter(result => result !== '' && !result.includes('[Info]'));
+            stdout = parseInt(output);
             resolve(stdout);
         } else {
             reject('npm : failed!');
