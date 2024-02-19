@@ -214,6 +214,7 @@
             document.getElementById("memMax").innerHTML = this.totalMem;
             document.getElementById("memory").value = Math.floor(this.totalMem / 2)
             document.getElementById("monitorCount").value = data.monitorCount ? data.monitorCount : 1
+            document.getElementById("os").value = "Linux_64"
             document.getElementById("memSelectd").innerHTML = " " + document.getElementById("memory").value + " MB"
             document.getElementById("btnAddInstnce").innerHTML = "Add Instance";
             document.getElementById("btnAddInstnce").setAttribute("uuid", "");
