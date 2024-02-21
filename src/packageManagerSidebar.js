@@ -157,9 +157,9 @@ class PackageManagerSidebar {
   
   }
   promptForSDKDir() {
-    const header = "Configuring Package Manager";
+    const header = "Configure SDK Location";
     const options = {
-      detail: "Please select the directory to configure Package Manager",
+      detail: "Please select SDK Location directory to configure Package Manager",
       modal: true,
     };
     vscode.window
