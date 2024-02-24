@@ -965,14 +965,6 @@
                     "default": null,
                     "description": "(Required) Set the location of Chrome executable for the web inspector, e.g. C:\\\\chromium\\\\chrome.exe"
                 },
-                "webosose.defaultDevice": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "description": "(Optional) Set the default device for running commands, e.g. emulator"
-                },
                 "webosose.lunaApiLevel": {
                     "type": "string",
                     "default": "OSE_APILevel_27",
