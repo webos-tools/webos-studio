@@ -957,7 +957,7 @@
                     "default": true,
                     "description": "Enable/Disable provisioned webOS dashboard at first"
                 },
-                "webosose.chromeExecutable": {
+                "webos.chromeExecutable": {
                     "type": [
                         "string",
                         "null"

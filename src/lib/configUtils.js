@@ -9,7 +9,7 @@ const { InputController } = require('./inputController');
 const { InputChecker } = require('./inputChecker');
 const path = require('path');
 
-const WEBOSOSE = 'webosose';
+const WEBOSOSE = 'webos';
 const BROWSER_PATH = 'chromeExecutable';
 
 function getCliPath() {
