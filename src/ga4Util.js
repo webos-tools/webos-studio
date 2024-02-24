@@ -179,7 +179,7 @@ function ga4PageView(title) {
  * @param {import("node-gtag4/types/gtag").eventPayloadType} param
  */
 function ga4Event(param) {
-  if (vscode.workspace.getConfiguration().get("webosose.enableUserDataCollection") === true) {
+  if (vscode.workspace.getConfiguration().get("webos.enableUserDataCollection") === true) {
     ga4.event(param);
   }
 }
@@ -188,7 +188,7 @@ function ga4Event(param) {
  * @param {any} version
  */
 function mpGa4EventLaunched(version) {
-  if (vscode.workspace.getConfiguration().get("webosose.enableUserDataCollection") !== true) {
+  if (vscode.workspace.getConfiguration().get("webos.enableUserDataCollection") !== true) {
     return;
   }
   mpGa4Event(EVENT_KEYS.LAUNCHED, {
@@ -240,7 +240,7 @@ function checkInitialExecution(context) {
   if (license_agreement !== true) {
     getUserAgreement(context);
   }
-  if (vscode.workspace.getConfiguration().get("webosose.enableUserDataCollection")) {
+  if (vscode.workspace.getConfiguration().get("webos.enableUserDataCollection")) {
     return;
   }
 }
@@ -268,10 +268,10 @@ function getUserAgreement(context) {
     if (answer.title === "I agree") {
       // since click "I agree", the dialog will not show.
       globalConfig.updateConfigs("license_agreement", true);
-      vscode.workspace.getConfiguration().update("webosose.enableUserDataCollection", true);
+      vscode.workspace.getConfiguration().update("webos.enableUserDataCollection", true);
     } else {
       // when user click "No", the dialog will show again at next time.
-      vscode.workspace.getConfiguration().update("webosose.enableUserDataCollection", false);
+      vscode.workspace.getConfiguration().update("webos.enableUserDataCollection", false);
     }
   });
   return true;

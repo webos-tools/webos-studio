@@ -978,7 +978,7 @@
                     "default": "OSE_APILevel_27",
                     "description": "(Required) Set the level of LUNA API, e.g OSE_APILevel_27"
                 },
-                "webosose.enableUserDataCollection": {
+                "webos.enableUserDataCollection": {
                     "type": "boolean",
                     "default": "true",
                     "markdownDescription": "Enable User Data Collection for the webOS Studio Extension to send product usage.\n\n_**Note**: The UDC is different with telemetry, disabling telemetry is not affect to UDC._"
