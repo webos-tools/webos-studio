@@ -1144,9 +1144,9 @@ vscode-extension-tizentv:
 webos-studio:
 - version: ""
   license: "Apache-2.0"
-  download location: "https://github.com/webosose/webos-studio"
-  homepage: "https://github.com/webosose/webos-studio"
-  copyright text: "Copyright (c) 2021-2022 LG Electronics Inc."
+  download location: "https://github.com/webos-sdk/webos-studio"
+  homepage: "https://github.com/webos-sdk/webos-studio"
+  copyright text: "Copyright (c) 2021-2024 LG Electronics Inc."
 wrappy:
 - version: "1.0.2"
   license: "ISC"
