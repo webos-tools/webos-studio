@@ -652,7 +652,7 @@ class InstanceWebviewProvider {
                      <button id="welcomAddInstance" class="webview-button">Add Instance</button>
                      </br>
                      learn more about how to use emulator
-                     <a href="https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose">read our docs</a>.
+                     <a href="https://marketplace.visualstudio.com/items?itemName=webOSSDK.webosstudio">read our docs</a>.
                       
                 </div>
                 <div id="listLayout" class="listLayout">
