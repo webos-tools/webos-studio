@@ -539,7 +539,7 @@ function activate(context) {
                                     apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length - 1];
                                     const webosConfig = {
                                         api_level: apiLevelNo,
-                                        profile: deviceProfile
+                                        // profile: deviceProfile
                                     }
                                     const webosConfigJSON = JSON.stringify(webosConfig, null, 2);
                                     const jsonPath = path.join(projectLocation, `${projectName}/.webosstudio.config`);
