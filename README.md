@@ -92,45 +92,6 @@ webOS Studio supports multiple webOS platforms. So, you need to set the proper p
 2. Execute `webOS: Set Device Profile`.
 3. Select the profile of your target webOS device.
 
-### Package Manager
-
-Package Manager feature enables the developers to install all required tools for the developement of webOS TV and webOS OSE App Development.
-There are  two  main sections in Package Manager,  TV SDK and OSE SDK
-Under TV SDK list of all the supported versions of Emulator, Simulator and Beanviser are listed
-User can install on uninstall the components by clicking on the respective icons
-Simlar to TV SDK, under OSE SDK  lists Emulator , Workflow Designer and Resource monitor
-
-In order to Launch the Package Manager in windows, VSCode has to be open in Administrator permission. On Mac and Ubuntu while installing components system prompt for the root user password
-
-On opening the Package Manager on first time , user has to select a directory to configure the package manager. When user install any of the listed components, it installs the components in respective subdirectory(Config, Downloads, OSE, Tools and TV ) under the above selected directory
- 
-Some of the components requried additional software(Pre-requisites) to be installed, Ex. to install Emulator,  Virtualbox to be available in the system.
-So while installing Emulator, Package Manager checks is Virtualbox(Pre-Requisite) is availabe, if not, it will start download, extract, install and configure (silent Installtion) virtual box before installing  emulator
-  
-On installing the the components , if the component required any prerequisites and it is not installed in the system it will prompt user to confirm the installation 
-
-List of  prequsites sowtware required/installed during each componets installation are below
-1. TV Emulator
-- jre  version >=1.5.0 					-- 
-- virtualbox:  version >=6.1.0
-
-2. TV Simulator
-- No prerequisites
-
-3. TV Beanviser
-- No prerequisites
-
-4. OSE Emulator 
-- python3 version >=3.0
-- virtualbox version  >=6.1.0
-- webos-emulator-launcher  version >=0.8.8
-
-5.  OSE workflow Designer
-- No prerequisites
-
-6. Resource Monitor
-- No prerequisites
-
 ## How to Use
 
 For more detailed user guide, see each platform's website.
