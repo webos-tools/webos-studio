@@ -16,6 +16,7 @@
 - [How to Use](#how-to-use)
 - [Command Palette](#command-palette)
 - [Miscellaneous Information](#miscellaneous-information)
+- [Known Issues](#known-issues)
 - [Other Resources](#other-resources)
 - [Contributors](#contributors)
 - [Copyright and License Information](#copyright-and-license-information)
@@ -125,6 +126,11 @@ webOS Studio supports the following commands:
 
 - When VS Code starts, a notification pop-up might says that VirtualBox is not installed, even when VirtualBox is already installed properly. To resolve this, add the VirtualBox installation directory to your environment variable (`$PATH`).
 - If you want to report bugs or suggest some features, use **Issue Reporter**. (**Help** > **Report Issue**)
+
+## Known Issues
+
+- Auto-completion feature is supported only on webOS OSE.
+- Web app and JS service debuggings by "Debug On -> VS Code" are not supported for old webOS targets.
 
 ## Other Resources
 
