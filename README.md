@@ -97,7 +97,7 @@ webOS Studio supports multiple webOS platforms. So, you need to set the proper p
 For more detailed user guide, see each platform's website.
 
 - [webOS OSE website](https://www.webosose.org/docs/tools/sdk/vs-code-extension)
-- [webOS TV website](https://webostv.developer.lge.com/develop/tools/webos-studio-dev-guide)
+- webOS TV website (will soon be available)
 
 ## Command Palette
 
