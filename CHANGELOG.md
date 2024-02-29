@@ -4,26 +4,35 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
-## [1.9.0] [2024-02-27]
+## [1.9.1] [2024-02-xx]
 
 This is an integrated pre-release for OSE and TV of the webOS Studio extension.
 
 - Introducing Device Profile for OSE and TV as a command, webOS: Set Device Profile
+- Adding new features
+  - Device profiles
+  - Package Manager
+  - Resource Monitoring
+  - Using integrated CLI
 - Integrating common commands between OSE and TV as follows:
   - webOS: Create ProjectWizard
-  - webOS: Preview Application
+  - webOS: Install Global Packages
+  - webOS: Install Emulator Launcher
+  - webOS: Auto Reload
   - webOS: Package Application
   - webOS: Set Up Device
   - webOS: Install Application
   - webOS: Launch Application
   - webOS: Debug
+  - webOS: IPK Analyzer
   - webOS: Run Application
-- TV developers for VS Code Extension will get following features:
-  - Package manager and Emulator Manager
-  - Project Wizard
-  - Debug on VS Code
-  - Auto Reload
-  - IPK Analyzer
+- OSE only features
+  - Resource Monitoring
+- TV only features
+  - webOS TV: Set Up SSH Key
+  - webOS TV: Run on Simulator
+- Others
+  - Updated webOS Emulator Launcher as v0.9.4
 
 ## [1.1.4] [2023-11-08]
 
