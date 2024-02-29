@@ -7,7 +7,7 @@ let statusJson = {};
 const vscode = acquireVsCodeApi();
 let isChecking = false;
 let pbarJson = {};
-console.log("hellow")
+
 function cancelDownload(comp_uid, isComp) {
 
   let msg = {

@@ -491,7 +491,7 @@ class PackageManagerSidebar {
     return `
       <tr class="trhover childrow" data-comp_uid="${rowObj["compInfo"]["comp_uid"]
       }"  data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="3" aria-posinset="1" aria-setsize="3" >
-      <td role="gridcell" title ="Disk Space: ${this.convertSize(rowObj["compInfo"].expFileSizeInMB)}">${prerow}V${rowObj["compInfo"]["sdk_version"]} </td>
+      <td role="gridcell" title ="Disk Space: ${this.convertSize(rowObj["compInfo"].expFileSizeInMB)}">${prerow}${rowObj["compInfo"]["shortDisplayName"]} </td>
        <td role="gridcell">${this.getActionHTML(
         rowObj,
         rowObj["sdk"],
@@ -574,6 +574,7 @@ class PackageManagerSidebar {
             rowObj["compDirName"] = config["components"][i]["subDirName"];
             rowObj["compUID"] = config[compName][j]["comp_uid"];
             rowObj["compInfo"] = config[compName][j];
+            rowObj["shortDisplayName"] = config["components"][i]["shortDisplayName"];
 
             treeHTML =
               treeHTML + this.getTreeTableChildRowHTML(rowObj, statusJson);
