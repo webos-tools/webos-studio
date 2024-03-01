@@ -679,7 +679,7 @@ async function launchSimulator(appDir, version, params) {
         const paramsStr = params ? `-p "${JSON.stringify(params).replace(/"/g, "'")}"` : "";
         const launchCmd = os.type() == "Windows_NT" ? 'ares-launch.cmd' : 'ares-launch';
         const cmd = `${launchCmd} "${appDir.replace(/\\/g, '/')}" -s ${version} ${paramsStr}`;
-        const dirSimulator = 'webOS_TV_' + version + '_Simulator_1.3.0';
+        const dirSimulator = 'webOS_TV_' + version + '_Simulator_1.4.0';
         const sp = path.join(getSimulatorDirPath(), dirSimulator);
         const cmd2 = cmd + ' -sp ' + sp;
         console.log(`runCommand: ${cmd2}`);

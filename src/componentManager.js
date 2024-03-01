@@ -5010,6 +5010,9 @@ class InstallManager {
         break;
       case "darwin":
         fileName = `webOS_TV_${tvOSVersion}_Simulator_${version}_mac.zip`
+        if (process.arch === 'arm64' && tvOSVersion !== '6.0') {
+          fileName = `webOS_TV_${tvOSVersion}_Simulator_${version}_mac-arm64.zip`
+        }
         break;
     }
     switch (osStr) {
