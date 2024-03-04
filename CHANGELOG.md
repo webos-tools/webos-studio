@@ -4,7 +4,7 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
-## [1.9.1] [2024-03-04]
+## [1.9.2] [2024-03-04]
 
 This is an integrated pre-release for OSE and TV of the webOS Studio extension.
 

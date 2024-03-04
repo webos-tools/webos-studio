@@ -2,12 +2,12 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "1.9.1",
+    "version": "1.9.2",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
         "vscode": "^1.58.0",
-        "webos-cli": ">=3.0.0"
+        "webos-cli": ">=3.0.2"
     },
     "license": "Apache-2.0",
     "categories": [
