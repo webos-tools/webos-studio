@@ -96,14 +96,16 @@ async function aresVersion() {
     return '';
 }
 
+let doneCliCheck = false;
 async function checkCliVersion() {
+    if (doneCliCheck) return;
     if (getCliPath() === '') {
         try {
             const cliPackageJsonVersion = await aresVersion();
             const cliVersionStr = semver.valid(semver.coerce(cliPackageJsonVersion));
             console.log(`webOS CLI version: ${cliPackageJsonVersion}`);
             if (!cliPackageJsonVersion || !cliVersionStr) {
-                vscode.window.showWarningMessage(`Warning! Failed to check the webOS CLI version.`);
+                // vscode.window.showWarningMessage(`Warning! Failed to check the webOS CLI version.`);
                 return true;
             }
             const packageJson = require(path.resolve(__dirname, '../../package.json'));
@@ -115,17 +117,18 @@ async function checkCliVersion() {
                         return true;
                     } else {
                         console.log(`Supported CLI version: ${validRange}`);
+                        doneCliCheck = true;
                         vscode.window.showErrorMessage("webOS Studio", {
                             detail: `Found old TV/OSE CLI. Please uninstall  and install 3.0 or higher CLI to use webOS Studio. (Refer https://github.com/webos-tools/cli)`,
                             modal: true} );
                         return false;
                     }
                 } else {
-                    console.warn(`webos-cli version range is invalid: ${supportedVersionRange}`);
+                    // console.warn(`webos-cli version range is invalid: ${supportedVersionRange}`);
                     return true;
                 }
             } else {
-                console.warn(`Failed to check webos-cli version range: ${supportedVersionRange}`);
+                // console.warn(`Failed to check webos-cli version range: ${supportedVersionRange}`);
                 return true;
             }
         } catch (err) {
