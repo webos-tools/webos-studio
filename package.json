@@ -6,7 +6,8 @@
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
-        "vscode": "^1.58.0"
+        "vscode": "^1.58.0",
+        "webos-cli": ">=3.0.0"
     },
     "license": "Apache-2.0",
     "categories": [
@@ -1031,6 +1032,7 @@
         "portfinder": "^1.0.28",
         "request": "^2.88.2",
         "rimraf": "3.0.2",
+        "semver": "^7.3.8",
         "showdown": "^2.1.0",
         "socket.io": "^4.6.1",
         "sudo-prompt-alt": "^9.3.0",
@@ -1039,7 +1041,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/webos-sdk/webos-studio.git"
+        "url": "https://github.com/webos-tools/webos-studio.git"
     },
     "devDependencies": {
         "@typescript-eslint/parser": "4.33.0",

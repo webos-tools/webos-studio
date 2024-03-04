@@ -70,7 +70,7 @@ Global packages are essential packages to run webOS Studio. This extension suppo
 Or you can also do the same job with the following command:
 
 ``` bash
-npm install -g @enact/cli @webos-sdk/cli patch-package
+npm install -g @enact/cli @webos-tools/cli patch-package
 ```
 
 ### Emulator Launcher

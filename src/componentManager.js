@@ -1482,7 +1482,7 @@ class ComponentMgr {
       switch (selComp.uninstallMethod) {
         case "OSE_CLI_UNINSTALL_FORALL": {
           let osStr = os.platform().toLowerCase();
-          let command = ` npm uninstall -g @webosose/ares-cli `;
+          let command = ` npm uninstall -g @webos-tools/cli `;
           if (osStr == "darwin") {
             command = "source ~/.bashrc && " + command;
           } else if (osStr == "linux") {
@@ -1526,7 +1526,7 @@ class ComponentMgr {
         }
         case "INT_CLI_UNINSTALL_FORALL": {
           let osStr = os.platform().toLowerCase();
-          let command = ` npm unlink @webosose/ares-cli -g`;
+          let command = ` npm unlink @webos-tools/cli -g`;
           // let command = ` npm uninstall -g @webosose/ares-cli `;
 
           if (osStr == "darwin") {
@@ -3207,7 +3207,7 @@ class InstallManager {
               profileLoader = " source ~/.bashrc && ";
             }
             let npmPrg = this.componentMgr.getNPMProgram()
-            let command = ` ${npmPrg} install -g  @webosose/ares-cli `;
+            let command = ` ${npmPrg} install -g  @webos-tools/cli `;
             logger.run(`${qItem.msgData.componentInfo.shortName} - ${command} `)
             if (osStr == "darwin") {
               await this.executeSudoCommand(command, false)
@@ -3269,7 +3269,7 @@ class InstallManager {
 
             let gitPath = path.join(destPath, qItem.msgData.componentInfo.subDirName)
             let linkCommand = `${npmPrg} install &&  ${npmPrg} link `;
-            let uninstallCommand = ` ${npmPrg} uninstall @webosose/ares-cli -g `
+            let uninstallCommand = ` ${npmPrg} uninstall @webos-tools/cli -g `
             let gitCommand = ` git clone ${qItem.msgData.componentInfo.repository}   `;
             logger.run(`${qItem.msgData.componentInfo.shortName} - ${gitCommand} `)
             if (fs.existsSync(gitPath)) {

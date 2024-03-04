@@ -5,9 +5,12 @@
 const vscode = require('vscode');
 const fs = require('fs');
 const { fileURLToPath } = require('url');
+const semver = require('semver');
 const { InputController } = require('./inputController');
 const { InputChecker } = require('./inputChecker');
 const path = require('path');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 const WEBOSOSE = 'webos';
 const BROWSER_PATH = 'chromeExecutable';
@@ -81,9 +84,63 @@ function getSimulatorDirPath(sdkPath) {
     }
 }
 
+async function aresVersion() {
+    try {
+        const { stdout, stderr } = await exec('ares -V');
+        if (stdout) {
+            return stdout.trim().split(': ')[1];
+        }
+    } catch (e) {
+        console.error(e);
+    }
+    return '';
+}
+
+async function checkCliVersion() {
+    if (getCliPath() === '') {
+        try {
+            const cliPackageJsonVersion = await aresVersion();
+            const cliVersionStr = semver.valid(semver.coerce(cliPackageJsonVersion));
+            console.log(`webOS CLI version: ${cliPackageJsonVersion}`);
+            if (!cliPackageJsonVersion || !cliVersionStr) {
+                vscode.window.showWarningMessage(`Warning! Failed to check the webOS CLI version.`);
+                return true;
+            }
+            const packageJson = require(path.resolve(__dirname, '../../package.json'));
+            const supportedVersionRange = packageJson.engines['webos-cli'];
+            if (packageJson && packageJson.engines && supportedVersionRange) {
+                const validRange = semver.validRange(supportedVersionRange);
+                if (validRange) {
+                    if (semver.satisfies(cliVersionStr, validRange)) {
+                        return true;
+                    } else {
+                        console.log(`Supported CLI version: ${validRange}`);
+                        vscode.window.showErrorMessage("webOS Studio", {
+                            detail: `Found old TV/OSE CLI. Please uninstall  and install 3.0 or higher CLI to use webOS Studio. (Refer https://github.com/webos-tools/cli)`,
+                            modal: true} );
+                        return false;
+                    }
+                } else {
+                    console.warn(`webos-cli version range is invalid: ${supportedVersionRange}`);
+                    return true;
+                }
+            } else {
+                console.warn(`Failed to check webos-cli version range: ${supportedVersionRange}`);
+                return true;
+            }
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+    // CLI is not installed
+    return false;
+}
+
 module.exports = {
     getCliPath: getCliPath,
     getBrowserPath: getBrowserPath,
     getDefaultDevice: getDefaultDevice,
-    getSimulatorDirPath: getSimulatorDirPath
+    getSimulatorDirPath: getSimulatorDirPath,
+    checkCliVersion: checkCliVersion
 }

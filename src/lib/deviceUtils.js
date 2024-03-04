@@ -6,6 +6,7 @@ const vscode = require('vscode');
 const ares = require('./runCommand');
 const { getSimulatorDirPath } = require('./configUtils');
 const { getSimulatorVersionArray } = require('./workspaceUtils');
+const { checkCliVersion } = require('./configUtils');
 
 let deviceList = [];
 let simulatorList = [];
@@ -115,6 +116,7 @@ async function setCurrentDeviceProfile(profile) {
 }
 
 async function getCurrentDeviceProfile() {
+    await checkCliVersion();
     return new Promise((resolve, reject) => {
         ares.config(false)
             .then((data) => {

@@ -8,13 +8,13 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const notify = require('./lib/notificationUtils');
 const { InputChecker } = require('./lib/inputChecker');
-const libraryList = ["@enact/cli", "http://10.177.227.123/cli/webosose-ares-cli-2.4.0-INT-T.2.tgz", "patch-package"];
+const libraryList = ["@enact/cli", "@webos-tools/cli", "patch-package"];
 const libraryPrompt = {
     "@enact/cli": `@enact/cli Global package adding in progress. This may take few minutes, Please wait...`,
-    "@webosose/ares-cli": `@webosose/ares-cli Global package adding in progress...`,
+    "@webos-tools/cli": `@webos-tools/cli Global package adding in progress...`,
     "patch-package": `patch-package Global package adding in progress...`
 }
-const command = "npm install -g @enact/cli @webosose/ares-cli patch-package"
+const command = "npm install -g @enact/cli @webos-tools/cli patch-package"
 
 async function isNodeInstalledRoot() {
     try {
