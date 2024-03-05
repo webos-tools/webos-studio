@@ -23,7 +23,7 @@
 
 ---
 
-> This extension was developed vased on the [webOS TV extension](https://marketplace.visualstudio.com/items?itemName=webOSTVSDK.webostv).
+> This extension was developed based on the [webOS TV extension](https://marketplace.visualstudio.com/items?itemName=webOSTVSDK.webostv).
 
 ## System Requirements
 
