@@ -655,7 +655,7 @@ async function isInstalledService(serviceId, device) {
 
 async function addEmulatorLauncher() {
     const python = (os.type() == "Windows_NT") ? 'python' : 'python3';
-    let cmd = `VBoxManage && ${python} -m pip install --upgrade webos-emulator --force-reinstall`;
+    let cmd = `${python} -m pip install --upgrade webos-emulator --force-reinstall`;
 
     return await _execAsyncLauncher(cmd, (stdout, resolve, reject) => {
         if (stdout) {
