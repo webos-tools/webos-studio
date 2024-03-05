@@ -180,13 +180,23 @@ class PackageManagerSidebar {
     });
     if (msgData.envVarValue != "" && msgData.envVarValue != null) {
       if (!fs.existsSync(msgData.envVarValue)) {
-        return false;
-      }
+        // in case of mac, if vs code is launching from launch bar without quiting, 
+        // old environment values are reappearing
+        // to avoid get the values from global storage
+        msgData.envVarValue = this.compMangerObj.getEnvFromGlobalState(this.configData["sdk_env"]);
+        if (!msgData.envVarValue) {
+          return null;
+        }
+        if (!fs.existsSync(msgData.envVarValue)) {
+          return null;
+        }
 
+      }
+     
       vscode.commands.executeCommand("webos.updateSDKPath", msgData.envVarValue);
-      return true;
+      return  msgData.envVarValue;
     } else {
-      return false;
+      return null;
     }
   }
   openFolderDlg() {
@@ -259,11 +269,16 @@ class PackageManagerSidebar {
   async loadSDKManager() {
 
     return new Promise(async (resolve, reject) => {
-      let isConfigured = false;
-      isConfigured = await this.isEnvDirExists();
-      if (isConfigured) {
+      let configuredDir = null;
+      configuredDir = await this.isEnvDirExists();
+      
+      if (configuredDir) {
+        this.compMangerObj.envPath =  configuredDir;
+        this.compMangerObj.envPath_TV = path.join( configuredDir, "TV");
         await this.doStartEditor();
       } else {
+        this.compMangerObj.envPath =  "";
+        this.compMangerObj.envPath_TV = "";
         if (await isElevated()) {
           this.promptForSDKDir();
           reject();

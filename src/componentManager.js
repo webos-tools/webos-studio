@@ -995,7 +995,9 @@ class ComponentMgr {
           break;
         }
       }
+    
       if (output && output.stdout && output.stdout.trim().toLowerCase() === msgData.envVarValue.toLowerCase()) {
+        this.setEnvInGlobalState(msgData.envVarName,msgData.envVarValue)
         msgData["isSet"] = true;
 
         let evalue = this.getEnvVarValue(msgData.envVarName);
@@ -1014,6 +1016,7 @@ class ComponentMgr {
       msgData["isSet"] = false;
       msgData["errMsg"] = error.message;
       this.envPath = "";
+      this.envPath_TV = ""
       return msgData;
     }
   }
@@ -1097,6 +1100,7 @@ class ComponentMgr {
             break;
           }
         }
+        this.setEnvInGlobalState(envVarName,envVarValue)
         resolve();
       } catch (error) {
         reject(error);
@@ -1106,17 +1110,13 @@ class ComponentMgr {
   getEnvironment_pkgmgr(msgData) {
 
     let evalue = this.getEnvVarValue(msgData.envVarName);
+
     if (evalue != "" && evalue != null) {
       msgData["envVarValue"] = evalue;
       msgData["errMsg"] = "";
-      this.envPath = evalue;
-      this.envPath_TV = path.join(evalue, "TV");
-
     } else {
       msgData["envVarValue"] = "";
       msgData["errMsg"] = "Error getting Environment";
-      this.envPath = "";
-      this.envPath_TV = "";
     }
     return msgData;
   }
@@ -1124,11 +1124,17 @@ class ComponentMgr {
     if (process.env[envVar]) {
       return process.env[envVar];
     } else {
-      let envValue = this.getEnvFromShell(envVar);
-
-      return envValue;
+      let value =this.getEnvFromGlobalState(envVar);
+      if(!value){
+        let envValue = this.getEnvFromShell(envVar);
+        return envValue;
+      }else{
+        return value;
+      }
+    
     }
   }
+
   getEnvFromShell(envVar) {
     // in case of environment var is not availble in the current process execute directly from shell and get it
     let osStr = os.platform().toLowerCase();
@@ -1153,6 +1159,17 @@ class ComponentMgr {
     } else {
       return null;
     }
+  }
+
+
+  setEnvInGlobalState(key,value){
+    // store  the  value in Global
+    this.context.globalState.update(key, value );
+  }
+  getEnvFromGlobalState(key){
+    //get the value from global
+   return this.context.globalState.get(key,null);
+  
   }
 
   async checkPreReqOnCompInstall(msgData, panel) {
