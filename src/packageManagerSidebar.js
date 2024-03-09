@@ -106,7 +106,7 @@ class PackageManagerSidebar {
 
             }
             case "UNINSTALL_COMP_REQ":
-              vscode.window.showInformationMessage( `Do you want to uninstall  '${msg.data.componentInfo.displayName} v${msg.data.componentInfo.sdk_version}' `,
+              vscode.window.showInformationMessage( `Do you want to uninstall  '${msg.data.componentInfo.displayName} v${msg.data.componentInfo.sdk_version_act}' `,
                 ...["Yes", "No"])
             .then(async (answer) => {
                 if (answer === "Yes") {

@@ -57,6 +57,7 @@ function doRowAction(command, rowObj) {
           shortName: rowObj["compInfo"]["shortName"],
           subDirName: rowObj["compInfo"]["subDirName"],
           sdk_version: rowObj["compInfo"]["sdk_version"],
+          sdk_version_act: rowObj["compInfo"]["sdk_version_act"],
           apiLevel: rowObj["compInfo"]["apiLevel"],
           displayName: rowObj["compInfo"]["displayName"],
         },
