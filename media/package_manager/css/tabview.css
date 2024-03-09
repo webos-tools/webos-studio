@@ -77,9 +77,9 @@ body {
 .dlg {
   padding-top: 1px;
   min-width: 50%;
-  background-color: var(--vscode-activityBar-background);
+  background-color: transparent;
   border: var(--vscode-activityBar-border);
-  color:var(--vscode-activityBar-foreground);
+  color:var(--vscode-foreground);
 
 
 }
