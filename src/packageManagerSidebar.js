@@ -308,7 +308,7 @@ class PackageManagerSidebar {
     this.compMangerObj.clearDownloadDir();
     this.compMangerObj.updateAvailableDiskspaceOnEnvPath();
     this.compMangerObj.addEnvIfMissing();
-    // this.compMangerObj.promptIfTVSDKInstallerIsAvailable();
+    this.compMangerObj.promptIfTVSDKInstallerIsAvailable();
 
   }
 
