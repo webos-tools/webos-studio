@@ -31,7 +31,7 @@
     window.onload = onLoadEvent;
 
     const removeCount = 9;
-    const tvAPI = [["TV_APILevel_23", "APILevel23"]];
+    const tvAPI = [["TV_APILevel_23", "Default"]];
     const oseAPI = [["OSE_APILevel_27", "APILevel27"],["OSE_APILevel_25", "APILevel25"],["OSE_APILevel_24", "APILevel24"],
         ["OSE_APILevel_23", "APILevel23"], ["OSE_APILevel_22", "APILevel22"],
         ["OSE_APILevel_21", "APILevel21"], ["OSE_APILevel_20", "APILevel20"]];
@@ -86,7 +86,7 @@
             description.value = descriptionValue + '2.24.0';
         }
         if (apiVersionValue === 'TV_APILevel_23') {
-            description.value = descriptionValue + '23';
+            description.value = descriptionValue ;
         }
     });
     btnGenerate.addEventListener('click', function() {
