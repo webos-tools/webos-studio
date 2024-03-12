@@ -528,7 +528,7 @@ async function deviceInfo(device) {
     }
     let cmd = `${path.join(await getCliPath(), 'ares-device')} -i -d "${device}"`;
     return _execAsync(cmd, (stdout, resolve, reject) => {
-        if (stdout.includes('webos')) {
+        if (stdout.trim().includes('webos') || stdout.trim().includes('modelName')) {
             resolve(stdout);
         } else {
             reject('ares-device info: failed!');
