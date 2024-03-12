@@ -11,6 +11,7 @@ const { getDefaultDir, getIpkArray } = require('./lib/workspaceUtils');
 const ares = require('./lib/runCommand');
 const notify = require('./lib/notificationUtils');
 const ga4Util = require('./ga4Util');
+const deviceUtils = require('./lib/deviceUtils');
 
 const folderBtn = InputController.FileBrowser;
 folderBtn.bindAction(async function (thisInput) {
@@ -26,9 +27,21 @@ folderBtn.bindAction(async function (thisInput) {
 function _install(appFilePath, device) {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
+        let deviceList;
+        if(!device){
+            deviceList = await deviceUtils.getDeviceList();
+            for (let i = 0; i < deviceList.length; i++) {
+                let item = deviceList[i];
+                if(item.default == false){
+                    continue;
+                }
+                device = item.name;
+                break;
+            }
+        }
         vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
-            title: "Install Application",
+            title: `Install Application on ${device}`,
             cancellable: false
         }, async (progress, token) => {
             token.onCancellationRequested(() => {
@@ -38,6 +51,7 @@ function _install(appFilePath, device) {
             // let progress = await notify.initProgress("generate application", true);
             await notify.showProgress(progress, 20, `Installation of IPK to device in progress...`);
             ga4Util.mpGa4Event("InstallApp", {category:"Commands"});
+
             await ares.install(appFilePath, device)
                 .then(async () => {
                     await notify.clearProgress(progress, `Success! Installed ${appFilePath} on ${device}.`);
