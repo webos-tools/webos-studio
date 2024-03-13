@@ -106,6 +106,9 @@ class PackageManagerSidebar {
 
             }
             case "UNINSTALL_COMP_REQ":
+              if (msg.data.componentInfo.comp_uid.includes("emulator")) {
+                msg.data.componentInfo.sdk_version_act = msg.data.componentInfo.sdk_version;
+              }
               vscode.window.showInformationMessage( `Do you want to uninstall  '${msg.data.componentInfo.displayName} v${msg.data.componentInfo.sdk_version_act}' `,
                 ...["Yes", "No"])
             .then(async (answer) => {

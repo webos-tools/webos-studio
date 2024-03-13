@@ -150,7 +150,7 @@ async function _setInstanceList() {
             instanceList = []
             while (count < filtered.length) {
                 let data = {};
-                data["name"] = filtered[count]
+                data["name"] = filtered[count];
                 data["uuid"] = filtered[++count];
                 data["isRunning"] = false;
                 data["attachedVMDK"] = "";

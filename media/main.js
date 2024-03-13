@@ -168,6 +168,9 @@
                 let row = document.createElement('div');
                 row.setAttribute("class", "InstlistItem");
                 instanceList.appendChild(row);
+                if (this.instListData[i].label === 'LG webOS TV Emulator') {
+                    this.instListData[i].label = 'LG webOS TV Emulator 1.2.0';
+                }
                 if (this.instListData[i].label.startsWith('LG webOS TV')) {
                     row.innerHTML = `
                 <div class="InstlistItemTitleContainer">
