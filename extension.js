@@ -38,6 +38,7 @@ const { PackageManagerSidebar } = require('./src/packageManagerSidebar');
 const { getSimulatorDirPath } = require('./src/lib/configUtils');
 const extensionPath = __dirname;
 const ga4Util = require('./src/ga4Util');
+const inspectApp_ipk = require('./src/inspectApp_ipk');
 
 let apiObjArray = [];
 let apiObjArrayIndex = 0;
@@ -824,6 +825,12 @@ function activate(context) {
                 launchApp(obj.appId, obj.device)
             })
     }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorer.debugipk', (file) => {
+        installApp(file.fsPath, null)
+            .then((obj) => {
+                inspectApp_ipk(obj.appId, undefined);
+            })
+    }));
 
     const webososeAppsProvider = new AppsProvider();
     vscode.window.registerTreeDataProvider('apps', webososeAppsProvider);
@@ -880,10 +887,25 @@ function activate(context) {
         inspectApp(app.label, undefined, true, 'IDE');
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp.ide', async (app) => {
-        inspectApp(app.label, undefined, true, 'IDE');
+        packageApp(app.label)
+            .then(installApp)
+            .then((obj) => {
+                if (obj && obj.appId) {
+                    inspectApp(app.label, undefined, true, 'IDE');             
+                }
+            });
+        // inspectApp(app.label, undefined, true, 'IDE');
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.debugApp.browser', async (app) => {
-        inspectApp(app.label, undefined, true, 'BROWSER');
+        packageApp(app.label)
+            .then(installApp)
+            .then((obj) => {
+                if (obj && obj.appId) {
+                    inspectApp(app.label, undefined, true, 'BROWSER');
+                
+                }
+            });
+        // inspectApp(app.label, undefined, true, 'BROWSER');
     }));
     // Provide Diagnostics when user performs lint.
     let collection = vscode.languages.createDiagnosticCollection('appLintCollection');

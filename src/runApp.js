@@ -13,8 +13,8 @@ async function _getDebugOption(title) {
     const controller = new InputController();
     controller.addStep({
         title: title,
-        placeholder: 'Debug in VS Code or inspector?',
-        items: ['VS Code', 'inspector'].map(label => ({ label }))
+        placeholder: 'Debug on VS Code Debugger or Chrome Inspector?',
+        items: ['VS Code Debugger', 'Chrome Inspector'].map(label => ({ label }))
     });
     const results = await controller.start();
     const debugoption = results.shift() === 'VS Code';

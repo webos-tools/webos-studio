@@ -56,6 +56,7 @@
         "onCommand:webososeDevices.closeApp.display1",
         "onCommand:webosose.explorer.installApp",
         "onCommand:webosose.explorer.runApp",
+        "onCommand:webosose.explorer.debugipk",
         "onCommand:apps.projectWizard",
         "onCommand:apps.refreshList",
         "onCommand:apps.packageApp",
@@ -263,6 +264,10 @@
                 "title": "webOS: Run Application"
             },
             {
+                "command": "webosose.explorer.debugipk",
+                "title": "webOS: Debug on Chrome Inspector"
+            },
+            {
                 "command": "webosose.explorermenu.packageApp",
                 "title": "webOS: Package Application"
             },
@@ -288,15 +293,15 @@
             },
             {
                 "command": "webosose.explorermenu.debug",
-                "title": "webOS: Debug"
+                "title": "webOS: Chrome Inspector"
             },
             {
                 "command": "webosose.explorermenu.debug.ide",
-                "title": "VS Code"
+                "title": "VS Code Debugger"
             },
             {
                 "command": "webosose.explorermenu.debug.browser",
-                "title": "inspector"
+                "title": "Chrome Inspector"
             },
             {
                 "command": "webososeDevices.refreshList",
@@ -412,11 +417,11 @@
             },
             {
                 "command": "apps.debugApp.ide",
-                "title": "VS Code"
+                "title": "VS Code Debugger"
             },
             {
                 "command": "apps.debugApp.browser",
-                "title": "inspector"
+                "title": "Chrome Inspector"
             },
             {
                 "command": "apps.lintApp",
@@ -639,13 +644,21 @@
             ],
             "explorer/context": [
                 {
+                    "command": "webosose.explorer.debugipk",
+                    "when": "resourceExtname == .ipk",
+                    "group": "device2@2"
+                },
+                {
                     "command": "webosose.explorer.installApp",
-                    "when": "resourceExtname == .ipk"
+                    "when": "resourceExtname == .ipk",
+                    "group": "device2@1"
                 },
                 {
                     "command": "webosose.explorer.runApp",
-                    "when": "resourceExtname == .ipk"
+                    "when": "resourceExtname == .ipk",
+                    "group": "device2@1"
                 },
+              
                 {
                     "command": "webosose.explorermenu.packageApp",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
@@ -654,17 +667,17 @@
                 {
                     "command": "webosose.explorermenu.installApp",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
-                    "group": "device1@1"
+                    "group": "device1@2"
                 },
                 {
                     "command": "webosose.explorermenu.runApp",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
-                    "group": "device1@1"
+                    "group": "device1@3"
                 },
                 {
                     "command": "webosose.explorermenu.runSimulator",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
-                    "group": "device1@1"
+                    "group": "device1@4"
                 },
                 {
                     "command": "webosose.explorermenu.appPreview",
@@ -689,6 +702,10 @@
                 },
                 {
                     "command": "webosose.explorer.runApp",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorer.debugipk",
                     "when": "false"
                 },
                 {
@@ -932,7 +949,7 @@
             },
             {
                 "id": "webosose.explorermenu.debug",
-                "label": "webOS: Debug"
+                "label": "webOS: Debug on"
             },
             {
                 "id": "apps.debugApp",
