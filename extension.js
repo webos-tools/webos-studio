@@ -987,9 +987,9 @@ function activate(context) {
 
 }
 function initExtViews(){
-    vscode.commands.executeCommand('vbox.focus');
-    vscode.commands.executeCommand('apps.focus');
-    vscode.commands.executeCommand('webososeDevices.focus');
+    // vscode.commands.executeCommand('vbox.focus');
+    // vscode.commands.executeCommand('apps.focus');
+    // vscode.commands.executeCommand('webososeDevices.focus');
     
 
     setTimeout(()=>{
@@ -1042,6 +1042,7 @@ function updateStatusBarItem() {
         myStatusBarItem.text = text;
         myStatusBarItem.tooltip = tooltip;
         myStatusBarItem.show();
+        vscode.commands.executeCommand('setContext', 'webos.profile', profile);
     })();
 }
 
