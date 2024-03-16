@@ -17,11 +17,6 @@
                 "type": "tv-simulator",
                 "displayName": "Simulator",
                 "subDirName": "Simulator"
-            },
-            {
-                "type": "tv-beanviser",
-                "displayName": "Beanviser",
-                "subDirName": "beanviser"
             }
            
         ],
