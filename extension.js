@@ -994,7 +994,7 @@ function initExtViews(){
 
     setTimeout(()=>{
         if(logger.extInit == false){
-            logger.logAny("webOS Studio initialized successfully." ) ;
+            logger.log("webOS Studio initialized successfully." ) ;
             logger.log("------------------------------------------------")
         
             logger.extInit = true;
