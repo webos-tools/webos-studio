@@ -415,6 +415,9 @@ async function launchClose(appId, device, dp) {
     if (!appId || !device) {
         return Promise.reject('ares-launch --close: arguments are not fulfilled.')
     }
+    if (dp === undefined) {
+        dp = '0';
+    }
     let cmd = `${path.join(await getCliPath(), 'ares-launch')} -c ${appId} -d "${device}" -dp "${dp}"`;
     return _execAsync(cmd, (stdout, resolve, reject) => {
 

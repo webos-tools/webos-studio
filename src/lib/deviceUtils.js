@@ -103,10 +103,17 @@ async function getRunningList(device) {
     return appList;
 }
 
+let prof = '';
+
+function getProfile() {
+    return prof;
+}
+
 async function setCurrentDeviceProfile(profile) {
     let result = false;
     await ares.config(true, profile)
         .then(() => {
+            prof = profile;
             result = true;
         }).catch(err =>{
             console.error(err);
@@ -120,6 +127,7 @@ async function getCurrentDeviceProfile() {
     return new Promise((resolve, reject) => {
         ares.config(false)
             .then((data) => {
+                prof = data;
                 resolve(data);
             }).catch((err) => {
                 console.error(err);
@@ -185,6 +193,7 @@ module.exports = {
     getDeviceList: getDeviceList,
     getInstalledList: getInstalledList,
     getRunningList: getRunningList,
+    getProfile: getProfile,
     getDefaultDevice: getDefaultDevice,
     updateDeviceStatus:updateDeviceStatus,
     getSimulatorList: getSimulatorList,

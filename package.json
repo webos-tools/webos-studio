@@ -554,7 +554,12 @@
                 },
                 {
                     "submenu": "webososeDevices.closeApp",
-                    "when": "view == webososeDevices && viewItem == running",
+                    "when": "webos.profile == 'OSE' && (view == webososeDevices && viewItem == running)",
+                    "group": "app2@3"
+                },
+                {
+                    "command": "webososeDevices.closeApp",
+                    "when": "webos.profile == 'TV' && (view == webososeDevices && viewItem == running)",
                     "group": "app2@3"
                 },
                 {

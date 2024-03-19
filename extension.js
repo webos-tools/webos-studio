@@ -731,7 +731,7 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webososeDevices.refreshDevice', (device) => {
         device = deviceClone(device);
         if (device != null) {
-            webososeDevicesProvider.refresh(device);
+            webososeDevicesProvider.refresh();
         }
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webososeDevices.installApp', (device) => {

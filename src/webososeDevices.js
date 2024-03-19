@@ -5,7 +5,7 @@
 const vscode = require('vscode');
 const path = require('path');
 const chokidar = require('chokidar');
-const { getDeviceList, getInstalledList, getRunningList, updateDeviceStatus, getSimulatorList } = require('./lib/deviceUtils');
+const { getDeviceList, getInstalledList, getRunningList, updateDeviceStatus, getSimulatorList, getProfile } = require('./lib/deviceUtils');
 const { logger } = require('./lib/logger');
 const { getSimulatorDirPath } = require('./lib/configUtils');
 const ga4Util = require('./ga4Util');
@@ -79,10 +79,12 @@ class DeviceProvider {
             });
         } else if (label === 'Running') {
             let running = await getRunningList(deviceName);
+            const profile = getProfile();
+            console.log("Hit profile =" + profile);
             running.forEach((appId) => {
                 let idArray = appId.split(/\s+/)
                 let id = idArray[0].trim();
-                let display = appId.replace(id, "").replace("-", "").trim();
+                const display = (profile === 'tv') ? '' : appId.replace(id, "").replace("-", "").trim();
                 if (!id.includes("[Info]")) {
                     array.push(new AppId(id, 'running', deviceName, display));
                 }

@@ -4,7 +4,7 @@
 */
 const vscode = require('vscode');
 const { InputController } = require('./lib/inputController');
-const { getDeviceList, getInstalledList } = require('./lib/deviceUtils');
+const { getDeviceList, getInstalledList, getProfile } = require('./lib/deviceUtils');
 const notify = require('./lib/notificationUtils');
 const ares = require('./lib/runCommand');
 const { getLaunchParams } = require('./lib/commonInput');
@@ -64,19 +64,24 @@ module.exports = async function launchApp(id, deviceName, displayId, withParams)
         let results2 = await controller2.start();
         appId = results2.shift();
 
-        let controller3 = new InputController();
-        let displayArr = ['display 0', 'display 1'];
-        controller3.addStep({
-            title,
-            placeholder: 'Select Display Id',
-            items: displayArr.map(label => ({ label }))
-        });
-        let results3 = await controller3.start();
-        if ((results3.shift()) === displayArr[0]) {
+        const profile = getProfile();
+        if (profile === 'tv') {
             dp = 0;
-        }
-        else {
-            dp = 1;
+        } else {
+            let controller3 = new InputController();
+            let displayArr = ['display 0', 'display 1'];
+            controller3.addStep({
+                title,
+                placeholder: 'Select Display Id',
+                items: displayArr.map(label => ({ label }))
+            });
+            let results3 = await controller3.start();
+            if ((results3.shift()) === displayArr[0]) {
+                dp = 0;
+            }
+            else {
+                dp = 1;
+            }
         }
     }
     const params = withParams ? await getLaunchParams(title) : {};
