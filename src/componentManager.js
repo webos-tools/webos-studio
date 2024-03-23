@@ -1979,7 +1979,7 @@ class ComponentMgr {
     if (osStr == "linux") {
       profileLoader = " . ~/.profile && ";
     } else if (osStr == "darwin") {
-      profileLoader = " source ~/.bashrc && ";
+      profileLoader = " touch ~/.bash_profile && source ~/.bash_profile && ";
     }
     let nvmnodejs = this.getEnvVarValue("NVM_SYMLINK");
     let whichcommand = ""
@@ -2014,6 +2014,11 @@ class ComponentMgr {
     return outStr.split("\n")[0]
 
 
+  }
+  getNpmGloablPath() {
+    let command = `${this.getNPMProgram()} config get prefix `;
+    let outStr = this.executeCommandSync(command);
+    return outStr.split("\n")[0];
   }
   async uninstallFromNPM(command, comp_uid) {
     return new Promise(async (resolve, reject) => {

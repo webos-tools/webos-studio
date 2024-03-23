@@ -249,7 +249,7 @@ class PackageManagerSidebar {
         if (msgData.isSet) {
 
           await this.compMangerObj.setAnyEnvVariable("LG_WEBOS_TV_SDK_HOME", path.join(filePath.fsPath, "TV"));
-          await this.compMangerObj.setAnyEnvVariable("WEBOS_CLI_TV", path.dirname(path.join(this.compMangerObj.getNPMProgram(true))));
+          await this.compMangerObj.setAnyEnvVariable("WEBOS_CLI_TV", path.join(this.compMangerObj.getNpmGloablPath(), 'bin'));
 
           vscode.commands.executeCommand("webos.updateSDKPath", filePath.fsPath);
           await this.doStartEditor();
