@@ -4,6 +4,25 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+## [2.0.1] [2024-03-28]
+
+- Change API Level string in project wizard for TV profile
+- Change TV simulator version notation on notification window
+- Change Debug sub menu name and function
+- Remove auto focus of webOS Studio extension on start and do not show display numbers for TV profile
+- Remove beanviser in the Package Manager
+- Disable auto focus to Output log
+- Set WEBOS_CLI_TV variable to launch TV Emulator
+- Update TV Simulators to v1.4.1
+- Fix following bugs
+  - Default target information is displayed as null when install or run app
+  - Can't launch or use TV emulator
+  - Color theme bug for the Package Manager
+  - Show information error in TV profile
+  - There is no Debug Application menu on ipk file
+  - TV emulator v1.2.0 does not run
+  - TV emulator is not running on fresh linux environment
+
 ## [2.0.0] [2024-03-05]
 
 This is an integrated release for OSE and TV of the webOS Studio extension.
