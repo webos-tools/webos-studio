@@ -4,6 +4,16 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+## [2.0.2] [2024-04-06]
+
+- Change Simulator name and order in sidebar
+- Remove webOS Emulator Launcher install prompt pop-up
+- Update webOS Studio UI text
+- Update TV Simulator 6.0
+- Update README.md
+- Bug fix
+  - Global package installation progress notification and an OSE/TV CLI deletion notification occur simultaneously
+
 ## [2.0.1] [2024-03-28]
 
 - Change API Level string in project wizard for TV profile
