@@ -28,6 +28,7 @@ async function isNodeInstalledRoot() {
 }
 
 async function installGlobalLibrary() {
+    handlingPrompt = true;
     vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
         title: "Install Global Packages",
