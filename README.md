@@ -1,6 +1,8 @@
 # webOS Studio
 
 **webOS Studio** helps the users develop apps or services for [webOS Open Source Edition (OSE)](https://webosose.org) and [webOS TV](https://webostv.developer.lge.com).
+- **webOS TV** is a web-centric smart TV platform that has powered LG Smart TVs for over a decade. It not only verified its reliable and stable performance across the globe but also demonstrated the potential and qualification of becoming a leading player in the linux-based smart display platforms competition.
+- **webOS OSE** is the open source project of webOS launched in  March 2018 under the philosophy of open platform, open partnership, and open connectivity. On top of the core architecture of webOS, webOS OSE offers additional features that allow extension to more diverse industry verticals.
 
 > **IMPORTANT NOTICE:** 
 > - If you installed the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose) or [webOS TV extension](https://marketplace.visualstudio.com/items?itemName=webOSTVSDK.webostv), **UNINSTALL** those before installing this extension.
@@ -36,9 +38,9 @@ Emulator-related features are not supported in Apple Silicon Mac.
 | Software                      | Required version                  |
 | ----------------------------- | --------------------------------- |
 | Microsoft Visual Studio Code  | 1.58.0 or higher                  |
-| Node.js                       | v14.15.1 ~ v16.20.2               |
+| Node.js                       | v14.15.1 or higher (verified on v14.15.1 and v16.20.2)              |
 | Python                        | 3.6 or higher                     |
-| VirtualBox                    | 6.1 or higher                     |
+| VirtualBox                    | 6.1                     |
 
 ## Setup
 
@@ -75,7 +77,7 @@ npm install -g @enact/cli @webos-tools/cli patch-package
 
 ### Emulator Launcher
 
-Emulator Launcher is a command-line based tool which helps users set up the webOS emulator more easier.
+Emulator Launcher is a command-line based tool which helps users set up the [webOS emulator](https://www.webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-user-guide/) more easier.
 
 You can install the Emulator Launcher with the following command:
 
@@ -98,7 +100,7 @@ webOS Studio supports multiple webOS platforms. So, you need to set the proper p
 For more detailed user guide, see each platform's website.
 
 - [webOS OSE website](https://www.webosose.org/docs/tools/sdk/vs-code-extension)
-- webOS TV website (will soon be available)
+- [webOS TV website](https://webostv.developer.lge.com/develop/tools/webos-studio-dev-guide)
 
 ## Command Palette
 
@@ -120,7 +122,7 @@ webOS Studio supports the following commands:
 | webOS: Auto Reload                    |  v  |  v  | Auto Reload                                                         |
 | webOS OSE: Launch Resource Monitoring |     |  v  | Launches Resource Monitoring window.                                |
 | webOS TV: Set Up SSH Key              |  v  |     | Sets up ssh key for webOS TV                                        |
-| webOS TV: Run on Simulator            |  v  |     | Runs an app on the webOS TV Simulator.                              |
+| webOS TV: Run on Simulator            |  v  |     | Runs an app on the [webOS TV Simulator](https://webostv.developer.lge.com/develop/tools/simulator-introduction).                              |
 
 ## Miscellaneous Information
 
