@@ -197,7 +197,7 @@
             },
             {
                 "command": "webosSimulator.runApp",
-                "title": "Run Application"
+                "title": "Run App"
             },
             {
                 "command": "webosose.generateApp",
@@ -333,7 +333,7 @@
             },
             {
                 "command": "webososeDevices.installApp",
-                "title": "Install Application"
+                "title": "Install App"
             },
             {
                 "command": "webososeDevices.setDefaultDevice",
@@ -405,7 +405,7 @@
             },
             {
                 "command": "apps.previewApp",
-                "title": "Preview Application"
+                "title": "Preview App"
             },
             {
                 "command": "apps.runWithoutInstall",
