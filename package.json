@@ -127,13 +127,13 @@
                     "name": "Package Manager"
                 },
                 {
+                    "id": "webosSimulator",
+                    "name": "Simulator Manager"
+                },
+                {
                     "type": "webview",
                     "id": "vbox",
                     "name": "Emulator Manager"
-                },
-                {
-                    "id": "webosSimulator",
-                    "name": "Simulator"
                 },
                 {
                     "id": "quickLauncher",

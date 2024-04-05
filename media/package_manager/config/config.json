@@ -7,18 +7,16 @@
     "tv": {
         "subDirName": "TV",
         "components": [
-           
-            {
-                "type": "tv-emulator",
-                "displayName": "Emulator",
-                "subDirName": "Emulator"
-            },
             {
                 "type": "tv-simulator",
                 "displayName": "Simulator",
                 "subDirName": "Simulator"
+            },
+            {
+                "type": "tv-emulator",
+                "displayName": "Emulator",
+                "subDirName": "Emulator"
             }
-           
         ],
       
         "tv-emulator": [
