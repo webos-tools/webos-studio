@@ -1087,7 +1087,7 @@ function chooseAPILevel(filepath) {
         .then(async (answer) => {
             if (answer === "Yes") {
                 let controller = new InputController();
-                let apiList = ['20', '21', '22', '23', '24', '25', '27'];  // [REQUIRED] Update the api level when new version of OSE is released.
+                let apiList = ['20', '21', '22', '23', '24', '25', '27', '28'];  // [REQUIRED] Update the api level when new version of OSE is released.
 
                     controller.addStep({
                         title: 'Choose API Level',
@@ -1467,6 +1467,7 @@ function getWebviewHome(resource) {
                 <select name="selelct-api-version" id="selelct-api-version" disabled>
                         <option value="none" selected disabled hidden>====== select ======</option>
                         <!--[REQUIRED] Update the api level when new version of OSE is released.-->
+                        <option value="OSE_APILevel_28">OSE APILevel28</option>
                         <option value="OSE_APILevel_27">OSE APILevel27</option>
                         <option value="OSE_APILevel_25">OSE APILevel25</option>
                         <option value="OSE_APILevel_24">OSE APILevel24</option>

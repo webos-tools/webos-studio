@@ -995,8 +995,8 @@
                 },
                 "webosose.lunaApiLevel": {
                     "type": "string",
-                    "default": "OSE_APILevel_27",
-                    "description": "(Required) Set the level of LUNA API, e.g OSE_APILevel_27"
+                    "default": "OSE_APILevel_28",
+                    "description": "(Required) Set the level of LUNA API, e.g OSE_APILevel_28"
                 },
                 "webos.enableUserDataCollection": {
                     "type": "boolean",
