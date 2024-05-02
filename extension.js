@@ -648,7 +648,11 @@ function activate(context) {
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.packageApp', () => { packageApp(); }));
-    context.subscriptions.push(vscode.commands.registerCommand('webosose.setupDevice', () => { setupDevice(); }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.setupDevice', () => {
+        setupDevice().then(() => {
+            webososeDevicesProvider.refresh();
+        });
+    }));
     context.subscriptions.push(vscode.commands.registerCommand('webos.getKey', () => {
         getCurrentDeviceProfile()
             .then((data) => {
