@@ -152,8 +152,8 @@ class Simulator {
     }
 
     iconPath = {
-		light: path.resolve(resourcesPath, 'light', 'simul.svg'),
-		dark: path.resolve(resourcesPath, 'dark', 'simul.svg')
+        light: path.join(__filename, '..', '..', 'resources', 'light', 'simul.svg'),
+        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'simul.svg')
 	};
 }
 class SimulatorProvider {
