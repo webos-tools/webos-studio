@@ -118,5 +118,7 @@
   width: 0px;
   height: 18px;
   margin-right: auto;
-
+}
+.hiddenRow {
+  display: none !important;
 }

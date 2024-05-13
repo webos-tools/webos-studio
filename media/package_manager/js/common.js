@@ -210,6 +210,24 @@ function handleMsg() {
     const message = event.data; // The json data that the extension sent
 
     switch (message.command) {
+      case "DEVICE_PROFILE_CHANGED":
+        {
+
+          let currentProRows = document.querySelectorAll(`tr[data-rowprofile='${message.data.profile}']`)
+          let otherProfRows = document.querySelectorAll(`tr[data-rowprofile]:not([data-rowprofile="${message.data.profile}"])`)
+          currentProRows.forEach(element => {
+            if(element.classList.contains("hiddenRow")){
+              element.classList.remove("hiddenRow");
+            }
+          });
+          otherProfRows.forEach(element => {
+            if(!element.classList.contains("hiddenRow")){
+              element.classList.add("hiddenRow");
+            }
+          });
+          
+        }
+        break;
       case "SET_CONFIG_JSON": {
         configJson = message.data;
         break;

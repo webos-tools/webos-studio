@@ -15,9 +15,10 @@ const portfinder = require('portfinder');
 const notify = require('./lib/notificationUtils');
 const http = require('http');
 const ga4Util = require('./ga4Util');
+const fs = require('fs');
 
-module.exports = async function previewApp(appSelectedDir, previewPanelInfo) {
-    ga4Util.mpGa4Event("PreviewApp", {category:"Commands"});
+module.exports = async function previewApp(appSelectedDir, previewPanelInfo, context) {
+    ga4Util.mpGa4Event("PreviewApp", { category: "Commands" });
     let defaultDir = getDefaultDir();
     let defaultString = '';
     let appDir;
@@ -64,6 +65,15 @@ module.exports = async function previewApp(appSelectedDir, previewPanelInfo) {
         appDir = path.join(defaultDir, appDir);
     }
 
+    let appInfo = path.join(appDir, "appinfo.json");
+    let appTitle ="App Preview";
+    if (fs.existsSync(appInfo)) {
+        let rawdata = fs.readFileSync(appInfo, 'utf8');
+        let appInfoData = JSON.parse(rawdata);
+        if (appInfoData && appInfoData["title"]) {
+            appTitle = "App Preview - "+appInfoData["title"]
+        }
+    }
     let isEnact = await enactUtils.isEnactApp(appDir);
     // const columnToShowIn = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn + 1 : undefined;
 
@@ -107,7 +117,7 @@ module.exports = async function previewApp(appSelectedDir, previewPanelInfo) {
                                 previewPanelInfo.appDir = appDir;
                                 previewPanelInfo.childProcess = child;
                                 previewPanelInfo.webPanel.webview.options = { "enableScripts": true, "enableForms": true, }
-                                previewPanelInfo.webPanel.webview.html = getWebviewContent(url);
+                                previewPanelInfo.webPanel.webview.html = getWebviewContent(url, previewPanelInfo.webPanel.webview,appTitle);
                                 previewPanelInfo.isProcRunning = true;
                                 previewPanelInfo.webPanel.onDidDispose(
                                     () => {
@@ -130,6 +140,7 @@ module.exports = async function previewApp(appSelectedDir, previewPanelInfo) {
                             }
                         }).catch((err) => {
                             console.log("process error -", err);
+                            previewPanelInfo.webPanel = null
                             vscode.window.showErrorMessage(`Error! Failed to run a local server.`);
                         })
                 })
@@ -162,42 +173,71 @@ module.exports = async function previewApp(appSelectedDir, previewPanelInfo) {
         });
     }
 
-    function getWebviewContent(url) {
+    function getWebviewContent(url, webview,appTitle) {
         // const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'preview.js'));
-
+        const commonJs = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                context.extensionUri,
+                "media",
+                "preview",
+                "js",
+                "common.js"
+            )
+        );
+        const codiconsUri = webview.asWebviewUri(vscode.Uri.joinPath(context.extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
+        const commonCss = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                context.extensionUri,
+                "media",
+                "preview",
+                "css",
+                "common.css"
+            )
+        );
         return `<!DOCTYPE html >
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>App Preview</title>
-            <script>
-            function setSize() {
-            var iframeElement = document.getElementById("previewEle");
-            iframeElement.style.height = (window.innerHeight - 10) + "px";
-
-        }
-        // Handle the message inside the webview
-        window.addEventListener('resize', (event) => {
-            setSize();
-        }, true);
-        window.addEventListener('message', event => {
-            const message = event.data; // The JSON data our extension sent
-            switch (message.command) {
-                case 'reload':
-                    var iframeElement = document.getElementById("previewEle");
-                    var url = iframeElement.getAttribute("src")
-                    iframeElement.setAttribute("src", url + "?couter=" + Math.random());
-
-            }
-        });
-
+            <link href="${commonCss}" rel="stylesheet">
+            <link href="${codiconsUri}" rel="stylesheet">
+        
+       <script>
+       
         </script>
         </head>
-        <body style="overflow: auto;"  onload="setSize()" >
+        <body style="overflow: auto;" >
+
+            <div id="prv_toolBar" class="prv_toolBar">
+                <div id="prv_toolBar_title" class="prv_toolBar_title">${appTitle}</div>
+                <div id="prv_toolBarBody" class="prv_toolBarBody">
+                    <div class="prv_toolBarMenu" id="prv_toolBarMenu">
+                        <span id ="prv_resTitle" class="prv_resTitle">Resolution - Fit to Windows</span>
+                        <i id ="prv_ddmenu" title="Menu" class="codicon codicon-menu prv_icon"></i>
+                        <i id ="prv_zoomin" title="Zoom-In" class="codicon codicon-zoom-in prv_icon_zoom"></i>
+                        <i id ="prv_zoomout" title="Zoom-out" class="codicon codicon-zoom-out prv_icon_zoom"></i>
+                    </div>
+            
+            
+                </div>
+
+                <div id="prv_toolBarCtxMenu" class="prv_toolBarCtxMenu" style="display:none">
+                    <p class="prv_toolBarCtxMenu_item" id="prv_menu_fitToWindows">Fit to Windows</p>
+                    <hr >
+                    <p class="prv_toolBarCtxMenu_item" id="prv_menu_fhd">FHD - 1920 X 1080</p>
+                    <p class="prv_toolBarCtxMenu_item" id="prv_menu_hd">HD - 1280 X 720</p>
+                    <hr >
+                    </hr>
+                    <p  class="prv_toolBarCtxMenu_item" id="prv_menu_16-9" class="ctxmenu_item_active">16:9</p>
+                    <p  class="prv_toolBarCtxMenu_item" id="prv_menu_4-3">4:3</p>
+                </div>
+            </div>
+
             <iframe id="previewEle" width="100%" class="webview ready" sandbox="allow-scripts allow-same-origin  allow-forms allow-pointer-lock allow-downloads allow-modals allow-popups allow-orientation-lock" frameborder="0" src="${url}" style="border:none;overflow: auto;margin: 0px;height:100%" ></iframe>
 
             </body>
+            <script type='text/javascript' src="${commonJs}"></script>
         </html>`;
     }
 }

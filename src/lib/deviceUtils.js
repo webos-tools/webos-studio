@@ -112,9 +112,19 @@ function getProfile() {
 async function setCurrentDeviceProfile(profile) {
     let result = false;
     await ares.config(true, profile)
-        .then(() => {
+        .then(async() => {
             prof = profile;
             result = true;
+           
+            const pkgMgr = await vscode.commands.executeCommand("getPackageMgr") 
+            if(pkgMgr && pkgMgr.panel){
+                pkgMgr.panel.webview.postMessage({
+                    command: "DEVICE_PROFILE_CHANGED",
+                    data: {profile :profile},
+                  });
+              
+            }
+           
         }).catch(err =>{
             console.error(err);
             // vscode.window.showErrorMessage(`Error! Failed to set device profile.`);

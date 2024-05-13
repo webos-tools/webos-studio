@@ -1,0 +1,80 @@
+.prv_toolBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--vscode-editorWidget-background);
+    color: var(--vscode-editorWidget-foreground);
+    z-index: 10;
+    padding: 2px;
+    box-sizing: border-box;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    border: none;
+    border-bottom: solid 1px;
+    border-color: var(--vscode-actionBar-toggledBackground);
+  }
+  .prv_toolBarBody {
+    display: flex;
+    flex-direction: row-reverse;
+    padding-left: 15px;
+    width: 100%;
+    float: right;
+  }
+  
+  .prv_toolBar_title {
+    padding-left: 15px;
+    padding-right: 5px;
+    font-variant-caps: petite-caps;
+    color: cornflowerblue;
+    width: 100%;
+   
+  }
+  
+  
+  .prv_toolBarCtxMenu {
+    position: fixed;
+    background: var(--vscode-menu-background);
+    color: var(--vscode-menu-foreground);
+    border-color: var(--vscode-menu-separatorBackground);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    padding: 5px;
+  
+    box-shadow: 5px 5px var(--vscode-menu-background);
+    z-index: 15;
+  }
+    
+  .prv_toolBarCtxMenu_item {
+    padding: 5px;
+    margin: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+  }
+  
+  .prv_toolBarCtxMenu_item:hover {
+    border-radius: 3px;
+    background: var(--vscode-menu-selectionBackground);
+    color: var(--vscode-menu-selectionForeground);
+  }
+  .prv_icon{
+    vertical-align: middle;
+    padding-right: 20px;
+  }
+  .prv_resTitle{
+    padding-right: 10px;
+  }
+  .prv_toolBarMenu{
+    cursor: pointer;
+  }
+  .previewEleTrans{
+    transition: 0.2s all linear;
+  }
+  .prv_icon_zoom{
+    vertical-align: middle;
+    padding-right: 10px;
+  }

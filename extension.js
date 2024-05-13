@@ -882,7 +882,7 @@ function activate(context) {
         installLibrary(app.label, app.description);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.previewApp', async (app) => {
-        previewApp(app.label, previewPanelInfo);
+        previewApp(app.label, previewPanelInfo, context);
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.runWithoutInstall', async (app) => {
         runWithoutInstall(app.label, context);
@@ -983,6 +983,8 @@ function activate(context) {
     }));
   
     this.packageMgrWebviewProvider = new PackageManagerSidebar(context);
+    context.subscriptions.push(vscode.commands.registerCommand('getPackageMgr', () =>this.packageMgrWebviewProvider ));
+
     vscode.window.registerWebviewViewProvider(PackageManagerSidebar.viewType, this.packageMgrWebviewProvider, { webviewOptions: { retainContextWhenHidden: true } });
 
   vscode.commands.executeCommand('webososeDevices.refreshList');

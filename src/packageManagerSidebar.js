@@ -8,6 +8,8 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 const { ComponentMgr } = require("./componentManager");
+
+const { getCurrentDeviceProfile } = require('./lib/deviceUtils');
 class PackageManagerSidebar {
   constructor(context) {
     this.context = context;
@@ -50,8 +52,9 @@ class PackageManagerSidebar {
 
   doResolveWebview(panel) {
 
-    this.loadSDKManager().then(() => {
-
+    this.loadSDKManager().then(async() => {
+      this.currentProfile  = await getCurrentDeviceProfile();
+    
       panel.webview.html = this.getHtmlForWebview(this.panel.webview);
 
       setTimeout(() => {
@@ -484,31 +487,31 @@ class PackageManagerSidebar {
     </div>
       `;
   }
-  getTreeTableParentRowHTML(compName, displayName) {
+  getTreeTableParentRowHTML(compName, displayName,sdk) {
     return `
-      <tr class ="trhover" data-compname="${compName}"role="row" aria-level="2" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+      <tr data-rowprofile ="${sdk}" class ="trhover ${sdk != this.currentProfile ?" hiddenRow ":"" }" data-compname="${compName}"role="row" aria-level="2" aria-posinset="1" aria-setsize="1" aria-expanded="true">
         <td role="gridcell" style="width:100%;overflow-x:visibile">${displayName}</td>
        
         <td role="gridcell"></td>
       </tr>
       `;
   }
-  getTreeTableCatRowHTML(catName) {
+  getTreeTableCatRowHTML(catName,sdk) {
     return `
-      <tr class ="trhover" role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+      <tr  data-rowprofile ="${sdk}" class ="trhover ${sdk != this.currentProfile ?" hiddenRow ":"" }" role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
         <td role="gridcell" style="width:100%;overflow-x:visibile">${catName}</td>
         
         <td role="gridcell"></td>
       </tr>
       `;
   }
-  getTreeTableChildRowHTML(rowObj, statusJson) {
+  getTreeTableChildRowHTML(rowObj, statusJson,sdk) {
 
     let rowObjB64 = Buffer.from(JSON.stringify(rowObj)).toString("base64");
     let prerow = ` ${this.getActionInfoHTML(rowObj["compInfo"]["comp_uid"]
     )}`
     return `
-      <tr class="trhover childrow" data-comp_uid="${rowObj["compInfo"]["comp_uid"]
+      <tr data-rowprofile ="${sdk}" class="trhover childrow ${sdk != this.currentProfile ?" hiddenRow ":"" }" data-comp_uid="${rowObj["compInfo"]["comp_uid"]
       }"  data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="3" aria-posinset="1" aria-setsize="3" >
       <td role="gridcell" title ="Disk Space: ${this.convertSize(rowObj["compInfo"].expFileSizeInMB)}">${prerow}${rowObj["compInfo"]["shortDisplayName"]} </td>
        <td role="gridcell">${this.getActionHTML(
@@ -573,7 +576,7 @@ class PackageManagerSidebar {
       for (let k = 0; k < sdks.length; k++) {
         let config = configData[sdks[k]];
 
-        treeHTML = treeHTML + this.getTreeTableCatRowHTML(sdkNames[k]);
+        treeHTML = treeHTML + this.getTreeTableCatRowHTML(sdkNames[k],sdks[k]);
 
         for (let i = 0; i < config["components"].length; i++) {
           let compName = config["components"][i]["type"];
@@ -581,7 +584,8 @@ class PackageManagerSidebar {
             treeHTML +
             this.getTreeTableParentRowHTML(
               compName,
-              config["components"][i]["displayName"]
+              config["components"][i]["displayName"],
+              sdks[k]
             );
 
           for (let j = 0; j < config[compName].length; j++) {
@@ -596,7 +600,7 @@ class PackageManagerSidebar {
             rowObj["shortDisplayName"] = config["components"][i]["shortDisplayName"];
 
             treeHTML =
-              treeHTML + this.getTreeTableChildRowHTML(rowObj, statusJson);
+              treeHTML + this.getTreeTableChildRowHTML(rowObj, statusJson,sdks[k]);
           }
         }
 

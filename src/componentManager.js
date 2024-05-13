@@ -73,11 +73,52 @@ class ComponentMgr {
     let configData = "";
     try {
       configData = fs.readFileSync(jsonPath.fsPath, "utf8");
-      return JSON.parse(configData);
+      return this.orderConfig( JSON.parse(configData));
     } catch (e) {
       return null;
     }
   }
+  orderConfig(config){
+    let sdks =["tv","ose"]
+    for (let k = 0; k < sdks.length; k++) {
+
+      for (let i = 0; i < config[sdks[k]]["components"].length; i++) {
+        let compName = config[sdks[k]]["components"][i]["type"];
+        
+          config[sdks[k]][compName] = this.orderBySortOrder(config[sdks[k]][compName])
+      }
+    }
+    return config
+  }
+  orderBySortOrder(objArray) {
+    let o = {};
+    objArray.forEach(element => {
+        o[element.sortOrder] = element;
+    });
+
+    var sorted = {},
+        key, a = [];
+
+    for (key in o) {
+        if (o.hasOwnProperty(key)) {
+            a.push(key);
+        }
+    }
+
+    a.sort();
+    a.reverse();
+
+    for (key = 0; key < a.length; key++) {
+        sorted[a[key]] = o[a[key]];
+    }
+    let returnArray =[]
+    a.forEach(element => {
+      returnArray.push(sorted[element])
+    });
+  
+    return returnArray;
+}
+
   async updateAvailableDiskspaceOnEnvPath() {
     // gets the Avalialble diskspace and send a msg to UI
     await checkDiskSpace(this.envPath).then((diskSpace) => {
