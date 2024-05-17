@@ -43,6 +43,11 @@ const inspectApp_ipk = require('./src/inspectApp_ipk');
 let apiObjArray = [];
 let apiObjArrayIndex = 0;
 let myStatusBarItem;
+let studioProfile = "";
+let studioAPILevelList = [];
+
+const OSE_SITE = "http://www.webosose.org/docs/reference/ls2-api"
+const TV_SITE = "https://webostv.developer.lge.com/develop/references/luna-service-introduction"
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -59,6 +64,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'],
         {
             provideCompletionItems(document, position) {
+                if(studioProfile === "") {
+                    return undefined;
+                }
+
                 const linePrefix = document.lineAt(position).text.substring(0, position.character);
                 if (!linePrefix.endsWith('luna://')) {
                     return undefined;
@@ -66,14 +75,20 @@ function activate(context) {
 
                 apiObjArrayIndex = setFromConvertCacheAPI();
                 const returnItemArray = [];
-
                 const apiServiceArray = apiObjArray[apiObjArrayIndex].service;
 
                 for (const i in apiServiceArray) {
                     const serviceItemName = apiServiceArray[i].name;
                     let urlServiceName = replaceAll(serviceItemName, ".", "-");
                     urlServiceName = urlServiceName.toLocaleLowerCase();
-                    const urlName = `http://www.webosose.org/docs/reference/ls2-api/${urlServiceName}`;
+
+                    let urlName = "";
+                    if (studioProfile === "ose") {
+                        urlName = `${OSE_SITE}/${urlServiceName}`;
+                    } else if (studioProfile === "tv") {
+                        urlName = `${TV_SITE}`;
+                    }
+
                     const urlServiceSite = `<a href='${urlName}'>Site link of service(${serviceItemName})</a>`
 
                     const serviceItemInterface = { label: serviceItemName, description: "Luna API Service" };
@@ -99,7 +114,11 @@ function activate(context) {
     const methodProvider = vscode.languages.registerCompletionItemProvider(
         ['plaintext', 'javascript', 'typescript', 'html'],
         {
-            provideCompletionItems(document, position) {
+            provideCompletionItems(document, position) {  
+                if(studioProfile === "") {
+                    return undefined;
+                }
+
                 let serviceName = "";
                 const returnItemArray = [];
                 const linePrefix = document.lineAt(position).text.substring(0, position.character);
@@ -151,6 +170,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
+            if(studioProfile === "") {
+                return undefined;
+            }
+
             const returnItemArray = [];
             let serviceName = "";
             let methodName = "";
@@ -201,6 +224,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems() {
+            if(studioProfile === "") {
+                return undefined;
+            }
+
             const stringFirstMain = 'new LS2Request()';
             const snippetFirstItemInterface = { label: stringFirstMain, description: "Luna API Snippet" };
             const firstSnippetCompletion = new vscode.CompletionItem(snippetFirstItemInterface, vscode.CompletionItemKind.Snippet);
@@ -265,6 +292,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
+            if(studioProfile === "") {
+                return undefined;
+            }
+
             const returnItemArray = [];
             let serviceName = "";
 
@@ -308,7 +339,9 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
-
+            if(studioProfile === "") {
+                return undefined;
+            }
             const returnItemArray = [];
             let serviceName = "";
             let methodName = "";
@@ -401,7 +434,6 @@ function activate(context) {
                         msg = 'Create Project';
                         panel.title = msg;
                         panel.webview.html = getWebviewCreateProject(appTypeIndex, resource); // page2
-                        vscode.workspace.getConfiguration().update("webosose.lunaApiLevel", apiLevel);
                         break;
                     case 'Next':
                         appType = message.appType;
@@ -539,8 +571,7 @@ function activate(context) {
                                     apiLevelStatusSplit = apiLevelStatus.split("_");
                                     apiLevelNo = apiLevelStatusSplit[apiLevelStatusSplit.length - 1];
                                     const webosConfig = {
-                                        api_level: apiLevelNo,
-                                        // profile: deviceProfile
+                                        api_level: apiLevelNo
                                     }
                                     const webosConfigJSON = JSON.stringify(webosConfig, null, 2);
                                     const jsonPath = path.join(projectLocation, `${projectName}/.webosstudio.config`);
@@ -1008,12 +1039,6 @@ function initExtViews(){
         
         }
     },5000)
-    
-    
-    
-   
-    
-    
 }
 
 function getResourcePath() {
@@ -1037,6 +1062,15 @@ function updateStatusBarItem() {
         let profile, tooltip, text;
         try {
             profile = await getCurrentDeviceProfile();
+            if (studioProfile !== profile) {
+                //init apiObjArray
+                apiObjArray = [];
+                apiObjArrayIndex = 0;
+                console.log(`Updated studio Profile : ${studioProfile} to ${profile} , init apiObjArray`);
+                studioProfile = profile;
+            }
+
+            setStudioAPILevelByProfile(profile);
             profile = profile.trim().toUpperCase();
             text = 'webOS ' + profile;
             tooltip = 'Current profile of webOS Studio is set to ' + profile;
@@ -1050,6 +1084,34 @@ function updateStatusBarItem() {
         myStatusBarItem.show();
         vscode.commands.executeCommand('setContext', 'webos.profile', profile);
     })();
+}
+
+function setStudioAPILevelByProfile(profile) {
+    let apiLevelList = [];
+    const apiFilePath = path.join(__dirname, `resources/apis/${profile}`);
+    if (apiFilePath && fs.existsSync(apiFilePath)) {
+        try {
+            let fileObj = fs.readdirSync(apiFilePath);
+
+            fileObj.forEach(file => {
+                let filename = path.parse(file).name;
+                let apiLevel = filename.split("_");
+                apiLevelList.push(apiLevel[1]);
+            })
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+    } else {
+        console.error(`invalid apiLevel file path : ${apiFilePath}, profile : ${profile}`);
+        return;
+    }
+
+    apiLevelList.sort(function(comp1, comp2) {
+        return comp2 - comp1;
+    });
+
+    studioAPILevelList = apiLevelList;
 }
 
 async function setProfile(profile) {
@@ -1090,10 +1152,11 @@ function chooseAPILevel(filepath) {
             .showInformationMessage(`There is no API level information in the folder of this project.
                                 Do you want to create it?\n If you select "Yes", create ".webosstuido.config" file.
                                 If not, you can't use the Luna API Auto Completion.`, ...["Yes", "No"])
-        .then(async (answer) => {
-            if (answer === "Yes") {
-                let controller = new InputController();
-                let apiList = ['20', '21', '22', '23', '24', '25', '27', '28'];  // [REQUIRED] Update the api level when new version of OSE is released.
+            .then(async (answer) => {
+                if (answer === "Yes") {
+                    let controller = new InputController();
+
+                    let apiList = studioAPILevelList;
 
                     controller.addStep({
                         title: 'Choose API Level',
@@ -1161,24 +1224,25 @@ function setFromConvertCacheAPI() {
         chooseAPILevel(filepath);
         return;
     }
+
     if (fileData) {
         jsonData = JSON.parse(fileData);
         apiData = jsonData.api_level;
     }
 
-    if (!apiData) {
-        let apiLevelStatus = "";
-        let apiLevelStatusSplit = [];
-        apiLevelStatus = vscode.workspace.getConfiguration().get("webosose.lunaApiLevel");
-        if (apiLevelStatus.includes('#')) {
-            apiLevelStatus = "OSE_APILevel_21";
-            vscode.workspace.getConfiguration().update("webosose.lunaApiLevel", apiLevelStatus);
-        }
-        apiLevelStatusSplit = apiLevelStatus.split("_");
-        apiLevel = apiLevelStatusSplit[apiLevelStatusSplit.length - 1];
-    }
-    else {
+    if (apiData) {
         apiLevel = apiData;
+    } else {
+        vscode.window.showInformationMessage(`There is no API level information in ".webosstudio.config" file.
+                                            Please check the file`);
+        return;
+    }
+
+    //check api level validation depends on profile
+    if (!studioAPILevelList.includes(apiLevel)) {
+        vscode.window.showInformationMessage(`API level ${apiLevel} is not supported by ${studioProfile} profile.
+                                            Please check ".webosstudio.config" file`);
+        return;
     }
 
     const findAPIIndex = apiObjArray.findIndex((element) => element["level"] === apiLevel);
@@ -1190,7 +1254,7 @@ function setFromConvertCacheAPI() {
         const methodObjArray = [];
         const paramObjArray = [];
 
-        const jsonPath = path.join(__dirname, "resources/filterAPIByAPILevel_" + apiLevel + ".json");
+        const jsonPath = path.join(__dirname, `resources/apis/${studioProfile}/filterAPIByAPILevel_${apiLevel}.json`);
 
         try {
             fileData = fs.readFileSync(jsonPath, 'utf8');
@@ -1211,6 +1275,7 @@ function setFromConvertCacheAPI() {
 
             serviceName = jsonDataServices[key].uri;
             serviceName = changeServiceName(serviceName);
+
             if (serviceName == "remove") {
                 continue;
             }
@@ -1345,10 +1410,18 @@ function compareFn(a, b) {
 
 function changeServiceName(serviceName) {
     let changeName = serviceName;
+
+    // Do not adjust service name for tv
+    if (studioProfile === "tv") {
+        return changeName;
+    }
+
     if (serviceName === "com.webos.service.power") { // Remove duplicated service
         changeName = "remove";
-    }
-    else {
+        return changeName;
+    } else if(serviceName === "com.palm.service.tellurium") {
+        return changeName; //TODO : Need to improve luna comparisionTool
+    } else {
         if (serviceName.includes("palm")) { // Change the service name from palm to webos
             let replaceWord = "";
             if (serviceName.includes("service")) {
@@ -1392,7 +1465,13 @@ function findParamInArray(serviceName, methodName) {
     let urlMethodName = replaceAll(methodName, "/", "-");
     urlServiceName = urlServiceName.toLocaleLowerCase();
     urlMethodName = urlMethodName.toLocaleLowerCase();
-    const urlName = `http://www.webosose.org/docs/reference/ls2-api//${urlServiceName}/#${urlMethodName}`;
+
+    let urlName = "";
+    if (studioProfile === "ose") {
+        urlName = `${OSE_SITE}//${urlServiceName}/#${urlMethodName}`;
+    } else if (studioProfile === "tv") {
+        urlName = `${TV_SITE}`;
+    }
 
     const apiParamArray = apiObjArray[apiObjArrayIndex].param;
     const findServiceIndex = apiParamArray.findIndex((element) => element["name"] === serviceName);
@@ -1432,7 +1511,6 @@ function findParamInArray(serviceName, methodName) {
     }
     return [paramNameArr, paramDescrArr, [methodParamDesc]];
 }
-
 
 function getWebviewHome(resource) {
     const commonCssUri = resource + '/media/wizard/pageCommon.css';

@@ -1,0 +1,1227 @@
+{
+    "product": "TV",
+    "APILevel": 0,
+    "build": "",
+    "services": [
+        {
+            "uri": "com.palm.activitymanager",
+            "summary": "<p>Monitors various parts of the system, and launches services when the corresponding events happen. Activities can also be used to schedule work, periodically, or at particular times.</p>\n"
+        },
+        {
+            "uri": "com.webos.applicationManager",
+            "summary": "<p>The Application Manager provides the launch method to launch a specified application. You can launch an app directly by using the launch method with the specified app ID and appropriate arguments.</p>\n"
+        },
+        {
+            "uri": "com.webos.audio",
+            "summary": "<p>Provides methods for volume control.</p>\n\n<p>The <strong>Audio Setting</strong> service enables apps to control volume, with the following methods.</p>\n"
+        },
+        {
+            "uri": "com.webos.service.blegatt",
+            "summary": "<p>All methods return responses containing <strong>'errorCode'</strong> (Number) and <strong>'errorText'</strong> (String) when <strong>'returnValue'</strong> contains false. All responses from methods that have been subscribed to (i.e., were passed <strong>'subscribe:true'</strong>) contain <strong>'subscribed'</strong>.</p>"
+        },
+        {
+            "uri": "com.palm.connectionmanager",
+            "summary": "<p>Provides the status of available Internet connections.</p>\n\n<p>Connection manager provides methods for managing Internet connections. It enables apps to get the status of connections.</p>\n"
+        },
+        {
+            "uri": "com.palm.db",
+            "summary": "<p>Enables apps to store persistent data.</p>\n\n<p>DB8 is an API for managing embedded JSON database. DB8 allows apps to store persistent data. DB8 provides various functions that allow entry, storage, and retrieval of large quantities of information as well as provides ways to manage how that information is organized.</p>\n"
+        },
+        {
+            "uri": "com.webos.service.sm",
+            "summary": "<p>Provides app security and authentications services such as app signature verification. From <strong>webOS 3.0 or later</strong> platform device, you can use this security manager service for device identification/authentication API.</p>\n"
+        },
+        {
+            "uri": "com.webos.service.drm",
+            "summary": "Provides methods for managing DRM clients which handle DRM right information, sending DRM message, and subscribing to DRM rights error information. For more details on DRM playback, see the DRM Content Playback.</p>\n"
+        },
+        {
+            "uri": "com.webos.service.mrcu",
+            "summary": "<p>Provides methods related to the magic remote sensor. This is used to check the sensor data from the magic remote or to stop receiving sensor data from the magic remote.</p>\n"
+        },
+        {
+            "uri": "com.webos.mediadb",
+            "summary": "<p>Enables apps to store large media-related datasets persistently.</p><p>The Media Database service enables apps to:</p><ul<li>Add objects</li><li>Update objects</li><li>Delete objects</li><li>Query objects</li><li>Manage access to objects within the database</li></ul><p>Unlike the DB8 service, Media Database allows apps to manage large media datasets.</p><p>However, the usage method of Media Database is as same as Database (DB8). To learn about webOS Database (DB8) service and how to use it, see Database (DB8).</p>\n"
+        },
+        {
+            "uri": "com.webos.settingsservice",
+            "summary": "<p>Provides a method for retrieving system setting value.</p>\n"
+        },
+        {
+            "uri": "com.palm.systemservice",
+            "summary": "<p>Provides information about the system time. Apps can subscribe to this method to get system time updates.</p>\n"
+        },
+        {
+            "uri": "com.webos.service.tv.systemproperty",
+            "summary": "<p>Provides a method for retrieving TV system information. This API is used to check the version of webOS TV and its features.</p>\n"
+        }
+    ],
+    "methods": [
+        {
+            "uri": "com.palm.activitymanager/adopt",
+            "description": "<p>Register an app's or service's willingness to take over as the Activity's parent.</p>\n\n<p>If your app can wait for an unavailable, not released Activity to become available, then set the &quot;wait&quot; flag to true. If it is, and the Activity is valid, which means Activity exists and is not exiting, the call should succeed. If it cannot wait, and the Activity is valid but cannot be adopted, then the call fails. The adopted return flag indicates a successful or failed adoption.</p>",
+            "parameters": [
+                {
+                    "name": "activityId",
+                    "required": "yes",
+                    "type": "Number"
+                },
+                {
+                    "name": "activityName",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "wait",
+                    "required": "yes",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "subscribe",
+                    "required": "yes",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "detailedEvents",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.activitymanager/cancel",
+            "description": "<p>Terminates the specified Activity and sends a<strong>'cancel'</strong> event to all subscribers. This call should succeed if the Activity exists and is not already exiting. This is different from the stop method in that the Activity should take little or no time to clean up. On a<strong>'cancel'</strong>, it should immediately abort the processing task, clean up, and exit, On a <strong>'stop'</strong>, it should finish processing tasks in some reasonable amount of time (10-15 seconds).</p>",
+            "parameters": [
+                {
+                    "name": "activityId",
+                    "required": "yes",
+                    "type": "Number"
+                },
+                {
+                    "name": "activityName",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.activitymanager/complete",
+            "description": "<p>An Activity's parent can use this method to end the Activity and optionally restart it with new attributes.</p>",
+            "parameters": [
+                {
+                    "name": "activityId",
+                    "required": "yes",
+                    "type": "Number"
+                },
+                {
+                    "name": "activityName",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "restart",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "callback",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "schedule",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "trigger",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "metadata",
+                    "required": "no",
+                    "type": "Object"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.activitymanager/create",
+            "description": "<p>Creates a new Activity and returns its ID.</p>\n\n<p>You can create either a foreground or background Activity. A foreground Activity is run as soon as its specified prerequisites are met. After a background Activity's prerequisites are met, it is moved into a ready queue, and a limited number are allowed to run depending on system resources. The foreground is the default.</p>",
+            "parameters": [
+                {
+                    "name": "activity",
+                    "required": "yes",
+                    "type": "Object"
+                },
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "detailedEvents",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "start",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "replace",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.activitymanager/release",
+            "description": "<p>Allows a parent to free an Activity and notify other subscribers. The Activity is canceled unless one of its non-parent subscribers adopts it and becomes the new parent. The Activity is canceled immediately. For a completely safe transfer, a subscribing app or service, prior to the release, should already have called the adopt method, indicating its willingness to take over as the parent.</p>",
+            "parameters": [
+                {
+                    "name": "activityId",
+                    "required": "yes",
+                    "type": "Number"
+                },
+                {
+                    "name": "activityName",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.activitymanager/start",
+            "description": "<p>Attempts to start the specified Activity, either moving it from the &quot;init&quot; state to be eligible to run or resuming it if it is currently paused. This sends <strong>'start'</strong> events to any subscribed listeners once the Activity is cleared to begin. If the &quot;force&quot; parameter is present (and true), other Activities could be canceled to free resources the Activity needs to run.</p>",
+            "parameters": [
+                {
+                    "name": "activityId",
+                    "required": "yes",
+                    "type": "Number"
+                },
+                {
+                    "name": "activityName",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.activitymanager/stop",
+            "description": "<p>Stops an Activity and sends a <strong>'stop'</strong> event to all Activity subscribers. This succeeds unless the Activity is already canceled.</p>",
+            "parameters": [
+                {
+                    "name": "activityId",
+                    "required": "yes",
+                    "type": "Number"
+                },
+                {
+                    "name": "activityName",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.applicationManager/launch",
+            "description": "<p>Launches an app that corresponds to the given app ID. You can use this method to open your service or app. For example, a user can download content with your service in the background. When downloading content is completed, your service needs to launch your app again.</p>\n",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "params",
+                    "required": "no",
+                    "type": "Object"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.applicationManager/getAppLoadStatus",
+            "description": "<p>Returns whether the app with the given ID is installed.</p>\n\n<p>If you try to launch an app that is not installed on webOS TV, an error occurs. To check whether the app exists or not before launching the app, use this method. This method is available on webOS TV 4.0 or higher.",
+            "parameters": [
+                {
+                    "name": "appId",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.audio/setMuted",
+            "description": "<p>Mutes or unmutes the volume.</p>",
+            "parameters": [
+                {
+                    "name": "muted",
+                    "required": "yes",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.audio/volumeDown",
+            "description": "<p>Decreases the volume by 1.</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.audio/volumeUp",
+            "description": "<p>Increases the volume by 1.</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.service.blegatt/isEnabled",
+            "description": "<p>Checks if Bluetooth is currently enabled and ready for use. If the TV device's Bluetooth adapter is enabled, the <strong>'isEnabled'</strong> return is true; or else, it is false. If the <strong>'isEnabled'</strong> return is false, BLE operations cannot be done. You should call the <strong>'isEnabled'</strong> method first and check if the <strong>'isEnabled'</strong> return is returned as true before running any BLE operations.</p>",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/startScan",
+            "description": "<p>Starts scanning only for BLE devices. If you want to search for a certain device containing a specific service UUID, include the service UUID in the <strong>'uuid'</strong> parameter when calling this method. To avoid getting information about too many devices, it also allows picking out devices that include name in their advertising information only. To do so, include <strong>'scanType:name'</strong>in the parameter when calling the <strong>startScan</strong> method.</p>",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "yes",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "uuid",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "scanType",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/stopScan",
+            "description": "<p>Stops ongoing ble scanning. If the <strong>'stopScan'</strong> method is called while scanning is underway, the ongoing scanning operation stops and no more information about device searching is sent as return of the <strong>'startScan'</strong> method. The scanning operation also stops when 60 seconds elapse after the <strong>'startScan'</strong> method is called or if another app goes foreground. The state of the scanning operation can be checked in the <strong>'isScan'</strong> return of the <strong>'getState'</strong> method.</p>",
+            "parameters": [
+                {
+                    "name": "returnValue",
+                    "required": "yes",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "errorCode",
+                    "required": "no",
+                    "type": "Number"
+                },
+                {
+                    "name": "errorText",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/getState",
+            "description": "<p>>Gets information about the scanning state, connected devices, and paired devices. If the value of the <strong>'subscribe'</strong> parameter is true, every time there is a change to the return data, the updated information will be delivered.</p",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/pair",
+            "description": "<p>Pairs a specific remote Bluetooth device with a specific Bluetooth adapter. Only one pairing request can be active for an adapter at a given time. When the <strong>'pair'</strong> method is called, the mac address of a device to pair should be added. If no or wrong address, an error will be returned. If the <strong>'subscribe'</strong> parameter is true when this method is called, the result of pairing - success or failure- will be delivered in the <strong>'subscribed'</strong> return.</p>",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/unpair",
+            "description": "<p>Disconnects from the paired remote device. All pairing information about the remote device will be removed and any open connections will be closed. However, the remote device is still discoverable. When this method is called, the mac address of a device to delete from the pairing history should be included. When the pairing history is deleted, the information about the device of which unpairing is requested is deleted and updated to the <strong>'pairedDevice'</strong> return of the <strong>'getState'</strong> method.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/connect",
+            "description": "<p>Connects to the GATT profile on the specified remote device. When this method is called, the mac address of a device to connect should be included. Also to receive all events while the connection is on, the value of the <strong>'subscribe'</strong> parameter should be true.</p>",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "yes",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/disconnect",
+            "description": "<p>Disconnects GATT connection. When calling this method, you should include the mac address to disconnect in the <strong>'address'</strong> parameter. When the connection is closed, an <strong>'onConnectionStateChange'</strong> event is delivered as an <strong>'event'</strong> return of the <strong>'client/connect'</strong> method. The values of <strong>'connecting'</strong> and <strong>'connected'</strong> of the <strong>'values'</strong> object will be false. Also, when the connection is closed, the disconnected device is removed from the <strong>'connectedDevice'</strong> return of the <strong>'getState'</strong> method. If an app with connected device(s) goes background without disconnecting the device(s), all the connected device(s) will be disconnected.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/discoverServices",
+            "description": "<p>Discovers available services for the given remote device. When calling this method, you should include the mac address of the connected device in the <strong>'address'</strong> parameter. When searching of the supported service of the connected device is complete, an <strong>'onServicesDiscovered'</strong> event is delivered as an <strong>'event'</strong> return of the <strong>'client/connect'</strong> method. To check the information about the searched service, call the <strong>'client/getServices'</strong> method.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/getServices",
+            "description": "<p>Gets available services for remote device. When calling this method, you should include the mac address of the connected device in the <strong>'address'</strong> parameter. The service information of the connected device is delivered in an <strong>'onServicesDiscovered'</strong> event as an <strong>'event'</strong> return of the <strong>'client/connect'</strong> method, and information about the service, characteristic, and descriptor is delivered in the <strong>'values'</strong> object.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/setCharacteristicNotification",
+            "description": "<p>Enables or disables notifications/indications for a given characteristic. When calling this method, you should include the mac address of the connected device in the <strong>'address'</strong> parameter and include the service UUID where the characteristic for notification belongs in the service parameter. Also, you should include the characteristic UUID for notification in the <strong>'characteristic'</strong> parameter and set whether to enable notification in the enable parameter. When there is a change to the characteristic's information for which notification is on, an <strong>'onCharacteristicChanged'</strong> event is delivered as an <strong>'event'</strong> return of the <strong>'client/connect '</strong> method, and the changed values are delivered in the <strong>'values'</strong> object.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "service",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "characteristic",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "enable",
+                    "required": "yes",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/readCharacteristic",
+            "description": "<p>Reads the value of a specific characteristic. When calling this method, you should include the mac address of the connected device in the <strong>'address'</strong> parameter, include the service UUID where the characteristic for reading belongs in the service parameter, and include the characteristic UUID for read in the <strong>'characteristic'</strong> parameter. Information about the read characteristic is delivered in an <strong>'onCharacteristicRead'</strong> event as an <strong>'event'</strong> return of the <strong>'client/connect'</strong> method, and information about the characteristic is delivered in the <strong>'values'</strong> object.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "service",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "characteristic",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/readDescriptor",
+            "description": "<p>Reads the value of descriptor of a service characteristic. When calling this method, you should include the mac address of the connected device in the <strong>'address'</strong> parameter, include the descriptor UUID for reading in the <strong>'descriptor'</strong> parameter, and include the characteristic UUID where the descriptor belongs in the <strong>'characteristic'</strong> parameter, and include the service UUID where the characteristic belongs in the <strong>'service'</strong> parameter. Information about the read descriptor is delivered in an <strong>'onDescriptorRead'</strong> event as an <strong>'event'</strong> return of the <strong>'client/connect'</strong> method, and the descriptor information is delivered in the <strong>'values'</strong> object.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "service",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "characteristic",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "descriptor",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/writeCharacteristic",
+            "description": "<p>Writes the value for a remote characteristic. When calling this method, you should include the mac address of the connected device in the <strong>'address'</strong> parameter, include the service UUID where the characteristic to write belongs in the <strong>'service'</strong> parameter, and include the characteristic UUID in the <strong>'characteristic'</strong> parameter. Also, you should include the value to write in the <strong>'value'</strong> object, and the value should be of a single type, among string, number and bytes. If two or more types are included, the call of the method will fail. If writing to a certain characteristic is successful, an <strong>'onCharacteristicWrite'</strong>' event is delivered as an <strong>'event'</strong> return of the <strong>'client/connect'</strong> method.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "service",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "characteristic",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "required": "yes",
+                    "type": "Object: gattValueInfo"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.blegatt/client/writeDescriptor",
+            "description": "<p>Writes the value of a specific descriptor of a service characteristic in the remote device. When calling this method, you should include the mac address of the connected device in the <strong>'address'</strong> parameter, include the descriptor UUID for write in the <strong>'descriptor'</strong> parameter, include the characteristic UUID where the descriptor belongs in the <strong>'characteristic'</strong> parameter, and include the service UUID where the characteristic belongs in the service parameter. Also, you should include the value to write in the <strong>'value '</strong> object, and the value should be of a single type, among string, number and bytes. If two or more types are included, the call of the method will fail. If writing to a certain descriptor is successful, an <strong>'onDescriptorWrite event'</strong> is delivered as an <strong>'event'</strong> return of the <strong>'client/connect'</strong> method.</p>",
+            "parameters": [
+                {
+                    "name": "address",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "service",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "characteristic",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "descriptor",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "required": "no",
+                    "type": "Object: gattValueInfo"
+                },
+                {
+                    "name": "notification",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.connectionmanager/getStatus",
+            "description": "<p>Register an app's or service's willingness to take over as the Activity's parent.</p>\n\n<p>If your app can wait for an unavailable, not released Activity to become available, then set the &quot;wait&quot; flag to true. If it is, and the Activity is valid, which means Activity exists and is not exiting, the call should succeed. If it cannot wait, and the Activity is valid but cannot be adopted, then the call fails. The adopted return flag indicates a successful or failed adoption.</p>",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/batch",
+            "description": "<p>Enables apps to execute multiple database operations in one service request. It allows only the following database operations:</p>\n\n<p>Operations:</p>\n\n<ul>\n\t<li>put</li>\n\t<li>get</li>\n\t<li>del</li>\n\t<li>find (without a watch)</li>\n\t<li>merge</li>\n</ul>\n\n<p>Atomicity is NOT guaranteed across batched operations.</p>",
+            "parameters": [
+                {
+                    "name": "operations",
+                    "required": "yes",
+                    "type": "Object array"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/del",
+            "description": "<p>Deletes the JSON data objects from the database.</p>\n\n<p>Apps can specify the objects as:</p>\n\n<p><ul>\n\t<li>A set of IDs</li>\n\t<li>A DB8 query</li>\n</ul></p>",
+            "parameters": [
+                {
+                    "name": "ids",
+                    "required": "no",
+                    "type": "String array"
+                },
+                {
+                    "name": "query",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "purge",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/delkind",
+            "description": "<p>Deletes a kind from the database. Deleting a kind deletes ALL data objects of that kind.</p>",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/find",
+            "description": "<p>Returns a set of objects that match the query specified in the <strong>query</strong> parameter.</p><p>The app can specify the number of results to return. However, if the app does not want to specify a limit, it can set the <strong>count</strong> parameter to <strong>true.</strong> This will cause the <strong>find</strong> method to return the total number of results returned in the <strong>FindResponse</strong> object.</p><p>The app can also request to be notified if any of the returned results from the query change in the future. In order to receive change notifications, set the <strong>watch</strong> parameter to <strong>true.</strong></p><p>The find method supports group by(distinct) enabling the app to remove duplicate objects.</p>",
+            "parameters": [
+                {
+                    "name": "query",
+                    "required": "yes",
+                    "type": "Object"
+                },
+                {
+                    "name": "count",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "watch",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/get",
+            "description": "<p>Retrieves JSON data objects by ids. This is the fastest way to retrieve data.</p>",
+            "parameters": [
+                {
+                    "name": "ids",
+                    "required": "yes",
+                    "type": "String array"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/merge",
+            "description": "<p>Updates the object properties in existing objects.</p>\n\n<p>The objects can be specified in one of the following ways.</p><p>\n\n<ul>\n\t<li>A query</li>\n\t<li>An array of IDs</li>\n</ul></p>",
+            "parameters": [
+                {
+                    "name": "objects",
+                    "required": "no",
+                    "type": "Object array"
+                },
+                {
+                    "name": "query",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "props",
+                    "required": "no",
+                    "type": "Object"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/put",
+            "description": "<p>Stores JSON data objects of a particular kind into the database. The put method will:</p>\n\n<p></p><ul>\n\t<li>Assign an id field to each object, if it was not set</li>\n\t<li>Return the id and rev for each stored object</li>\n</ul>",
+            "parameters": [
+                {
+                    "name": "objects",
+                    "required": "yes",
+                    "type": "Object array"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/putKind",
+            "description": "<p>Registers a kind with the database.</p><p>Kinds define the owner, and the indexes for a JSON data object. Indexes can be composed of single or multiple properties. When you create your index, be aware that queries can only return results that are indexed, and are contiguously ordered.</p><p>If your app or service wants to be notified only when a subset of an object's properties is updated, then you can use revision sets.</p><p>If your app or service creates objects that other apps or services need to access, then see the putPermissions method for more information.</p>",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "owner",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "private",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "schema",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "sync",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "extends",
+                    "required": "no",
+                    "type": "String array"
+                },
+                {
+                    "name": "indexes",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "revsets",
+                    "required": "no",
+                    "type": "Object array"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/putPermissions",
+            "description": "<p>Enables other apps or services to access the apps stored DB8 data. The app can give permissions to access data objects of a particular kind.</p>",
+            "parameters": [
+                {
+                    "name": "type",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "object",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "caller",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "operations",
+                    "required": "yes",
+                    "type": "Object"
+                },
+                {
+                    "name": "create",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "read",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "update",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "delete",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/reservelds",
+            "description": "<p>Reserves a block of object ids.</p>",
+            "parameters": [
+                {
+                    "name": "count",
+                    "required": "yes",
+                    "type": "Number"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/search",
+            "description": "<p><p>Supports the <strong>?</strong> operator. The <strong>?</strong> operator can be used for full-text searching. However, the <strong>search</strong> method is significantly slower, and should only be used for a full-text type-down search. The <strong>search</strong> method should not be used for retrieving results that are going to be scrolled in a list.</p><p>The <strong>search</strong> method supports:</p>\n\n<ul>\n\t<li>Ordering by any property</li>\n\t<li>Distinct method to remove duplicate objects</li>\n\t<li>%% operator in the filter to search in a substring</li>\n</ul><p>The <strong>search</strong> method has some limitations:</p>         \n\n<ul>\n\t<li>There must be an index for the field you are searching on.</li>\n\t<li>The search operation looks for words beginning with the search string.</li>\n</ul></p>",
+            "parameters": [
+                {
+                    "name": "query",
+                    "required": "yes",
+                    "type": "Object"
+                },
+                {
+                    "name": "watch",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.db/watch",
+            "description": "<p>Watches for updates to the database that would change the results of a query.</p>",
+            "parameters": [
+                {
+                    "name": "query",
+                    "required": "yes",
+                    "type": "Object"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.sm/deviceid/getIDs",
+            "description": "<p>This API returns the device ID provided by the webOS TV. Currently,<strong>LGUDID</strong> (LG Unique Device ID) is supported.</p><p><strong>LGUDID</strong> is generated using MAC as a seed, but it also uses the randomly generated UUID (Universally Unique ID). LGUDID is generated according to the UUID version 5 spec and uses MAC as a name and randomly generated UUID (version 4) instead of a namespace ID.</p>",
+            "parameters": [
+                {
+                    "name": "idType",
+                    "required": "yes",
+                    "type": "String array"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.drm/load",
+            "description": "<p>Creates a DRM client instance for given type./<p><p>After a DRM client instance is created using this method, other methods provided by the DRM service can be used.</p><p>If different plugins in an application need to access the same DRM client instance, use isLoaded method to check the client ID. The client ID is randomly generated with mixed characters and numbers in 11 bytes. The last 1 byte is reserved for '0'. (e.g. ISQTUFTWV40, 5DaOSFv82A0)</p><p>Post-condition: A unique DRM client instance is created..</p>",
+            "parameters": [
+                {
+                    "name": "drmType",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "appId",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.drm/unload",
+            "description": "<p>Removes a DRM client instance and deallocates the resource.</p><p>After calling this method, the removed DRM client instance cannot be used by any other method.</p>",
+            "parameters": [
+                {
+                    "name": "clientId",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.drm/isLoaded",
+            "description": "<p>Checks if a DRM client mapping to given application ID exists or not.</p><p>If exists, the client ID is returned. Otherwise, a new DRM client instance for the application ID can be created using the load method.</p><p>Since only one DRM client ID can be created per an application ID, this method is used when different plugins with same application ID try to access a DRM client that already exists.</p>",
+            "parameters": [
+                {
+                    "name": "appId",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.drm/sendDrmMessage",
+            "description": "<p>Sends a DRM message to DRM service, using a message type as defined by the DRM system. DRM service parses the received message and performs the DRM operation. Setting, initialization command, and authentication information are passed within this message.</p><p>The format of the message is determined according to the DRM type. The message must comply with the predefined schema. See the samples of messages in msg parameter description.</p> <p>Pre-condition: For PlayReady, a callback function must be registered using getRightsError to receive an error occurred while the message is being processed by DRM service. Post-condition: A unique ID for the message is returned.</p>",
+            "parameters": [
+                {
+                    "name": "clientId",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "msgType",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "msg",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "drmSystemId",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.drm/getRightsError",
+            "description": "<p>Returns DRM rights error information when a DRM licensing error occurs during content playback. The DRM rights error information is returned if parameter <strong>subscribe</strong> is set to 'true'. If an error information is received, the application retries to acquire a DRM right or operates an appropriate action such as displaying an error to the user.</p><p>This method is supported in the following DRM type only:</p><ul><li><strong>PlayReady</strong></li></ul>",
+            "parameters": [
+                {
+                    "name": "clientId",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "subscribe",
+                    "required": "yes",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.mrcu/getAPIVersion",
+            "description": "<p>Gets MRCU API version. This method gives the version of the API provided by the MRCU service. API usability may change by API version, and implementation may vary. If there is a singularity, an explanation about the change will be added to this specification with version.</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor2/getSensorEventData",
+            "description": "<p>Subscribes the sensor data from the magic remote. The data includes point coordinates, gyroscope sensor, accelerometer sensor and quaternion value. You can get the sensor data by subscribing a callback function with specified intervals.</p>",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "yes",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "sensorType",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor2/cancelSensorDataSubscribe",
+            "description": "<p>Cancels the subscription of the app or service that is currently subscribing (app/service termination state).</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor2/getSensorState",
+            "description": "<p>Notifies the current status of the motion sensor on the remote control (whether <strong>'getSensorEventData'</strong> is available).</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor2/getSensorInterval",
+            "description": "<p>Notifies the min/max value of the current sensor callback interval and the callback interval supported by the Motion Sensor.</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor2/setSensorInterval",
+            "description": "<p>Changes the callback interval of the motion sensor to the desired value within the corresponding interval range (min:10ms, max:1000ms).</p>",
+            "parameters": [
+                {
+                    "name": "interval",
+                    "required": "yes",
+                    "type": "Int"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor2/sensor2/resetQuaternion",
+            "description": "<p>Resets the quaternion sensor of the Magic Remote. Sometimes you need to reset the sensor before the user action, such as when a game starts or magic remote wakes up from sleep mode.</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.mediadb/batch",
+            "description": "<p>Enables apps to execute multiple database operations in one service request. It allows only the following database operations:</p><ul><li>put</li><li>get</li><li>del</li><li>find (without a watch)</li><li>merge</li></ul><p>Atomicity is NOT guaranteed across batched operations.</p>",
+            "parameters": [
+                {
+                    "name": "operations",
+                    "required": "yes",
+                    "type": "Object array"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/del",
+            "description": "<p>Deletes the JSON data objects from the database. Apps can specify the objects as:</p><ul><li>a set of ids - this will return a <strong>PutResponse</strong> object</li><li>a DB8 query - this will return a <strong>CountResponse</strong> object</li></ul>",
+            "parameters": [
+                {
+                    "name": "ids",
+                    "required": "no",
+                    "type": "Object array"
+                },
+                {
+                    "name": "query",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "purge",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/delKind",
+            "description": "<p>Deletes a kind from the database. Deleting a kind deletes ALL data objects of that kind.</p>",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/find",
+            "description": "<p>Returns a set of objects that match the query specified in the <strong>query</strong> parameter.</p><p>The app can specify the number of results to return. However, if the app does not want to specify a limit, it can set the <strong>count</strong> parameter to <strong>true</strong>. This will cause the find method to return the total number of results returned in the <strong>FindResponse</strong> object.</p><p>The app can also request to be notified if any of the returned results from the query change in the future. In order to receive change notifications, set the <strong>watch</strong> parameter to <strong>true</strong>.</p><p>The <strong>find</strong> method supports distinct groups enabling the app to remove duplicate objects.</p>",
+            "parameters": [
+                {
+                    "name": "query",
+                    "required": "yes",
+                    "type": "Object"
+                },
+                {
+                    "name": "count",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "watch",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/get",
+            "description": "Retrieves JSON data objects by ids. This is the fastest way to retrieve data.</p>",
+            "parameters": [
+                {
+                    "name": "ids",
+                    "required": "yes",
+                    "type": "String array"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/merge",
+            "description": "<p>Updates the object properties in existing objects.</p><p>The objects can be specified in one of the following ways:</p><ul><li>A query</li> <li>An array of IDs</li></ul><p>Objects can be specified using a query (returns CountResponse) or array of IDs (returns PutResponse).</p>",
+            "parameters": [
+                {
+                    "name": "objects",
+                    "required": "yes",
+                    "type": "Object array"
+                },
+                {
+                    "name": "query",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "props",
+                    "required": "no",
+                    "type": "Object"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/put",
+            "description": "<p>Stores JSON data objects of a particular kind into the database. The <strong>put</strong> method will:</p><ul><li>Assign an <strong>id</strong> field to each object, if it was not set</li><li>Return the <strong>id</strong> and <strong>rev</strong> for each stored object,</li></ul>",
+            "parameters": [
+                {
+                    "name": "objects",
+                    "required": "yes",
+                    "type": "Object array"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/putKind",
+            "description": "<p>Registers a kind JSON object with the database.</p><p>Kind objects define the owner, and the indexes for a JSON data object. Indexes can be composed of single or multiple fields. When you create your index, be aware that queries can only return results that are indexed, and are contiguously ordered.</p><p>If your app or service wants to be notified only when a subset of an object's properties are updated, then you can use revision sets.</p><p>If your app or service creates objects that other apps or services need to access, then see the putPermissions method for more information.</p>",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "owner",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "schema",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "sync",
+                    "required": "no",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "extends",
+                    "required": "no",
+                    "type": "String array"
+                },
+                {
+                    "name": "indexes",
+                    "required": "no",
+                    "type": "Object"
+                },
+                {
+                    "name": "revsets",
+                    "required": "no",
+                    "type": "Object array"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/putPermissions",
+            "description": "<p>Enables other apps, or services to access the apps stored DB8 data.</p><p>The app can give permissions to access data objects of a particular kind.</p>",
+            "parameters": [
+                {
+                    "name": "type",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "object",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "caller",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "operations",
+                    "required": "yes",
+                    "type": "Object"
+                },
+                {
+                    "name": "create",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "read",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "update",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "delete",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/reserveIds",
+            "description": "<p>Reserves a block of object ids.</p>",
+            "parameters": [
+                {
+                    "name": "count",
+                    "required": "yes",
+                    "type": "Number"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/search",
+            "description": "<p>Unlike the <strong>find</strong> method, the <strong>search</strong> method call supports the <strong>?</strong> operator. The <strong>?</strong> operator can be used for full-text searching. However, the <strong>search</strong> method is significantly slower, and should only be used for the full-text type-down search. The <strong>search</strong> method should not be used for retrieving results that are going to be scrolled in a list.</p><p>The <strong>search</strong> method supports:</p><ul> <li>Ordering by any property</li><li>Distinct method to remove duplicate objects</li><li>%% operator in the filter to search in a substring</li></ul><p>The <strong>search</strong> method has some limitations:</p><ul><li>There must be an index for the field you are searching on.</li><li>The search operation looks for words beginning with the search string.</li></ul>",
+            "parameters": [
+                {
+                    "name": "query",
+                    "required": "yes",
+                    "type": "Object"
+                },
+                {
+                    "name": "watch",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.mediadb/watch",
+            "description": "<p>Watches for updates to the database that would change the results of a query.</p>",
+            "parameters": [
+                {
+                    "name": "query",
+                    "required": "yes",
+                    "type": "Object"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.settingsservice/getSystemSettings",
+            "description": "<p>Retrieves values from system settings with keys that are specified in an array as a parameter. The following keys are available:</p>",
+            "parameters": [
+                {
+                    "name": "category",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "keys",
+                    "required": "no",
+                    "type": "String array"
+                },
+                {
+                    "name": "key",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.palm.systemservice/time/getSystemTime",
+            "description": "<p>Requests the system time. Apps can subscribe to this method and receive notifications when the time zone changes and/or the system time changes by a significant amount (currently 5 minutes).</p>",
+            "parameters": [
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.tv.systemproperty/getSystemInfo",
+            "description": "<p>Retrieves the system information with keys that are specified in an array as a parameter. Following keys are available:</p>",
+            "parameters": [
+                {
+                    "name": "keys",
+                    "required": "yes",
+                    "type": "String array"
+                },
+                {
+                    "name": "subscribe",
+                    "required": "no",
+                    "type": "Boolean"
+                }
+            ]
+        }
+    ]
+}
