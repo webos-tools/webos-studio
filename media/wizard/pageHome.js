@@ -33,9 +33,10 @@
     const removeCount = 9;
     //[REQURIED] Need to add api level
     const tvAPI = [["TV_APILevel_0", "Default"]];
-    const oseAPI = [["OSE_APILevel_28", "APILevel28"],["OSE_APILevel_27", "APILevel27"],["OSE_APILevel_25", "APILevel25"],["OSE_APILevel_24", "APILevel24"],
-        ["OSE_APILevel_23", "APILevel23"], ["OSE_APILevel_22", "APILevel22"],
-        ["OSE_APILevel_21", "APILevel21"], ["OSE_APILevel_20", "APILevel20"]];
+    const oseAPI = [["OSE_APILevel_29", "APILevel29"], ["OSE_APILevel_28", "APILevel28"],
+        ["OSE_APILevel_27", "APILevel27"],["OSE_APILevel_25", "APILevel25"],["OSE_APILevel_24", "APILevel24"],
+        ["OSE_APILevel_23", "APILevel23"], ["OSE_APILevel_22", "APILevel22"],["OSE_APILevel_21", "APILevel21"],
+        ["OSE_APILevel_20", "APILevel20"]];
     let removeSelect = function() {
         for (let step = 0; step < removeCount; step++ ) {
             selelctApiVersion.remove(1);
@@ -87,6 +88,8 @@
             description.value = descriptionValue + '2.24.0';
         } else if (apiVersionValue === 'OSE_APILevel_28') {
             description.value = descriptionValue + '2.25.0';
+        } else if (apiVersionValue === 'OSE_APILevel_29') {
+            description.value = descriptionValue + '2.26.0';
         }
 
         //[REQURIED] : Need to add api level
