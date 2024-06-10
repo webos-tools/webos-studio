@@ -4,31 +4,31 @@
     "build": "587",
     "services": [
         {
-            "uri": "com.palm.configurator",
+            "uri": "com.webos.service.configurator",
             "summary": "<p>Creates the database schema, filecache configuration, and activities for webOS applications.</p>\n"
         },
         {
-            "uri": "com.palm.db",
+            "uri": "com.webos.service.db",
             "summary": "<p>Enables apps to store persistent data.</p>\n"
         },
         {
-            "uri": "com.palm.filecache",
+            "uri": "com.webos.service.filecache",
             "summary": "<p>This service enables you to manage caching of files. It implements the global shared cache space, which webOS applications (such as&nbsp;<strong>Email</strong>) can use to temporary store cache files or send files to other webOS applications.</p>\n"
         },
         {
-            "uri": "com.palm.preferences",
+            "uri": "com.webos.service.preferences",
             "summary": "<p>Enables applications to manage system and application properties.</p>\n\n<p><strong>Note:</strong> This service must be used only if existing system applications are already using it.&nbsp;Else, use &quot;com.webos.service.systemservice&quot;.&nbsp;</p>\n"
         },
         {
-            "uri": "com.palm.service.devmode",
+            "uri": "com.webos.service.devmode",
             "summary": "<p>Developer mode support service. Allows you to enable or disable&nbsp;developer mode on a device and to query the status of developer mode.</p>\n"
         },
         {
-            "uri": "com.palm.sleep",
+            "uri": "com.webos.service.sleep",
             "summary": "<p>This service registers itself as <strong>com.webos.service.power </strong>and as <strong>com.webos.service.alarm </strong>and is provided by the sleep daemon (sleepd). It allows applications to interact with (e.g. defer or prevent) the system suspend/resume cycle.</p>\n"
         },
         {
-            "uri": "com.palm.webappmanager",
+            "uri": "com.webos.service.webappmanager",
             "summary": "<p>Internal system service for handling web-based (HTML) applications.</p>\n\n<p>The Web App Manager (WAM) is a component responsible for web application management in webOS platform. The Application Manager (SAM) sends a request to manage web applications to WAM.</p>\n\n<p>WAM handles basic routines such as launching, closing apps as well as the following features of web applications.</p>\n\n<ol>\n\t<li>Running lists</li>\n\t<li>Life cycles</li>\n\t<li>Current status of applications</li>\n\t<li>Application crash</li>\n</ol>\n"
         },
         {
@@ -148,10 +148,6 @@
             "summary": "<p>The peripheralmanager is a service to provide APIs to monitor sensors and control actuators connected to I/O peripherals using industry-standard protocols.&nbsp;</p>\n\n<p>Currently, supported protocols are&nbsp;UART ,GPIO, SPI and I2C.</p>\n\n<p>This service manages parallel requests from multiple applications to access peripherals and control the hardware.</p>\n"
         },
         {
-            "uri": "com.webos.service.power",
-            "summary": "<p>The com.webos.service.power service is provided by the sleep daemon (sleepd), and allows applications to interact with (e.g. defer or prevent) the&nbsp;system suspend/resume cycle.</p>\n"
-        },
-        {
             "uri": "com.webos.service.power2",
             "summary": "<p>Allows client applications to power-on, power-off, and perform other power-related operations on the device.</p>\n"
         },
@@ -190,7 +186,7 @@
     ],
     "methods": [
         {
-            "uri": "com.palm.configurator/rescan",
+            "uri": "com.webos.service.configurator/rescan",
             "description": "<p>Force rescan of resource file for application. Useful when application&#39;s resource file has been modified and it wants to update the resources.</p>\n\n<p>For example, updated Kind or Kind permissions</p>",
             "acg": "configurator.management",
             "parameters": [
@@ -212,7 +208,7 @@
             ]
         },
         {
-            "uri": "com.palm.configurator/run",
+            "uri": "com.webos.service.configurator/run",
             "description": "<p>This method will scan all folders and process all configuration files.</p>",
             "acg": "configurator.management",
             "parameters": [
@@ -224,7 +220,7 @@
             ]
         },
         {
-            "uri": "com.palm.configurator/scan",
+            "uri": "com.webos.service.configurator/scan",
             "description": "<p>Within the API call, application can notify <strong>Configurator</strong> about new resource files and ask Configurator to process those resource files.<br />\nExample of use case: application installed and runs at first. Application at first startup can ask configurator to register kind for itself.</p>\n\n<p>For Path of resource files, see<strong> Runtime Configurator Directory</strong> in <strong>Overview</strong> section of this doc</p>",
             "acg": "configurator.management",
             "parameters": [
@@ -246,7 +242,7 @@
             ]
         },
         {
-            "uri": "com.palm.configurator/unconfigure",
+            "uri": "com.webos.service.configurator/unconfigure",
             "description": "<p>Rollback all actions that were made by the&nbsp;<u>scan</u>/<u>rescan</u> API calls. In other words, release used resources.</p>",
             "acg": "configurator.management",
             "parameters": [
@@ -268,7 +264,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/batch",
+            "uri": "com.webos.service.db/batch",
             "description": "<p>The <strong>batch</strong> method enables apps to execute multiple database operations in one service request. It allows only the following database operations:</p>\n\n<ul>\n\t<li>put</li>\n\t<li>get</li>\n\t<li>del</li>\n\t<li>find (without a watch)</li>\n\t<li>merge&nbsp;</li>\n</ul>\n\n<p>Atomicity is NOT guaranteed across batched operations.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -280,13 +276,13 @@
             ]
         },
         {
-            "uri": "com.palm.db/compact",
+            "uri": "com.webos.service.db/compact",
             "description": "<p style=\"text-align:left\">The <strong>compact </strong>method invokes the&nbsp;low level garbage collector. When DB8 executes a&nbsp;<strong>del</strong> operation without&nbsp;<strong>Purge:True</strong> param, it only marks the object as to be deleted. The object will be removed by DB8, when the garbage collector is called. To call the garbage collector manually, the client can call the <strong>compact</strong> method.</p>\n\n<p style=\"text-align:left\">This command is implemented only for the <strong>LevelDB</strong> and <strong>Sandwich</strong> engine.</p>",
             "acg": "database.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.db/del",
+            "uri": "com.webos.service.db/del",
             "description": "<p style=\"text-align:left\">The <strong>del </strong>method deletes JSON data objects from the database.<br />\n<br />\nApps can specify the objects to be deleted by providing:</p>\n\n<ul>\n\t<li style=\"text-align:left\">a set of IDs to be deleted</li>\n\t<li style=\"text-align:left\">a DB8 query</li>\n</ul>",
             "acg": "database.operation",
             "parameters": [
@@ -308,7 +304,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/delKind",
+            "uri": "com.webos.service.db/delKind",
             "description": "<p>The <strong>delKind </strong>method deletes a Kind from the database. Deleting a Kind deletes ALL data objects of that Kind.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -320,7 +316,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/dump",
+            "uri": "com.webos.service.db/dump",
             "description": "<p style=\"text-align:left\">Backs up a database. The file created by the <strong>dump</strong> method<strong>&nbsp;</strong>typically contains JSON statements to recreate all of the Kinds and data of the database from which they have been dumped.</p>",
             "acg": "database.management",
             "parameters": [
@@ -337,7 +333,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/find",
+            "uri": "com.webos.service.db/find",
             "description": "<p>The <strong>find</strong> method returns a set of objects that match the query specified in the&nbsp;<strong>query</strong>&nbsp;parameter.</p>\n\n<p>The app can specify the number of results to return. However, if the app does not want to specify a limit, it can set the&nbsp;<strong>count</strong>&nbsp;parameter to <strong>true</strong>. This will cause the&nbsp;<strong>find</strong>&nbsp;method to return the total number of results.</p>\n\n<p>The app can also request to be notified if any of the returned results from the query change in the future. In order to receive change notifications, set the&nbsp;<strong>watch</strong>&nbsp;parameter to <strong>true</strong>.</p>\n\n<p>The <strong>find</strong>&nbsp;method supports distinct groups enabling the app to remove duplicate objects.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -364,7 +360,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/get",
+            "uri": "com.webos.service.db/get",
             "description": "<p style=\"text-align:left\">The&nbsp;<strong>get</strong>&nbsp;method retrieves&nbsp;JSON data objects by ids. This is the fastest way to retrieve data.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -376,7 +372,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/getProfile",
+            "uri": "com.webos.service.db/getProfile",
             "description": "<p>Get profiling data for applications. Profile data includes the queries made and related information such as&nbsp;request time and response time.</p>",
             "acg": "database.profiling",
             "parameters": [
@@ -393,13 +389,13 @@
             ]
         },
         {
-            "uri": "com.palm.db/internal/postBackup",
+            "uri": "com.webos.service.db/internal/postBackup",
             "description": "<p>An internal DB8 method that is called when a backup operation has been completed.</p>",
             "acg": "database.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.db/internal/postRestore",
+            "uri": "com.webos.service.db/internal/postRestore",
             "description": "<p>An internal DB8 method that is called when the database finishes a restore process.</p>",
             "acg": "database.management",
             "parameters": [
@@ -416,7 +412,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/internal/preBackup",
+            "uri": "com.webos.service.db/internal/preBackup",
             "description": "<p>Invoked when an internal webOS service wants to restore a database from a backup file.&nbsp;</p>",
             "acg": "database.management",
             "parameters": [
@@ -448,7 +444,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/internal/preRestore",
+            "uri": "com.webos.service.db/internal/preRestore",
             "description": "<p style=\"text-align:left\">Used by the webOS service to correctly respond to a database restore command.&nbsp;This method must be called before restoring a database.</p>",
             "acg": "database.management",
             "parameters": [
@@ -460,7 +456,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/internal/releaseAdminProfile",
+            "uri": "com.webos.service.db/internal/releaseAdminProfile",
             "description": "<p>For applications whose profiling is controlled by admin-privileged applications, this method relinquishes the profiling control from admin-privilged applications. The 3rd-party application can then control its own its own profiling.</p>\n\n<p><strong>Background:</strong> Once an admin-privileged application has enabled/disabled profiling for a 3rd-party application, then only admin-privileged applications can control the profiling for that application.</p>",
             "acg": "database.management",
             "parameters": [
@@ -472,7 +468,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/internal/scheduledPurge",
+            "uri": "com.webos.service.db/internal/scheduledPurge",
             "description": "<p>An internal&nbsp;DB8 private method, used by <strong>activityManager</strong>. <strong>Activity manager</strong> periodically calls the <strong>DB8</strong> garbage collector to remove data that has been marked for deletion.</p>",
             "acg": "database.management",
             "parameters": [
@@ -484,7 +480,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/internal/scheduledSpaceCheck",
+            "uri": "com.webos.service.db/internal/scheduledSpaceCheck",
             "description": "<p>An internal DB8 callback method, that is called by the <strong>Activity Manager</strong> for checking available disk space.</p>",
             "acg": "database.management",
             "parameters": [
@@ -496,19 +492,19 @@
             ]
         },
         {
-            "uri": "com.palm.db/internal/spaceCheck",
+            "uri": "com.webos.service.db/internal/spaceCheck",
             "description": "<p>An internal DB8 private method, used by webOS private services. Services can subscribe for the <strong>spaceCheck </strong>method and get notifications when DB8 reaches soft and hard disk space limits.</p>",
             "acg": "database.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.db/listActiveMedia",
+            "uri": "com.webos.service.db/listActiveMedia",
             "description": "<p><span style=\"background-color:rgb(255, 255, 255); color:rgb(102, 102, 102)\">Returns a list of active attached media, and shards.</span>&nbsp;</p>",
             "acg": "database.operation",
             "parameters": []
         },
         {
-            "uri": "com.palm.db/load",
+            "uri": "com.webos.service.db/load",
             "description": "<p>Restores a database from a dumped JSON file.</p>",
             "acg": "database.management",
             "parameters": [
@@ -520,7 +516,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/merge",
+            "uri": "com.webos.service.db/merge",
             "description": "<p>The <strong>merge</strong>&nbsp;method updates the properties of existing objects.</p>\n\n<p>The objects can be specified in one of the following ways:</p>\n\n<ul>\n\t<li>A query</li>\n\t<li>An array of IDs</li>\n</ul>",
             "acg": "database.operation",
             "parameters": [
@@ -547,7 +543,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/mergePut",
+            "uri": "com.webos.service.db/mergePut",
             "description": "<p>The <strong>mergePut</strong> method updates the properties of existing objects. If an object doesn&#39;t exist, a new one&nbsp;will be created in the database.</p>\n\n<p>The object&nbsp;to be updated can be specified in one of the following ways:</p>\n\n<ul>\n\t<li>A query</li>\n\t<li>An array of IDs</li>\n</ul>",
             "acg": "database.operation",
             "parameters": [
@@ -569,7 +565,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/profile",
+            "uri": "com.webos.service.db/profile",
             "description": "<p>Enables or disables DB8 profiling for an application. When enabled, profiling data is stored for the&nbsp;application.</p>\n\n<p>You can enable DB8 profiling using one of the following approaches:</p>\n\n<p>- Self enabling: In this approach, the 3rd-party application enables profiling on itself (see example 1).</p>\n\n<p>- Enable profiling using admin-privileged applications: In the approach, an admin-privileged application controls DB8 profiling for 3rd-party applications. Use this approach when you want the admin to control the profiling of 3rd-party applications. You can choose to enable profiling for a single application or for all 3rd-party applications. See example 2 and 3.</p>",
             "acg": "database.profiling",
             "parameters": [
@@ -586,7 +582,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/purge",
+            "uri": "com.webos.service.db/purge",
             "description": "<p>The <strong>purge </strong>method invokes the garbage collector. The purge method will:</p>\n\n<ul>\n\t<li>Remove all objects that were marked for deletion</li>\n\t<li>Perform a space check, and remove all temporary data</li>\n</ul>",
             "acg": "database.operation",
             "parameters": [
@@ -598,13 +594,13 @@
             ]
         },
         {
-            "uri": "com.palm.db/purgeStatus",
+            "uri": "com.webos.service.db/purgeStatus",
             "description": "<p>The <strong>purgeStatus </strong>method returns the status of the last run <strong>purge </strong>command. If the last run <strong>purge </strong>command was successful, the objects were permanently deleted, and the <strong>purgeStatus </strong>method will return the updated database revision number.</p>",
             "acg": "database.operation",
             "parameters": []
         },
         {
-            "uri": "com.palm.db/put",
+            "uri": "com.webos.service.db/put",
             "description": "<p>The <strong>put </strong>method stores JSON data objects of a particular Kind into the database. The <strong>put </strong>method will:</p>\n\n<ul>\n\t<li>Assign an <strong>id</strong> field to each object, if it was not set.</li>\n\t<li>Return the <strong>id</strong>&nbsp;and&nbsp;<strong>rev</strong>&nbsp;for each stored object.</li>\n</ul>",
             "acg": "database.operation",
             "parameters": [
@@ -621,7 +617,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/putKind",
+            "uri": "com.webos.service.db/putKind",
             "description": "<p>The <strong>putKind </strong>method registers a kind with the database.</p>\n\n<p>Kinds define the owner, and the indexes for a JSON data object. Indexes can be composed of single or multiple properties. When you create your index, be aware that queries can only return results that are indexed, and are contiguously ordered.</p>\n\n<p>If your app or service wants to be notified only when a subset of an object&#39;s properties are updated, then you can use revision sets.</p>\n\n<p>If your app or service creates objects that other apps or services need to access, then see the <strong>putPermissions</strong><a href=\"#com.webos.service.dbv1.5-putPermissions\"><strong> </strong></a>method for more information.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -673,7 +669,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/putPermissions",
+            "uri": "com.webos.service.db/putPermissions",
             "description": "<p style=\"text-align:left\">The <strong>putPermissions </strong>method enables other apps or services to access an app&#39;s stored DB8 data. The app can give permissions to access data objects of a specific Kind.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -720,7 +716,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/putQuotas",
+            "uri": "com.webos.service.db/putQuotas",
             "description": "<p>The <strong>putQuotas</strong> method provides the ability to update a quota&#39;s current service limits at runtime. This service is used by private webOS services to increase/decrease quotas for critical webOS services.</p>",
             "acg": "database.management",
             "parameters": [
@@ -742,13 +738,13 @@
             ]
         },
         {
-            "uri": "com.palm.db/quotaStats",
+            "uri": "com.webos.service.db/quotaStats",
             "description": "<p>The <strong>quotaStats </strong>method returns information about a service&#39;s used limits.</p>",
             "acg": "database.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.db/removeAppData",
+            "uri": "com.webos.service.db/removeAppData",
             "description": "<p>The <strong>removeAppData</strong> method removes all data&nbsp;associated with the given owner. In other words, the method removes all <strong>Kinds&nbsp;</strong>that have specified&nbsp;<strong>owner</strong>.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -760,7 +756,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/reserveIds",
+            "uri": "com.webos.service.db/reserveIds",
             "description": "<p>When a client service creates objects that have references between each other, the service can ask the database through the <strong>reserveIds</strong> method to regenerate ids of objects.&nbsp;The client service can use such ids as objects, and DB8 will use those ids when objects are inserted into the database.</p>\n\n<p>By default, DB8 configured to reserve maximum [0:1000] ids, but this limit can vary depending on the platform.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -772,7 +768,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/search",
+            "uri": "com.webos.service.db/search",
             "description": "<p style=\"text-align:left\">Unlike the <strong>find </strong>method, the <strong>search</strong>&nbsp;method supports the <strong>&quot;?&quot; </strong>(question mark) operator. The&nbsp;<strong>?&nbsp;</strong>operator&nbsp;can be used for full-text searching.&nbsp;However, the <strong>search </strong>method is significantly slower, and should only be used for full-text type-down search. The <strong>search</strong>&nbsp;method should not be used for&nbsp;retrieving results that are going to be scrolled in a list.</p>\n\n<p style=\"text-align:left\">The&nbsp;search&nbsp;method supports:</p>\n\n<ul>\n\t<li style=\"text-align:left\">Ordering by any property.</li>\n\t<li style=\"text-align:left\"><em>Distinct method</em> to remove duplicate objects.</li>\n\t<li style=\"text-align:left\"><strong>%% </strong>operator in filter to search in a sub-string.</li>\n\t<li style=\"text-align:left\">Canceling the search mid-way (using the &#39;cancelable&#39; parameter).&nbsp;</li>\n</ul>\n\n<p style=\"text-align:left\">The <strong>search</strong> method has some limitations:</p>\n\n<ul>\n\t<li style=\"text-align:left\">There must be an index for the field you are searching on.</li>\n\t<li style=\"text-align:left\">The search operation looks for words beginning with the search string.</li>\n</ul>",
             "acg": "database.operation",
             "parameters": [
@@ -794,7 +790,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/setShardMode",
+            "uri": "com.webos.service.db/setShardMode",
             "description": "<p>Marks an external media as <strong>transient</strong>&nbsp;for the specified DB8 shard Id. This means&nbsp;that all data, relative to the shard, are not required by any application and will be removed by garbage collector.&nbsp;In other words, marking shard as <strong>transient</strong>&nbsp;will wipe all data from the shard on the nearest garbage collector call.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -811,7 +807,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/shardInfo",
+            "uri": "com.webos.service.db/shardInfo",
             "description": "<p>Retrieves the state of a shard, like shard activity, associated media devices, mount point.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -823,7 +819,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/stats",
+            "uri": "com.webos.service.db/stats",
             "description": "<p>The stats method returns detailed information about the storage space used by every service.</p>",
             "acg": "database.profiling",
             "parameters": [
@@ -840,7 +836,7 @@
             ]
         },
         {
-            "uri": "com.palm.db/watch",
+            "uri": "com.webos.service.db/watch",
             "description": "<p style=\"text-align:left\">The <strong>watch </strong>method watches for&nbsp;updates to the database that would change the results of a query.</p>",
             "acg": "database.operation",
             "parameters": [
@@ -857,7 +853,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/ChangeType",
+            "uri": "com.webos.service.filecache/ChangeType",
             "description": "<p>Allows apps to modify the parameters of a cache type other than its&nbsp;name. You must specify the name of the cache type, and those cache type parameters that have to be modified. The cache type values are all as defined in&nbsp;<strong>DefineType</strong>.</p>",
             "acg": "filecache.management",
             "parameters": [
@@ -894,7 +890,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/CopyCacheObject",
+            "uri": "com.webos.service.filecache/CopyCacheObject",
             "description": "<p>Enables copying of an object from the file cache to a non-cached location.&nbsp;On successful completion, <strong>newPathName</strong> will be returned as it may be different than expected due to filename collisions. If there is a name collision, the name will be made unique by adding a number to the file basename (i.e. foo.bar may become foo-(1).bar).</p>",
             "acg": "filecache.management",
             "parameters": [
@@ -916,7 +912,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/DefineType",
+            "uri": "com.webos.service.filecache/DefineType",
             "description": "<p>Defines a new cache type.&nbsp;This is intended for use by the backup service.</p>\n\n<p>Optionally you may specify the default values for the size, cost, and lifetime. These defaults will be applied to all objects inserted into this cache type that do not specify their own values for these arguments. The size is in bytes, the cost is an integer between 0 and 100, and the lifetime is in seconds. &nbsp;</p>\n\n<p>The&nbsp;<strong>errorCode</strong>&nbsp;and&nbsp;<strong>errorText&nbsp;</strong>are only be returned if the <strong>returnValue</strong> is false.</p>\n\n<p>Note: You can not define type with the same <strong>typeName</strong>. Use&nbsp;<strong>changeType</strong> to change an existing type.</p>",
             "acg": "filecache.management",
             "parameters": [
@@ -958,7 +954,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/DeleteType",
+            "uri": "com.webos.service.filecache/DeleteType",
             "description": "<p style=\"text-align:left\">Allows you to delete a previously defined cache type and frees up its space. All objects in the cache must be expired in order to delete a cache type. The app can call the <strong>ExpireCacheObject&nbsp;</strong>to force the&nbsp;objects to expire in the cache type.&nbsp;</p>",
             "acg": "filecache.management",
             "parameters": [
@@ -970,7 +966,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/DescribeType",
+            "uri": "com.webos.service.filecache/DescribeType",
             "description": "<p style=\"text-align:left\">Returns&nbsp;cache type details.&nbsp;The <strong>DescribeType </strong>will return the currently assigned values for all cache type parameters.&nbsp;</p>\n\n<p style=\"text-align:left\">Note: Filesize&nbsp;as&nbsp;it&nbsp;resides&nbsp;on&nbsp;disk&nbsp;after&nbsp;accounting&nbsp;for&nbsp;the&nbsp;filesystem&nbsp;blocksize of 4096 &nbsp;loWatermark/hiWatermark&nbsp;will be padded with filesystem&nbsp;block size of&nbsp;4096.</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -982,7 +978,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/ExpireCacheObject",
+            "uri": "com.webos.service.filecache/ExpireCacheObject",
             "description": "<p style=\"text-align:left\">Objects will normally be automatically expired form the cache as space is needed. If you want to force an item to be removed or if you want to remove items prior to calling <strong>DeleteType</strong>, you can expire an object manually.</p>\n\n<p style=\"text-align:left\">The&nbsp;<strong>ExpireCacheObject </strong>method will not actually remove a subscribed object from the cache, but will mark the object for removal. The object is physically removed, when it has no active subscriptions.</p>\n\n<p style=\"text-align:left\"><strong>NOTE</strong>: By default, objects in a cache type will be automatically expired from the cache as space is needed.</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -994,7 +990,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/GetCacheObjectFilename",
+            "uri": "com.webos.service.filecache/GetCacheObjectFilename",
             "description": "<p style=\"text-align:left\">Allows you to query the original filename of a particular object in a cache type. &nbsp;In order to get the cache object file name the app must specify the path name of the object. &nbsp;</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -1006,7 +1002,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/GetCacheObjectSize",
+            "uri": "com.webos.service.filecache/GetCacheObjectSize",
             "description": "<p>Allows you to query a particular object size in a cache type. In order to get the cache object size, the app must specify the pathname of the object.&nbsp;</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -1018,13 +1014,13 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/GetCacheStatus",
+            "uri": "com.webos.service.filecache/GetCacheStatus",
             "description": "<p>Give status of the cache as a whole. The <strong>GetCacheStatus</strong> will return:</p>\n\n<ul>\n\t<li>the number of cache types defined</li>\n\t<li>the total space used by the objects in all cache types</li>\n\t<li>the number of objects in all cache types</li>\n\t<li>the available space in the cache</li>\n</ul>",
             "acg": "filecache.operation",
             "parameters": []
         },
         {
-            "uri": "com.palm.filecache/GetCacheTypeStatus",
+            "uri": "com.webos.service.filecache/GetCacheTypeStatus",
             "description": "<p>Allows you to query the status of a particular cache type to obtain:</p>\n\n<ul>\n\t<li>the total space used by the objects in the specified cache type</li>\n\t<li>the number of objects in the specified cache type</li>\n</ul>",
             "acg": "filecache.operation",
             "parameters": [
@@ -1036,19 +1032,19 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/GetCacheTypes",
+            "uri": "com.webos.service.filecache/GetCacheTypes",
             "description": "<p>Returns an array of all defined cache types.</p>",
             "acg": "filecache.operation",
             "parameters": []
         },
         {
-            "uri": "com.palm.filecache/GetVersion",
+            "uri": "com.webos.service.filecache/GetVersion",
             "description": "<p style=\"text-align:left\">Returns the version of the File Cache API.</p>",
             "acg": "filecache.operation",
             "parameters": []
         },
         {
-            "uri": "com.palm.filecache/InsertCacheObject",
+            "uri": "com.webos.service.filecache/InsertCacheObject",
             "description": "<p>Inserts a new object of the specified type into the cache.</p>\n\n<p>The&nbsp;<strong>fileName&nbsp;</strong>parameter is required. It is stored with the object to ensure that the correct extension is provided, so that other module can choose a strategy to process this file (for example, choose the file viewer matching the extension).</p>\n\n<p>Other&nbsp;parameters are optional. If not provided, the cache type default values defined are be used.</p>\n\n<p>Returned is the path to the object in the cache. The&nbsp;<strong>subscribe</strong>&nbsp;setting should be set to true so that after the object is inserted you can write the file.</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -1085,7 +1081,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/ResizeCacheObject",
+            "uri": "com.webos.service.filecache/ResizeCacheObject",
             "description": "<p style=\"text-align:left\">By calling the <strong>ResizeCacheObject&nbsp;</strong>you can specify the size of the cached object after it is inserted into the cache. Call this method if the final size of the object, which is being inserted into the cache, is not known by the moment, when you call the&nbsp;<strong>InsertCacheObject</strong>&nbsp;method. In this case:</p>\n\n<ol>\n\t<li>Call the&nbsp;<strong>InsertCacheObject</strong>&nbsp;method specifying the best approximate object size you can guess.</li>\n\t<li>Then call the&nbsp;<strong>ResizeCacheObject</strong>&nbsp;method on a subscribed object, if the the object size grows out of the previously specified size.</li>\n</ol>\n\n<p>If the object is larger than the specified size when the write operation is complete, the object will be automatically removed from the cache. If the object is smaller than the specified size, the recorded object size will be adjusted to the correct size.</p>\n\n<p><strong>Remark: </strong>it is not a good practice to just specify a larger than expected size though as this could cause other objects to be expired from the cache to make room for the specified size.</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -1102,7 +1098,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/SubscribeCacheObject",
+            "uri": "com.webos.service.filecache/SubscribeCacheObject",
             "description": "<p style=\"text-align:left\">Enables you to subscribe an object in the cache and hold a subscription to the object for the duration of your usage. An object cannot be expired from the cache while at least one subscription is active.</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -1114,7 +1110,7 @@
             ]
         },
         {
-            "uri": "com.palm.filecache/TouchCacheObject",
+            "uri": "com.webos.service.filecache/TouchCacheObject",
             "description": "<p>Allows you to mark an object as recently used. This decreases the chances&nbsp;of&nbsp;the object from getting expired from the cache when the space is being reclaimed.</p>",
             "acg": "filecache.operation",
             "parameters": [
@@ -1126,7 +1122,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/appProperties/getAllAppProperties",
+            "uri": "com.webos.service.preferences/appProperties/getAllAppProperties",
             "description": "<p>The <strong>getAllAppProperties</strong> gets all properties set to an application as an object array.</p>\n\n<p><strong>Note:</strong>&nbsp;If the <strong>getAllAppProperties</strong> method succeeds, there will be no <strong>returnValue</strong> and the returned object will only be an array of JSON objects containing key/value pairs.</p>",
             "acg": "preferences.application",
             "parameters": [
@@ -1138,7 +1134,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/appProperties/getAllAppPropertiesObj",
+            "uri": "com.webos.service.preferences/appProperties/getAllAppPropertiesObj",
             "description": "<p>The <strong>getAllAppPropertiesObj </strong>method gets&nbsp;all properties set to an application as an object.</p>",
             "acg": "preferences.application",
             "parameters": [
@@ -1150,7 +1146,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/appProperties/getAppKeys",
+            "uri": "com.webos.service.preferences/appProperties/getAppKeys",
             "description": "<p>The <strong>getAppKeys </strong>method returns all property keys for an application as a string array.</p>\n\n<p><strong>Note:</strong> If the <strong>getAppKeys </strong>method succeeds, there will be no <strong>returnValue</strong> and the returned object will only be an array of strings.</p>",
             "acg": "preferences.application",
             "parameters": [
@@ -1162,7 +1158,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/appProperties/getAppKeysObj",
+            "uri": "com.webos.service.preferences/appProperties/getAppKeysObj",
             "description": "<p>The&nbsp;<strong>getAppKeys&nbsp;</strong>method returns all property&nbsp;keys for an application as a JSON object.</p>",
             "acg": "preferences.application",
             "parameters": [
@@ -1174,7 +1170,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/appProperties/getAppProperty",
+            "uri": "com.webos.service.preferences/appProperties/getAppProperty",
             "description": "<p>The&nbsp;<strong>getAppProperty&nbsp;</strong>method returns&nbsp;an application property for a specific key.</p>",
             "acg": "preferences.application",
             "parameters": [
@@ -1191,7 +1187,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/appProperties/removeAppProperty",
+            "uri": "com.webos.service.preferences/appProperties/removeAppProperty",
             "description": "<p>The&nbsp;<strong>getAppProperty&nbsp;</strong>method&nbsp;removes an application property.</p>",
             "acg": "preferences.application",
             "parameters": [
@@ -1208,7 +1204,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/appProperties/setAppProperty",
+            "uri": "com.webos.service.preferences/appProperties/setAppProperty",
             "description": "<p>Add or change an application property.</p>",
             "acg": "preferences.application",
             "parameters": [
@@ -1230,7 +1226,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/backup/postRestore",
+            "uri": "com.webos.service.preferences/backup/postRestore",
             "description": "<p><strong>postRestore</strong>&nbsp;method restores the application/services preferences from <strong>lunaprefs_backup.db</strong>&nbsp;provided in the parameter.</p>",
             "parameters": [
                 {
@@ -1246,7 +1242,7 @@
             ]
         },
         {
-            "uri": "com.palm.preferences/backup/preBackup",
+            "uri": "com.webos.service.preferences/backup/preBackup",
             "description": "<p><strong>preBackup</strong>&nbsp;method takes backup of application/services preferences stored in &quot;/var/preferences&quot; path.</p>",
             "parameters": [
                 {
@@ -1257,19 +1253,19 @@
             ]
         },
         {
-            "uri": "com.palm.service.devmode/getDevMode",
+            "uri": "com.webos.service.devmode/getDevMode",
             "description": "<p>Return the current status of developer mode.</p>",
             "acg": "devmode.query",
             "parameters": []
         },
         {
-            "uri": "com.palm.service.devmode/getPassphrase",
+            "uri": "com.webos.service.devmode/getPassphrase",
             "description": "<p>Returns the current passphrase associated with the SSH key, which is used to connect to the device. This method is only callable by the developer mode app.</p>",
             "acg": "devmode.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.service.devmode/setDevMode",
+            "uri": "com.webos.service.devmode/setDevMode",
             "description": "<p>Enable or disable developer mode. The device will reboot if the mode is changed.</p>",
             "acg": "devmode.management",
             "parameters": [
@@ -1281,13 +1277,13 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/shutdown/initiate",
+            "uri": "com.webos.service.sleep/shutdown/initiate",
             "description": "<p>Starts the shutdown process. It sends&nbsp;the <strong>shutdownApplications</strong> and <strong>shutdownServices</strong> signals to all the registered apps/services.</p>\n\n<p>Returns &quot;true&quot; once the shutdown process is complete&nbsp;and the system decides that it can shutdown.</p>\n\n<p><strong>Note</strong>: This call does not do the actual shutdown; instead&nbsp;use the&nbsp;<strong>machineOff&nbsp;</strong>method.&nbsp;</p>",
             "acg": "sleep.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.sleep/shutdown/machineOff",
+            "uri": "com.webos.service.sleep/shutdown/machineOff",
             "description": "<p>Shuts down the machine forcefully.</p>",
             "acg": "sleep.management",
             "parameters": [
@@ -1299,7 +1295,7 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/shutdown/machineReboot",
+            "uri": "com.webos.service.sleep/shutdown/machineReboot",
             "description": "<p>Reboots the machine forcefully by calling &quot;reboot&quot;.</p>",
             "acg": "sleep.management",
             "parameters": [
@@ -1311,7 +1307,7 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/shutdown/shutdownApplicationsAck",
+            "uri": "com.webos.service.sleep/shutdown/shutdownApplicationsAck",
             "description": "<p>Sets the client&#39;s response as ACK for the &quot;shutdownApplications&quot; signal and trigger the dispatcher for the shutdown state machine, so that if the total client ACK count exceeds total number of clients, it can proceed to the next state.</p>",
             "acg": "sleep.management",
             "parameters": [
@@ -1323,7 +1319,7 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/shutdown/shutdownApplicationsRegister",
+            "uri": "com.webos.service.sleep/shutdown/shutdownApplicationsRegister",
             "description": "<p>Registers an application for the &quot;shutdownApplications&quot; signal. Returns the client ID&nbsp;of the client.</p>",
             "acg": "sleep.management",
             "parameters": [
@@ -1335,7 +1331,7 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/shutdown/shutdownServicesAck",
+            "uri": "com.webos.service.sleep/shutdown/shutdownServicesAck",
             "description": "<p>Sets the client&#39;s response as ACK for the &quot;shutdownServices&quot; signal and trigger the dispatcher for the shutdown state machine, so that if the total client ACK count exceeds total number of clients, it can proceed to the next state.</p>",
             "acg": "sleep.management",
             "parameters": [
@@ -1347,7 +1343,7 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/shutdown/shutdownServicesRegister",
+            "uri": "com.webos.service.sleep/shutdown/shutdownServicesRegister",
             "description": "<p>Registers an application for the &quot;shutdownApplications&quot; signal. Returns the client ID&nbsp;of the client added.</p>",
             "acg": "sleep.management",
             "parameters": [
@@ -1359,7 +1355,7 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/timeout/clear",
+            "uri": "com.webos.service.sleep/timeout/clear",
             "description": "<p>Handles a timeout/clear message and deletes a timeout by its key.</p>",
             "acg": "sleep.operation",
             "parameters": [
@@ -1371,7 +1367,7 @@
             ]
         },
         {
-            "uri": "com.palm.sleep/timeout/set",
+            "uri": "com.webos.service.sleep/timeout/set",
             "description": "<p>Handles a timeout/set message and adds a new power timeout. Relative timeouts can be set by passing the &quot;in&quot; parameter. Absolute timeouts can be set by passing the &quot;at&quot; parameter.</p>",
             "acg": "sleep.operation",
             "parameters": [
@@ -1423,7 +1419,7 @@
             ]
         },
         {
-            "uri": "com.palm.webappmanager/clearBrowsingData",
+            "uri": "com.webos.service.webappmanager/clearBrowsingData",
             "description": "<p>Clears the browsing data of a specific&nbsp;type.</p>",
             "acg": "webapplication.management",
             "parameters": [
@@ -1435,19 +1431,19 @@
             ]
         },
         {
-            "uri": "com.palm.webappmanager/closeAllApps",
+            "uri": "com.webos.service.webappmanager/closeAllApps",
             "description": "<p>Closes all the currently running applications.</p>",
             "acg": "webapplication.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.webappmanager/getWebProcessSize",
+            "uri": "com.webos.service.webappmanager/getWebProcessSize",
             "description": "<p>Gets the size of the current WebProcess.</p>",
             "acg": "webapplication.management",
             "parameters": []
         },
         {
-            "uri": "com.palm.webappmanager/killApp",
+            "uri": "com.webos.service.webappmanager/killApp",
             "description": "<p>Kills all the windows owned by the specified app.</p>\n\n<p><strong>Note</strong>: The method is intended to be used by SAM if necessary.</p>",
             "acg": "webapplication.management",
             "parameters": [
@@ -1464,7 +1460,7 @@
             ]
         },
         {
-            "uri": "com.palm.webappmanager/launchApp",
+            "uri": "com.webos.service.webappmanager/launchApp",
             "description": "<p>Launches an application by the app ID.</p>\n\n<p><strong>Note</strong>: This is the major function used by the<strong> SAM</strong> to request for launching an application.</p>",
             "acg": "webapplication.management",
             "parameters": [
@@ -1496,7 +1492,7 @@
             ]
         },
         {
-            "uri": "com.palm.webappmanager/listRunningApps",
+            "uri": "com.webos.service.webappmanager/listRunningApps",
             "description": "<p>Returns the list of applications that the Web App Manager is running.</p>",
             "acg": "webapplication.management",
             "parameters": [
@@ -1513,7 +1509,7 @@
             ]
         },
         {
-            "uri": "com.palm.webappmanager/logControl",
+            "uri": "com.webos.service.webappmanager/logControl",
             "description": "<p>Enables or disables displaying the logs with associated keys.</p>",
             "acg": "webapplication.management",
             "parameters": [
@@ -1530,7 +1526,7 @@
             ]
         },
         {
-            "uri": "com.palm.webappmanager/pauseApp",
+            "uri": "com.webos.service.webappmanager/pauseApp",
             "description": "<p>Pauses the web application.</p>\n\n<p><strong>Note</strong>: The method can be used by <strong>SAM </strong>to move a specified web application from foreground to background (currently, SAM uses the keep-alive feature instead of WAM).</p>",
             "acg": "webapplication.management",
             "parameters": [
@@ -1542,7 +1538,7 @@
             ]
         },
         {
-            "uri": "com.palm.webappmanager/webProcessCreated",
+            "uri": "com.webos.service.webappmanager/webProcessCreated",
             "description": "<p>Returns the process ID of the launched application.</p>",
             "acg": "webapplication.management",
             "parameters": [
@@ -9959,107 +9955,6 @@
                     "name": "size",
                     "required": "yes",
                     "type": "String"
-                }
-            ]
-        },
-        {
-            "uri": "com.webos.service.power/suspend/TESTSuspend",
-            "description": "<p>Schedule the IdleCheck thread to start the cycle for suspending the system (Used for testing purposes).</p>",
-            "parameters": []
-        },
-        {
-            "uri": "com.webos.service.power/suspend/activityEnd",
-            "description": "<p>Cancel a previous request (identified by &quot;id&quot;) which was registered using activityStart.</p>",
-            "parameters": [
-                {
-                    "name": "id",
-                    "required": "yes",
-                    "type": "String"
-                }
-            ]
-        },
-        {
-            "uri": "com.webos.service.power/suspend/forceSuspend",
-            "description": "<p>Force the device to go into suspend even with a charger connected or any activity is still active. (Used for testing purposes).</p>",
-            "parameters": []
-        },
-        {
-            "uri": "com.webos.service.power/suspend/identify",
-            "description": "<p>Register a new client with the specified name.</p>",
-            "parameters": [
-                {
-                    "name": "clientName",
-                    "required": "yes",
-                    "type": "String"
-                },
-                {
-                    "name": "subscribe",
-                    "required": "yes",
-                    "type": "Boolean"
-                }
-            ]
-        },
-        {
-            "uri": "com.webos.service.power/suspend/prepareSuspendAck",
-            "description": "<p>Used by a client to respond (ack or nack) to the &quot;prepareSuspend&quot; signal.&nbsp;Once the client sends ack to the &quot;prepareSuspend&quot; signal, the client does not do any more operations and prepare itself for the system suspend.</p>",
-            "parameters": [
-                {
-                    "name": "clientId",
-                    "required": "yes",
-                    "type": "String"
-                },
-                {
-                    "name": "ack",
-                    "required": "yes",
-                    "type": "Boolean"
-                }
-            ]
-        },
-        {
-            "uri": "com.webos.service.power/suspend/prepareSuspendRegister",
-            "description": "<p>Register a client (already registered with &quot;identify&quot; call) for &quot;prepareSuspend&quot; signal. This will add the client to the total client count&nbsp;checked during the final prepareSuspend polling to make a decision to proceed with the suspend action or postpone it until later.</p>",
-            "parameters": [
-                {
-                    "name": "clientId",
-                    "required": "yes",
-                    "type": "String"
-                },
-                {
-                    "name": "register",
-                    "required": "yes",
-                    "type": "Boolean"
-                }
-            ]
-        },
-        {
-            "uri": "com.webos.service.power/suspend/suspendRequestAck",
-            "description": "<p>Used by a client to respond (ack or nack) to the &quot;suspendRequest&quot; signal. Once the client sends ack to the &quot;suspendRequest&quot; signal, the client has to finish all its current operations and prepare for the system suspend.</p>",
-            "parameters": [
-                {
-                    "name": "clientId",
-                    "required": "yes",
-                    "type": "String"
-                },
-                {
-                    "name": "ack",
-                    "required": "yes",
-                    "type": "Boolean"
-                }
-            ]
-        },
-        {
-            "uri": "com.webos.service.power/suspend/suspendRequestRegister",
-            "description": "<p>Register a client (already registered with &quot;identify&quot; call) for &quot;suspendRequest&quot; signal. This will add the client to the total client count that is checked during the suspendRequest polling to make a decision to proceed with the suspend action or postpone it until later.</p>",
-            "parameters": [
-                {
-                    "name": "clientId",
-                    "required": "yes",
-                    "type": "String"
-                },
-                {
-                    "name": "register",
-                    "required": "yes",
-                    "type": "Boolean"
                 }
             ]
         },

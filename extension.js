@@ -1274,12 +1274,6 @@ function setFromConvertCacheAPI() {
             let serviceName = "", serviceSummary = "";
 
             serviceName = jsonDataServices[key].uri;
-            serviceName = changeServiceName(serviceName);
-
-            if (serviceName == "remove") {
-                continue;
-            }
-
             serviceSummary = jsonDataServices[key].summary;
 
             const findSummaryIndex = serviceSummary.match(replaceRegex);
@@ -1312,11 +1306,6 @@ function setFromConvertCacheAPI() {
                 methodDesc = jsonDataMethods[key].description;
                 acgName = jsonDataMethods[key].acg;
                 paramsArray = jsonDataMethods[key].parameters;
-
-                serviceName = changeServiceName(serviceName);
-                if (serviceName == "remove") {
-                    continue;
-                }
 
                 for (const key in paramsArray) {
                     let paramName = "", requireName = "", typeName = "";
@@ -1406,34 +1395,6 @@ function compareFn(a, b) {
         return 1;
     }
     return 0;
-}
-
-function changeServiceName(serviceName) {
-    let changeName = serviceName;
-
-    // Do not adjust service name for tv
-    if (studioProfile === "tv") {
-        return changeName;
-    }
-
-    if (serviceName === "com.webos.service.power") { // Remove duplicated service
-        changeName = "remove";
-        return changeName;
-    } else if(serviceName === "com.palm.service.tellurium") {
-        return changeName; //TODO : Need to improve luna comparisionTool
-    } else {
-        if (serviceName.includes("palm")) { // Change the service name from palm to webos
-            let replaceWord = "";
-            if (serviceName.includes("service")) {
-                replaceWord = "webos";
-            }
-            else {
-                replaceWord = "webos.service";
-            }
-            changeName = serviceName.replace("palm", replaceWord);
-        }
-    }
-    return changeName;
 }
 
 function findMethodInArray(serviceName) {
