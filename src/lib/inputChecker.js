@@ -36,7 +36,7 @@ class InputChecker {
 
     static checkDirectoryName(value) {
         if (!matchReg(value, /[a-zA-Z0-9-._]+/g)) {
-            return 'Please include only letters(A-Z,a-z), digits(0-9), underscore & minus signs.';
+            return 'Please include only letters(A-Z, a-z), digits(0-9), underscore & minus signs.';
         }
         return null;
     }
@@ -148,13 +148,10 @@ class InputChecker {
         if (value.length === 1) {
             return 'Please enter the device name with a minimum of 2 characters.';
         }
-        if (!matchReg(value, /[a-z0-9-.]+/g)) {
-            return 'Please include only lowercase letters(a-z), digits(0-9), minus signs.';
+        if (!matchReg(value, /^[_a-zA-Z0-9][a-zA-Z0-9#_-]*/g)) {
+            return `Please include only letters(A-Z, a-z), digits(0-9), and special characters('-', '_', '#').
+                    And it cannot begin with '-' or '#'.`;
         }
-        if (!matchReg(value, /^[a-z0-9][a-z0-9-.]+/g)) {
-            return 'Please start with an alphanumeric character.';
-        }
-
         return null;
     }
 
