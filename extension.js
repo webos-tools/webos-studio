@@ -83,13 +83,14 @@ function activate(context) {
                     urlServiceName = urlServiceName.toLocaleLowerCase();
 
                     let urlName = "";
+                    let urlServiceSite = "";
                     if (studioProfile === "ose") {
                         urlName = `${OSE_SITE}/${urlServiceName}`;
+                        urlServiceSite = `<a href='${urlName}'>Site link of service(${serviceItemName})</a>`
                     } else if (studioProfile === "tv") {
                         urlName = `${TV_SITE}`;
+                        urlServiceSite = `<a href='${urlName}'>Site link</a>`
                     }
-
-                    const urlServiceSite = `<a href='${urlName}'>Site link of service(${serviceItemName})</a>`
 
                     const serviceItemInterface = { label: serviceItemName, description: "Luna API Service" };
                     const serviceItemSummary = apiServiceArray[i].summary + urlServiceSite;
@@ -180,7 +181,7 @@ function activate(context) {
 
             const linePrefix = document.lineAt(position).text;
 
-            if (linePrefix.includes("luna://com.webos")) {
+            if (linePrefix.includes("luna://com.webos") || linePrefix.includes("luna://com.palm")) {
                 const lineSplit = linePrefix.split("/");
                 const linelength = lineSplit.length;
                 serviceName = lineSplit[2];
@@ -1428,10 +1429,13 @@ function findParamInArray(serviceName, methodName) {
     urlMethodName = urlMethodName.toLocaleLowerCase();
 
     let urlName = "";
+    let urlMethodSite = "";
     if (studioProfile === "ose") {
         urlName = `${OSE_SITE}//${urlServiceName}/#${urlMethodName}`;
+        urlMethodSite = `<a href='${urlName}'>Site link of method(${methodName})</a></p>`
     } else if (studioProfile === "tv") {
         urlName = `${TV_SITE}`;
+        urlMethodSite = `<a href='${urlName}'>Site link</a></p>`
     }
 
     const apiParamArray = apiObjArray[apiObjArrayIndex].param;
@@ -1446,7 +1450,7 @@ function findParamInArray(serviceName, methodName) {
                 const paramItemType = apiParamArray[findServiceIndex]["methods"][findMethodIndex]["params"][i].type;
                 const paramItemDesc = `<p><strong>${methodName}</strong> method parameter<br><br>required : <strong>${paramItemRequired} \
                                     </strong><br>type : <strong>${paramItemType}</strong><br><br> \
-                                    <a href='${urlName}'>Site link of method(${methodName})</a></p>`;
+                                    ${urlMethodSite}`;
 
                 paramNameArr.push(paramItemName);
                 paramRequiredArr.push(paramItemRequired);
@@ -1468,7 +1472,7 @@ function findParamInArray(serviceName, methodName) {
             const paramDesc = `<li><strong>${paramNameArr[i]}</strong> : ${paramTypeArr[i]} (${requiredString})</li>`;
             methodParamDesc = methodParamDesc + paramDesc;
         }
-        methodParamDesc = methodParamDesc + `<br><a href='${urlName}'>Site link of method(${methodName})</a></p>`;
+        methodParamDesc = methodParamDesc + `<br><a href='${urlName}'>${urlMethodSite}</a></p>`;
     }
     return [paramNameArr, paramDescrArr, [methodParamDesc]];
 }
