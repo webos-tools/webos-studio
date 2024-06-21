@@ -39,7 +39,7 @@ function _execAsync(cmd, option, next) {
                     // const { showPrompt } = require('../installGlobalLibrary');
                     // showPrompt();
                     if (cmd.includes('VBoxManage')) {
-                        vscode.window.showWarningMessage(`Warning! Unable to find the VirtualBox.`)
+                        logger.warn(`Unable to find the VirtualBox.\n`);
                         reject("Unable to find the installed  VirtualBox");
                     } else {
                       
