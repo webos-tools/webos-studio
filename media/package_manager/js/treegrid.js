@@ -158,9 +158,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     }
   }
 
-  function isRowFocused() {
-    return getRowWithFocus() === document.activeElement;
-  }
+
 
   function isEditableFocused() {
     var focusedElem = document.activeElement;
@@ -240,26 +238,6 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     }
   }
 
-  function moveByCol(direction) {
-    var currentRow = getRowWithFocus();
-    if (!currentRow) {
-      return;
-    }
-    var cols = getNavigableCols(currentRow);
-    var numCols = cols.length;
-    var currentCol = getColWithFocus(currentRow);
-    var currentColIndex = cols.indexOf(currentCol);
-  
-    var newColIndex =
-      currentCol || direction < 0 ? currentColIndex + direction : 0;
-   
-    if (doAllowRowFocus && newColIndex < 0) {
-      focus(currentRow);
-      return;
-    }
-    newColIndex = restrictIndex(newColIndex, numCols);
-    focusCell(cols[newColIndex]);
-  }
 
   function moveToExtremeCol(direction, currentRow) {
    
@@ -276,7 +254,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
     }
   }
 
-  function doPrimaryAction(event) {
+  function doPrimaryAction() {
     var currentRow = getRowWithFocus();
     if (!currentRow) {
       return;
@@ -298,13 +276,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   
   }
 
-  function toggleExpanded(row) {
-    var cols = getNavigableCols(row);
-    var currentCol = getColWithFocus(row);
-    if (currentCol === cols[0] && isExpandable(row)) {
-      changeExpanded(!isExpanded(row), row);
-    }
-  }
+
 
   function changeExpanded(doExpand, row) {
     var currentRow = row || getRowWithFocus();
@@ -427,7 +399,7 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
         moveToExtreme(1);
         break;
       case ENTER:
-        doPrimaryAction(event);
+        doPrimaryAction();
         break;
       default:
         return;
@@ -456,22 +428,13 @@ function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
 
     var range = document.createRange();
     range.selectNodeContents(target.firstChild);
-    var left = range.getBoundingClientRect().left;
-    var EXPANDO_WIDTH = 20;
+    
 
       changeExpanded(!isExpanded(row), row);
   
   }
 
-  function onDoubleClick(event) {
-    var row = getContainingRow(event.target);
-    if (row) {
-      if (isExpandable(row)) {
-        changeExpanded(!isExpanded(row), row);
-      }
-      event.preventDefault();
-    }
-  }
+
 
   initAttributes();
   treegridElem.addEventListener('keydown', onKeyDown);

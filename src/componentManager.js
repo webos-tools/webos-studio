@@ -73,19 +73,19 @@ class ComponentMgr {
     let configData = "";
     try {
       configData = fs.readFileSync(jsonPath.fsPath, "utf8");
-      return this.orderConfig( JSON.parse(configData));
+      return this.orderConfig(JSON.parse(configData));
     } catch (e) {
       return null;
     }
   }
-  orderConfig(config){
-    let sdks =["tv","ose"]
+  orderConfig(config) {
+    let sdks = ["tv", "ose"]
     for (let k = 0; k < sdks.length; k++) {
 
       for (let i = 0; i < config[sdks[k]]["components"].length; i++) {
         let compName = config[sdks[k]]["components"][i]["type"];
-        
-          config[sdks[k]][compName] = this.orderBySortOrder(config[sdks[k]][compName])
+
+        config[sdks[k]][compName] = this.orderBySortOrder(config[sdks[k]][compName])
       }
     }
     return config
@@ -93,31 +93,31 @@ class ComponentMgr {
   orderBySortOrder(objArray) {
     let o = {};
     objArray.forEach(element => {
-        o[element.sortOrder] = element;
+      o[element.sortOrder] = element;
     });
 
     var sorted = {},
-        key, a = [];
+      key, a = [];
 
     for (key in o) {
-        if (o.hasOwnProperty(key)) {
-            a.push(key);
-        }
+      if (o.hasOwnProperty(key)) {
+        a.push(key);
+      }
     }
 
     a.sort();
     a.reverse();
 
     for (key = 0; key < a.length; key++) {
-        sorted[a[key]] = o[a[key]];
+      sorted[a[key]] = o[a[key]];
     }
-    let returnArray =[]
+    let returnArray = []
     a.forEach(element => {
       returnArray.push(sorted[element])
     });
-  
+
     return returnArray;
-}
+  }
 
   async updateAvailableDiskspaceOnEnvPath() {
     // gets the Avalialble diskspace and send a msg to UI
@@ -176,14 +176,13 @@ class ComponentMgr {
     };
 
     let filePath = path.join(this.envPath, "Config", "status.json");
-    //  if (!fs.existsSync(filePath)) {
     var dirname = path.dirname(filePath);
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
 
     fs.writeFileSync(filePath, JSON.stringify(statusJson), "utf8");
-    //}
+
   }
   addEnvIfMissing() {
     let tvsdk = this.getEnvVarValue("LG_WEBOS_TV_SDK_HOME");
@@ -245,7 +244,7 @@ class ComponentMgr {
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
-}
+  }
 
   getStatusJson() {
     if (!this.statusJson) {
@@ -257,7 +256,6 @@ class ComponentMgr {
         return this.statusJson;
       } catch (e) {
         this.statusJson = null;
-        // console.log("err " + e);
         return null;
       }
     } else {
@@ -357,7 +355,7 @@ class ComponentMgr {
     try {
       instVer = instVer.replace("r", ".").replace("_", ".");
       rvalue = satisfies(instVer, reqVer);
-    } catch { }
+    } catch(e) {      console.log(e) }
     return rvalue;
   }
   compareVersionWithoutOp(reqVer, availableV, op) {
@@ -366,6 +364,7 @@ class ComponentMgr {
       availableV = availableV.replace("r", ".").replace("_", ".");
       rvalue = compare(availableV, reqVer, op);
     } catch (e) {
+      console.log(e)
     }
     return rvalue;
   }
@@ -403,7 +402,7 @@ class ComponentMgr {
 
       let command = `echo '${newVarLine}' >> ${filePath} &&  echo '${newVarLine}' >> ${filePath2} &&  echo '${newVarLine}' >> ${filePath3}`;
       await this.executeAnyCommand(command)
-        .then((out) => {
+        .then(() => {
           resolve();
         })
         .catch((err) => {
@@ -418,7 +417,7 @@ class ComponentMgr {
       let filePath = path.join("~/.bash_profile");
       let command = `echo '${newVarLine}' >> ${filePath} `;
       await this.executeAnyCommand(command)
-        .then((out) => {
+        .then(() => {
           resolve();
         })
         .catch((err) => {
@@ -694,7 +693,8 @@ class ComponentMgr {
               }
             })
 
-            .catch((e) => {
+            .catch(() => {
+             
               // console.error("Not Available-", command);
             });
         }
@@ -713,7 +713,7 @@ class ComponentMgr {
 
     // get the comp installed status and update status json 
     let osStr = os.platform().toLowerCase();
-    let sdkLst = [ "tv", "ose"];
+    let sdkLst = ["tv", "ose"];
     for (let j = 0; j < sdkLst.length; j++) {
       try {
         let components = this.configJson[sdkLst[j]]["components"];
@@ -850,7 +850,7 @@ class ComponentMgr {
                     let instanceName = simulators[f].displayName;
                     if (fs.existsSync(pathToCheck)) {
                       let comp_uid = simulators[f]["comp_uid"];
-                      let sdk = this.configJson[sdkLst[j]];
+                     
                       let loc = path.join(tvsdkPath, components[k].subDirName, simulators[f].subDirName)
 
                       this.statusJson[sdkLst[j]][comp_uid] = { sdk_version: simulators[f]["sdk_version"], location: loc, instName: instanceName, };
@@ -888,7 +888,7 @@ class ComponentMgr {
                     let instanceName = beanvisers[f].displayName;
                     if (fs.existsSync(pathToCheck)) {
                       let comp_uid = beanvisers[f]["comp_uid"];
-                      let sdk = this.configJson[sdkLst[j]];
+                      
                       let loc = path.join(tvsdkPath, components[k].subDirName)
 
                       this.statusJson[sdkLst[j]][comp_uid] = { sdk_version: beanvisers[f]["sdk_version"], location: loc, instName: instanceName, };
@@ -927,7 +927,7 @@ class ComponentMgr {
                     let instanceName = wfdesingers[f].displayName;
                     if (fs.existsSync(pathToCheck)) {
                       let comp_uid = wfdesingers[f]["comp_uid"];
-                      let sdk = this.configJson[sdkLst[j]];
+                     
                       let loc = path.join(skPath, components[k].subDirName)
 
                       this.statusJson[sdkLst[j]][comp_uid] = { sdk_version: wfdesingers[f]["sdk_version"], location: loc, instName: instanceName, };
@@ -965,7 +965,7 @@ class ComponentMgr {
                     let instanceName = resMonitors[f].displayName;
                     if (fs.existsSync(pathToCheck)) {
                       let comp_uid = resMonitors[f]["comp_uid"];
-                      let sdk = this.configJson[sdkLst[j]];
+                     
                       let loc = path.join(skPath, components[k].subDirName)
 
                       this.statusJson[sdkLst[j]][comp_uid] = { sdk_version: resMonitors[f]["sdk_version"], location: loc, instName: instanceName, };
@@ -1036,9 +1036,9 @@ class ComponentMgr {
           break;
         }
       }
-    
+
       if (output && output.stdout && output.stdout.trim().toLowerCase() === msgData.envVarValue.toLowerCase()) {
-        this.setEnvInGlobalState(msgData.envVarName,msgData.envVarValue)
+        this.setEnvInGlobalState(msgData.envVarName, msgData.envVarValue)
         msgData["isSet"] = true;
 
         let evalue = this.getEnvVarValue(msgData.envVarName);
@@ -1086,7 +1086,7 @@ class ComponentMgr {
           break;
         }
       }
-    } catch (e) { }
+    } catch (e) { console.log(e) }
   }
   async deleteEnvPathVariableSync(pathValue) {
     //Delete value from Env Path
@@ -1106,7 +1106,7 @@ class ComponentMgr {
           break;
         }
       }
-    } catch (e) { }
+    } catch (e) { console.log(e) }
   }
   async setAnyEnvVariable(envVarName, envVarValue) {
     // setting any environment variable
@@ -1141,7 +1141,7 @@ class ComponentMgr {
             break;
           }
         }
-        this.setEnvInGlobalState(envVarName,envVarValue)
+        this.setEnvInGlobalState(envVarName, envVarValue)
         resolve();
       } catch (error) {
         reject(error);
@@ -1165,14 +1165,14 @@ class ComponentMgr {
     if (process.env[envVar]) {
       return process.env[envVar];
     } else {
-      let value =this.getEnvFromGlobalState(envVar);
-      if(!value){
+      let value = this.getEnvFromGlobalState(envVar);
+      if (!value) {
         let envValue = this.getEnvFromShell(envVar);
         return envValue;
-      }else{
+      } else {
         return value;
       }
-    
+
     }
   }
 
@@ -1203,14 +1203,14 @@ class ComponentMgr {
   }
 
 
-  setEnvInGlobalState(key,value){
+  setEnvInGlobalState(key, value) {
     // store  the  value in Global
-    this.context.globalState.update(key, value );
+    this.context.globalState.update(key, value);
   }
-  getEnvFromGlobalState(key){
+  getEnvFromGlobalState(key) {
     //get the value from global
-   return this.context.globalState.get(key,null);
-  
+    return this.context.globalState.get(key, null);
+
   }
 
   async checkPreReqOnCompInstall(msgData, panel) {
@@ -1271,7 +1271,9 @@ class ComponentMgr {
         };
         vscode.window
           .showInformationMessage(header, options)
-          .then((answer) => { });
+          .then((answer) => { 
+            console.log(answer)
+          });
         return;
       }
       // since resource monitor do is inbuilt with extenstion 
@@ -1658,7 +1660,7 @@ class ComponentMgr {
                 .then(async () => {
                   try {
                     this.removeVmdk(selComp, instName);
-                  } catch { }
+                  } catch (e) { console.log(e) }
                   msgComp["command"] = "PRG_UPDATE_COMP";
                   msgComp["data"]["message"] = "Uninstalled successfully";
                   this.panel.webview.postMessage(msgComp);
@@ -1873,7 +1875,7 @@ class ComponentMgr {
         case "OSE_RESMONITOR_UNINSTALL_FORALL": {
           try {
             let sdkPath = this.envPath;
-            let osStr = os.platform().toLowerCase();
+            
 
             if (sdkPath) {
 
@@ -1974,7 +1976,7 @@ class ComponentMgr {
           }
         });
 
-      } catch { }
+      } catch(e) {      console.log(e) }
     }
 
   }
@@ -2062,6 +2064,7 @@ class ComponentMgr {
     return outStr.split("\n")[0];
   }
   async uninstallFromNPM(command, comp_uid) {
+    console.log(comp_uid)
     return new Promise(async (resolve, reject) => {
       let osStr = os.platform().toLowerCase();
       let cmd = ""
@@ -2173,6 +2176,7 @@ class InstallManager {
     msgComp["data"]["message"] = err.message;
     msgComp["data"]["isError"] = true;
     this.panel.webview.postMessage(msgComp);
+    console.log("reject handler for ",key)
 
     this.sendQErrMsg({ message: err["code"] == "ERR_REQUEST_CANCELLED" ? "" : "Failed to install Pre-requisites" }, qItem);
     this.componentMgr.updateInstallingStatusPreReqAndDepJsonOfOtherDepOnError(false, qItem.msgData.sdk, qItem.msgData.component, qItem.msgData.componentInfo.comp_uid, qItem);
@@ -2413,7 +2417,7 @@ class InstallManager {
                 },
               };
               this.panel.webview.postMessage(msgComp);
-              let ver = qItem.msgData.depInstall[key]["downloadInfo"]["version"];
+             
               logger.run(`${depInstallItem.displayName} ${depInstallItem["downloadInfo"]["version"]} - ${depInstallItem.downloadInfo.script} `)
 
               await this.executeAnyCommand(depInstallItem.downloadInfo.script)
@@ -2479,7 +2483,7 @@ class InstallManager {
 
                     // run the script to install silent
                     let dlFile = path.join(this.componentMgr.envPath, "Downloads", qItem["downloadedFileName"]);
-                    await this.executeCommand(` MsiExec.exe /i ${dlFile} /qn`, comp_uid, key, "Installing")
+                    await this.executeCommand(` MsiExec.exe /i ${dlFile} /qn`)
                       .then(() => {
                         this.qPreReqCompletionHandlerForPreReq(comp_uid, key, depInstallItem, qItem);
                       })
@@ -2619,7 +2623,7 @@ class InstallManager {
                   msgComp["data"]["message"] = "Extracting";
                   this.panel.webview.postMessage(msgComp);
 
-                  let ver = qItem.msgData.depInstall[key]["downloadInfo"]["version"];
+                 
 
                   // create a dir to
                   let desPathForextact = path.join(
@@ -2774,8 +2778,7 @@ class InstallManager {
                   msgComp["data"]["message"] = "Downloaded successfully";
                   msgComp["data"]["val"] = 50;
                   this.panel.webview.postMessage(msgComp);
-                  let ver =
-                    qItem.msgData.depInstall[key]["downloadInfo"]["version"];
+                 
                   let srcPath = path.join(
                     this.componentMgr.envPath,
                     "Downloads",
@@ -2829,8 +2832,7 @@ class InstallManager {
                   msgComp["data"]["val"] = 50;
                   msgComp["data"]["message"] = "Downloaded successfully";
                   this.panel.webview.postMessage(msgComp);
-                  let ver =
-                    qItem.msgData.depInstall[key]["downloadInfo"]["version"];
+                 
                   let srcPath = path.join(
                     this.componentMgr.envPath,
                     "Downloads",
@@ -2894,7 +2896,7 @@ class InstallManager {
                   msgComp["data"]["val"] = 50;
                   msgComp["data"]["message"] = "Downloaded successfully";
                   this.panel.webview.postMessage(msgComp);
-                  let ver = qItem.msgData.depInstall[key]["downloadInfo"]["version"];
+                  
                   let srcPath = path.join(
                     this.componentMgr.envPath,
                     "Downloads",
@@ -3263,12 +3265,7 @@ class InstallManager {
 
 
             let osStr = os.platform().toLowerCase();
-            let profileLoader = "";
-            if (osStr == "linux") {
-              profileLoader = " . ~/.profile && ";
-            } else if (osStr == "darwin") {
-              profileLoader = " source ~/.bashrc && ";
-            }
+           
             let npmPrg = this.componentMgr.getNPMProgram()
             let command = ` ${npmPrg} install -g  @webos-tools/cli `;
             logger.run(`${qItem.msgData.componentInfo.shortName} - ${command} `)
@@ -3321,13 +3318,7 @@ class InstallManager {
               qItem.msgData.sdkSubDirName,
               qItem.msgData.componentSubDirName
             );
-            let osStr = os.platform().toLowerCase();
-            let profileLoader = "";
-            if (osStr == "linux") {
-              profileLoader = " . ~/.profile && ";
-            } else if (osStr == "darwin") {
-              profileLoader = " source ~/.bashrc && ";
-            }
+            
             let npmPrg = this.componentMgr.getNPMProgram()
 
             let gitPath = path.join(destPath, qItem.msgData.componentInfo.subDirName)
@@ -3361,7 +3352,7 @@ class InstallManager {
               .catch((error) => {
                 this.qRejectHandlerForComp(error, msgComp, qItem);
               });
-              vscode.commands.executeCommand('webos.updateProfile');
+            vscode.commands.executeCommand('webos.updateProfile');
 
           }
           break;
@@ -3438,7 +3429,7 @@ class InstallManager {
                           }
 
                           await this.vbox_addNew_TV_Instance(scriptPath)
-                            .then(async (uuid) => {
+                            .then(async () => {
                               this.componentMgr.statusJson[qItem.msgData.sdk][qItem.msgData.componentInfo.comp_uid] = {
                                 sdk_version: qItem.msgData.componentInfo.sdk_version,
                                 location: scriptPath,
@@ -3446,7 +3437,7 @@ class InstallManager {
                               };
                               try {
                                 this.addShortcut(scriptPath, qItem.msgData.componentInfo.sdk_version, "TV_EMU", qItem.msgData.componentInfo.displayName);
-                              } catch { }
+                              } catch(e) {      console.log(e) }
 
                               this.qCompletionHandlerForComp(msgComp, qItem);
                             })
@@ -3457,6 +3448,7 @@ class InstallManager {
 
                         })
                         .catch((err) => {
+                          console.log(err)
                           this.qRejectHandlerForComp({ message: "Emulator Instance Already available" }, msgComp, qItem);
                         });
                     })
@@ -3554,7 +3546,7 @@ class InstallManager {
                                     }
 
                                     this.addShortcut(path.join(destPath, fileExt), qItem.msgData.componentInfo["sdk_version"], "OSE_EMU", qItem.msgData.componentInfo.displayName);
-                                  } catch { }
+                                  } catch(e) {      console.log(e) }
 
 
                                   this.qCompletionHandlerForComp(msgComp, qItem);
@@ -3569,7 +3561,7 @@ class InstallManager {
                             });
                         })
                         .catch((error) => {
-                          // console.log(error);
+                          console.log(error);
                         });
                     })
                     .catch((err) => {
@@ -3670,7 +3662,7 @@ class InstallManager {
                           }
 
                           this.addShortcut(path.join(destPath, qItem.msgData.componentInfo.subDirName, qItem.msgData.componentInfo.subDirName + fileExt), null, "TV_SIMU", qItem.msgData.componentInfo.displayName);
-                        } catch { }
+                        } catch(e) {      console.log(e) }
                         this.qCompletionHandlerForComp(msgComp, qItem);
                       })
                       .catch((err) => {
@@ -3788,11 +3780,17 @@ class InstallManager {
                                   if (osStr == "darwin") {
                                     fileExt = ".command"
                                     fs.copyFile(path.join(destPath, qItem.msgData.componentSubDirName, "beanviser.sh"), path.join(destPath, qItem.msgData.componentSubDirName, "beanviser" + fileExt), (err) => {
+                                      console.log(err)
                                     });
                                   }
 
                                   this.addShortcut(path.join(destPath, qItem.msgData.componentSubDirName, "beanviser" + fileExt), null, "TV_BEANVISER", qItem.msgData.componentInfo.displayName);
-                                } catch { }
+                                  if (osStr == "linux") {
+                                    this.executeSudoCommand("apt install gconf2 -y")
+                                  }
+
+
+                                } catch(e) {      console.log(e) }
 
                                 this.qCompletionHandlerForComp(msgComp, qItem);
                               })
@@ -3830,7 +3828,7 @@ class InstallManager {
                             try {
                               let fileExt = ".cmd"
                               this.addShortcut(path.join(destPath, qItem.msgData.componentSubDirName, qItem.msgData.componentSubDirName + fileExt), null, "TV_BEANVISER", qItem.msgData.componentInfo.displayName, path.join(destPath, qItem.msgData.componentSubDirName));
-                            } catch { }
+                            } catch (e) { console.log(e) }
                             this.qCompletionHandlerForComp(msgComp, qItem);
                           })
                           .catch((err) => {
@@ -3950,11 +3948,12 @@ class InstallManager {
                                   if (osStr == "darwin") {
                                     fileToex = "launch-workflow-designer.command"
                                     fs.copyFile(path.join(destPath, qItem.msgData.componentSubDirName, "launch-workflow-designer.sh"), path.join(destPath, qItem.msgData.componentSubDirName, fileToex), (err) => {
+                                      console.log(err)
                                     });
                                   }
 
                                   this.addShortcut(path.join(destPath, qItem.msgData.componentSubDirName, fileToex), null, "OSE_WFD", qItem.msgData.componentInfo.displayName);
-                                } catch { }
+                                } catch(e) {       console.log(e)}
 
                                 this.qCompletionHandlerForComp(msgComp, qItem);
                               })
@@ -3992,7 +3991,7 @@ class InstallManager {
                             try {
                               let fileToex = "launch-workflow-designer.cmd"
                               this.addShortcut(path.join(destPath, qItem.msgData.componentSubDirName, fileToex), null, "OSE_WFD", qItem.msgData.componentInfo.displayName, path.join(destPath, qItem.msgData.componentSubDirName));
-                            } catch { }
+                            } catch(e) {      console.log(e) }
                             this.qCompletionHandlerForComp(msgComp, qItem);
                           })
                           .catch((err) => {
@@ -4228,8 +4227,8 @@ class InstallManager {
     // Get the open document from the active editor (should be the
     // settings.json file)
     const settingsDocument = activeEditor.document;
-    const documentText = settingsDocument.getText();
-    // console.log(documentText)
+   
+ 
 
     // Open an edit operation to update the settings document
     activeEditor.edit((editBuilder) => {
@@ -4514,6 +4513,7 @@ class InstallManager {
     if (targetType == "TV_EMU") {
       if (osStr == "darwin") {
         fs.copyFile(path.join(filePath, "run_webos_emulator.sh"), path.join(filePath, "run_webos_emulator.command"), (err) => {
+          console.log(err)
         });
       }
       const shortcutsCreated = createDesktopShortcut({
@@ -4576,7 +4576,7 @@ class InstallManager {
         this.executeAnyCommand(`chmod -R 777 "${filePath}"`);
       }
       let cmdWin = this.componentMgr.getEnvVarValue("ComSpec");
-      const shortcutsCreated = createDesktopShortcut({
+       createDesktopShortcut({
         windows: {
           filePath: cmdWin ? cmdWin : "C:\\Windows\\system32\\cmd.exe",
           workingDirectory: filePath,
@@ -4613,7 +4613,7 @@ class InstallManager {
     // 
     else if (targetType == "TV_BEANVISER") {
 
-      const shortcutsCreated = createDesktopShortcut({
+      createDesktopShortcut({
         windows: {
           filePath: filePath,
           name: displayName,
@@ -4630,12 +4630,11 @@ class InstallManager {
         },
       });
 
-      if (shortcutsCreated) {
-      }
+
     }
     else if (targetType == "OSE_WFD") {
 
-      const shortcutsCreated = createDesktopShortcut({
+      createDesktopShortcut({
         windows: {
           filePath: filePath,
           name: displayName,
@@ -4654,14 +4653,13 @@ class InstallManager {
         },
       });
 
-      if (shortcutsCreated) {
-      }
+
     }
 
   }
 
   vbox_deleteInstance(instName) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       let runningInstance = await this.vbox_getRunningInstance();
       let commands = [];
       let vboxcmd = this.componentMgr.getVboxCommandPath();
@@ -4691,7 +4689,7 @@ class InstallManager {
     return new Promise((resolve, reject) => {
       let vboxcmd = this.componentMgr.getVboxCommandPath();
       let command = `${vboxcmd} list runningvms`;
-      cp.exec(command, (error, stdout, stderr) => {
+      cp.exec(command, (error, stdout) => {
 
         if (error) {
           reject(error);
@@ -4744,7 +4742,7 @@ class InstallManager {
           override: true
         }
       );
-      downloader.on('end', (downladInfo) => {
+      downloader.on('end', () => {
         delete this.downloaders[comp_uid]
         // logger.info(`Downloaded ${depInstallItem.displayName} from ${downladInfo.location}`)
         resolve();
@@ -4755,7 +4753,7 @@ class InstallManager {
 
       downloader.on('start', () => {
       });
-      downloader.on('retry', (attempt, retryOpts, err) => {
+      downloader.on('retry', () => {
         logger.info(`Retrying Download ${depInstallItem.displayName} from ${downladInfo.location}`)
       });
       downloader.on('resume', () => {
@@ -4826,7 +4824,7 @@ class InstallManager {
           override: true
         }
       );
-      downloader.on('end', (downladInfo) => {
+      downloader.on('end', () => {
         delete this.downloaders[comp_uid]
         logger.info(`Downloaded ${qItem.msgData.componentInfo.displayName} from ${url}`)
         resolve();
@@ -4837,7 +4835,7 @@ class InstallManager {
 
       downloader.on('start', () => {
       });
-      downloader.on('retry', (attempt, retryOpts, err) => {
+      downloader.on('retry', () => {
         logger.info(`Retrying Download ${qItem.msgData.componentInfo.displayName} from ${url}`)
       });
       downloader.on('resume', () => {
@@ -4942,12 +4940,12 @@ class InstallManager {
 
   }
 
-  executeCommand(command, comp_uid, depItem, msg) {
+  executeCommand(command) {
 
     return new Promise(async (resolve, reject) => {
       try {
         await exec(command)
-          .then((data) => {
+          .then(() => {
             resolve();
           })
           .catch((e) => {
@@ -4962,7 +4960,7 @@ class InstallManager {
   }
   executeAnyCommand(command, option) {
     return new Promise(async (resolve, reject) => {
-      cp.exec(command, option, (error, stdout, stderr) => {
+      cp.exec(command, option, (error, stdout) => {
 
         if (stdout) {
           if (
@@ -4976,20 +4974,20 @@ class InstallManager {
         if (error) {
           reject(error);
         }
-        if (stderr) {
-        }
+     
         resolve(stdout);
       });
     });
   }
 
   async executeSudoCommand(command, isSilent) {
+    logger.info("Requesting sudo permission to execute " + `${command}`)
     return new Promise(async (resolve, reject) => {
       let options = {
         name: "webOS Studio",
       };
       await sudoExec(command, options)
-        .then((error, stdout, stderr) => {
+        .then((error, stdout) => {
           // console.log(error, stdout, stderr);
           if (isSilent) {
             resolve()
@@ -5010,7 +5008,7 @@ class InstallManager {
           }
 
         });
-    }); ``
+    });
   }
   getFileId(jsonResp, version) {
     let osStr = os.platform().toLowerCase();

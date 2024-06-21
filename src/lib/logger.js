@@ -2,7 +2,7 @@ const vscode = require("vscode");
 
 var outputChannel;
 let extInit = false;
-let extInitMessage ="";
+let extInitMessage = "";
 
 var logLevel = 4; //( 1-error,2-error and warn, 3, error ,war, info, 4, - all)
 const setLogLevel = (logLvl) => {
@@ -68,7 +68,7 @@ function replaceAnsiColor(data) {
 }
 function error(data) {
   if (outputChannel && logLevel >= 1) {
-    if(logger.extInit == false){
+    if (logger.extInit == false) {
       var str = data.toString("utf8").replace(/Error|failed|ERR|Fail|Failure/gi, "");
       outputChannel.appendLine("[Warning] " + replaceAnsiColor(str));
     }
@@ -91,7 +91,8 @@ function log(data) {
 function info(data) {
   if (outputChannel && logLevel >= 3) {
     outputChannel.appendLine("[Info] " + replaceAnsiColor(data));
-    outputChannel.show(true);
+    /** Based on TVL feedback(default foucs) this is commented */
+    // outputChannel.show(true);
   }
 }
 

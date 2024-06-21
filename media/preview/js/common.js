@@ -21,7 +21,7 @@ class PeviewApp {
 
             }
         });
-        window.addEventListener('resize', (event) => {
+        window.addEventListener('resize', () => {
             if (this.currentRes == "FTW") {
                 this.setSize();
             }
@@ -63,7 +63,7 @@ class PeviewApp {
         // <p class="prv_toolBarCtxMenu_item" id="prv_menu_fitToWindows">Fit to Windows</p>
         // <p class="prv_toolBarCtxMenu_item" id="prv_menu_fhd">FHD - 1920x1080</p>
         // <p class="prv_toolBarCtxMenu_item" id="prv_menu_hd">HD - 1280x720</p>
-        document.getElementById("prv_menu_fitToWindows").onclick = (event) => {
+        document.getElementById("prv_menu_fitToWindows").onclick = () => {
             let iframeElement = document.getElementById("previewEle");
             iframeElement.classList.remove("previewEleTrans")
             this.setSize();
@@ -75,7 +75,7 @@ class PeviewApp {
             this.currentScale = 1
             iframeElement.style.transform = `scale(${this.currentScale})`;
         }
-        document.getElementById("prv_menu_fhd").onclick = (event) => {
+        document.getElementById("prv_menu_fhd").onclick = () => {
             let iframeElement = document.getElementById("previewEle");
             iframeElement.classList.remove("previewEleTrans")
             this.currentScale = 1
@@ -90,7 +90,7 @@ class PeviewApp {
 
 
         }
-        document.getElementById("prv_menu_hd").onclick = (event) => {
+        document.getElementById("prv_menu_hd").onclick = () => {
             let iframeElement = document.getElementById("previewEle");
             iframeElement.classList.remove("previewEleTrans")
             this.currentScale = 1
@@ -103,10 +103,10 @@ class PeviewApp {
             this.hideToolBarMenu();
             this.appScrollToCenter()
         }
-        document.getElementById("prv_menu_16-9").onclick = (event) => {
+        document.getElementById("prv_menu_16-9").onclick = () => {
             this.setResolutionByRatio(16, 9)
         }
-        document.getElementById("prv_menu_4-3").onclick = (event) => {
+        document.getElementById("prv_menu_4-3").onclick = () => {
             this.setResolutionByRatio(4, 3)
         }
 

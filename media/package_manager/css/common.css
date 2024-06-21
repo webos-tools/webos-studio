@@ -77,8 +77,8 @@
   overflow: hidden;
   align-items: center;
 }
-.hpbarOuter {
-}
+/* .hpbarOuter {
+} */
 .hpbar {
   width: 0px;
   height: 18px;

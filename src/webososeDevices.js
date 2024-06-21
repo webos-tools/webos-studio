@@ -3,14 +3,12 @@
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
-const path = require('path');
 const chokidar = require('chokidar');
 const { getDeviceList, getInstalledList, getRunningList, updateDeviceStatus, getSimulatorList, getProfile } = require('./lib/deviceUtils');
-const { logger } = require('./lib/logger');
+
 const { getSimulatorDirPath } = require('./lib/configUtils');
 const ga4Util = require('./ga4Util');
 
-const resourcesPath = path.resolve(__dirname, '../../resources');
 class DeviceProvider {
     _onDidChangeTreeData = new vscode.EventEmitter();
     onDidChangeTreeData = this._onDidChangeTreeData.event;
@@ -18,7 +16,7 @@ class DeviceProvider {
     constructor() { }
 
     refresh(element) {
-        ga4Util.mpGa4Event("RefreshKnownDevice", {category:"Commands"});
+        ga4Util.mpGa4Event("RefreshKnownDevice", { category: "Commands" });
         if (element) {
             this._onDidChangeTreeData.fire(element);
         } else {
@@ -44,18 +42,15 @@ class DeviceProvider {
     async _getDeviceList() {
         let array = [];
         let deviceList = await getDeviceList();
-        for(let i = 0 ;i<deviceList.length;i++){
+        for (let i = 0; i < deviceList.length; i++) {
             deviceList[i]["isOnline"] = await updateDeviceStatus(deviceList[i].name);
         }
-        // deviceList[0]["isOnline"] = true;4
         deviceList.forEach((device) => {
             let description = device.default ? "(default) " : "";
             description += `${device.username}@${device.ip}:${device.port}`
-            array.push(new Device(device.name, description,device["isOnline"]));
+            array.push(new Device(device.name, description, device["isOnline"]));
         });
-        // if(logger.extInit == false)
-        //     logger.logAny("webOS Studio Initialized successfully.");
-        // logger.extInit = true;
+
         return array;
     }
 
@@ -64,12 +59,12 @@ class DeviceProvider {
         if (!deviceName) {
             return;
         }
-     
+
         let isOnline = await updateDeviceStatus(deviceName);
-        if(!isOnline){
-         vscode.window.showErrorMessage(`Unaable to connect device '${deviceName}', device may offline `);
-         return[]  
-     }
+        if (!isOnline) {
+            vscode.window.showErrorMessage(`Unaable to connect device '${deviceName}', device may offline `);
+            return []
+        }
         if (label === 'Installed') {
             let installed = await getInstalledList(deviceName);
             installed.forEach((appId) => {
@@ -98,21 +93,15 @@ class DeviceProvider {
 class Device {
     contextValue = 'device';
 
-    constructor(deviceName, infoStr,isOnline) {
+    constructor(deviceName, infoStr, isOnline) {
         this.label = deviceName;
-        // this.label =isOnline?deviceName:{label:deviceName +" [Offline]",highlights:[[deviceName.length+1,deviceName.length+10]]};// deviceName
-        // this.description = infoStr;
-        this.description = isOnline?infoStr:"[Offline]"+infoStr;
-         
-        // this.children = [new AppList('Installed', deviceName), new AppList('Running', deviceName)];
-        this.children = isOnline?[new AppList('Installed', deviceName), new AppList('Running', deviceName)]:null;
+        this.description = isOnline ? infoStr : "[Offline]" + infoStr;
+        this.children = isOnline ? [new AppList('Installed', deviceName), new AppList('Running', deviceName)] : null;
         this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
+        this.iconPath = new vscode.ThemeIcon('device-desktop');
+
     }
 
-    iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'display.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'display.svg')
-    };
 }
 
 class AppList {
@@ -140,10 +129,11 @@ class Simulator {
     constructor(simulatorName, version) {
         this.label = simulatorName;
         this.version = version;
+        this.iconPath = new vscode.ThemeIcon('device-desktop');
     }
 
     refresh(element) {
-        ga4Util.mpGa4Event("RefreshSimulator", {category:"Commands"});
+        ga4Util.mpGa4Event("RefreshSimulator", { category: "Commands" });
         if (element) {
             this._onDidChangeTreeData.fire(element);
         } else {
@@ -151,14 +141,10 @@ class Simulator {
         }
     }
 
-    iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'simul.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'simul.svg')
-	};
 }
 class SimulatorProvider {
     _onDidChangeTreeData = new vscode.EventEmitter();
-	onDidChangeTreeData = this._onDidChangeTreeData.event;
+    onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     constructor() {
         if (simulatorDirPath) {

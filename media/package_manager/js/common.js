@@ -124,7 +124,7 @@ function hideProgressBarInSDKTab(comp_uid) {
   loaderContainer.style.display = "none";
 
 }
-function showRowInstallStatus(comp_uid, ver, preReqKey) {
+function showRowInstallStatus(comp_uid) {
   // set tick mark
   // set installed version text
   let check = document.getElementById(comp_uid + "_check");
@@ -378,7 +378,7 @@ function handleMsg() {
               "CHECKING"
             );
           } else {
-            showRowInstallStatus(message.data["row_uid"], message.data["ver"], message.data["key"]);
+            showRowInstallStatus(message.data["row_uid"]);
 
           }
 
@@ -531,7 +531,7 @@ class HProgressBar {
             this.clearIndefProgress();
             this.clearInstallProgress();
             this.showButtonArea(isComp);
-            this.startDownLadingProgess(val, msg, 0.5)
+            this.startDownLadingProgess(val, msg)
           }
 
         }
@@ -547,10 +547,10 @@ class HProgressBar {
     }
 
   }
-  pausePbar(msgData) {
+  pausePbar() {
     this.isPbarPaused = true;
   }
-  restartPbar(msgData) {
+  restartPbar() {
     this.isPbarPaused = false
   }
   hideButtonArea() {
@@ -599,7 +599,7 @@ class HProgressBar {
     }
 
   }
-  startDownLadingProgess(val, message, divder) {
+  startDownLadingProgess(val, message) {
     this.hpbar.setAttribute("class", "hpbar");
     this.hpbar.style.width = (val * .7) + "%";//(val * divder) + "%"
     this.setPBarMsg(message)

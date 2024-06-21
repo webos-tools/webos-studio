@@ -70,8 +70,11 @@
         "onCommand.apps.debugApp",
         "onCommand.apps.debugApp.ide",
         "onCommand.apps.debugApp.browser",
-        "onCommand.apps.lintApp",
-        "onCommand.apps.lintAppDisable",
+        "onCommand.apps.lintEnactApp",
+        "onCommand.apps.lintEnactAppDisable",
+        "onCommand:apps.import",
+        "onCommand.apps.lintWebApp",
+        "onCommand.apps.lintWebAppDisable",
         "onView:webosose.webososeDevices",
         "onView:webosose.installGlobal",
         "onView:webosose.installEmulator",
@@ -98,7 +101,11 @@
         "onCommand:webosose.explorermenu.debug",
         "onCommand:webosose.explorermenu.debug.ide",
         "onCommand:webosose.explorermenu.debug.browser",
-        "onCommand:ipkanalyze.start"
+        "onCommand:ipkanalyze.start",
+        "onCommand:logview.start",
+        "onCommand:logview.stop",
+        "onCommand:packagemanager.checkreleases"
+
     ],
     "main": "./extension.js",
     "contributes": {
@@ -109,9 +116,24 @@
                     "title": "webOS Studio",
                     "icon": "media/display.svg"
                 }
+            ],
+            "panel": [
+                {
+                    "id": "logview-panel",
+                    "title": "Log Viewer",
+                    "icon": "media/display.svg"
+                }
             ]
         },
         "views": {
+            "logview-panel": [
+                {
+                    "type": "webview",
+                    "id": "devicelogview",
+                    "name": "",
+                    "when": "webosose.showlogview==true"
+                }
+            ],
             "webosose-devices": [
                 {
                     "id": "apps",
@@ -157,6 +179,14 @@
             {
                 "command": "ipkanalyze.start",
                 "title": "webOS: IPK Analyzer"
+            },
+            {
+                "command": "logview.start",
+                "title": "webOS OSE: Start Log Viewer"
+            },
+            {
+                "command": "logview.stop",
+                "title": "webOS OSE: Stop Log Viewer"
             },
             {
                 "command": "webapp.reloadPreview",
@@ -377,6 +407,11 @@
                 "icon": "$(add)"
             },
             {
+                "command": "apps.import",
+                "title": "Import",
+                "icon": "$(arrow-down)"
+            },
+            {
                 "command": "apps.refreshList",
                 "title": "Reload List",
                 "icon": "$(refresh)"
@@ -424,11 +459,19 @@
                 "title": "Chrome Inspector"
             },
             {
-                "command": "apps.lintApp",
+                "command": "apps.lintEnactApp",
                 "title": "Run Lint"
             },
             {
-                "command": "apps.lintAppDisable",
+                "command": "apps.lintEnactAppDisable",
+                "title": "Clear Lint"
+            },
+            {
+                "command": "apps.lintWebApp",
+                "title": "Run Lint"
+            },
+            {
+                "command": "apps.lintWebAppDisable",
                 "title": "Clear Lint"
             },
             {
@@ -466,6 +509,10 @@
             {
                 "command": "quickLauncher.changeLog",
                 "title": "Change Log"
+            },
+            {
+                "command": "packagemanager.checkreleases",
+                "title": "webOS: Auto Update - Maintainer Script- Update Package Manager configuration"
             }
         ],
         "menus": {
@@ -482,6 +529,11 @@
                 },
                 {
                     "command": "apps.projectWizard",
+                    "when": "view == apps",
+                    "group": "navigation"
+                },
+                {
+                    "command": "apps.import",
                     "when": "view == apps",
                     "group": "navigation"
                 },
@@ -539,12 +591,12 @@
                 },
                 {
                     "submenu": "webososeDevices.runApp",
-                    "when": "webos.profile == 'OSE' && (view == webososeDevices && viewItem == installed || viewItem == running)",
+                    "when": "webos.profile == 'OSE' && view == webososeDevices && viewItem == installed",
                     "group": "app1@1"
                 },
                 {
                     "command": "webososeDevices.runApp",
-                    "when": "webos.profile == 'TV' && (view == webososeDevices && viewItem == installed || viewItem == running)",
+                    "when": "webos.profile == 'TV' && view == webososeDevices && viewItem == installed",
                     "group": "app1@1"
                 },
                 {
@@ -554,12 +606,12 @@
                 },
                 {
                     "submenu": "webososeDevices.closeApp",
-                    "when": "webos.profile == 'OSE' && (view == webososeDevices && viewItem == running)",
+                    "when": "webos.profile == 'OSE' && view == webososeDevices && viewItem == running",
                     "group": "app2@3"
                 },
                 {
                     "command": "webososeDevices.closeApp",
-                    "when": "webos.profile == 'TV' && (view == webososeDevices && viewItem == running)",
+                    "when": "webos.profile == 'TV' && view == webososeDevices && viewItem == running",
                     "group": "app2@3"
                 },
                 {
@@ -608,13 +660,23 @@
                     "group": "app2@2"
                 },
                 {
-                    "command": "apps.lintApp",
+                    "command": "apps.lintEnactApp",
                     "when": "view == apps && viewItem == enact-app",
                     "group": "app2@2"
                 },
                 {
-                    "command": "apps.lintAppDisable",
+                    "command": "apps.lintEnactAppDisable",
                     "when": "view == apps && viewItem == enact-app",
+                    "group": "app2@2"
+                },
+                {
+                    "command": "apps.lintWebApp",
+                    "when": "view == apps && viewItem == web-app",
+                    "group": "app2@2"
+                },
+                {
+                    "command": "apps.lintWebAppDisable",
+                    "when": "view == apps && viewItem == web-app",
                     "group": "app2@2"
                 },
                 {
@@ -851,6 +913,10 @@
                     "when": "false"
                 },
                 {
+                    "command": "apps.import",
+                    "when": "false"
+                },
+                {
                     "command": "apps.installApp",
                     "when": "false"
                 },
@@ -887,11 +953,19 @@
                     "when": "false"
                 },
                 {
-                    "command": "apps.lintApp",
+                    "command": "apps.lintEnactApp",
                     "when": "false"
                 },
                 {
-                    "command": "apps.lintAppDisable",
+                    "command": "apps.lintEnactAppDisable",
+                    "when": "false"
+                },
+                {
+                    "command": "apps.lintWebApp",
+                    "when": "false"
+                },
+                {
+                    "command": "apps.lintWebAppDisable",
                     "when": "false"
                 },
                 {
@@ -905,6 +979,10 @@
                 {
                     "command": "webosose.previewApp",
                     "when": "false"
+                },
+                {
+                    "command": "packagemanager.checkreleases",
+                    "when": "webosose.showReleaseChecker==true"
                 }
             ],
             "webososeDevices.runApp": [
@@ -1031,9 +1109,11 @@
         "pack": "vsce package"
     },
     "dependencies": {
+        "@typescript-eslint/parser": "4.33.0",
         "7zip-min": "^1.4.4",
         "@vscode/codicons": "0.0.20",
         "ar-async": "0.1.4",
+        "archiver": "^7.0.0",
         "catalogist": "1.0.4",
         "chalk": "^4.1.0",
         "check-disk-space": "^3.3.1",
@@ -1042,14 +1122,19 @@
         "create-desktop-shortcuts": "^1.10.1",
         "decompress": "^4.2.1",
         "default-gateway": "6.0.3",
+        "eslint-plugin-html": "^7.1.0",
+        "eslint-plugin-import": "^2.29.0",
         "execa": "^5.1.1",
         "express": "^4.18.1",
         "fast-folder-size": "1.7.0",
+        "fs": "^0.0.1-security",
+        "fs-extra": "^11.1.1",
         "get-folder-size": "2.0.1",
         "node-downloader-helper": "^2.1.9",
         "node-fetch": "^2.6.9",
         "got": "^11.8.6",
         "node-gtag4": "^0.1.2",
+        "node-stream-zip": "^1.15.0",
         "node-watch": "^0.6.2",
         "portfinder": "^1.0.28",
         "request": "^2.88.2",
@@ -1057,9 +1142,11 @@
         "semver": "^7.3.8",
         "showdown": "^2.1.0",
         "socket.io": "^4.6.1",
+        "ssh2": "^1.15.0",
         "sudo-prompt-alt": "^9.3.0",
         "tcp-port-used": "^1.0.2",
-        "tree-kill": "^1.2.2"
+        "tree-kill": "^1.2.2",
+        "typescript": "4.4.4"
     },
     "repository": {
         "type": "git",

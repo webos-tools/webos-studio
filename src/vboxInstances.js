@@ -31,7 +31,7 @@ class VboxInstanceProvider {
         let array = [];
         let instanceList = await getInstanceList();
         instanceList.forEach((instance) => {
-            array.push(new VboxInstance(instance.name, instance.uuid, instance.isRunning,instance.attachedVMDK,instance.state)); // type is valid and its available
+            array.push(new VboxInstance(instance.name, instance.uuid, instance.isRunning, instance.attachedVMDK, instance.state, instance.configFile)); // type is valid and its available
         });
         if (array.length > 0) {
             return array;
@@ -47,7 +47,7 @@ class VboxInstanceProvider {
 class VboxInstance {
     contextValue = 'vboxInsance';
 
-    constructor(instanceName, uuid, isRunning,attachedVMDK, state) {
+    constructor(instanceName, uuid, isRunning, attachedVMDK, state, configFile) {
         this.label = instanceName;
         this.description = isRunning ? "Running" : "";
         this.isRunning = isRunning;
@@ -55,6 +55,7 @@ class VboxInstance {
         this.collapsibleState = vscode.TreeItemCollapsibleState.None;
         this.attachedVMDK = attachedVMDK;
         this.state = state;
+        this.configFile = configFile;
     }
 
     iconPath = {

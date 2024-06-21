@@ -11,6 +11,8 @@ const { getRunningInstance } = require('./lib/vboxUtils');
 const fs = require('fs')
 const { logger } = require('./lib/logger');
 const ga4Util = require('./ga4Util');
+const path = require("path")
+const { spawn } = require('child_process');
 const wemulIntegration = true;
 class InstanceWebviewProvider {
 
@@ -52,7 +54,7 @@ class InstanceWebviewProvider {
             ]
         };
 
-     
+
 
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
         //   this.sendIcons(webviewView.webview);
@@ -67,13 +69,13 @@ class InstanceWebviewProvider {
                     }
                 case 'addInstance':
                     {
-                        ga4Util.mpGa4Event("EmulatorManager_add", {category:"Commands", action:"Add instance"});
+                        ga4Util.mpGa4Event("EmulatorManager_add", { category: "Commands", action: "Add instance" });
                         this.addNewInstance(msg.data)
                         break;
                     }
                 case 'updateInstance':
                     {
-                        ga4Util.mpGa4Event("EmulatorManager_update", {category:"Commands", action:"Update instance"});
+                        ga4Util.mpGa4Event("EmulatorManager_update", { category: "Commands", action: "Update instance" });
                         this.updateInstance(msg.data)
                         break;
                     }
@@ -84,25 +86,25 @@ class InstanceWebviewProvider {
                     }
                 case 'launchInstance':
                     {
-                        ga4Util.mpGa4Event("EmulatorManager_launch", {category:"Commands", action:"Launch instance"});
+                        ga4Util.mpGa4Event("EmulatorManager_launch", { category: "Commands", action: "Launch instance" });
                         this.launchSelectedInstance(msg.data)
                         break;
                     }
                 case 'deleteInstance':
                     {
-                        ga4Util.mpGa4Event("EmulatorManager_delete", {category:"Commands", action:"Delete instance"});
+                        ga4Util.mpGa4Event("EmulatorManager_delete", { category: "Commands", action: "Delete instance" });
                         this.deleteInstance(msg.data)
                         break;
                     }
                 case 'editInstance':
                     {
-                        ga4Util.mpGa4Event("EmulatorManager_edit", {category:"Commands", action:"Edit instance"});
+                        ga4Util.mpGa4Event("EmulatorManager_edit", { category: "Commands", action: "Edit instance" });
                         this.editInstance(msg.data)
                         break;
                     }
             }
         });
-        
+
     }
     showMessge(data) {
         if (data.isError) {
@@ -120,7 +122,7 @@ class InstanceWebviewProvider {
                     this.filteredInstanceList = [];
                     await this.getSupportedInstance(data).then(() => {
                         this._view.webview.postMessage({ command: 'loadInstnaceList', "data": { "filterdInsance": this.filteredInstanceList, allInstance: data } });
-                    }).catch((e)=>{
+                    }).catch((e) => {
                         console.log(e)
                     })
                 })
@@ -410,6 +412,30 @@ class InstanceWebviewProvider {
                 });
             });
     }
+    getTVEmulatorStartCommand(configFile) {
+
+        let osStr = os.platform().toLowerCase();
+        let prg = "";
+        let command = "";
+        switch (osStr) {
+            case "darwin":
+                prg = "run_webos_emulator.command";
+                command = path.join(path.dirname(configFile), prg);
+                break;
+            case "linux":
+                prg = "LG_webOS_TV_Emulator.sh";
+                // command = "/usr/bin/gnome-terminal --sh" + `"${path.join(path.dirname(configFile), prg)}"`
+                command = path.join(path.dirname(configFile), prg);
+                break;
+            case "win32":
+                prg = "LG_webOS_TV_Emulator.exe";
+                command = path.join(path.dirname(configFile), prg);
+                break;
+
+        }
+        return command;
+
+    }
 
     async launchSelectedInstance(data) {
         await getRunningInstance()
@@ -426,27 +452,55 @@ class InstanceWebviewProvider {
                         .then(async (answer) => {
                             if (answer === "Yes") {
                                 if (wemulIntegration) {
-                                    commands = [
-                                        `${this.webos_emulator} -vd ${runninguuid} -k`,
-                                        `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                                        `${this.webos_emulator} -vd ${data.uuid} -s`,
-                                    ]
+
+                                    if (data.instType == "TV") {
+                                        commands = [
+                                            `VBoxManage controlvm ${runninguuid} pause`,
+                                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                                            `VBoxManage controlvm  ${runninguuid} poweroff`,
+                                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+
+                                        ]
+                                    } else {
+                                        commands = [
+                                            `${this.webos_emulator} -vd ${runninguuid} -k`,
+                                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                                            `${this.webos_emulator} -vd ${data.uuid} -s`,
+                                        ]
+                                    }
+
                                 }
                                 else {
-                                    commands = [
-                                        `VBoxManage controlvm ${runninguuid} pause`,
-                                        `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                                        `VBoxManage controlvm  ${runninguuid} poweroff`,
-                                        `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                                        `vboxmanage startvm ${data.uuid}`,
-                                    ]
+                                    if (data.instType == "TV") {
+                                        commands = [
+                                            `VBoxManage controlvm ${runninguuid} pause`,
+                                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                                            `VBoxManage controlvm  ${runninguuid} poweroff`,
+                                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+
+                                        ]
+                                    } else {
+                                        commands = [
+                                            `VBoxManage controlvm ${runninguuid} pause`,
+                                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                                            `VBoxManage controlvm  ${runninguuid} poweroff`,
+                                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                                            `vboxmanage startvm ${data.uuid}`,
+                                        ]
+                                    }
+
                                 }
                                 return await vscode.window.withProgress({
                                     location: vscode.ProgressLocation.Notification,
                                 }, async (progress) => {
                                     progress.report({ increment: 20, message: `Launching Instance ${data.instName} ...` });
                                     await this.exec_commands(commands)
-                                        .then(() => {
+                                        .then(async () => {
+                                            if (data.instType == "TV") {
+                                                spawn(`${this.getTVEmulatorStartCommand(data.configFile)}`,
+                                                    { stdio: 'ignore', detached: true }).unref()
+                                                await new Promise(resolve => setTimeout(resolve, 20000));
+                                            }
                                             progress.report({ increment: 40, message: `Launching Instance ${data.instName}  ...` });
                                             this.getInstalledInstanceListAndSendToWebview();
                                         }).catch((err) => {
@@ -460,24 +514,49 @@ class InstanceWebviewProvider {
                 } else {
                     // no running instance
                     if (wemulIntegration) {
-                        commands = [
-                            `${this.webos_emulator} -vd ${data.uuid} -s`,
-                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                        ]
+                        if (data.instType == "TV") {
+                            spawn(`${this.getTVEmulatorStartCommand(data.configFile)}`,
+                                { stdio: 'ignore', detached: true }).unref()
+
+                            commands = [
+                                `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                            ]
+                        } else {
+                            commands = [
+                                `${this.webos_emulator} -vd ${data.uuid} -s`,
+                                `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                            ]
+                        }
+
                     } else {
-                        commands = [
-                            `vboxmanage startvm ${data.uuid}`,
-                            `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
-                        ]
+                        if (data.instType == "TV") {
+                            spawn(`${this.getTVEmulatorStartCommand(data.configFile)}`,
+                                { stdio: 'ignore', detached: true }).unref()
+
+                            commands = [
+                                `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                            ]
+                        } else {
+                            commands = [
+                                `vboxmanage startvm ${data.uuid}`,
+                                `ping -${os.type() == "Windows_NT" ? "n" : "c"} 5 localhost `,
+                            ]
+                        }
+
                     }
                     return await vscode.window.withProgress({
                         location: vscode.ProgressLocation.Notification,
                     }, async (progress) => {
                         progress.report({ increment: 10, message: `Launching Instance ${data.instName} ...` });
+                        if (data.instType == "TV") {
+                            await new Promise(resolve => setTimeout(resolve, 12000));
+                        }
                         await this.exec_commands(commands)
-                            .then(() => {
+                            .then(async () => {
+
                                 progress.report({ increment: 40, message: `Launching Instance ${data.instName}  ...` });
                                 this.getInstalledInstanceListAndSendToWebview();
+                                progress.report({ increment: 20, message: `Launching Instance1 ${data.instName}  ...` });
                             }).catch((err) => {
                                 vscode.window.showErrorMessage("Error Launching Instance")
                                 console.log("error", err);
@@ -609,9 +688,9 @@ class InstanceWebviewProvider {
             logger.run(commandstring)
             logger.log("------------------------------------------------")
             exec(commandstring, (error, stdout, stderr) => {
-                if(stdout){
+                if (stdout) {
                     if (!commandstring.includes("showvminfo")) {
-                        logger.log(stdout )
+                        logger.log(stdout)
                     }
                 }
                 if (error) {

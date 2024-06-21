@@ -37,16 +37,16 @@
     cursor: default;
     
   }
- .treegrid tbody {
+ /* .treegrid tbody {
     
-  }  
+  }   */
   
-  .treegrid-col1 {
+  /* .treegrid-col1 {
   }
   .treegrid-col2
   .treegrid-col3
   .treegrid-col4 {
-  } 
+  }  */
   
   .treegrid th {
     text-align: left;
@@ -138,12 +138,12 @@
     transform: rotate(90deg);
   }
   
-  .treegrid tr[aria-expanded]:focus > td:first-child::before,
+  /* .treegrid tr[aria-expanded]:focus > td:first-child::before,
   .treegrid tr[aria-expanded] > td:focus:first-child::before,
   .treegrid tr:focus > td[aria-expanded]:first-child::before,
   .treegrid tr > td[aria-expanded]:focus:first-child::before {
    
-  }
+  } */
 
   .loader {
     border: 4px solid #f3f3f3;

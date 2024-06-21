@@ -14,7 +14,7 @@ const { logger } = require('./logger');
 
 
 function _execAsync(cmd, option, next) {
-    logger.run(cmd )
+    logger.run(cmd)
     // +" "+ typeof option == "object"?JSON.stringify(option):""
     logger.log("------------------------------------------------")
     return new Promise((resolve, reject) => {
@@ -26,13 +26,13 @@ function _execAsync(cmd, option, next) {
         }
 
         exec(cmd, execOption, (err, stdout, stderr) => {
-            if(stdout){
+            if (stdout) {
                 logger.log(stdout)
             }
-            if(stderr){
+            if (stderr) {
                 logger.error(stderr)
             }
-           
+
 
             if (err) {
                 logger.error(err)
@@ -53,9 +53,9 @@ function _execAsync(cmd, option, next) {
         })
     })
 }
-
-function _execAsyncLauncher(cmd, option, next) {
-    logger.run(cmd )
+function _lintExecAsync(cmd, option, next) {
+    logger.run(cmd)
+    // +" "+ typeof option == "object"?JSON.stringify(option):""
     logger.log("------------------------------------------------")
     return new Promise((resolve, reject) => {
         let execOption = {};
@@ -66,10 +66,44 @@ function _execAsyncLauncher(cmd, option, next) {
         }
 
         exec(cmd, execOption, (err, stdout, stderr) => {
-            if(stdout){
+            if (stderr) {
+                logger.error(stderr)
+            }
+
+            if (stdout) {
                 logger.log(stdout)
             }
-            if(stderr){
+            
+            if (stdout== null && err) {
+                logger.error(err)
+                reject(err);
+            } else {
+                if (next) {
+                    next(stdout, resolve, reject);
+                } else {
+                    resolve(stdout);
+                }
+            }
+        })
+    })
+}
+
+function _execAsyncLauncher(cmd, option, next) {
+    logger.run(cmd)
+    logger.log("------------------------------------------------")
+    return new Promise((resolve, reject) => {
+        let execOption = {};
+        if (typeof option == "function") {
+            next = option;
+        } else if (typeof option == "object") {
+            execOption = option;
+        }
+
+        exec(cmd, execOption, (err, stdout, stderr) => {
+            if (stdout) {
+                logger.log(stdout)
+            }
+            if (stderr) {
                 logger.error(stderr)
             }
             if (err) {
@@ -91,11 +125,11 @@ function _execAsyncLauncher(cmd, option, next) {
 }
 
 function _execServer(cmd, params) {
-    logger.run(cmd +" "+ params)
+    logger.run(cmd + " " + params)
     logger.log("------------------------------------------------")
-    let errMsg ="";
+    let errMsg = "";
     return new Promise((resolve, reject) => {
-      
+
         const myArr = params.split(" ");
         var child = spawn(cmd, myArr, {
             // @ts-ignore
@@ -120,21 +154,21 @@ function _execServer(cmd, params) {
         });
         // @ts-ignore
         child.stderr.on('data', (data) => {
-            errMsg = errMsg+data.toString();
+            errMsg = errMsg + data.toString();
             reject(data);
         });
         child.on('error', (err) => {
-          
+
             logger.error(err)
             console.error('Failed to start subprocess.');
             console.error(err);
             reject(err);
         });
         child.on('close', (code, signal) => {
-        if(errMsg !=""){
-            logger.warn(errMsg)
+            if (errMsg != "") {
+                logger.warn(errMsg)
 
-        }
+            }
             console.log(
                 `child process terminated due to receipt of signal ${signal}`);
         });
@@ -142,32 +176,32 @@ function _execServer(cmd, params) {
 }
 
 function _execPreviewServer(cmd, params, cwd, port) {
- 
-    logger.run(cmd +" "+params)
+
+    logger.run(cmd + " " + params)
     logger.log("------------------------------------------------")
     return new Promise((resolve, reject) => {
 
         const myArr = params.split(" ");
 
         var sysIP = getNWAdderss(os.networkInterfaces())
-        
+
         var child = spawn(cmd, myArr, {
             // @ts-ignore
             encoding: 'utf8',
             cwd: cwd,
             shell: true,
         });
-       
-          
+
+
         // @ts-ignore
         child.stdout.on('data', (data) => {
-          
+
             logger.log(data);
-          
+
             tcpPortUsed.check(port, sysIP)
                 .then(() => {
-                  
-                    resolve(["http://" + sysIP + ":" + port, child,data.toString()]);
+
+                    resolve(["http://" + sysIP + ":" + port, child, data.toString()]);
                 }, function (err) {
                     console.log('Error on port status:', err.message);
                 });
@@ -176,11 +210,11 @@ function _execPreviewServer(cmd, params, cwd, port) {
         // @ts-ignore
         child.stderr.on('data', (data) => {
             logger.warn(data);
-            console.error("Auto reload data on error ->",data);
+            console.error("Auto reload data on error ->", data);
             // reject(data);
         });
         child.on('error', (err) => {
-            logger.error(err);;
+            logger.error(err);
             console.error('Failed to start subprocess.', err);
             reject(err);
         });
@@ -276,11 +310,9 @@ async function pack(appDir, outDir, minify, serviceDir) {
     })
 }
 async function push(device, srcDir, destDir) {
-      let cmd = `${path.join(await getCliPath(), 'ares-push')} --device "${device}"  "${srcDir}"   "${destDir}"  `;
-      return _execAsync(cmd, (stdout, resolve, reject) => {
-        if (stdout.includes('Push:')) {
+    let cmd = `${path.join(await getCliPath(), 'ares-push')} --device "${device}"  "${srcDir}"   "${destDir}"  `;
+    return _execAsync(cmd, (stdout, resolve, reject) => {
         
-        }
         if (stdout.includes('Success')) {
             resolve("");
         } else {
@@ -323,16 +355,16 @@ async function install(appFilePath, device) {
     })
 }
 async function installListFull(device) {
- 
+
     let cmd = `${path.join(await getCliPath(), 'ares-install')}`;
 
     if (device) {
         cmd += ` -d "${device}" -l`;
     }
 
-    return _execAsync(cmd, (stdout, resolve, reject) => {
+    return _execAsync(cmd, (stdout, resolve) => {
         resolve(stdout);
-       
+
     })
 }
 
@@ -391,10 +423,10 @@ async function relaunch(appId, device, params, dp) {
         return Promise.reject('ares-launch: arguments are not fulfilled.')
     }
     let closeCmd = `${path.join(await getCliPath(), 'ares-launch')} -c ${appId} -d "${device}" -dp "${dp}"`;
-  
+
     let paramsStr = params ? `-p "${JSON.stringify(params).replace(/"/g, "'")}"` : "";
     let launchCmd = `${path.join(await getCliPath(), 'ares-launch')} ${appId} -d "${device}" ${paramsStr} -dp "${dp}"`;
-    let cmd =closeCmd+" && "+launchCmd
+    let cmd = closeCmd + " && " + launchCmd
     return _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout.includes('Launched application')) {
             resolve();
@@ -447,17 +479,23 @@ async function server(appDir, isEnact, port) {
     }
 }
 
-async function getLintResults(appDir, isEnact) {
-    if (!appDir) {
-        return Promise.reject('enact lint: arguments are not fulfilled.')
+async function getLintResults(appDir, lintAppPath, extensionBasePath, appType) {
+    if (!appDir && !lintAppPath) {
+        return Promise.reject('Lint arguments are not fulfilled.')
     }
     let cmd = "";
-    if (isEnact) {
+    if (appType === "EnactApp") {
         cmd = "enact lint .";
         // cmd = `${path.join(appDir, 'enact lint .')}`;
         let param = appDir;
-        return _execAsync(cmd, { cwd: param });
-
+        // return _execAsync(cmd, { cwd: param });
+        return _lintExecAsync(cmd, { cwd: param });
+        
+    } else if (appType === "WebApp") {
+        console.log("Executing lint for web app")
+        cmd = `eslint ${lintAppPath} --ext .js,.html`
+        // return await _execAsync(cmd, { cwd: extensionBasePath })
+        return await _lintExecAsync(cmd, { cwd: extensionBasePath })
     }
     return Promise.reject('Lint is not supported for type of app.');
 }
@@ -487,7 +525,7 @@ async function config(isSet, profile) {
             } else {
                 reject('ares-config -c: failed!');
             }
-        })   
+        })
     }
     if (!profile) {
         return Promise.reject('ares-config: arguments are not fulfilled.')
@@ -520,7 +558,7 @@ async function openBrowser(url) {
         args = args.concat(['--new', '--args']);
     }
     args = args.concat([url]);
-    logger.run(info[0] +" "+args)
+    logger.run(info[0] + " " + args)
     logger.log("------------------------------------------------")
     spawn(info[0], args);
 }
@@ -643,10 +681,10 @@ async function isInstalledService(serviceId, device) {
     const profile = await config(false);
     const command = (profile === "tv") ? "ares-novacom" : "ares-shell";
     let cmd = command + ' --run "test -d /media/developer/apps/usr/palm/services/' + serviceId + '  2>&1 > /dev/null  && echo 1 || echo 0" -d ' + addQuotes(device);
-  
+
     return await _execAsync(cmd, (stdout, resolve, reject) => {
         if (stdout) {
-            let output =stdout.split(/\r?\n/);
+            let output = stdout.split(/\r?\n/);
             output = output.filter(result => result !== '' && !result.includes('[Info]'));
             stdout = parseInt(output);
             resolve(stdout);
@@ -676,7 +714,7 @@ async function launchSimulator(appDir, version, params) {
     }
 
     const terminalName = 'webOS TV Simulator';
-    const cliPath = await getCliPath();
+    
     try {
         const terminal = vscode.window.createTerminal(terminalName, os.type() == "Windows_NT" ? "${env:windir}\\System32\\cmd.exe" : null);
         const paramsStr = params ? `-p "${JSON.stringify(params).replace(/"/g, "'")}"` : "";
@@ -744,7 +782,7 @@ module.exports = {
     launch: launch,
     launchRunning: launchRunning,
     launchClose: launchClose,
-    relaunch:relaunch,
+    relaunch: relaunch,
     server: server,
     inspect: inspect,
     openBrowser: openBrowser,
@@ -758,9 +796,9 @@ module.exports = {
     isInstalledService: isInstalledService,
     addEmulatorLauncher: addEmulatorLauncher,
     getLintResults: getLintResults,
-    checkDeviceOnline:checkDeviceOnline,
-    push:push,
-    installListFull:installListFull,
+    checkDeviceOnline: checkDeviceOnline,
+    push: push,
+    installListFull: installListFull,
     launchSimulator: launchSimulator,
     novacomGetkey: novacomGetkey,
     config: config,

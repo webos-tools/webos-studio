@@ -11,12 +11,14 @@
                 "type": "tv-simulator",
                 "displayName": "Simulator",
                 "subDirName": "Simulator"
-            },           
+            },
             {
                 "type": "tv-emulator",
                 "displayName": "Emulator",
                 "subDirName": "Emulator"
             }
+          
+           
         ],
       
         "tv-emulator": [
@@ -125,7 +127,7 @@
         ],
         "tv-simulator": [
             {
-                "comp_uid": "tv_simulator_4",
+                "comp_uid": "tv_simulator_1",
                 "sortOrder":1,
                 "subDirName": "webOS_TV_6.0_Simulator_1.4.1",
                 "displayName": "webOS TV 6.0 Simulator",
@@ -144,7 +146,7 @@
                 "uninstallMethod": "TV_SIMULATOR_UNINSTALL_FORALL"
             },
             {
-                "comp_uid": "tv_simulator_3",
+                "comp_uid": "tv_simulator_2",
                 "sortOrder":2,
                 "subDirName": "webOS_TV_22_Simulator_1.4.1",
                 "displayName": "webOS TV 22 Simulator",
@@ -164,7 +166,7 @@
             },
            
             {
-                "comp_uid": "tv_simulator_2",
+                "comp_uid": "tv_simulator_3",
                 "sortOrder":3,
                 "subDirName": "webOS_TV_23_Simulator_1.4.1",
                 "displayName": "webOS TV 23 Simulator",
@@ -183,7 +185,7 @@
                 "uninstallMethod": "TV_SIMULATOR_UNINSTALL_FORALL"
             },
             {
-                "comp_uid": "tv_simulator_1",
+                "comp_uid": "tv_simulator_4",
                 "sortOrder":4,
                 "subDirName": "webOS_TV_24_Simulator_1.4.1",
                 "displayName": "webOS TV 24 Simulator",
@@ -246,7 +248,7 @@
       
         "ose-emulator": [
             {
-                "comp_uid": "ose_emulator_7",
+                "comp_uid": "ose_emulator_1",
                 "sortOrder":1,
                 "subDirName": "v2.20.0",
                 "displayName": "webOS OSE Emulator",
@@ -263,7 +265,7 @@
                 "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL"
             },
             {
-                "comp_uid": "ose_emulator_6",
+                "comp_uid": "ose_emulator_2",
                 "sortOrder":2,
                 "subDirName": "v2.20.1",
                 "displayName": "webOS OSE Emulator",
@@ -280,7 +282,7 @@
                 "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL"
             },
             {
-                "comp_uid": "ose_emulator_5",
+                "comp_uid": "ose_emulator_3",
                 "sortOrder":3,
                 "subDirName": "v2.21.0",
                 "displayName": "webOS OSE Emulator",
@@ -316,7 +318,7 @@
             },
           
             {
-                "comp_uid": "ose_emulator_3",
+                "comp_uid": "ose_emulator_5",
                 "sortOrder":5,
                 "subDirName": "v2.23.0",
                 "displayName": "webOS OSE Emulator",
@@ -333,7 +335,7 @@
                 "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL"
             },
             {
-                "comp_uid": "ose_emulator_2",
+                "comp_uid": "ose_emulator_6",
                 "sortOrder":6,
                 "subDirName": "v2.24.0",
                 "displayName": "webOS OSE Emulator",
@@ -350,7 +352,7 @@
                 "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL"
             },
             {
-                "comp_uid": "ose_emulator_1",
+                "comp_uid": "ose_emulator_7",
                 "sortOrder":7,
                 "subDirName": "v2.25.0",
                 "displayName": "webOS OSE Emulator",

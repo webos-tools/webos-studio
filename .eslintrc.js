@@ -11,6 +11,7 @@ module.exports = {
         "eslint:recommended"
     ],
     "plugins": [
+        "eslint-plugin-html",
         "import"
     ],
     "parser" : "@typescript-eslint/parser",
@@ -29,6 +30,8 @@ module.exports = {
         "no-unused-vars": "warn",
         "constructor-super": "warn",
         "valid-typeof": "warn"
+      
+
     },
     "globals": {
         "acquireVsCodeApi" : false,

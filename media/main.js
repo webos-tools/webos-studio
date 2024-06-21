@@ -59,7 +59,7 @@
             }
         }
         onClikPlay(event) {
-            vscode.postMessage({ command: 'launchInstance', data: { "uuid": event.currentTarget.getAttribute("uuid"), "instName": event.currentTarget.getAttribute("instName") } });
+            vscode.postMessage({ command: 'launchInstance', data: { "uuid": event.currentTarget.getAttribute("uuid"), "instName": event.currentTarget.getAttribute("instName"), "configFile": atob(event.currentTarget.getAttribute("configFile")), instType: event.currentTarget.getAttribute("instType") } });
         }
         onClikDelete(event) {
             vscode.postMessage({ command: 'deleteInstance', data: { "isRunning": event.currentTarget.getAttribute("isRunning"), "uuid": event.currentTarget.getAttribute("uuid"), "instName": event.currentTarget.getAttribute("instName") } });
@@ -175,23 +175,23 @@
                     row.innerHTML = `
                 <div class="InstlistItemTitleContainer">
                     <div class="InstlistItemTitle">
-                        <i  style="padding-right:5px"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
+                        <i  style="padding-right:5px;vertical-align: bottom;"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
                     </div>
                  </div>
                 <div class ="InstlistItemIcons">
-                <div title="Launch" class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowPlayIcon codicon codicon-play"></i></div>
+                <div title="Launch" class ="InstlistItemIcon"><i instType ="TV" configFile ="${btoa(this.instListData[i].configFile)}" uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowPlayIcon codicon codicon-play"></i></div>
                 </div>
                 `
                 } else {
                     row.innerHTML = `
                 <div class="InstlistItemTitleContainer">
                     <div class="InstlistItemTitle">
-                        <i  style="padding-right:5px"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
+                        <i  style="padding-right:5px; vertical-align: bottom;"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
                     </div>
                  </div>
                 <div class ="InstlistItemIcons">
                 
-                <div title="Launch" class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowPlayIcon codicon codicon-play"></i></div> 
+                <div title="Launch" class ="InstlistItemIcon"><i instType ="OSE" configFile ="${btoa(this.instListData[i].configFile)}" uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowPlayIcon codicon codicon-play"></i></div> 
                 <div title="Edit" class ="InstlistItemIcon"><i uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowEditIcon codicon codicon-edit"></i></div>    
                 
                     <div title="Delete" class ="InstlistItemIcon"> <i  isRunning= ${this.instListData[i].isRunning} uuid ="${this.instListData[i].uuid}" instName ="${this.instListData[i].label}" class="rowDelIcon codicon codicon-trash"></i></div>
@@ -257,7 +257,6 @@
             document.getElementById("defaultValueContainer").style.display = "block"
 
             document.getElementById("defaultValues").innerHTML = `<div style= "margin-top:-5px" class ="defaultContainerHeader"><i style="padding-right:5px" uuid class="rowPlayIcon codicon codicon-info"></i><span style="vertical-align:top">Other default values </span></div> <hr>  ${defatultValueArray.join("<br>")}`;
-            // document.getElementById("defaultValues").innerHTML = "<b>Default Values </b><br>" + defatultValueArray.join("<br>");
         }
         loadAddInstanceLayoutForUpdate(data) {
             this.replaceFileInput();
@@ -338,9 +337,6 @@
                         document.getElementById("listLayout").style.display = "block";
                         document.getElementById("welcomeLayout").style.display = "none";
                         document.getElementById("addLayout").style.display = "none";
-                        // this.listLayoutEle.style.display = "block";
-                        // this.welcomeLayoutEle.style.display = "none"
-                        // this.addLayoutEle.style.display = "none";
                         document.getElementById("listLoaderProgress").style.display = "flex"
                         webviewController.loadListLayout(message.data);
                         document.getElementById("listLoaderProgress").style.display = "none"

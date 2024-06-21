@@ -1,0 +1,314 @@
+body {
+  overflow-y: scroll;
+  overflow-x: auto;
+}
+
+.outerContainer {
+  position: absolute;
+  display: flex;
+  height: 100vh;
+  flex-direction: row;
+  width: 100vw;
+}
+
+tbody {
+  /* overflow: scroll */
+}
+
+.scrolldiv {
+  position: relative;
+  width: 10px;
+
+}
+
+.tableOuter {
+  height: 100vh;
+  width: 100%;
+}
+
+thead tr {
+  position: sticky;
+  top: 25px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  z-index: 1;
+  background-color: var(--vscode-widget-border)
+}
+
+thead tr th {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border: 0px;
+
+}
+
+.stopedLine {
+  margin-top: auto;
+  position: absolute;
+  margin-left: 5px;
+  margin-top: 5px;
+  display: none;
+  width: 100%;
+  text-align: center;
+}
+
+.noLogEntryFound {
+  margin-top: auto;
+  position: absolute;
+  margin-left: 25px;
+  margin-top: 5px;
+  display: none;
+}
+
+.absrow {
+  position: absolute;
+  width: 100%;
+}
+
+.borderRow {
+  height: 0px;
+}
+
+.hiddenCol {
+  display: none;
+}
+
+.hidden_td {
+  display: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  display: block;
+
+}
+
+th {
+  padding: 0px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-weight: normal;
+  background-color: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+
+  border-bottom: solid var(--vscode-activityBar-border);
+  text-align: left;
+  z-index: 1;
+}
+
+.otherCol {
+  padding: 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+}
+
+.lastCol {
+  padding: 0px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+}
+
+tbody tr:hover {
+  background: var(--vscode-list-hoverBackground);
+  border: none;
+}
+
+tbody tr:focus {
+  background: var(--vscode-list-hoverBackground);
+  border: none;
+}
+
+*:focus {
+  outline: none;
+}
+
+.trError {
+  color: red;
+}
+
+.trWarning {
+  color: darkorange;
+}
+
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+  width: 10px;
+  height: 15px;
+  background-color: var(--vscode-editor-foreground);
+  border-radius: 1px;
+  margin-top: auto;
+  position: absolute;
+  margin-left: 5px;
+  margin-top: 5px;
+  display: none;
+}
+
+.blink_Text {
+  height: 15px;
+  margin-top: auto;
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 5px;
+  display: none;
+  animation: color-change 2s infinite;
+}
+
+@keyframes color-change {
+  0% {
+    color: red;
+  }
+
+  50% {
+    color: blue;
+  }
+
+  100% {
+    color: red;
+  }
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.toolBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--vscode-editorWidget-background);
+  color: var(--vscode-editorWidget-foreground);
+  z-index: 10;
+  padding: 2px;
+  box-sizing: border-box;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  border: none;
+  border-bottom: solid 1px;
+  border-color: var(--vscode-actionBar-toggledBackground);
+
+}
+
+.logFinderInput {
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: none;
+  border-radius: 3px;
+  padding: 3px;
+  width: 200px;
+}
+
+.importRowSelector_select {
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: none;
+  border-radius: 3px;
+  padding: 3px;
+  font-size: 12px;
+}
+
+.importRowSelector_select:focus {
+  outline: 1px solid -webkit-focus-ring-color;
+  outline-offset: -1px;
+}
+
+.importRowSelector_select:focus {
+  outline-color: var(--vscode-focusBorder) !important;
+}
+
+.logText_found {
+  background-color: green;
+}
+
+.logText_found_focused {
+  background-color: yellowgreen;
+  color: black;
+}
+
+.logFinderInput:focus {
+  outline: 1px solid -webkit-focus-ring-color;
+  outline-offset: -1px;
+}
+
+.logFinderInput:focus {
+  outline-color: var(--vscode-focusBorder) !important;
+}
+
+
+.toolBarBody {
+  display: flex;
+  flex-direction: row-reverse;
+  padding-left: 15px;
+  width: 100%;
+  float: right;
+
+}
+
+.toolBar_title {
+  padding-left: 15px;
+  padding-right: 5px;
+  font-variant-caps: petite-caps;
+  color: cornflowerblue;
+  width: 150px;
+  ;
+}
+
+.toolBarFind {
+  display: flex;
+
+}
+
+.logFindResult {
+  padding-left: 5px;
+  padding-right: 5px;
+  min-width: 75px;
+  text-align: center;
+}
+
+.toolBarCtxMenu {
+  position: fixed;
+  background: var(--vscode-menu-background);
+  color: var(--vscode-menu-foreground);
+  border-color: var(--vscode-menu-separatorBackground);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  padding: 5px;
+
+  box-shadow: 5px 5px var(--vscode-menu-background);
+  z-index: 15;
+}
+
+
+.toolBarCtxMenu_item {
+  padding: 5px;
+  margin: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+.toolBarCtxMenu_item:hover {
+  border-radius: 3px;
+  background: var(--vscode-menu-selectionBackground);
+  color: var(--vscode-menu-selectionForeground);
+}
+
+.importRowSelector {
+  display: none;
+}

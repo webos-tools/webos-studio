@@ -8,7 +8,6 @@ const os = require('os');
 const { exec } = require('child_process');
 const { getCliPath } = require('./configUtils');
 const { logger } = require('./logger');
-const { showEmulatorPrompt } = require('../installGlobalLibrary');
 let instanceList = [];
 
 function _sortByName(a, b) {
@@ -23,15 +22,15 @@ function _execAsync(cmd, option, next) {
         } else if (typeof option == "object") {
             execOption = option;
         }
-        logger.run(cmd )
+        logger.run(cmd)
         logger.log("------------------------------------------------")
         exec(cmd, execOption, (err, stdout, stderr) => {
-            if(stdout){
+            if (stdout) {
                 if (!cmd.includes('list vms -l')) {
                     logger.log(stdout);
                 }
             }
-            if(stderr){
+            if (stderr) {
                 logger.warn(stderr);
             }
             if (err) {
@@ -43,7 +42,7 @@ function _execAsync(cmd, option, next) {
                         vscode.window.showWarningMessage(`Warning! Unable to find the VirtualBox.`)
                         reject("Unable to find the installed  VirtualBox");
                     } else {
-                        // showEmulatorPrompt();
+                      
                         reject("Unable to find the installed  webos-emulator");
                     }
                 } else {
@@ -100,7 +99,7 @@ async function getInstanceVMDK() {
 
         let outArray = stdout.split('\n')
         let infoArray = []
-        let vmdkInfos = { "uuid": "", "attachedVMDK": "","state":"" };
+        let vmdkInfos = { "uuid": "", "attachedVMDK": "", "state": "" };
 
         for (let j = 0; j < outArray.length; j++) {
 
@@ -108,7 +107,10 @@ async function getInstanceVMDK() {
                 vmdkInfos["uuid"] = outArray[j].split(":")[1].trim();
                 vmdkInfos["attachedVMDK"] = "";
             }
-            
+            if (outArray[j].includes('Config file:')) {
+                vmdkInfos["configFile"] = outArray[j].replace("Config file:", "").trim();
+            }
+
             if (outArray[j].includes('State:') && vmdkInfos["uuid"] != "") {
                 vmdkInfos["state"] = outArray[j].split(":")[1].split("(")[0].trim();
             }
@@ -116,7 +118,7 @@ async function getInstanceVMDK() {
             if (outArray[j].includes(`.vmdk`) && vmdkInfos["uuid"]) {
                 vmdkInfos["attachedVMDK"] = outArray[j].split(": ")[1].split("(UUID")[0].replaceAll('"', '').trim();
                 infoArray.push(vmdkInfos)
-                vmdkInfos = { "uuid": "", attachedVMDK: "" ,"state":"" };
+                vmdkInfos = { "uuid": "", attachedVMDK: "", "state": "" };
             }
         }
         resolve(infoArray);
@@ -154,7 +156,7 @@ async function _setInstanceList() {
                 data["uuid"] = filtered[++count];
                 data["isRunning"] = false;
                 data["attachedVMDK"] = "";
-                data["state"] ="";
+                data["state"] = "";
                 instanceList.push(data)
                 count++;
             }
@@ -168,7 +170,7 @@ async function _setInstanceList() {
                         }
                     });
                 }).catch((err) => {
-                      console.error("No Running Instance Found", err);
+                    console.error("No Running Instance Found", err);
                 });
 
             await getInstanceVMDK()
@@ -178,11 +180,12 @@ async function _setInstanceList() {
                             if (instance.uuid == data[i].uuid) {
                                 instance["attachedVMDK"] = data[i]["attachedVMDK"]
                                 instance["state"] = data[i]["state"]
+                                instance["configFile"] = data[i]["configFile"]
                             }
                         }
                     });
                 }).catch((err) => {
-                      console.error("vmdk", err);
+                    console.error("vmdk", err);
                 });
         }).catch((err) => {
             console.error(err);

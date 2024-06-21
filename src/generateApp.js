@@ -6,13 +6,14 @@ const vscode = require('vscode');
 const { fileURLToPath } = require('url');
 const fs = require('fs');
 const path = require('path');
+const fse = require('fs-extra');
 const { InputController } = require('./lib/inputController');
 const { InputChecker } = require('./lib/inputChecker');
 const templateUtils = require('./lib/templateUtils');
 const enactUtils = require('./lib/enactUtils');
 const appUtils = require('./lib/appUtil');
 const ares = require('./lib/runCommand');
-const { getDefaultDir, setDefaultDir, copyDirSync, updatePackageJson, getAppsList } = require('./lib/workspaceUtils');
+const { getDefaultDir, setDefaultDir, copyDirSync, updatePackageJson,  getAppsList } = require('./lib/workspaceUtils');
 const notify = require('./lib/notificationUtils');
 
 let defaultId = 'com.domain.app';
@@ -504,7 +505,7 @@ async function generateAppFromProjectWizard(template, projectLocation, projectNa
 }
 
 function _removeAppDir(appDirPath) {
-    require('./ga4Util').mpGa4Event("RemoveAppDir", {category:"Commands"});
+    require('./ga4Util').mpGa4Event("RemoveAppDir", { category: "Commands" });
     try {
         if (!fs.existsSync(appDirPath)) {
             return "REMOVE_SUCCESS";
@@ -512,7 +513,7 @@ function _removeAppDir(appDirPath) {
 
         fs.rmSync(appDirPath, { recursive: true });
         return "REMOVE_SUCCESS";
-    } catch(err) {
+    } catch (err) {
         return err;
     }
 }
@@ -546,8 +547,120 @@ async function removeApp(app) {
         });
 }
 
+async function importApp() {
+    return new Promise(async (resolve, ) => {
+        let defaultDir = getDefaultDir();
+
+        const folderUri = await vscode.window.showOpenDialog({
+            canSelectFiles: false,
+            canSelectFolders: true,
+            canSelectMany: false,
+            openLabel: 'Select webOS Project'
+        });
+
+        if (folderUri && folderUri[0]) {
+            if (defaultDir) {
+                const destinationFolderpath = defaultDir;
+                folderUri.forEach(folderUri => {
+                    //creating the sorce path
+                    const sourceFolderPath = folderUri.fsPath;
+                    isAppDir(sourceFolderPath);
+
+                    async function isAppDir(dirent) {
+                        let appDir = undefined;
+                        await isAppCheck(dirent, appDir)
+                        async function isAppCheck(dirent, appDir) {
+                            let itmAray = fs.readdirSync(dirent);
+
+                            if (itmAray.indexOf("package.json") > -1 && itmAray.indexOf("services.json") > -1) {
+                                appDir = dirent;
+                                appDir.type = "js-service";
+                                return await isAppfolder(appDir, sourceFolderPath);
+
+                            } else if ((itmAray.indexOf("package.json") > -1) && (itmAray.indexOf("appinfo.json") > -1)) {
+                                appDir = dirent;
+                                appDir.type = "enact-app";
+                                return await isAppfolder(appDir, sourceFolderPath);
+
+                            } else if (itmAray.includes("appinfo.json")) {
+                                appDir = dirent;
+                                appDir.type = "web-app";
+                                return await isAppfolder(appDir, sourceFolderPath);
+
+                            } else {
+                                appDir = "";
+                                return await isAppfolder(appDir, sourceFolderPath);
+                            }
+                        }
+                    }
+
+                    function isAppfolder(appDir, sourceFolderPath) {
+                        //creating the destination path
+                        const folderName = path.basename(sourceFolderPath)
+                        var sorcefolderdir = path.dirname(sourceFolderPath);
+                        if (appDir != sourceFolderPath) {
+                            vscode.window.showInformationMessage(`Selected App is not a webOS App/Service. Please select webOS App/Service.`);
+
+                        } else {
+                            const destinationFolder = path.join(destinationFolderpath, folderName);
+                            if (sorcefolderdir != defaultDir) {
+                                async function copyFilesWithProgress(sourceFolderPath, destinationFolder) {
+                                    return vscode.window.withProgress({
+                                        location: vscode.ProgressLocation.Notification,
+                                        title: 'Import App/Service',
+                                        cancellable: false,
+                                    }, async (progress) => {
+                                        try {
+                                            progress.report({ increment: 0, message: 'Import App/Service in progress...' });
+
+                                            await notify.showProgress(progress, 50, `Copying the App files...`);
+                                            let itemArr = fs.readdirSync(sourceFolderPath);
+
+                                            if (itemArr.includes(".webosstudio.config")) {
+                                                resolve(await fse.copy(sourceFolderPath, destinationFolder));
+
+                                            } else if (!(itemArr.includes(".webosstudio.config"))) {
+                                                resolve(await fse.copy(sourceFolderPath, destinationFolder)
+                                                    .then(() => { addingAppinfo(destinationFolder) }))
+                                                async function addingAppinfo(destinationFolder) {
+                                                    const profile = await ares.config(false);
+                                                    let apiLevelNo = "27", deviceProfile = profile.toUpperCase();
+                                                    if (deviceProfile == "TV") {//In case of TV latest apiLevel is "23"
+                                                        apiLevelNo = "23"
+                                                    }
+                                                    var webosConfig = {
+                                                        api_level: apiLevelNo,
+                                                        profile: deviceProfile
+                                                    }
+                                                    const webosConfigJSON = JSON.stringify(webosConfig, null, 2);
+                                                    const jsonPath = path.join(destinationFolder, `/.webosstudio.config`);
+                                                    fs.writeFileSync(jsonPath, webosConfigJSON);
+                                                }
+                                            }
+                                            await notify.clearProgress(progress, `Success! imported project in workspace.`);
+                                        } catch (error) {
+                                            vscode.window.showErrorMessage('Error:Error importing the app');
+                                        }
+                                    }
+                                    )
+                                }
+                                copyFilesWithProgress(sourceFolderPath, destinationFolder);
+
+                            }
+                            else {
+                                vscode.window.showInformationMessage(`please select the different workspace`)
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    })
+}
+
 module.exports = {
     generateApp: generateApp,
     generateAppFromProjectWizard: generateAppFromProjectWizard,
-    removeApp: removeApp
+    removeApp: removeApp,
+    importApp: importApp
 };

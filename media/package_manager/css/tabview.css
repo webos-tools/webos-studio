@@ -1,6 +1,3 @@
-body {
-
-}
 
 /* Style the tab */
 .tab {
@@ -79,8 +76,7 @@ body {
   min-width: 50%;
   background-color: transparent;
   border: var(--vscode-activityBar-border);
-  color:var(--vscode-foreground);
-
+  color: var(--vscode-foreground);
 
 }
 

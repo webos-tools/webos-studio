@@ -8,7 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 const { ComponentMgr } = require("./componentManager");
-
+const { AutoUpdate } = require("./AutoUpdateConfig");
 const { getCurrentDeviceProfile } = require('./lib/deviceUtils');
 class PackageManagerSidebar {
   constructor(context) {
@@ -52,9 +52,9 @@ class PackageManagerSidebar {
 
   doResolveWebview(panel) {
 
-    this.loadSDKManager().then(async() => {
-      this.currentProfile  = await getCurrentDeviceProfile();
-    
+    this.loadSDKManager().then(async () => {
+      this.currentProfile = await getCurrentDeviceProfile();
+
       panel.webview.html = this.getHtmlForWebview(this.panel.webview);
 
       setTimeout(() => {
@@ -95,46 +95,47 @@ class PackageManagerSidebar {
             }
 
             case "INSTALL_COMP": {
-              require("./ga4Util").mpGa4Event("PackageManager_Install", {category:"Commands", name: msg.data.displayname, version: msg.data.sdk_version});
+              require("./ga4Util").mpGa4Event("PackageManager_Install", { category: "Commands", name: msg.data.displayname, version: msg.data.sdk_version });
               this.compMangerObj.installCompAndDependancy(msg.data, this.panel)
 
               break;
             }
 
             case "UNINSTALL_COMP":
-            {
-              require("./ga4Util").mpGa4Event("PackageManager_UnInstall", {category:"Commands", name: msg.data.displayname, version: msg.data.sdk_version});
-              this.compMangerObj.unInstallComp(msg.data, this.panel);
-              break;
+              {
+                require("./ga4Util").mpGa4Event("PackageManager_UnInstall", { category: "Commands", name: msg.data.displayname, version: msg.data.sdk_version });
+                this.compMangerObj.unInstallComp(msg.data, this.panel);
+                break;
 
-            }
+              }
             case "UNINSTALL_COMP_REQ":
               if (msg.data.componentInfo.comp_uid.includes("emulator")) {
                 msg.data.componentInfo.sdk_version_act = msg.data.componentInfo.sdk_version;
               }
-              vscode.window.showInformationMessage( `Do you want to uninstall  '${msg.data.componentInfo.displayName} v${msg.data.componentInfo.sdk_version_act}' `,
+              vscode.window.showInformationMessage(`Do you want to uninstall  '${msg.data.componentInfo.displayName} v${msg.data.componentInfo.sdk_version_act}' `,
                 ...["Yes", "No"])
-            .then(async (answer) => {
-                if (answer === "Yes") {
-                  // this.compMangerObj.unInstallComp(msg.data, this.panel);
-                  msg.command = "UNINSTALL_CONFIRMED";
-                  this.panel.webview.postMessage(msg);
-                 
-                }else{
-               
-                  let msgComp = {
-                    command: "UNINSTALL_CANCELLED",
-                    data: {
-                      comp_uid: msg.data.componentInfo.comp_uid,
-                      sdk: msg.data.sdk
-                    
-                    },
-                  };
-                  this.panel.webview.postMessage(msgComp);
-                 
-                  
-                }})
-              
+                .then(async (answer) => {
+                  if (answer === "Yes") {
+                    // this.compMangerObj.unInstallComp(msg.data, this.panel);
+                    msg.command = "UNINSTALL_CONFIRMED";
+                    this.panel.webview.postMessage(msg);
+
+                  } else {
+
+                    let msgComp = {
+                      command: "UNINSTALL_CANCELLED",
+                      data: {
+                        comp_uid: msg.data.componentInfo.comp_uid,
+                        sdk: msg.data.sdk
+
+                      },
+                    };
+                    this.panel.webview.postMessage(msgComp);
+
+
+                  }
+                })
+
               break;
             case "CANCEL_DOWNLOAD": {
               this.compMangerObj.cancelDownload(msg.data)
@@ -160,7 +161,7 @@ class PackageManagerSidebar {
       }
 
     });
-  
+
   }
   promptForSDKDir() {
     const header = "Configure SDK Location";
@@ -198,9 +199,9 @@ class PackageManagerSidebar {
         }
 
       }
-     
+
       vscode.commands.executeCommand("webos.updateSDKPath", msgData.envVarValue);
-      return  msgData.envVarValue;
+      return msgData.envVarValue;
     } else {
       return null;
     }
@@ -225,22 +226,51 @@ class PackageManagerSidebar {
         let osStr = os.platform().toLowerCase();
         if (osStr == "linux" || osStr == "darwin") {
           let cmd = ""
+          let files = [];
           if (osStr == "linux") {
             cmd = "chmod 777  ~/.bashrc &&  chmod 777  ~/.profile"
+            files.push(path.join(os.homedir(), ".bashrc"));
+            files.push(path.join(os.homedir(), ".profile"));
+
           } else {
             // cmd = "chmod 777  ~/.bash_profile"
-           
-            if(fs.existsSync( path.join(os.homedir(),".bash_profile"))){
+
+            if (fs.existsSync(path.join(os.homedir(), ".bash_profile"))) {
               cmd = "chmod 777  ~/.bash_profile"
-            }else{
-              cmd = `touch ${ path.join(os.homedir(),".bash_profile")} && chmod 777  ~/.bash_profile`
+              files.push(path.join(os.homedir(), ".bash_profile"));
+            } else {
+              cmd = `touch ${path.join(os.homedir(), ".bash_profile")} && chmod 777  ~/.bash_profile`
             }
           }
-          await this.compMangerObj.installManager.executeSudoCommand(cmd, false).catch((error) => {
-            vscode.window.showErrorMessage(`Unable to configure Package Manager - ${error.message} `);
-            vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
-            return Promise.reject()
-          })
+          if (files.length > 0) {
+            try {
+              files.forEach((element) => {
+                let prgLoc = this.compMangerObj.executeCommandSync("which " + element)
+                if (prgLoc != null) {
+                  element = prgLoc.replace("\n", "")
+                }
+                fs.accessSync(element, fs.constants.W_OK);
+              });
+
+            } catch (e) {
+              await this.compMangerObj.installManager.executeSudoCommand(cmd, false).catch((error) => {
+                vscode.window.showErrorMessage(`Unable to configure Package Manager - ${error.message} `);
+                vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
+                return Promise.reject()
+              })
+            }
+          } else {
+            await this.compMangerObj.installManager.executeSudoCommand(cmd, false).catch((error) => {
+              vscode.window.showErrorMessage(`Unable to configure Package Manager - ${error.message} `);
+              vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
+              return Promise.reject()
+            })
+          }
+          // await this.compMangerObj.installManager.executeSudoCommand(cmd, false).catch((error) => {
+          //   vscode.window.showErrorMessage(`Unable to configure Package Manager - ${error.message} `);
+          //   vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
+          //   return Promise.reject()
+          // })
         }
 
 
@@ -278,13 +308,13 @@ class PackageManagerSidebar {
     return new Promise(async (resolve, reject) => {
       let configuredDir = null;
       configuredDir = await this.isEnvDirExists();
-      
+
       if (configuredDir) {
-        this.compMangerObj.envPath =  configuredDir;
-        this.compMangerObj.envPath_TV = path.join( configuredDir, "TV");
+        this.compMangerObj.envPath = configuredDir;
+        this.compMangerObj.envPath_TV = path.join(configuredDir, "TV");
         await this.doStartEditor();
       } else {
-        this.compMangerObj.envPath =  "";
+        this.compMangerObj.envPath = "";
         this.compMangerObj.envPath_TV = "";
         if (await isElevated()) {
           this.promptForSDKDir();
@@ -305,7 +335,15 @@ class PackageManagerSidebar {
   }
 
   async doStartEditor() {
+    await this.setTVCLIEnv();
     this.panel.webview.html = this.getLoaderHtml();
+    // do not execute auto update on development mode
+    if (this.context.extensionMode == 1) {
+      if (await new AutoUpdate(this.context).doAutoUpateConfigFile()) {
+        this.compMangerObj.configJson = this.compMangerObj.getConfigJson()
+        this.configData = this.compMangerObj.configJson;
+      }
+    }
     this.compMangerObj.addDirectoriesIfNotAvl();
     this.compMangerObj.addStatusJsonIfNotAvl();
     this.compMangerObj.getStatusJson();
@@ -316,6 +354,19 @@ class PackageManagerSidebar {
     this.compMangerObj.updateAvailableDiskspaceOnEnvPath();
     this.compMangerObj.addEnvIfMissing();
     this.compMangerObj.promptIfTVSDKInstallerIsAvailable();
+
+  }
+  async setTVCLIEnv() {
+
+    let npmGPath = this.compMangerObj.getNpmGloablPath()
+    let osStr = os.platform().toLowerCase();
+    if (osStr == "linux" || osStr == "darwin") {
+      npmGPath = path.join(npmGPath, 'bin')
+    }
+    if (this.compMangerObj.getEnvVarValue("WEBOS_CLI_TV") != npmGPath) {
+      await this.compMangerObj.setAnyEnvVariable("WEBOS_CLI_TV", npmGPath);
+    }
+
 
   }
 
@@ -453,8 +504,7 @@ class PackageManagerSidebar {
         <link href="${codiconsUri}" rel="stylesheet" />
      
         <dialog open  class="dlg" >
-       
-        ${this.getAllTreeGridView(["tv", "ose"], ["TV SDK", "OSE SDK"])}
+               ${this.getAllTreeGridView(["tv", "ose"], ["TV SDK", "OSE SDK"])}
         <div style ="padding-top:10px">SDK Location : ${this.compMangerObj.envPath.replace(this.compMangerObj.envPath.charAt(0), this.compMangerObj.envPath.charAt(0).toUpperCase())}</div>
         <div style ="padding-top:5px" id ="avlDskSpace"></div>
       
@@ -487,31 +537,31 @@ class PackageManagerSidebar {
     </div>
       `;
   }
-  getTreeTableParentRowHTML(compName, displayName,sdk) {
+  getTreeTableParentRowHTML(compName, displayName, sdk) {
     return `
-      <tr data-rowprofile ="${sdk}" class ="trhover ${sdk != this.currentProfile ?" hiddenRow ":"" }" data-compname="${compName}"role="row" aria-level="2" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+      <tr data-rowprofile ="${sdk}" class ="trhover ${sdk != this.currentProfile ? " hiddenRow " : ""}" data-compname="${compName}"role="row" aria-level="2" aria-posinset="1" aria-setsize="1" aria-expanded="true">
         <td role="gridcell" style="width:100%;overflow-x:visibile">${displayName}</td>
        
         <td role="gridcell"></td>
       </tr>
       `;
   }
-  getTreeTableCatRowHTML(catName,sdk) {
+  getTreeTableCatRowHTML(catName, sdk) {
     return `
-      <tr  data-rowprofile ="${sdk}" class ="trhover ${sdk != this.currentProfile ?" hiddenRow ":"" }" role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
+      <tr  data-rowprofile ="${sdk}" class ="trhover ${sdk != this.currentProfile ? " hiddenRow " : ""}" role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="true">
         <td role="gridcell" style="width:100%;overflow-x:visibile">${catName}</td>
         
         <td role="gridcell"></td>
       </tr>
       `;
   }
-  getTreeTableChildRowHTML(rowObj, statusJson,sdk) {
+  getTreeTableChildRowHTML(rowObj, statusJson, sdk) {
 
     let rowObjB64 = Buffer.from(JSON.stringify(rowObj)).toString("base64");
     let prerow = ` ${this.getActionInfoHTML(rowObj["compInfo"]["comp_uid"]
     )}`
     return `
-      <tr data-rowprofile ="${sdk}" class="trhover childrow ${sdk != this.currentProfile ?" hiddenRow ":"" }" data-comp_uid="${rowObj["compInfo"]["comp_uid"]
+      <tr data-rowprofile ="${sdk}" class="trhover childrow ${sdk != this.currentProfile ? " hiddenRow " : ""}" data-comp_uid="${rowObj["compInfo"]["comp_uid"]
       }"  data-rowobj ="${rowObjB64}" role="row" style="border-bottom:1px" aria-level="3" aria-posinset="1" aria-setsize="3" >
       <td role="gridcell" title ="Disk Space: ${this.convertSize(rowObj["compInfo"].expFileSizeInMB)}">${prerow}${rowObj["compInfo"]["shortDisplayName"]} </td>
        <td role="gridcell">${this.getActionHTML(
@@ -576,7 +626,7 @@ class PackageManagerSidebar {
       for (let k = 0; k < sdks.length; k++) {
         let config = configData[sdks[k]];
 
-        treeHTML = treeHTML + this.getTreeTableCatRowHTML(sdkNames[k],sdks[k]);
+        treeHTML = treeHTML + this.getTreeTableCatRowHTML(sdkNames[k], sdks[k]);
 
         for (let i = 0; i < config["components"].length; i++) {
           let compName = config["components"][i]["type"];
@@ -600,7 +650,7 @@ class PackageManagerSidebar {
             rowObj["shortDisplayName"] = config["components"][i]["shortDisplayName"];
 
             treeHTML =
-              treeHTML + this.getTreeTableChildRowHTML(rowObj, statusJson,sdks[k]);
+              treeHTML + this.getTreeTableChildRowHTML(rowObj, statusJson, sdks[k]);
           }
         }
 

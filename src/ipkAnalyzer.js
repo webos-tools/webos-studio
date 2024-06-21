@@ -6,31 +6,477 @@ const vscode = require("vscode");
 const path = require('path');
 const fs = require('fs');
 const ar = require('ar-async');
-const decompress = require('decompress');
-const decompressTargz = require('decompress-targz');
-const rimraf = require('rimraf');
-const catalogist = require('catalogist');
-const fastFolderSizeSync = require('fast-folder-size/sync');
 const ares = require('./lib/runCommand');
 const notify = require('./lib/notificationUtils');
-let tmpDirPath = undefined;
-let uniqueno = 0;
+const _7z = require("7zip-min");
+const { logger } = require('./lib/logger');
 
 class IPK_ANALYZER {
 
     constructor(context) {
         this.context = context
-        this.editorVer = 1;
-        this.expressServer = null;
-        this.lastSrcCodeSavedPath = null;
         this.lastCompPath = null;
         this.panel = null;
+        this.flatJson = {};
+        this.flatJson_pathKey = {};
+        this.setiJson = this.getSetiJson();
+        this.lAresInfo = "";
+        this.rAresInfo = "";
+
+        this.lSrcDir = path.join(vscode.Uri.joinPath(this.context.extensionUri).fsPath, "L");
+        this.rSrcDir = path.join(vscode.Uri.joinPath(this.context.extensionUri).fsPath, "R");
+        this.leftFilePath = "";
+        this.leftExtractedFilePath = ""
+        this.leftFileTreeJson = null;
+        this.leftFileFlatJson = null
+        this.leftFileFlatJson_pathKey = null
+        this.leftFileCompareJson = null
+
+        this.rightFilePath = "";
+        this.rightExtractedFilePath = ""
+        this.rightFileTreeJson = null;
+        this.rightFileFlatJson = null
+        this.rightFileFlatJson_pathKey = null
+        this.rightFileCompareJson = null
+        this.isAnalysing = false;
+    }
+    getSetiJson() {
+        // getting Config json , which contains the component information
+        let jsonPath = vscode.Uri.joinPath(this.context.extensionUri,
+            "media",
+            "ipk_analyzer",
+            "seti_theme",
+            "seti.json");
+        let setJson = "";
+        try {
+            setJson = fs.readFileSync(jsonPath.fsPath, "utf8");
+            return JSON.parse(setJson);
+        } catch (e) {
+            return {};
+        }
+    }
+    async doAresInfo(ipkPath, fileSide) {
+
+        if (fileSide == "L") {
+            this.lAresInfo = ""
+        } else {
+            this.rAresInfo = ""
+        }
+        await ares.packageInfo(ipkPath)
+            .then(async (stdout) => {
+                if (fileSide == "L") {
+                    this.lAresInfo = stdout
+                } else {
+                    this.rAresInfo = stdout;
+                }
+                let msgComp = {
+                    command: "ARES_INFO",
+                    data: {
+                        info: stdout,
+                        fileSide: fileSide,
+                    },
+                };
+                if (this.panel && this.panel.webview) {
+                    this.panel.webview.postMessage(msgComp);
+                }
+
+            }).catch((err) => {
+                console.log(err)
+            });
+    }
+    postIPKAnalysisStoped(fileSide, isWithError) {
+        this.isAnalysing = false
+        let msgComp = {
+            command: "ANALYSIS_STOPED",
+            data: {
+                fileSide: fileSide,
+                isWithError: isWithError
+            },
+        };
+        if (this.panel && this.panel.webview) {
+            this.panel.webview.postMessage(msgComp);
+        }
+    }
+    postIPKAnalysisReportGettingReady(fileSide, filePath) {
+        let msgComp = {
+            command: "REPORT_READY",
+            data: {
+                fileSide: fileSide,
+                filePath: filePath,
+                otherFilePath: fileSide == "L" ? this.rightFilePath : this.leftFilePath
+            },
+        };
+        if (this.panel && this.panel.webview) {
+            this.panel.webview.postMessage(msgComp);
+        }
+    }
+    analysIPKFile(isLaunching, msgData) {
+        this.isAnalysing = true;
+        const options = {
+            canSelectMany: false,
+            canSelectFolders: false,
+            canSelectFiles: true,
+            openLabel: "Select IPK file",
+            defaultUri: this.lastCompPath ? this.lastCompPath : this.getDefaultDir(),
+            filters: {
+                'All files': ['*.ipk']
+            }
+        };
+        vscode.window.showOpenDialog(options).then(async (folderUri) => {
+            if (folderUri && folderUri[0]) {
+                this.lastCompPath = vscode.Uri.file(folderUri[0].fsPath);
+                vscode.window.withProgress({
+                    location: vscode.ProgressLocation.Notification,
+                    title: `IPK Analyzer`,
+                    cancellable: false
+                }, async (progress) => {
+                    this.progress = progress;
+                    this.notify = notify
+                    this.doAresInfo(folderUri[0].fsPath, msgData.fileSide)
+                    await notify.showProgress(progress, 15, `Extracting File`);
+
+
+                    let extFilePath = ""
+                    if (msgData.fileSide == "L") {
+                        extFilePath = this.lSrcDir;
+
+                    } else {
+                        extFilePath = this.rSrcDir
+                    }
+
+                    await this.readIPKArchiveAndWrite(folderUri[0].fsPath, extFilePath).then(async () => {
+                        if (!this.isAnalysing && !this.panel) {
+                            return Promise.reject()
+
+                        }
+                        await notify.showProgress(progress, 5, `Extracting File`);
+
+                        await this.unzipFile(path.join(extFilePath, "data.tar.gz"), path.join(extFilePath, "tar")).then(async () => {
+                            if (!this.isAnalysing && !this.panel) {
+                                return Promise.reject()
+                            }
+                            await notify.showProgress(progress, 20, `Extracting File`);
+
+                            await this.unzipFile(path.join(extFilePath, "tar", "data.tar"), path.join(extFilePath, "sourceCode")).then(async () => {
+                                if (!this.isAnalysing && !this.panel) {
+                                    return Promise.reject()
+                                }
+                                await notify.showProgress(progress, 15, `Generating Report`);
+
+                                this.postIPKAnalysisReportGettingReady(msgData.fileSide, folderUri[0].fsPath)
+
+
+                                // get Flat and tree json
+                                this.flatJson = {};
+                                this.flatJson_pathKey = {};
+                                let srcDir = path.join(extFilePath, "sourceCode");
+                                if (isLaunching) this.doStartEditor()
+
+
+                                await notify.clearProgress(progress, `Report Generated.`);
+
+                                this.diretoryToTreeAndFlatObj(srcDir, msgData.fileSide, async (err, res) => {
+
+                                    if (err) {
+                                        this.postIPKAnalysisStoped(msgData.fileSide, true)
+                                        return Promise.reject()
+                                    } else {
+
+
+                                        let treeJson =
+                                        {
+                                            name: path.basename(srcDir),
+                                            key: this.convertToKey(srcDir, msgData.fileSide),
+                                            pathKey: this.convertToLevelKey(srcDir, msgData.fileSide),
+                                            isFolder: true,
+                                            size: 0,
+                                            path: srcDir,
+                                            children: res
+                                        }
+                                        this.flatJson[this.convertToKey(srcDir, msgData.fileSide)] = { name: path.basename(srcDir), size: 0, isFolder: true }
+                                        this.flatJson_pathKey[this.convertToLevelKey(srcDir, msgData.fileSide)] = { name: path.basename(srcDir), size: 0, isFolder: true }
+                                        this.sortJsonChildren(treeJson)
+                                        this.calculateFolderSize(treeJson)
+                                        this.calculateSizePercentageAndConvert(treeJson, treeJson["size"])
+
+                                        if (msgData.fileSide == "L") {
+                                            this.leftFilePath = folderUri[0].fsPath
+                                            this.leftExtractedFilePath = srcDir
+                                            this.leftFileTreeJson = JSON.parse(JSON.stringify(treeJson))
+                                            this.leftFileFlatJson = JSON.parse(JSON.stringify(this.flatJson));
+                                            this.leftFileFlatJson_pathKey = JSON.parse(JSON.stringify(this.flatJson_pathKey))
+                                            this.leftFileCompareJson = JSON.parse(JSON.stringify(treeJson)) // same file 
+                                        } else {
+                                            this.rightFilePath = folderUri[0].fsPath
+                                            this.rightExtractedFilePath = srcDir
+                                            this.rightFileTreeJson = JSON.parse(JSON.stringify(treeJson))
+                                            this.rightFileFlatJson = JSON.parse(JSON.stringify(this.flatJson))
+                                            this.rightFileFlatJson_pathKey = JSON.parse(JSON.stringify(this.flatJson_pathKey))
+                                            this.rightFileCompareJson = JSON.parse(JSON.stringify(treeJson)) //same file initialy
+                                        }
+
+                                        // generate comparison json
+                                        if (this.rightFileTreeJson && this.leftFileTreeJson) {
+                                            this.leftFileCompareJson = JSON.parse(JSON.stringify(this.leftFileTreeJson))
+                                            this.rightFileCompareJson = JSON.parse(JSON.stringify(this.rightFileTreeJson))
+
+                                            this.compareJSON(this.leftFileCompareJson, this.rightFileFlatJson, this.rightFileFlatJson_pathKey)
+                                            this.compareJSON(this.rightFileCompareJson, this.leftFileFlatJson, this.leftFileFlatJson_pathKey)
+
+                                        }
+                                        // all json files are ready now launch editor
+
+                                        // after success extract
+                                        let msgComp = {
+                                            command: "GENERATE_UI",
+                                            data: {
+                                                leftFilePath: this.leftFilePath,
+                                                rightFilePath: this.rightFilePath,
+                                                fileSide: msgData.fileSide,
+                                                leftFileCompareJson: this.leftFileCompareJson,
+                                                rightFileCompareJson: this.rightFileCompareJson,
+                                                lAresInfo: this.lAresInfo,
+                                                rAresInfo: this.rAresInfo
+                                            },
+                                        };
+                                        if (this.panel) {
+                                            this.panel.webview.postMessage(msgComp);
+                                        }
+                                        this.isAnalysing = false;
+                                        return Promise.resolve();
+
+                                    }
+
+
+
+
+                                });
+
+
+
+                            }).catch(() => {
+                                this.postIPKAnalysisStoped(msgData.fileSide, true)
+                                return Promise.reject()
+                            })
+
+
+                        }).catch(() => {
+                            this.postIPKAnalysisStoped(msgData.fileSide, true)
+                            return Promise.reject()
+                        })
+
+
+                    }).catch(() => {
+                        this.postIPKAnalysisStoped(msgData.fileSide, true)
+                        return Promise.reject()
+                    })
+
+                })
+
+            } else {
+                this.postIPKAnalysisStoped(msgData.fileSide, false)
+                return Promise.reject()
+            }
+
+
+        })
+
+    }
+    compareJSON(treeJsonObj, flatJson, flatJson_pathKey) {
+        let key = treeJsonObj["key"]
+
+        if (flatJson[key]) {
+            // it is available in right json
+            // check file size diff
+            if (treeJsonObj["size"] != flatJson[key]["size"]) {
+                treeJsonObj["isModified"] = true;
+            }
+
+        } else {
+            // right json it is not available
+            // mark it as new Item in left json 
+            treeJsonObj["isNew"] = true;
+            if (flatJson_pathKey[treeJsonObj["pathKey"]]) {
+                // probable file found
+                treeJsonObj["isProbableFileFound"] = true;
+            }
+        }
+
+        treeJsonObj.children.forEach(obj => {
+
+            // if (obj["isFolder"]) {
+            this.compareJSON(obj, flatJson, flatJson_pathKey)
+
+            // }
+
+
+
+        })
     }
 
     startEditor() {
+        this.analysIPKFile(true, { fileSide: "L" })
 
+    }
+    convertToKey(filePath, fileSide) {
+        let commonPath = fileSide == "L" ? this.lSrcDir : this.rSrcDir
+        return filePath.replace(commonPath, "").split(path.sep).join("_")
+    }
+    convertToLevelKey(filePath, fileSide) {
+        let commonPath = fileSide == "L" ? this.lSrcDir : this.rSrcDir
+        let pathArray = filePath.replace(commonPath, "").split(path.sep);
+        return pathArray.length + "_" + pathArray[pathArray.length - 1]
+    }
+    diretoryToTreeAndFlatObj(dir, fileSide, done) {
+        var results = [];
+
+        fs.readdir(dir, (err, list) => {
+            if (err)
+                return done(err);
+
+            var pending = list.length;
+
+            if (!pending) {
+                this.flatJson[this.convertToKey(dir, fileSide)] = { name: path.basename(dir), size: 0, isFolder: true }
+                this.flatJson_pathKey[this.convertToLevelKey(dir, fileSide)] = { name: path.basename(dir), size: 0, isFolder: true }
+
+                return done(null, { key: this.convertToKey(dir, fileSide), pathKey: this.convertToLevelKey(dir, fileSide), name: path.basename(dir), size: 0, isFolder: true, path: dir, children: results });
+            }
+            list.forEach((file) => {
+                file = path.resolve(dir, file);
+                fs.stat(file, (err, stat) => {
+                    if (stat && stat.isDirectory()) {
+                        this.diretoryToTreeAndFlatObj(file, fileSide, (err, res) => {
+                            if (!Array.isArray(res)) {
+                                res = [res]
+                            }
+                            results.push({
+                                name: path.basename(file),
+                                key: this.convertToKey(file, fileSide),
+                                pathKey: this.convertToLevelKey(file, fileSide),
+                                isFolder: true,
+                                size: 0,
+                                path: file,
+                                children: res
+                            });
+                            this.flatJson[this.convertToKey(file, fileSide)] = { name: path.basename(file), size: 0, isFolder: true }
+                            this.flatJson_pathKey[this.convertToLevelKey(file, fileSide)] = { name: path.basename(file), size: 0, isFolder: true }
+
+                            if (!--pending)
+                                done(null, results);
+                        });
+                    }
+                    else {
+                        results.push({
+                            isFolder: false,
+                            size: stat.size,
+                            path: file,
+                            name: path.basename(file),
+                            key: this.convertToKey(file, fileSide),
+                            pathKey: this.convertToLevelKey(file, fileSide),
+                            children: []
+                        });
+                        this.flatJson[this.convertToKey(file, fileSide)] = { name: path.basename(file), size: stat.size, isFolder: false }
+                        this.flatJson_pathKey[this.convertToLevelKey(file, fileSide)] = { name: path.basename(file), size: stat.size, isFolder: false }
+
+                        if (!--pending)
+                            done(null, results);
+                    }
+                });
+            });
+        });
+    }
+    calculateFolderSize(pObj) {
+
+        pObj.children.forEach(cObj => {
+
+            //setExtension
+            if (!cObj["isFolder"]) {
+                if (this.setiJson.fileNames[cObj.name]) {
+                    cObj["iconClass"] = this.setiJson.fileNames[cObj.name];
+                } else {
+                    let extArray = cObj.name.split(".")
+                    extArray.shift()
+                    let ext = extArray.toString().replaceAll(",", ".")
+
+                    if (this.setiJson.fileExtensions[ext]) {
+                        cObj["iconClass"] = this.setiJson.fileExtensions[ext];
+
+                    } else if (this.setiJson.languageIds[ext]) {
+                        cObj["iconClass"] = this.setiJson.languageIds[ext];
+
+                    } else {
+                        cObj["iconClass"] = '_default';
+                    }
+
+
+
+                }
+            }
+
+
+
+
+            if (cObj["isFolder"] && cObj["children"].length > 0) {
+                this.calculateFolderSize(cObj)
+                pObj["size"] = pObj["size"] + cObj["size"]
+                this.flatJson[pObj["key"]]["size"] = pObj["size"];
+            } else {
+                pObj["size"] = pObj["size"] + cObj["size"]
+                this.flatJson[pObj["key"]]["size"] = pObj["size"];
+            }
+        })
+    }
+    calculateSizePercentageAndConvert(pObj, totalSize) {
+        let key = pObj["key"]
+        pObj["sizePer"] = ((pObj["size"] * 100) / totalSize).toFixed(2) + "%"
+        this.flatJson[key]["sizePer"] = pObj["sizePer"];
+
+        let size = "";
+        if (pObj["size"] >= (1020 * 1020)) {
+            size = (pObj["size"] / (1020 * 1020)).toFixed(2) + " MB"
+        } else if (pObj["size"] >= 100) {
+            size = (pObj["size"] / 1020).toFixed(2) + " KB"
+
+        } else {
+            size = pObj["size"] + " Bytes"
+        }
+        pObj["sizeConverted"] = size
+        this.flatJson[key]["sizeConverted"] = size
+
+        pObj.children.forEach(cObj => {
+            this.calculateSizePercentageAndConvert(cObj, totalSize)
+
+        })
+
+    }
+
+    sortJsonChildren(pObj) {
+        if (pObj.children.length > 1) {
+            pObj.children.sort((a, b) => {
+                let nameA = a.name.toUpperCase();
+                let nameB = b.name.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            })
+        }
+        pObj.children.forEach(cObj => {
+            this.sortJsonChildren(cObj)
+
+        })
+
+    }
+
+
+    doStartEditor() {
         vscode.commands.executeCommand('workbench.action.closeSidebar');
         vscode.commands.executeCommand('workbench.action.closePanel');
+
 
         this.panel = vscode.window.createWebviewPanel(
             'ipkanalyzer', // Identifies the type of the webview. Used internally
@@ -39,339 +485,141 @@ class IPK_ANALYZER {
             {
                 enableScripts: true,
                 retainContextWhenHidden: true,
-
             }
         );
         this.panel.webview.options = {
             // Allow scripts in the webview
             enableScripts: true,
             enableForms: true,
-            // localResourceRoots: [
-            //     this.context.extensionUri
-            // ]
-            // localResourceRoots: [vscode.Uri.file(path.join(this.context.extensionUri, 'media'))]
+            localResourceRoots: [this.context.extensionUri]
         }
         this.panel.webview.html = this.getHtmlForWebview(this.panel.webview);
         this.panel.onDidDispose(
             () => {
-                // this.expressServer.close();
                 this.panel = undefined;
+                if (this.isAnalysing && this.progress) {
+                    this.progress.report({ message: "Stopping..", "increment": 100 })
+                }
+                this.isAnalysing = false;
+
+                if (this.leftExtractedFilePath) {
+                    fs.rm(this.lSrcDir, { recursive: true, force: true }, () => { });
+                    this.leftFilePath = ""
+
+                }
+                if (this.rightExtractedFilePath) {
+                    fs.rm(this.rSrcDir, { recursive: true, force: true }, () => { });
+                    this.rightFilePath = ""
+
+                }
             },
             null,
             this.context.subscriptions
         );
-
-        /* ipkConfig = JSON.parse(fs.readFileSync(ipkConfigFile));
-        tmpDirPath = temp.path(ipkConfig.tmpPath); */
-
         this.panel.webview.onDidReceiveMessage(async msg => {
-            console.log("Webview message received-----------");
-            console.log(msg.command);
-            console.log(msg);
             switch (msg.command) {
-                case 'IMPORT_IPK_FILE':
-                    {
-                        try {
-                            const options = {
-                                canSelectMany: false,
-                                canSelectFolders: false,
-                                canSelectFiles: true,
-                                openLabel: 'Select IPK file to Import',
-                                defaultUri: this.lastCompPath ? this.lastCompPath : this.getDefaultDir(),
-
-                                // filters: {
-                                //     'All files': ['*.comp']
-                                // }
-                            };
-                            let tempFolder = undefined;
-                            if (!msg.compare) {
-                                tempFolder = "Temp1";
-                            }
-                            else
-                                tempFolder = "Temp2";
-                            vscode.window.showOpenDialog(options).then(fileUri => {
-                                if (fileUri && fileUri[0]) {
-                                    this.lastCompPath = vscode.Uri.file(fileUri[0].fsPath);
-                                    const data = fs.readFileSync(fileUri[0].fsPath, 'utf8');
-                                    tmpDirPath = vscode.Uri.joinPath(this.context.extensionUri, tempFolder).fsPath;
-                                    if (path.extname(fileUri[0].fsPath) !== '.ipk') {
-                                        vscode.window.showErrorMessage('Please select a packaged app with extension: *.ipk');
-                                        return;
-                                    }
-                                    if (data == "" || data == null) {
-                                        vscode.window.showErrorMessage('Selected file is empty');
-                                        return;
-                                    }
-                                    const classInstance = this;
-
-                                    // Progressbar Start
-                                    this._removeTmpDir(tmpDirPath, async function (message) {
-                                        try {
-                                            if (message !== "REMOVE_SUCCESS") {
-                                                vscode.window.showErrorMessage('Error!! ', message);
-                                                return;
-                                            }
-                                            vscode.window.withProgress({
-                                                location: vscode.ProgressLocation.Notification,
-                                                title: "IPK Analyzer",
-                                                cancellable: false
-                                            }, async (progress) => {
-                                                await notify.showProgress(progress, 5, `Loading Application Package(IPK)...`);
-                                                let promise = new Promise((resolve, reject) => {
-                                                    try {
-                                                        console.log("_unpackIpk()");
-                                                        let ipkFile = fileUri[0].fsPath;
-                                                        const reader = new ar.ArReader(ipkFile);
-                                                        if (!fs.existsSync(tmpDirPath)) {
-                                                            fs.mkdirSync(tmpDirPath);
-                                                        }
-                                                        reader.on("entry", function (entry, next) {
-                                                            console.log("started uppacking..");
-                                                            const name = entry.fileName();
-                                                            entry.fileData()
-                                                                .pipe(fs.createWriteStream(path.resolve(tmpDirPath, name)))
-                                                                .on("finish", function () {
-                                                                    next();
-                                                                });
-                                                        });
-                                                        reader.on("error", function (err) {
-                                                            console.log(err);
-                                                            return reject(err);
-                                                        });
-                                                        reader.on("close", function () {
-                                                            console.log("unpack ipk close");
-                                                            resolve("Success");
-                                                            // next();
-                                                        });
-                                                    }
-                                                    catch (e) {
-                                                        console.log(e);
-                                                        return reject(e);
-                                                    }
-                                                });
-                                                // await notify.showProgress(progress, 25, `Extracting IPK contents...`);
-                                                // this._unpackIpk(fileUri[0].fsPath)
-                                                await promise.then(async (stdout) => {
-                                                    console.log(stdout);
-                                                    console.log("Unpack IPK completed..");
-                                                    await notify.showProgress(progress, 15, `Extracting IPK contents...`);
-                                                    if (fs.existsSync(path.resolve(tmpDirPath, "control.tar.gz"))) {
-                                                        console.log("started extracting control.tar.gz..");
-                                                        await decompress(path.resolve(tmpDirPath, "control.tar.gz"), tmpDirPath, {
-                                                            plugins: [
-                                                                decompressTargz()
-                                                            ]
-                                                        }).then(async (stdout) => {
-                                                            console.log(stdout);
-                                                            console.log("control.tar.gz decompressed");
-                                                            await notify.showProgress(progress, 20, `Extracting IPK contents(data.tar.gz). It could take a few seconds...`);
-                                                            if (fs.existsSync(path.resolve(tmpDirPath, "data.tar.gz"))) {
-                                                                await decompress(path.resolve(tmpDirPath, "data.tar.gz"), tmpDirPath, {
-                                                                    plugins: [
-                                                                        decompressTargz()
-                                                                    ]
-                                                                }).then(async (stderr) => {
-                                                                    console.log(stderr);
-                                                                    console.log("data.tar.gz decompressed");
-                                                                    var data = [];
-                                                                    // return next();
-                                                                    await notify.showProgress(progress, 30, `Reading application directories content. Please wait...`);
-                                                                    // Check Applications directory(Temp\usr\palm\applications), if present load App directories/files into JSON data.
-                                                                    // const appDirPath = super._getDirectoriesList._getDirectoriesList(path.resolve(tmpDirPath, "usr", "palm", "applications")); // Temp\usr\palm\applications
-                                                                    const appsList = classInstance._getDirectoriesList(path.resolve(tmpDirPath, "usr", "palm", "applications")); // Temp\usr\palm\applications
-                                                                    console.log("Dir list--->", appsList);
-                                                                    let totalDirectorySize = (fastFolderSizeSync(path.resolve(tmpDirPath, "usr")) / 1024);
-                                                                    appsList.forEach(item => {
-                                                                        let appPath = path.resolve(tmpDirPath, "usr", "palm", "applications", item);
-                                                                        let appDirData = catalogist.treeSync(appPath, { childrenAlias: "data" });
-                                                                        classInstance._updateFolderSize(item, appDirData, true);
-                                                                        let jsonObj = {};
-                                                                        /*  let uniqueno = 0;
-                                                                            uniqueno++; */
-                                                                        uniqueno++;
-                                                                        jsonObj.id = item + uniqueno;
-                                                                        jsonObj.text = item;
-                                                                        let appData = {};
-                                                                        let apprawSize = (fastFolderSizeSync(appPath) / 1024);
-                                                                        appData.rawFileSize = (apprawSize);
-                                                                        appData.percent = ((apprawSize * 100) / totalDirectorySize);
-                                                                        jsonObj.data = appData;
-                                                                        let appJsonArr = classInstance._getAppServiceJsonTreeData(appDirData, totalDirectorySize);
-                                                                        jsonObj.children = appJsonArr;
-                                                                        data.push(jsonObj);
-                                                                    });
-                                                                    // Check Services directory, if present load all Services directories/files into JSON data.
-                                                                    let serviceDirList;
-                                                                    if (!fs.existsSync(path.resolve(tmpDirPath, "usr", "palm", "services")))
-                                                                        serviceDirList = [];
-                                                                    else
-                                                                        serviceDirList = classInstance._getDirectoriesList(path.resolve(tmpDirPath, "usr", "palm", "services"));
-                                                                    console.log("Dir list--->", serviceDirList);
-                                                                    serviceDirList.forEach(item => {
-                                                                        let servicePath = path.resolve(tmpDirPath, "usr", "palm", "services", item);
-                                                                        let serviceDirData = catalogist.treeSync(servicePath, { childrenAlias: "data" });
-                                                                        classInstance._updateFolderSize(item, serviceDirData, false);
-                                                                        let jsonObj = {};
-                                                                        /*         let uniqueno = 0;
-                                                                                uniqueno++; */
-                                                                        uniqueno++;
-                                                                        jsonObj.id = item + uniqueno;
-                                                                        jsonObj.text = item;
-                                                                        let serviceData = {};
-                                                                        let servicerawSize = (fastFolderSizeSync(servicePath) / 1024);
-                                                                        serviceData.rawFileSize = (servicerawSize);
-                                                                        serviceData.percent = ((servicerawSize * 100) / totalDirectorySize);
-                                                                        jsonObj.data = serviceData;
-                                                                        let serviceJsonArr = classInstance._getAppServiceJsonTreeData(serviceDirData, totalDirectorySize);
-                                                                        jsonObj.children = serviceJsonArr;
-                                                                        data.push(jsonObj);
-                                                                    });
-                                                                    await notify.showProgress(progress, 40, `Extracting package info from CLI. Please wait...`);
-                                                                    let ipkAnalyzeArr = undefined;
-                                                                    await ares.packageInfo(fileUri[0].fsPath)
-                                                                        .then(async (stdout) => {
-                                                                            console.log(stdout);
-                                                                            ipkAnalyzeArr = stdout.split('\n');
-                                                                        }).catch((err) => {
-                                                                            throw err;
-                                                                        });
-                                                                    let ipkfileName = path.basename(fileUri[0].fsPath, '.ipk');
-                                                                    let ipkfileSize = (classInstance._getFilesizeInBytes(fileUri[0].fsPath) / 1024);
-                                                                    let ipkRawfile = (fastFolderSizeSync(path.resolve(tmpDirPath, "usr")) / 1024);
-                                                                    await notify.showProgress(progress, 50, `Loading IPK Info...`);
-                                                                    // this.panel.webview
-                                                                    if (!msg.compare) {
-                                                                        classInstance.panel.webview.postMessage({ command: 'importIPKData', treeData: data, ipkAnalyzeInfo: ipkAnalyzeArr, ipkFileInfo: { ipkfileName: ipkfileName, ipkfileSize: ipkfileSize, ipkRawfile: ipkRawfile } });
-                                                                    }
-                                                                    else {
-                                                                        classInstance.panel.webview.postMessage({ command: 'compareIPKData', treeData: data, ipkAnalyzeInfo: ipkAnalyzeArr, ipkFileInfo: { ipkfileName: ipkfileName, ipkfileSize: ipkfileSize, ipkRawfile: ipkRawfile } });
-                                                                    }
-                                                                }).catch((err) => {
-                                                                    console.error(err);
-                                                                    vscode.window.showErrorMessage(`Error! Failed to decompress data.tar.gz.`);
-                                                                    // reject(err);
-                                                                });
-                                                                // return next();
-                                                            } else if (fs.existsSync(path.resolve(tmpDirPath, "data.tar.xz"))) {
-                                                                await notify.showProgress(progress, 100, `Extracting IPK contents(data.tar.gz). It could take a few seconds...`);
-                                                                // return next("NOT_SUPPORT_XZ");
-                                                                vscode.window.showErrorMessage(`Error! Failed to decompress data.tar.xz. Format is not supported!`);
-                                                            } else {
-                                                                // return next("NO_COMPONENT_FILE data tar file");
-                                                                await notify.showProgress(progress, 100, `Extracting IPK contents(data.tar.gz). It could take a few seconds...`);
-                                                                vscode.window.showErrorMessage(`Error! Failed to decompress data.tar.xz. data tar file not found!`);
-                                                            }
-                                                        }).catch((err) => {
-                                                            console.error(err);
-                                                            // return next(err);
-                                                            vscode.window.showErrorMessage(`Error! Failed to decompress control.tar.gz.`);
-                                                            // reject(err);
-                                                        });
-                                                    } else if (fs.existsSync(path.resolve(tmpDirPath, "control.tar.xz"))) {
-                                                        // return next("NOT_SUPPORT_XZ");
-                                                        await notify.showProgress(progress, 100, `Extracting IPK contents...`);
-                                                        // return next("NOT_SUPPORT_XZ");
-                                                        vscode.window.showErrorMessage(`Error! Failed to decompress control.tar.xz. Format is not supported!`);
-                                                    } else {
-                                                        // return next("NO_COMPONENT_FILE control tar file");
-                                                    }
-                                                }).catch((err) => {
-                                                    console.error(err);
-                                                    vscode.window.showErrorMessage(`Error! Failed to extract IPK Contents!`);
-                                                    // reject(err);
-                                                });
-                                            });
-
-                                            // let canvasControlsJson = JSON.parse(data);
-                                            // this.panel.webview.postMessage({ command: 'RenderImportedComp', "canvasControlsJson": this.migrateComponent(canvasControlsJson) })
-
-                                        } catch (e) {
-                                            console.log("Exception ", e);
-                                            vscode.window.showErrorMessage("Error on reading IPK file, file format may different");
-                                        }
-                                    })
-                                    // Progressbar End
-                                }
-                            });
-                        } catch (e) {
-                            console.log("Exception ", e);
-                            vscode.window.showErrorMessage("Error on importing the component");
-                        }
-                        break;
-                    }
-                case 'ERROR_MESSAGE':
-                    {
-                        vscode.window.showErrorMessage(`Error! "${msg.text}"!`);
-                        // `${path.join(await getCliPath(), 'ares-install')} -r ${appId} -d "${device}"`;
-                        break; // msg.text
-                    }
+                case "ANALYS_IPK":
+                    this.analysIPKFile(false, msg.data)
+                    break;
+                case "COMPARE_FILES":
+                    this.openDiff(msg.data)
+                    break;
+                case "OPEN_FILE":
+                    this.openFile(msg.data)
+                    break;
             }
         });
     }
 
-    _getDirectoriesList(path) {
-        return fs.readdirSync(path).filter(function (file) {
-            return fs.statSync(path + '/' + file).isDirectory();
+    async openDiff(data) {
+        await vscode.commands.executeCommand('vscode.diff', vscode.Uri.file(data.leftPath), vscode.Uri.file(data.rightPath), path.basename(data.rightPath), {
+            preview: data.preview,
+            preserveFocus: data.preview,
+            viewColumn: data.openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active
+        });
+
+    }
+
+    async openFile(data) {
+
+        await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(data.uri), {
+            preview: data.preview,
+            preserveFocus: true,
+            viewColumn: data.openToSide ? vscode.ViewColumn.Beside : vscode.ViewColumn.Active,
+        });
+
+    }
+
+    removeDir(installedPath) {
+        try {
+            fs.rmSync(installedPath, { recursive: true, force: true });
+            return true;
+        } catch (e) {
+            logger.info("Unable to remove the folder -" + installedPath + " , Please remove manually ")
+            logger.error("Error removing -" + installedPath + " - " + e.message)
+            return false;
+        }
+
+    }
+    unzipFile(filePath, destination) {
+        this.removeDir(destination)
+        logger.info(`Extracting ${filePath} `)
+
+        if (!fs.existsSync(destination)) {
+            fs.mkdirSync(destination, { recursive: true });
+        }
+        return new Promise(async (resolve, reject) => {
+            try {
+                await _7z.unpack(filePath, destination, (err) => {
+                    if (!err) {
+                        resolve();
+                        logger.info(` ${filePath} -Extracted `)
+                    } else {
+
+                        logger.info(`Error on Extracting ${filePath} -${err} `)
+                        reject(err);
+                    }
+                });
+            } catch (error) {
+                logger.info(`Error on Extracting ${filePath} -${error} `)
+                reject(error);
+            }
         });
     }
 
-    _updateFolderSize(appserviceId, jsonObj, isApp) {
-        let appservicePath = undefined;
-        if (isApp)
-            appservicePath = path.resolve(tmpDirPath, "usr", "palm", "applications", appserviceId);
-        else
-            appservicePath = path.resolve(tmpDirPath, "usr", "palm", "services", appserviceId);
-        jsonObj.forEach(obj => {
-            Object.entries(obj).forEach(() => { // obj["fullPath"]
-                // path.resolve(tmpDirPath, "usr", "palm", "applications", "com.domain.testenactwebosls2")
-                if (obj["isDirectory"] == true && obj["data"].length > 0) {
-                    const bytes = fastFolderSizeSync(path.resolve(appservicePath, obj["fullPath"]));
-                    obj["size"] = bytes;
-                    // console.log(`${key} ${value}`);
-                    // var jsonData = obj["data"];
-                    // updateFolderSize(jsonData);
+    readIPKArchiveAndWrite(filePath, destination) {
+        return new Promise((resolve, reject) => {
+            try {
+                this.removeDir(destination)
+                logger.info(`Reading Archive File  ${filePath} `)
+                const reader = new ar.ArReader(filePath);
+                if (!fs.existsSync(destination)) {
+                    fs.mkdirSync(destination);
                 }
-            });
-        });
-    }
-
-    _getAppServiceJsonTreeData(appServiceTreeData, totalDirectorySize) {
-        let jsonObjArr = [];
-        // Fill App/Service Object tree data
-        appServiceTreeData.forEach(obj => {
-            let jsonObj = {};
-            uniqueno++;
-            jsonObj.id = obj["name"] + uniqueno;
-            jsonObj.text = obj["fullName"];
-            if (obj["isDirectory"] == false)
-                jsonObj.type = "file";
-            else
-                jsonObj.type = "folder";
-            let appData = {};
-            let apprawSize = (obj["size"] / 1024);
-            appData.rawFileSize = (apprawSize);
-            appData.percent = ((apprawSize * 100) / totalDirectorySize);
-            jsonObj.data = appData;
-            let childrenData = [];
-            // path.resolve(tmpDirPath, "usr", "palm", "applications", "com.domain.testenactwebosls2")
-            if (obj["isDirectory"] == true && obj["data"].length > 0) {
-                // console.log(`${key} ${value}`);
-                let childrenList = this._getAppServiceJsonTreeData(obj["data"], totalDirectorySize);
-
-                childrenData = JSON.parse(JSON.stringify(childrenList));
+                reader.on("entry", (entry, next) => {
+                    console.log("started uppacking..");
+                    const name = entry.fileName();
+                    entry.fileData()
+                        .pipe(fs.createWriteStream(path.resolve(destination, name)))
+                        .on("finish", () => {
+                            next();
+                        });
+                });
+                reader.on("error", (err) => {
+                    console.log(err);
+                    return reject(err);
+                });
+                reader.on("close", () => {
+                    console.log("unpack ipk close");
+                    resolve("Success");
+                    // next();
+                });
             }
-            jsonObj.children = childrenData;
-            jsonObjArr.push(jsonObj);
+            catch (e) {
+                console.log(e);
+                return reject(e);
+            }
         });
-
-        return jsonObjArr;
-        // tree data
-    }
-
-    _getFilesizeInBytes(filename) {
-        var stats = fs.statSync(filename);
-        var fileSizeInBytes = stats.size;
-        return fileSizeInBytes;
     }
 
     getDefaultDir() {
@@ -383,560 +631,182 @@ class IPK_ANALYZER {
             return null;
         }
     }
-
-    _removeTmpDir(tmpDirPath, next) {
-        console.log("packageIPK()#_removeTmpDir()");
-        if (!fs.existsSync(tmpDirPath)) {
-            return next("REMOVE_SUCCESS");
-        }
-        rimraf(tmpDirPath, function (err) {
-            if (err) {
-                return next(err);
-            }
-            console.log("IPK Temp folder removed " + tmpDirPath);
-            return next("REMOVE_SUCCESS");
-        });
-    }
-
-    /*     async _unpackIpk(ipkFile, next) {
-            try {
-                console.log("_unpackIpk()");
-                const reader = new ar.ArReader(ipkFile);
-                tmpDirPath = vscode.Uri.joinPath(this.context.extensionUri, "Temp").fsPath;
-                if (!fs.existsSync(tmpDirPath)) {
-                    fs.mkdirSync(tmpDirPath);
-                }
-                reader.on("entry", function (entry, next) {
-                    console.log("started uppacking..");
-                    const name = entry.fileName();
-                    entry.fileData()
-                        .pipe(fs.createWriteStream(path.resolve(tmpDirPath, name)))
-                        .on("finish", function () {
-                            next();
-                        });
-                });
-                reader.on("error", function (err) {
-                    console.log(err);
-                    return next(err);
-                });
-                reader.on("close", function () {
-                    console.log("unpack ipk close");
-                    //next();
-                });
-            }
-            catch (e) {
-                console.log(e);
-                return next(e);
-            }
-        } */
-
-    async _unpackTar(next) {
-        if (fs.existsSync(path.resolve(tmpDirPath, "control.tar.gz"))) {
-            await decompress(path.resolve(tmpDirPath, "control.tar.gz"), tmpDirPath, {
-                plugins: [
-                    decompressTargz()
-                ]
-            }).catch((err) => {
-                console.error(err);
-                return next(err);
-                // vscode.window.showErrorMessage(`Error! Failed to run enact lint.`);
-                // reject(err);
-            });
-            console.log("control.tar.gz decompressed");
-            if (fs.existsSync(path.resolve(tmpDirPath, "data.tar.gz"))) {
-                (async function (next) {
-                    /*                     await decompress(path.resolve(tmpDirPath, "data.tar.gz"), tmpDirPath, {
-                                            plugins: [
-                                                decompressTargz()
-                                            ]
-                                        }).then(async (stderr) => {
-                                            console.log(stderr);
-                                            console.log("data.tar.gz decompressed");
-                                            return next();
-                                        }).catch((err) => {
-                                            console.error(err);
-                                            return next(err);
-                                            vscode.window.showErrorMessage(`Error! Failed to run enact lint.`);
-                                            //reject(err);
-                                        }); */
-                    console.log("data.tar.gz decompressed");
-                    return next();
-                })();
-            } else if (fs.existsSync(path.resolve(tmpDirPath, "data.tar.xz"))) {
-                return next("NOT_SUPPORT_XZ");
-            } else {
-                return next("NO_COMPONENT_FILE data tar file");
-            }
-        } else if (fs.existsSync(path.resolve(tmpDirPath, "control.tar.xz"))) {
-            return next("NOT_SUPPORT_XZ");
-        } else {
-            return next("NO_COMPONENT_FILE control tar file");
-        }
-    }
-
     getHtmlForWebview(webview) {
-        const styleCss = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'src', "lib", "jstree-table", 'style.min.css'));
-        const fontawesomeCss = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'src', "lib", "jstree-table", 'font-awesome.min.css'));
 
-        const jqueryJs = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'src', "lib", "jstree-table", "jquery-2.1.0", 'jquery-2.1.0.js'));
-        const jqueryUiJs = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'src', "lib", "jstree-table", "jquery-ui1.11.4", 'jquery-ui.js'));
-        const jstreeJs = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'src', "lib", "jstree-table", "jstree3.2.1", 'jstree.min.js'));
-        const jstreetableJs = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'src', "lib", "jstree-table", 'jstreetable.js'));
-        const bootstrapCss = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'src', "lib", "jstree-table", 'bootstrap.min.css'));
+        const commonJs = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                this.context.extensionUri,
+                "media",
+                "ipk_analyzer",
+                "js",
+                "common.js"
+            )
+        );
+        const treGridCss = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                this.context.extensionUri,
+                "media",
+                "ipk_analyzer",
+                "css",
+                "treegrid.css"
+            )
+        );
+        const treeGridJS = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                this.context.extensionUri,
+                "media",
+                "ipk_analyzer",
+                "js",
+                "file_treegrid.js"
+            )
+        );
+        const commonCss = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                this.context.extensionUri,
+                "media",
+                "ipk_analyzer",
+                "css",
+                "common.css"
+            )
+        );
+        const faCss = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                this.context.extensionUri,
+                "media",
+                "ipk_analyzer",
+                "css",
+                "fa",
+                "css",
+                "all.css"
+            )
+        );
+        const setiCss = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                this.context.extensionUri,
+                "media",
+                "ipk_analyzer",
+                "seti_theme",
+                "seti.css"
+            )
+        );
+        const loadingUri = webview.asWebviewUri(
+            vscode.Uri.joinPath(
+                this.context.extensionUri,
+                "media",
+                "loading.gif"
+            )
+        );
 
-        return `<!DOCTYPE html>
-			<html lang="en">
+        const codiconsUri = webview.asWebviewUri(vscode.Uri.joinPath(this.context.extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
+
+        return `
+            <html lang="en">
             <head>
-            <link href="${styleCss}" rel="stylesheet">
-            <link href="${fontawesomeCss}" rel="stylesheet">
-            <script type='text/javascript' src="${jqueryJs}"></script>
-            <script type='text/javascript' src="${jqueryUiJs}"></script>
-            <script type="text/javascript" src="${jstreeJs}"></script>
-            <script type="text/javascript" src="${jstreetableJs}"></script>
-            <style type="text/css">
-                @import url('${bootstrapCss}');
-                body {
-                    margin: 1em;
-                    color: var(--vscode-editor-foreground);
-                    background-color: var(--vscode-editor-background) !important;
-                }
-                code {
-                    font-size: var(--vscode-editor-font-size);
-                    font-family: var(--vscode-editor-font-family);
-                }         
-                label {
-                    color: var(--vscode-label-foreground);
-                    background: var(--vscode-label-background);
-                    font-size: var(--vscode-editor-font-size);
-                    font-family: var(--vscode-editor-font-family);
-                }
-                button {
-                    color: var(--vscode-button-foreground);
-                    background: var(--vscode-button-background);
-                }
-                button:hover {
-                    cursor: pointer;
-                    background: var(--vscode-button-hoverBackground);
-                }                
-                button:focus {
-                    outline-color: var(--vscode-focusBorder);
-                }
-                button.secondary {
-                    color: var(--vscode-button-secondaryForeground);
-                    background: var(--vscode-button-secondaryBackground);
-                }                
-                button.secondary:hover {
-                    background: var(--vscode-button-secondaryHoverBackground);
-                }
-                .jstree-table-wrapper {
-                    /* border: 1px solid #ccc;*/
-                    width:100% !important
-                }
-             
-                .jstree-clicked{
-                    color:  var(--vscode-editor-foreground)!important;
-                    background-color: var(--vscode-editor-background)!important;
-                }
-                .jstree-clicked :hover{
-                    color:  var(--vscode-editor-foreground)!important;
-                    background-color: var(--vscode-editor-background)!important;
-                }
-              .jstree-table-cell{
-                color:  var(--vscode-editor-foreground)!important;
-                background-color: var(--vscode-editor-background)!important;
-              }
+            <link href="${commonCss}" rel="stylesheet">
+            <link href="${treGridCss}" rel="stylesheet">
+            <link href="${faCss}" rel="stylesheet">
+            <link href="${codiconsUri}" rel="stylesheet" />
+            <link href="${setiCss}" rel="stylesheet" />
+            
+            
+           
+            <div id ="paneContainer">
+            <div id="leftPane">
+                <div id="leftSelector">
+                    <div class="fileButtonContainer"> <input placeholder="Select IPK file " disabled type="text" class="ipkInputField" id="selectedLeftFile"> <button id="fileButtonLeft" class="fileButton" onclick=handleFileSelectorClick("L")> Browse </button></div>
+                    <div style ="display:none" id="l_aresInfo" class="accordion">Package Information</div>
+                    <div id ="l_arrayInfo" class="panel">
+                        <div id ="lArrayInfo_loader"  >
+                            <div style =" display:flex;  justify-content: center; ">
+                                <img src="${loadingUri}" style ="width:30px;"></img>
+                            </div>
+                        </div> 
+                        <div id ="lArrayInfo_content" style="display:flex;padding-left:15px"></div>
+                    </div>
                 
-                .jstree-hovered{
-                    color:  var(--vscode-editor-foreground)!important;
-                    background-color: var(--vscode-editor-background)!important;
-                }
-                .jstree-hovered :active{
-                    color:  var(--vscode-editor-foreground)!important;
-                    background-color: var(--vscode-editor-background)!important;
-                }
-            
-               
-                .jstree-table-header-regular{
-                    color:  var(--vscode-activityBar-foreground)!important;
-                    background-color: var(--vscode-activityBar-background)!important;
-                    cursor: pointer;
-              
-                    width:1% !important
-                }
-                .jstreediv {
-                    color: var(--vscode-label-foreground);
-                    background: var(--vscode-label-background);
-              
-                    activeSelectionBackground: #2a273f;
-                    activeSelectionForeground: #8076C2;
-                    inactiveSelectionBackground: #2a273f;
-                    inactiveSelectionForeground: #8076C2;
-                    highlightForeground:#8076C2;
-                    hoverBackground: #1f2636;
-              
-                }
-                .collButton{
-                    color:  var(--vscode-activityBar-foreground)!important;
-                    background-color: var(--vscode-activityBar-background)!important;
-                }
-                .collapsible {
-                    color: white;
-                    cursor: pointer;
-                    padding: 2px;
-                    width: 100%;
-                    border: none;
-                    text-align: left;
-                    outline: none;
-                    font-size: 15px;
-                  }
-                  
-                  .active, .collapsible:hover {
-                  
-                  }
-                  
-                  .collapsible:after {
-                    content: '\\25BC';
-                    font-weight: bold;
-                    float: right;
-                    margin-left: 5px;
-                  }
-                  
-                  .active:after {
-                    content: "\\25B2";
-                  }
-                  
-                  .content {
-                    padding: 0 18px;
-                    max-height: 0;
-                    overflow: hidden;
-                    transition: max-height 0.2s ease-out;
-                    color: var(--vscode-label-foreground);
-                    background: var(--vscode-label-background);
-                    font-size: var(--vscode-editor-font-size);
-                    font-family: var(--vscode-editor-font-family);
-                  }
-                  .ipkinfofont {
-                    font-size: 13px;
-                    font-weight: 400;
-                    padding-left: 2px;
-                    padding-top: 3px;
-                  }
-                  .{
+                    <div style ="display:none"  id="l_files" class="accordion">Files</div>
+                    <div class="panel">
+                    <div id ="leftLoader" style="display:none" >
+                    <div style =" display:flex;  justify-content: center; ">
+                        <img src="${loadingUri}" style ="width:30px;"></img>
+                    </div>
+                </div>
 
-                  }
-            </style>
-            <script type="text/javascript">
-
-
-            </script>
-        </head>
-        <body>
-        <div id="test1">
-        <button type="button" onclick="importIPKFile()" id="btnImport">Import IPK</button>
-        <label for="test" id="ipkfileName"> IPK File (version 1.0.0)</label><br>
-        <b><label for="html" id="lblipkRawfile">Raw File Size : </label></b>&nbsp;<label for="test" id="ipkRawfile">HEJJJJJJJJJABCDEFGHIJ</label> &nbsp;&nbsp;&nbsp;&nbsp;
-        <b><label for="html" id="lblipkfileSize">Download Size : </label></b>&nbsp;<label for="test" id="ipkfileSize">ABCDEFGHIJHEJJJJJJJJJ</label>
-            </div>
-            <div id = "jstreeParent">
-            <div id="jstree" class="jstreediv">
-            </div>
-            </div>
-            <button type="button" class="collapsible collButton" onclick="showImportIPKDetails()" id="coll1">IPK Analysis Details</button>
-<div class="content" id="coll2">
-  <span>Lorem ipsum dolor sit amet
-consectetur adipisicing elit, sed do eiusmod tempor
-Ut enim ad minim veniam, quis nostrud exercitation ullamco.</span>
-</div><br>
-<div id="test2">
-<button type="button" onclick="compareIPKFile()" id="btnCompare">Compare IPK</button>
-<label for="test" id="ipkfileName2"> IPK File (version 1.0.0)</label><br>
-<b><label for="html" id="lblipkRawfile2">Raw File Size : </label></b>&nbsp;<label for="test" id="ipkRawfile2">HEJJJJJJJJJABCDEFGHIJ</label> &nbsp;&nbsp;&nbsp;&nbsp;
-<b><label for="html" id="lblipkfileSize2">Download Size : </label></b>&nbsp;<label for="test" id="ipkfileSize2">ABCDEFGHIJHEJJJJJJJJJ</label>
-    </div>
-    <div id = "jstree1Parent">
-<div id="jstree1"></div>
-</div>
-<button  type="button" class="collapsible collButton" onclick="showCompareIPKDetails()" id="coll3">IPK Analysis Details</button>
-<div class="content" id="coll4">
-  <span>Lorem ipsum dolor sit amet
-consectetur adipisicing elit, sed do eiusmod tempor
-Ut enim ad minim veniam, quis nostrud exercitation ullamco.</span>
-</div>
-        </body>
-        <script type="text/javascript">
-        const vscode = acquireVsCodeApi();
-        function getJSTreeData(data){
-            var jstreeOptions = {
-                plugins: ["table","contextmenu","sort","types"],
-                core: {
-                    data: data,
-                    check_callback: true
-                },
-                "types" : {
-                    "default" : {
-                        "icon" : "fa fa-folder text-warning"
-                    },
-                    "file" : {
-                        "icon" : "fa fa-file  text-warning"
-                    }
-                },
-                // configure tree table
-                table: {
-                    columns: [
-                        {width: 400, header: "Resource"},
-                        {width: 300, value: "rawFileSize", header: "Raw File Size", format: function(v) {if (v){ return v.toFixed(2)+'KB' }}},
-                        {width: 300, value: "percent", header: "% of Total Raw File Size", format: function(v) {if (v){ return v.toFixed(2)+'%' }}}
-                    ],
-                    resizable: false,
-                    draggable: false,
-                    contextmenu: false,
-                    height: 150,
-                    columnWidth:1000,
-                    contextmenu:false,
-                    headerContextMenu:false
-                }
-            };
-            return jstreeOptions;
-        }
-            $(document).ready(function(){
-                // tree data
-                // load jstree
-                //$("div#jstree").jstree(jstreeOptions);
-            });
-            //width: 500,
-            //height: 200
-            function loadJSTreeData(data, element){
-                if(vscode == null || vscode == undefined)
-                    vscode = acquireVsCodeApi();
-
-                vscode.postMessage({
-                    command: 'IMPORT_IPK_FILE',
-                    text: 'importIPKFile'
-                })
-            }
-            window.addEventListener('message', event => {
-                const message = event.data; // The JSON data our extension sent
-                switch (message.command) {
-                    case 'importIPK':
-                        var iframeElement = document.getElementById("previewEle");
-                        var url = iframeElement.getAttribute("src");
-                        iframeElement.setAttribute("src", url + "?couter=" + Math.random());
-                        break;
-                    case 'importIPKData':
-                        var jstreeOptions = getJSTreeData(message.treeData);
-                        //var url = iframeElement.getAttribute("src");//jstreeOptions
-                        var ipkfileName = document.getElementById("ipkfileName");
-                        ipkfileName.style.display = "inline";
-                        var lblipkRawfile = document.getElementById("lblipkRawfile");
-                        lblipkRawfile.style.display = "inline";
-                        var ipkRawfile = document.getElementById("ipkRawfile");
-                        ipkRawfile.style.display = "inline";
-                        var lblipkfileSize = document.getElementById("lblipkfileSize");
-                        lblipkfileSize.style.display = "inline";
-                        var ipkfileSize = document.getElementById("ipkfileSize");
-                        ipkfileSize.style.display = "inline";
-                        var jstree = document.getElementById("jstree");
-                        jstree.style.display = "block";
-                        var coll1 = document.getElementById("coll1");
-                        coll1.style.display = "block";
-                        var coll2 = document.getElementById("coll2");
-                        coll2.style.display = "block";
-            
-                        var btnCompare = document.getElementById("btnCompare");
-                        btnCompare.style.display = "inline";
-                        // load jstree
-                        document.getElementById("jstreeParent").innerHTML ="<div id='jstree' class='jstreediv'></div>"
-                        $("div#jstree").jstree(jstreeOptions);
-                        var ipkInfoObj = message.ipkFileInfo;
-                        //IPK File name
-                        ipkfileName.innerHTML = ipkInfoObj["ipkfileName"];
-                        ipkRawfile.innerHTML = ipkInfoObj["ipkRawfile"] + " KB";
-                        ipkfileSize.innerHTML = ipkInfoObj["ipkfileSize"] + " KB";
-                        //IPK Analyze Info
-                        var ipkAnalyzeInfo = message.ipkAnalyzeInfo;
-                        coll2.innerHTML = "";
-                        ipkAnalyzeInfo.forEach(item => {
-                            const break1 = document.createElement("br");
-                            const span = document.createElement("span");
-                            span.innerHTML = item;
-                            coll2.appendChild(span);
-                            coll2.appendChild(break1);
-                        });
-                        break;
-                    case 'compareIPKData':
-                        var jstreeOptions = getJSTreeData(message.treeData);
-                        var ipkfileName2 = document.getElementById("ipkfileName2");
-                        ipkfileName2.style.display = "inline";
-                        var lblipkRawfile2 = document.getElementById("lblipkRawfile2");
-                        lblipkRawfile2.style.display = "inline";
-                        var ipkRawfile2 = document.getElementById("ipkRawfile2");
-                        ipkRawfile2.style.display = "inline";
-                        var lblipkfileSize2 = document.getElementById("lblipkfileSize2");
-                        lblipkfileSize2.style.display = "inline";
-                        var ipkfileSize2 = document.getElementById("ipkfileSize2");
-                        ipkfileSize2.style.display = "inline";
-                        var jstree1 = document.getElementById("jstree1");
-                        jstree1.style.display = "block";
-                        var coll3 = document.getElementById("coll3");
-                        coll3.style.display = "block";
-                        var coll4 = document.getElementById("coll4");
-                        coll4.style.display = "block";
-
-                        // load jstree1
-                        document.getElementById("jstree1Parent").innerHTML ="<div id='jstree1' class='jstreediv'></div>"
-                        $("div#jstree1").jstree(jstreeOptions);
-                        var ipkInfoObj = message.ipkFileInfo;
-                        //IPK File name
-                        ipkfileName2.innerHTML = ipkInfoObj["ipkfileName"];
-                        ipkRawfile2.innerHTML = ipkInfoObj["ipkRawfile"] + " KB";
-                        ipkfileSize2.innerHTML = ipkInfoObj["ipkfileSize"] + " KB";
-                        //IPK Analyze Info
-                        var ipkAnalyzeInfo = message.ipkAnalyzeInfo;
-                        coll4.innerHTML = "";
-                        ipkAnalyzeInfo.forEach(item => {
-                            const break1 = document.createElement("br");
-                            const span = document.createElement("span");
-                            span.innerHTML = item;
-                            coll4.appendChild(span);
-                            coll4.appendChild(break1);
-                        });
-                        break;
+                        <div  id="leftGridContainer"> 
+                        ${this.getTreeTableHTML("L")}
+                        </div>
         
-                }
-            });
-            function importIPKFile(){
-                if(vscode == null || vscode == undefined)
-                    vscode = acquireVsCodeApi();
-
-                vscode.postMessage({
-                    command: 'IMPORT_IPK_FILE',
-                    text: 'importIPKFile',
-                    compare:false
-                })
-            }
-
-            function compareIPKFile(){
-                if(vscode == null || vscode == undefined)
-                    vscode = acquireVsCodeApi();
-                if($('#jstree').html().length == 0)
-                {
-                    console.log("compare error #################################");
-                    //Alert
-                    vscode.postMessage({
-                        command: 'ERROR_MESSAGE',
-                        text: 'Please import the IPK file for comparison!',
-                        compare:true
-                    })
-                }
-                else{
-                    console.log("Coming to compare import ##########################");
-                    vscode.postMessage({
-                        command: 'IMPORT_IPK_FILE',
-                        text: 'importIPKFile',
-                        compare:true
-                    })
-                }
-            }
-
-            function showImportIPKDetails(){
-                var element = document.getElementById("coll1");
-                element.classList.toggle("active");
-                var content = document.getElementById("coll2");
-                console.log("###################");
-                console.log(content.style);
-                console.log(content.style.maxHeight);
-                if (content.style.maxHeight){
-                  content.style.maxHeight = null;
-                } else {
-                  content.style.maxHeight = content.scrollHeight + "px";
-                }
-            }
-
-            function showCompareIPKDetails(){
-                var element = document.getElementById("coll3");
-                element.classList.toggle("active");
-                var content = document.getElementById("coll4");
-                console.log("###################");
-                console.log(content.style);
-                console.log(content.style.maxHeight);
-                if (content.style.maxHeight){
-                  content.style.maxHeight = null;
-                } else {
-                  content.style.maxHeight = content.scrollHeight + "px";
-                }
-            }
-
-        //var coll1 = document.getElementById("coll1");
+                    </div>
+              
+                </div>
                 
-        /*coll1.addEventListener("click", function() {
-            var element = document.getElementById("coll1");
-            element.classList.toggle("active");
-            var content = document.getElementById("coll2");
-            console.log("###################");
-            console.log(content.style);
-            console.log(content.style.maxHeight);
-            if (content.style.maxHeight){
-              content.style.maxHeight = null;
-            } else {
-              content.style.maxHeight = content.scrollHeight + "px";
-            }
-          });*/
+            </div>
+            
 
-          //var coll3 = document.getElementById("coll3");
+            <div id="paneSep">&nbsp;</div>
+            <div id="rightPane">
+                <div id="rightSelector">
+                <div class="fileButtonContainer"> <input placeholder="Select IPK file to compare " disabled type="text" class="ipkInputField" id="selectedRightFile"> <button id="fileButtonLeft" class="fileButton" onclick=handleFileSelectorClick("R")> Browse </button></div>
+                </div>
+                <div style ="display:none"  id="r_aresInfo" class="accordion">Package Information</div>
+                <div id ="r_arrayInfo"  class="panel">
+                    
+
+                    <div id ="rArrayInfo_loader"  >
+                    <div style =" display:flex;  justify-content: center; ">
+                    <img src="${loadingUri}" style ="width:30px;"></img>
+                    </div></div>
+                    <div id ="rArrayInfo_content" style="display:flex;padding-left:15px"></div>
+
+                </div>
+                <div style ="display:none"  id="r_files" class="accordion">Files</div>
+                <div  class="panel">
+                <div id ="rightLoader" style="display:none" >
+                        <div style =" display:flex;  justify-content: center; ">
+                            <img src="${loadingUri}" style ="width:30px;"></img>
+                        </div>
+                    </div>
+                <div  id="rightGridContainer"> 
+                ${this.getTreeTableHTML("R")}
+                </div> 
+                </div>
                 
-          /*coll3.addEventListener("click", function() {
-              var element = document.getElementById("coll3");
-              element.classList.toggle("active");
-              var content = document.getElementById("coll4");
-              console.log("###################");
-              console.log(content.style);
-              console.log(content.style.maxHeight);
-              if (content.style.maxHeight){
-                content.style.maxHeight = null;
-              } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-              }
-            });*/
-            //By default hide all the elements except Import
-            var ipkfileName = document.getElementById("ipkfileName");
-            ipkfileName.style.display = "none";
-            var lblipkRawfile = document.getElementById("lblipkRawfile");
-            lblipkRawfile.style.display = "none";
-            var ipkRawfile = document.getElementById("ipkRawfile");
-            ipkRawfile.style.display = "none";
-            var lblipkfileSize = document.getElementById("lblipkfileSize");
-            lblipkfileSize.style.display = "none";
-            var ipkfileSize = document.getElementById("ipkfileSize");
-            ipkfileSize.style.display = "none";
-            var jstree = document.getElementById("jstree");
-            jstree.style.display = "none";
-            var coll1 = document.getElementById("coll1");
-            coll1.style.display = "none";
-            var coll2 = document.getElementById("coll2");
-            coll2.style.display = "none";
-
-            var btnCompare = document.getElementById("btnCompare");
-            btnCompare.style.display = "none";
-            var ipkfileName2 = document.getElementById("ipkfileName2");
-            ipkfileName2.style.display = "none";
-            var lblipkRawfile2 = document.getElementById("lblipkRawfile2");
-            lblipkRawfile2.style.display = "none";
-            var ipkRawfile2 = document.getElementById("ipkRawfile2");
-            ipkRawfile2.style.display = "none";
-            var lblipkfileSize2 = document.getElementById("lblipkfileSize2");
-            lblipkfileSize2.style.display = "none";
-            var ipkfileSize2 = document.getElementById("ipkfileSize2");
-            ipkfileSize2.style.display = "none";
-            var jstree1 = document.getElementById("jstree1");
-            jstree1.style.display = "none";
-            var coll3 = document.getElementById("coll3");
-            coll3.style.display = "none";
-            var coll4 = document.getElementById("coll4");
-            coll4.style.display = "none";
-
-        </script>
-			</html>`;
+                
+                
+            </div>
+          </div>         
+          <div id ="ctxmenu" class ="ctxmenu" style="display:none">
+          <p id ="menu_viewFile" class ="ctxmenu_item_active" >View file</p><p id="menu_compareFile">Compare files</p>
+          </div>
+         
+            <script type='text/javascript' src="${commonJs}"></script>
+          <script type='text/javascript' src="${treeGridJS}"></script>    
+    `;
     }
+    getTreeTableHTML(id) {
+        return `
+          <div class="table-wrap" id="${"treegrid_wrap_" + id}" ><table id="${"treegrid_" + id}" 
+          class="treegrid" role="treegrid" aria-label="sdk">
+          <colgroup>
+            <col id="treegrid-col1" style="width:60%">
+            <col id="treegrid-col2" style="width:80px" >
+            <col id="treegrid-col3" style="width:40%" >
+          </colgroup>
+          <thead style="display:none" >
+            <tr>
+              <th scope="col" ></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="${"treegrid_body_" + id}">
+          </tbody>
+          
+            </table>
+            </div>
+          `;
+    }
+
 }
 
 exports.IPK_ANALYZER = IPK_ANALYZER;

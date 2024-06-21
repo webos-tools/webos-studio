@@ -3,9 +3,9 @@
   * SPDX-License-Identifier: Apache-2.0
 */
 const vscode = require('vscode');
-const { generateApp, generateAppFromProjectWizard, removeApp } = require('./src/generateApp');
+const {  generateAppFromProjectWizard, removeApp, importApp } = require('./src/generateApp');
 const previewApp = require('./src/previewApp');
-const { runWithoutInstall} = require('./src/runWithoutInstallation');
+const { runWithoutInstall } = require('./src/runWithoutInstallation');
 const reloadWebAppPreview = require('./src/reloadWebApp');
 const packageApp = require('./src/packageApp');
 const { setupDevice, setDeviceProfile } = require('./src/setupDevice');
@@ -33,13 +33,15 @@ const launchResourceMonitoring = require('./src/resourceMonitoring');
 const fs = require('fs');
 const path = require('path');
 const setLogLevel = require('./src/setLogLevel');
-const { getCurrentDeviceProfile, setCurrentDeviceProfile } = require('./src/lib/deviceUtils');
+const { getCurrentDeviceProfile } = require('./src/lib/deviceUtils');
 const { PackageManagerSidebar } = require('./src/packageManagerSidebar');
 const { getSimulatorDirPath } = require('./src/lib/configUtils');
+const { LogViewPanel } = require('./src/logViewPanel');
 const extensionPath = __dirname;
-const ga4Util = require('./src/ga4Util');
-const inspectApp_ipk = require('./src/inspectApp_ipk');
 
+const inspectApp_ipk = require('./src/inspectApp_ipk');
+const ga4Util = require('./src/ga4Util');
+const { AutoUpdate } = require("./src/AutoUpdateConfig");
 let apiObjArray = [];
 let apiObjArrayIndex = 0;
 let myStatusBarItem;
@@ -57,14 +59,14 @@ function activate(context) {
     ga4Util.initLocalStorage(context);
     ga4Util.sendLaunchEvent(context.extension.packageJSON.version);
     ga4Util.sendPageView(`webOSStudio ${context.extension.packageJSON.version}`);
-   
+
     let previewPanelInfo = { "webPanel": null, appDir: null, childProcess: null, isEnact: null };
-    let packageManagerObj = {webPanel :null};
+
     const serviceProvider = vscode.languages.registerCompletionItemProvider(
         ['plaintext', 'javascript', 'typescript', 'html'],
         {
             provideCompletionItems(document, position) {
-                if(studioProfile === "") {
+                if (studioProfile === "") {
                     return undefined;
                 }
 
@@ -115,8 +117,8 @@ function activate(context) {
     const methodProvider = vscode.languages.registerCompletionItemProvider(
         ['plaintext', 'javascript', 'typescript', 'html'],
         {
-            provideCompletionItems(document, position) {  
-                if(studioProfile === "") {
+            provideCompletionItems(document, position) {
+                if (studioProfile === "") {
                     return undefined;
                 }
 
@@ -171,7 +173,7 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
-            if(studioProfile === "") {
+            if (studioProfile === "") {
                 return undefined;
             }
 
@@ -225,7 +227,7 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems() {
-            if(studioProfile === "") {
+            if (studioProfile === "") {
                 return undefined;
             }
 
@@ -293,7 +295,7 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
-            if(studioProfile === "") {
+            if (studioProfile === "") {
                 return undefined;
             }
 
@@ -340,7 +342,7 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
-            if(studioProfile === "") {
+            if (studioProfile === "") {
                 return undefined;
             }
             const returnItemArray = [];
@@ -402,8 +404,8 @@ function activate(context) {
     myStatusBarItem.command = myCommandId;
     context.subscriptions.push(myStatusBarItem);
 
-	// update status bar item once at start
-	updateStatusBarItem();
+    // update status bar item once at start
+    updateStatusBarItem();
 
     context.subscriptions.push(serviceProvider, methodProvider, paramProvider, snippetServiceProvider, snippetMethodProvider, snippetParamProvider);
 
@@ -561,7 +563,7 @@ function activate(context) {
                     (async () => {
                         let result = await setProfile(deviceProfile.toLowerCase());
                         if (result === 0) {
-                            ga4Util.mpGa4Event("LaunchProjectWizard", {category:"Commands", type: appSubType, apiLevel: apiLevel});
+                            ga4Util.mpGa4Event("LaunchProjectWizard", { category: "Commands", type: appSubType, apiLevel: apiLevel });
                             generateAppFromProjectWizard(appSubType, projectLocation, projectName, prop, addWebOSlib, deviceProfile)
                                 .then(() => {
                                     let apiLevelStatus = "", apiLevelNo = "";
@@ -597,16 +599,16 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installGlobal', () => {
         installGlobalLibrary();
         vscode.commands.executeCommand('webos.updateProfile');
-        ga4Util.mpGa4Event("installGlobal", {category:"Commands"});
+        ga4Util.mpGa4Event("installGlobal", { category: "Commands" });
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webosose.installEmulator', () => {
-        ga4Util.mpGa4Event("installEmulator", {category:"Commands"});
+        ga4Util.mpGa4Event("installEmulator", { category: "Commands" });
         installEmulatorLauncher();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('webos.setDeviceProfile', () => {
-        ga4Util.mpGa4Event("setDeviceProfile", {category:"Commands"});
+        ga4Util.mpGa4Event("setDeviceProfile", { category: "Commands" });
         setProfile();
     }));
 
@@ -639,15 +641,15 @@ function activate(context) {
     // Help Provide
     const helpPanels = new Map();
     const readmeCommand = vscode.commands.registerCommand('quickLauncher.readme', async () => {
-        ga4Util.mpGa4Event("quickLauncher_readme", {category:"Commands"});
+        ga4Util.mpGa4Event("quickLauncher_readme", { category: "Commands" });
         renderReadMe(helpPanels);
     });
     const changeLogCommand = vscode.commands.registerCommand('quickLauncher.changeLog', async () => {
-        ga4Util.mpGa4Event("quickLauncher_changeLog", {category:"Commands"});
+        ga4Util.mpGa4Event("quickLauncher_changeLog", { category: "Commands" });
         renderChangeLog(helpPanels);
     });
     const initHelpCommand = vscode.commands.registerCommand('quickLauncher.initHelp', async () => {
-        ga4Util.mpGa4Event("quickLauncher_refresh", {category:"Commands"});
+        ga4Util.mpGa4Event("quickLauncher_refresh", { category: "Commands" });
         await webososeHelpProvider.refresh();
     })
 
@@ -658,7 +660,7 @@ function activate(context) {
     const webososeHelpProvider = new HelpProvider([
         { "label": "Resource Monitoring", "onSelectCommand": "webosose.resourceMonitoring", "icon": "resource_monitoring" },
         { "label": "Readme", "onSelectCommand": "quickLauncher.readme", "icon": "info" },
-        { "label": "Change Log", "onSelectCommand": "quickLauncher.changeLog", "icon": "versions" }        
+        { "label": "Change Log", "onSelectCommand": "quickLauncher.changeLog", "icon": "versions" }
     ]);
     vscode.window.registerTreeDataProvider('quickLauncher', webososeHelpProvider);
 
@@ -669,7 +671,7 @@ function activate(context) {
         webososeAppsProvider.storeContextOnExtnLaunch(context);
     }));*/
     context.subscriptions.push(vscode.commands.registerCommand('webosose.setloglevel', () => {
-        ga4Util.mpGa4Event("setLogLevel", {category:"Commands"});
+        ga4Util.mpGa4Event("setLogLevel", { category: "Commands" });
         setLogLevel();
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webosose.previewApp', () => {
@@ -708,7 +710,7 @@ function activate(context) {
             });
     }));
     context.subscriptions.push(vscode.commands.registerCommand('webos.launchParams', () => {
-		launchApp(null, null, null, true)
+        launchApp(null, null, null, true)
             .then(() => {
                 webososeDevicesProvider.refresh();
             });
@@ -879,7 +881,7 @@ function activate(context) {
         await webososeAppsProvider.refresh();
         webososeAppsProvider.storeContextOnExtnLaunch(context);
     }));*/
-    context.subscriptions.push(vscode.commands.registerCommand('apps.projectWizard', async (app) => {
+    context.subscriptions.push(vscode.commands.registerCommand('apps.projectWizard', async () => {
         vscode.commands.executeCommand('webosose.projectWizard');
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.packageApp', async (app) => {
@@ -896,6 +898,11 @@ function activate(context) {
                         });
                 }
             });
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('apps.import', async () => {
+        importApp().then(() => webososeAppsProvider.refresh(null, context))
+
     }));
     context.subscriptions.push(vscode.commands.registerCommand('apps.removeApp', async (app) => {
         await removeApp(app);
@@ -927,7 +934,7 @@ function activate(context) {
             .then(installApp)
             .then((obj) => {
                 if (obj && obj.appId) {
-                    inspectApp(app.label, undefined, true, 'IDE');             
+                    inspectApp(app.label, undefined, true, 'IDE');
                 }
             });
         // inspectApp(app.label, undefined, true, 'IDE');
@@ -938,18 +945,24 @@ function activate(context) {
             .then((obj) => {
                 if (obj && obj.appId) {
                     inspectApp(app.label, undefined, true, 'BROWSER');
-                
+
                 }
             });
         // inspectApp(app.label, undefined, true, 'BROWSER');
     }));
     // Provide Diagnostics when user performs lint.
     let collection = vscode.languages.createDiagnosticCollection('appLintCollection');
-    context.subscriptions.push(vscode.commands.registerCommand('apps.lintApp', async (app) => {
-        lintApp(app.label, collection, true);
+    context.subscriptions.push(vscode.commands.registerCommand('apps.lintEnactApp', async (app) => {
+        lintApp(app.label, collection, 'EnactApp', true);
     }));
-    context.subscriptions.push(vscode.commands.registerCommand('apps.lintAppDisable', async (app) => {
-        lintApp(app.label, collection, false);
+    context.subscriptions.push(vscode.commands.registerCommand('apps.lintEnactAppDisable', async (app) => {
+        lintApp(app.label, collection, 'EnactApp', false);
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('apps.lintWebApp', async (app) => {
+        lintApp(app.label, collection, 'WebApp', true);
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('apps.lintWebAppDisable', async (app) => {
+        lintApp(app.label, collection, 'WebApp', false);
     }));
     vscode.workspace.onDidDeleteFiles(() => {
         webososeAppsProvider.refresh(null, context);
@@ -1008,38 +1021,96 @@ function activate(context) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('ipkanalyze.start', async () => {
 
+
+        if (this.ipkAnalyzer && this.ipkAnalyzer.panel) {
+            this.ipkAnalyzer.panel.reveal(1);
+            // vscode.commands.executeCommand('ipkanalyzer.focus');
+            return
+        }
+
+        if (this.ipkAnalyzer && this.ipkAnalyzer.isAnalysing) {
+            // executing analyser on  while analysing and not opened the ui
+            return
+        }
+
         ga4Util.sendPageView("IpkAnalyzer");
-        const ipkAnalyzer = new IPK_ANALYZER(context);
-        ipkAnalyzer.startEditor();
+        this.ipkAnalyzer = new IPK_ANALYZER(context);
+        this.ipkAnalyzer.startEditor();
+
 
     }));
-  
+
     this.packageMgrWebviewProvider = new PackageManagerSidebar(context);
-    context.subscriptions.push(vscode.commands.registerCommand('getPackageMgr', () =>this.packageMgrWebviewProvider ));
+    context.subscriptions.push(vscode.commands.registerCommand('getPackageMgr', () => this.packageMgrWebviewProvider));
 
     vscode.window.registerWebviewViewProvider(PackageManagerSidebar.viewType, this.packageMgrWebviewProvider, { webviewOptions: { retainContextWhenHidden: true } });
 
-  vscode.commands.executeCommand('webososeDevices.refreshList');
+    context.subscriptions.push(vscode.commands.registerCommand('logview.start', async () => {
+
+        vscode.commands.executeCommand('setContext', 'webosose.showlogview', true);
+        vscode.commands.executeCommand("workbench.action.alignPanelCenter");
+        vscode.commands.executeCommand("devicelogview.focus");
+        if (!this.logViewPanelProvider) {
+            this.logViewPanelProvider = new LogViewPanel(context);
+            vscode.window.registerWebviewViewProvider(LogViewPanel.viewType, this.logViewPanelProvider, { webviewOptions: { retainContextWhenHidden: true } });
+        } else if (this.logViewPanelProvider && this.logViewPanelProvider.logProcess == null) {
+            this.logViewPanelProvider.reloadWebView()
+        }
+
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('logview.stop', async () => {
+        if (this.logViewPanelProvider) {
+            vscode.commands.executeCommand('setContext', 'webosose.showlogview', true);
+        }
+
+        if (this.logViewPanelProvider && this.logViewPanelProvider.logProcess != null) {
+            this.logViewPanelProvider.stopLogView()
+        }
+
+    }));
+
+    // hide the release checker on production mode
+    if (context.extensionMode == 1) {
+        vscode.commands.executeCommand('setContext', 'webosose.showReleaseChecker', false);
+    } else {
+        vscode.commands.executeCommand('setContext', 'webosose.showReleaseChecker', true);
+    }
+
+    context.subscriptions.push(vscode.commands.registerCommand('packagemanager.checkreleases', async () => {
+        if (await new AutoUpdate(context).doAutoUpateConfigFile()) {
+            vscode.window.showInformationMessage("AutoUpdate- Found new releases in Package Manager and Updated");
+        } else {
+            vscode.window.showInformationMessage("AutoUpdate- Not found any new releases in Package Manager");
+        }
+
+    }));
+
+    vscode.commands.executeCommand('setContext', 'webosose.showlogview', false);
+
+
+
+    vscode.commands.executeCommand('webososeDevices.refreshList');
     webososeAppsProvider.storeContextOnExtnLaunch(context);
     initExtViews();
 
 }
-function initExtViews(){
+function initExtViews() {
     // vscode.commands.executeCommand('vbox.focus');
     // vscode.commands.executeCommand('apps.focus');
     // vscode.commands.executeCommand('webososeDevices.focus');
-    
 
-    setTimeout(()=>{
-        if(logger.extInit == false){
-            logger.log("webOS Studio initialized successfully." ) ;
+
+
+    setTimeout(() => {
+        if (logger.extInit == false) {
+            logger.log("webOS Studio initialized successfully.");
             logger.log("------------------------------------------------")
-        
+
             logger.extInit = true;
-          
-        
+
+
         }
-    },5000)
+    }, 5000)
 }
 
 function getResourcePath() {
@@ -1108,7 +1179,7 @@ function setStudioAPILevelByProfile(profile) {
         return;
     }
 
-    apiLevelList.sort(function(comp1, comp2) {
+    apiLevelList.sort(function (comp1, comp2) {
         return comp2 - comp1;
     });
 
@@ -1396,6 +1467,26 @@ function compareFn(a, b) {
         return 1;
     }
     return 0;
+}
+
+function changeServiceName(serviceName) {
+    let changeName = serviceName;
+    if (serviceName === "com.webos.service.power") { // Remove duplicated service
+        changeName = "remove";
+    }
+    else {
+        if (serviceName.includes("palm")) { // Change the service name from palm to webos
+            let replaceWord = "";
+            if (serviceName.includes("service")) {
+                replaceWord = "webos";
+            }
+            else {
+                replaceWord = "webos.service";
+            }
+            changeName = serviceName.replace("palm", replaceWord);
+        }
+    }
+    return changeName;
 }
 
 function findMethodInArray(serviceName) {

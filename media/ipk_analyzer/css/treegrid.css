@@ -1,0 +1,164 @@
+.table-wrap {
+  overflow: scroll;
+  cursor: pointer;
+}
+
+.treegrid {
+  width: 100%;
+  white-space: nowrap;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.treegrid tr {
+  display: table-row;
+  cursor: default;
+  height: 20px;
+}
+
+.trhover:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+/* Extra space between columns for readability */
+.treegrid_prow {
+  padding-bottom: 1px;
+}
+
+.treegrid td {
+  padding-bottom: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.treegrid td :hover {
+  overflow-x: visible;
+}
+
+.treegrid tbody td {
+  cursor: pointer;
+}
+
+.treegrid tbody {}
+
+.treegrid-col1 {}
+
+.treegrid-col2 .treegrid-col3 .treegrid-col4 {}
+
+.treegrid th {
+  text-align: left;
+}
+
+.treegrid a {
+  padding-left: 0.25ch;
+  padding-right: 0.25ch;
+}
+
+*:focus {
+  outline: none;
+}
+
+.childrow:focus {
+  background: var(--vscode-list-hoverBackground);
+}
+
+.treegrid tr:focus {
+  background: var(--vscode-list-hoverBackground);
+  border: none;
+}
+
+.focusedRow {
+  background: var(--vscode-list-hoverBackground);
+  border: none;
+}
+
+.foundProbableRow {
+  text-decoration: underline solid red 2px;
+
+}
+
+.focusedRow_probable {
+
+  background-color: #6e2c2c;
+  border: none;
+
+}
+
+.treegrid tr>td:not(:first-child),
+.treegrid tr>th:not(:first-child) {
+  padding-left: 0.5ch;
+}
+
+.treegrid a:focus {
+  border-bottom: none;
+}
+
+/* Hide collapsed rows */
+.treegrid tr.hidden {
+  display: none;
+}
+
+
+/* Collapse/expand icons */
+.treegrid tr>td:first-child::before {
+  content: " ";
+  display: inline-block;
+  width: 2ch;
+  height: 11px;
+  transition: transform 0.3s;
+  transform-origin: 5px 5px;
+}
+
+.treegrid tr[aria-expanded]>td:first-child::before,
+.treegrid td[aria-expanded]:first-child::before {
+  cursor: pointer;
+
+  font-family: "codicon";
+  content: "\eab6";
+  padding-right: 15px;
+  vertical-align: sub;
+  font-weight: 900;
+}
+
+.treegrid tr[aria-expanded="true"]>td:first-child::before,
+.treegrid td[aria-expanded="true"]:first-child::before {
+  transform: rotate(90deg);
+}
+
+.treegrid tr[aria-expanded]:focus>td:first-child::before,
+.treegrid tr[aria-expanded]>td:focus:first-child::before,
+.treegrid tr:focus>td[aria-expanded]:first-child::before,
+.treegrid tr>td[aria-expanded]:focus:first-child::before {}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-radius: 10px;
+  border-top: 4px solid #3498db;
+  width: 8px;
+  height: 8px;
+  -webkit-animation: spin 1s linear infinite;
+  /* Safari */
+  animation: spin 1s linear infinite;
+  margin-top: 5px;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
