@@ -36,6 +36,10 @@
             "summary": "Provides methods for managing DRM clients which handle DRM right information, sending DRM message, and subscribing to DRM rights error information. For more details on DRM playback, see the DRM Content Playback.</p>\n"
         },
         {
+            "uri": "com.webos.service.keymanager3",
+            "summary": "<p>Provides methods for generation and deletion of keys, encryption and decryption, generation and verification of signature, etc. These crypto operations are performed by the keymaster trusted application (TA) running under the trusted execution environment (TEE). It is a similar concept to Android's HW keymaster, demonstrating the high-standard key protection technology.</p>"
+        },
+        {
             "uri": "com.webos.service.mrcu",
             "summary": "<p>Provides methods related to the magic remote sensor. This is used to check the sensor data from the magic remote or to stop receiving sensor data from the magic remote.</p>\n"
         },
@@ -307,27 +311,11 @@
         {
             "uri": "com.webos.service.blegatt/stopScan",
             "description": "<p>Stops ongoing ble scanning. If the <strong>'stopScan'</strong> method is called while scanning is underway, the ongoing scanning operation stops and no more information about device searching is sent as return of the <strong>'startScan'</strong> method. The scanning operation also stops when 60 seconds elapse after the <strong>'startScan'</strong> method is called or if another app goes foreground. The state of the scanning operation can be checked in the <strong>'isScan'</strong> return of the <strong>'getState'</strong> method.</p>",
-            "parameters": [
-                {
-                    "name": "returnValue",
-                    "required": "yes",
-                    "type": "Boolean"
-                },
-                {
-                    "name": "errorCode",
-                    "required": "no",
-                    "type": "Number"
-                },
-                {
-                    "name": "errorText",
-                    "required": "no",
-                    "type": "String"
-                }
-            ]
+            "parameters": []
         },
         {
             "uri": "com.webos.service.blegatt/getState",
-            "description": "<p>>Gets information about the scanning state, connected devices, and paired devices. If the value of the <strong>'subscribe'</strong> parameter is true, every time there is a change to the return data, the updated information will be delivered.</p",
+            "description": "<p>Gets information about the scanning state, connected devices, and paired devices. If the value of the <strong>'subscribe'</strong> parameter is true, every time there is a change to the return data, the updated information will be delivered.</p",
             "parameters": [
                 {
                     "name": "subscribe",
@@ -549,7 +537,7 @@
         },
         {
             "uri": "com.palm.connectionmanager/getStatus",
-            "description": "<p>Register an app's or service's willingness to take over as the Activity's parent.</p>\n\n<p>If your app can wait for an unavailable, not released Activity to become available, then set the &quot;wait&quot; flag to true. If it is, and the Activity is valid, which means Activity exists and is not exiting, the call should succeed. If it cannot wait, and the Activity is valid but cannot be adopted, then the call fails. The adopted return flag indicates a successful or failed adoption.</p>",
+            "description": "<p>Gets the current status of network connections (both Wi-Fi and wired) on the system. Apps can subscribe to it so that they are notified whenever the network status changes.</p>",
             "parameters": [
                 {
                     "name": "subscribe",
@@ -770,7 +758,7 @@
         },
         {
             "uri": "com.palm.db/search",
-            "description": "<p><p>Supports the <strong>?</strong> operator. The <strong>?</strong> operator can be used for full-text searching. However, the <strong>search</strong> method is significantly slower, and should only be used for a full-text type-down search. The <strong>search</strong> method should not be used for retrieving results that are going to be scrolled in a list.</p><p>The <strong>search</strong> method supports:</p>\n\n<ul>\n\t<li>Ordering by any property</li>\n\t<li>Distinct method to remove duplicate objects</li>\n\t<li>%% operator in the filter to search in a substring</li>\n</ul><p>The <strong>search</strong> method has some limitations:</p>         \n\n<ul>\n\t<li>There must be an index for the field you are searching on.</li>\n\t<li>The search operation looks for words beginning with the search string.</li>\n</ul></p>",
+            "description": "<p>Supports the <strong>?</strong> operator. The <strong>?</strong> operator can be used for full-text searching. However, the <strong>search</strong> method is significantly slower, and should only be used for a full-text type-down search. The <strong>search</strong> method should not be used for retrieving results that are going to be scrolled in a list.</p><p>The <strong>search</strong> method supports:</p>\n\n<ul>\n\t<li>Ordering by any property</li>\n\t<li>Distinct method to remove duplicate objects</li>\n\t<li>%% operator in the filter to search in a substring</li>\n</ul><p>The <strong>search</strong> method has some limitations:</p>         \n\n<ul>\n\t<li>There must be an index for the field you are searching on.</li>\n\t<li>The search operation looks for words beginning with the search string.</li>\n</ul></p>",
             "parameters": [
                 {
                     "name": "query",
@@ -808,11 +796,11 @@
         },
         {
             "uri": "com.webos.service.drm/load",
-            "description": "<p>Creates a DRM client instance for given type./<p><p>After a DRM client instance is created using this method, other methods provided by the DRM service can be used.</p><p>If different plugins in an application need to access the same DRM client instance, use isLoaded method to check the client ID. The client ID is randomly generated with mixed characters and numbers in 11 bytes. The last 1 byte is reserved for '0'. (e.g. ISQTUFTWV40, 5DaOSFv82A0)</p><p>Post-condition: A unique DRM client instance is created..</p>",
+            "description": "<p>Creates a DRM client instance for given type.</p><p>After a DRM client instance is created using this method, other methods provided by the DRM service can be used.</p><p>If different plugins in an application need to access the same DRM client instance, use isLoaded method to check the client ID. The client ID is randomly generated with mixed characters and numbers in 11 bytes. The last 1 byte is reserved for '0'. (e.g. ISQTUFTWV40, 5DaOSFv82A0)</p><p>Post-condition: A unique DRM client instance is created..</p>",
             "parameters": [
                 {
                     "name": "drmType",
-                    "required": "no",
+                    "required": "yes",
                     "type": "String"
                 },
                 {
@@ -887,6 +875,139 @@
             ]
         },
         {
+            "uri": "com.webos.service.keymanager3/generateKey",
+            "description": "<p>Enables an app to generate a new key or keypair and store it in the database. The key generated by this method can be used only by the owner of the key. For example, if app A creates a key using this method, that key can be used only by this app A. The key name must be unique, which means you cannot generate a key with the existing key name. To generate a key with the existing name, remove that existing key using the <strong>'removeKey'</strong> method first.</p>",
+            "parameters": [
+                {
+                    "name": "name",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "params",
+                    "required": "yes",
+                    "type": "Object::ParamSet"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.keymanager3/importKey",
+            "description": "<p>Enables an app to import a key or key pair and store it in the database. To import a key pair, just import the private key, then <strong>'keymanager3'</strong> will derive its public key.</p>",
+            "parameters": [
+                {
+                    "name": "name",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "params",
+                    "required": "yes",
+                    "type": "Object::ParamSet"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.keymanager3/exportKey",
+            "description": "<p>Enables an app to export a public key from the existing keypair by the key name.</p>",
+            "parameters": [
+                {
+                    "name": "name",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.keymanager3/removeKey",
+            "description": "<p>Removes a key from the device by key name.</p>",
+            "parameters": [
+                {
+                    "name": "name",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.keymanager3/begin",
+            "description": "<p>Begins a cryptographic operation, using the specified key, for the specified purpose with the specified parameters (as appropriate), and returns an operation handle that is used with <strong>'update'</strong> and <strong>'finish'</strong> to complete the operation.</p>",
+            "parameters": [
+                {
+                    "name": "name",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "params",
+                    "required": "yes",
+                    "type": "Object::ParamSet"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.keymanager3/update",
+            "description": "<p>Provides data to process the ongoing operation started by the <strong>'begin'</strong> method. If the returned <strong>'consumed_size'</strong> is not matched to the full length of the input data, you should call the <strong>'update'</strong> method again with the remaining data starting after the data's <strong>'consumed_size'</strong>. Do not process a large amount of data at once. If the data size exceeds 1M, split the data and use the '<strong>update'</strong> method multiple times with the spilt data sets.</p>",
+            "parameters": [
+                {
+                    "name": "handle",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "aad",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.keymanager3/finish",
+            "description": "<p>Begins a cryptographic operation, using the specified key, for the specified purpose with the specified parameters (as appropriate), and returns an operation handle that is used with <strong>'update'</strong> and <strong>'finish'</strong> to complete the operation. Do not process a large amount of data at once. If the data size exceeds 1M, split the data and use the <strong>'finish'</strong> method multiple times with the spilt data sets.</p>",
+            "parameters": [
+                {
+                    "name": "name",
+                    "required": "yes",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "signature",
+                    "required": "no",
+                    "type": "String"
+                },
+                {
+                    "name": "aad",
+                    "required": "no",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.keymanager3/abort",
+            "description": "<p>Aborts the in-progress operation. Once you call <strong>'abort'</strong> with a handle, the handle value is no longer available for cryptographic operation.</p>",
+            "parameters": [
+                {
+                    "name": "handle",
+                    "required": "yes",
+                    "type": "String"
+                }
+            ]
+        },
+        {
             "uri": "com.webos.service.mrcu/getAPIVersion",
             "description": "<p>Gets MRCU API version. This method gives the version of the API provided by the MRCU service. API usability may change by API version, and implementation may vary. If there is a singularity, an explanation about the change will be added to this specification with version.</p>",
             "parameters": []
@@ -934,8 +1055,29 @@
             ]
         },
         {
-            "uri": "com.webos.service.mrcu/sensor2/sensor2/resetQuaternion",
+            "uri": "com.webos.service.mrcu/sensor2/resetQuaternion",
             "description": "<p>Resets the quaternion sensor of the Magic Remote. Sometimes you need to reset the sensor before the user action, such as when a game starts or magic remote wakes up from sleep mode.</p>",
+            "parameters": []
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor/getSensorData",
+            "description": "<p>Subscribes the sensor data from the magic remote. The data includes point coordinates, gyroscope sensor, accelerometer sensor and quaternion value. You can get the sensor data by subscribing a callback function with specified intervals.</p>",
+            "parameters": [
+                {
+                    "name": "callbackInterval",
+                    "required": "yes",
+                    "type": "Number"
+                },
+                {
+                    "name": "subscribe",
+                    "required": "yes",
+                    "type": "Boolean"
+                }
+            ]
+        },
+        {
+            "uri": "com.webos.service.mrcu/sensor/resetQuaternion",
+            "description": "<p>Resets the quaternion sensor of the magic remote. Sometimes you need to reset the sensor before the user action, such as when a game starts or magic remote wakes up from sleep mode.</p>",
             "parameters": []
         },
         {
@@ -956,7 +1098,7 @@
                 {
                     "name": "ids",
                     "required": "no",
-                    "type": "Object array"
+                    "type": "String array"
                 },
                 {
                     "name": "query",
@@ -1019,7 +1161,7 @@
             "parameters": [
                 {
                     "name": "objects",
-                    "required": "yes",
+                    "required": "no",
                     "type": "Object array"
                 },
                 {
