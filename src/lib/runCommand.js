@@ -493,9 +493,12 @@ async function getLintResults(appDir, lintAppPath, extensionBasePath, appType) {
         
     } else if (appType === "WebApp") {
         console.log("Executing lint for web app")
+        let lintDir =path.join(extensionBasePath,"node_modules",".bin")
+        // cmd = `${lintExe +" "+ lintAppPath} --ext .js,.html`
         cmd = `eslint ${lintAppPath} --ext .js,.html`
-        // return await _execAsync(cmd, { cwd: extensionBasePath })
-        return await _lintExecAsync(cmd, { cwd: extensionBasePath })
+        // return await _execAsync(cmd, {cwd: extensionBasePath})
+        return await _lintExecAsync(cmd, { cwd: lintDir })
+
     }
     return Promise.reject('Lint is not supported for type of app.');
 }

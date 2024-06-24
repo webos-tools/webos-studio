@@ -1047,6 +1047,11 @@ function activate(context) {
 
     context.subscriptions.push(vscode.commands.registerCommand('logview.start', async () => {
 
+        let current_profile = await getCurrentDeviceProfile();
+        if (current_profile == "tv") {
+            vscode.window.showErrorMessage("The current profile is 'TV'. Switch to 'OSE' to start the Log Viewer.")
+            return false
+        }
         vscode.commands.executeCommand('setContext', 'webosose.showlogview', true);
         vscode.commands.executeCommand("workbench.action.alignPanelCenter");
         vscode.commands.executeCommand("devicelogview.focus");

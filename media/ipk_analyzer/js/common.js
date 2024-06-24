@@ -207,10 +207,10 @@ function addRows(tableBody, pObj, aLevel, fileSide) {
     }
     iconClass = "icon icon" + iconClass;
     colHTML = `<td style="padding-left:${aLevel + 1}ch "role="gridcell"><span class="preview_icon"><span class="${iconClass}"></span></span>${pObj.name}</td> <td role="gridcell">${pObj.sizeConverted} <td role="gridcell">
-     <div style="background-color:var(--vscode-editor-findMatchHighlightBackground);border-radius: 2px;width:${pObj.sizePer}">${pObj.sizePer}</div></td>`
+     <div style="background-color:coral;border-radius: 2px;width:${pObj.sizePer}">${pObj.sizePer}</div></td>`
   } else {
     colHTML = `<td style="padding-left:${aLevel + 1}ch "role="gridcell">${pObj.name}</td> <td role="gridcell">${pObj.sizeConverted} <td role="gridcell">
-  <div style="background-color:var(--vscode-editor-findMatchHighlightBackground);border-radius: 2px;width:${pObj.sizePer}">${pObj.sizePer}</div></td>`
+  <div style="background-color:coral;border-radius: 2px;width:${pObj.sizePer}">${pObj.sizePer}</div></td>`
   }
 
 

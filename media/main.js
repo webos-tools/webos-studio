@@ -175,7 +175,7 @@
                     row.innerHTML = `
                 <div class="InstlistItemTitleContainer">
                     <div class="InstlistItemTitle">
-                        <i  style="padding-right:5px;vertical-align: bottom;"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
+                        <i  style="padding-right:3px;vertical-align: bottom;"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
                     </div>
                  </div>
                 <div class ="InstlistItemIcons">
@@ -186,7 +186,7 @@
                     row.innerHTML = `
                 <div class="InstlistItemTitleContainer">
                     <div class="InstlistItemTitle">
-                        <i  style="padding-right:5px; vertical-align: bottom;"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
+                        <i  style="padding-right:3px; vertical-align: bottom;"  class="codicon  ${this.instListData[i].isRunning ? "codicon-vm-active" : "codicon-vm"} "></i> ${this.instListData[i].label}
                     </div>
                  </div>
                 <div class ="InstlistItemIcons">
