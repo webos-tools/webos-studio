@@ -671,12 +671,12 @@
                 },
                 {
                     "command": "apps.lintWebApp",
-                    "when": "view == apps && viewItem == web-app",
+                    "when": "view == apps && viewItem == hidden-menu",
                     "group": "app2@2"
                 },
                 {
                     "command": "apps.lintWebAppDisable",
-                    "when": "view == apps && viewItem == web-app",
+                    "when": "view == apps && viewItem == hidden-menu",
                     "group": "app2@2"
                 },
                 {
