@@ -1,2 +1,3 @@
 node_modules
 src/lib/jstree-table/*
+src/device_preview/lib/socketio.js

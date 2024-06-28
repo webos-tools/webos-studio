@@ -1474,26 +1474,6 @@ function compareFn(a, b) {
     return 0;
 }
 
-function changeServiceName(serviceName) {
-    let changeName = serviceName;
-    if (serviceName === "com.webos.service.power") { // Remove duplicated service
-        changeName = "remove";
-    }
-    else {
-        if (serviceName.includes("palm")) { // Change the service name from palm to webos
-            let replaceWord = "";
-            if (serviceName.includes("service")) {
-                replaceWord = "webos";
-            }
-            else {
-                replaceWord = "webos.service";
-            }
-            changeName = serviceName.replace("palm", replaceWord);
-        }
-    }
-    return changeName;
-}
-
 function findMethodInArray(serviceName) {
     const methodNameArr = [], methodDescrArr = [];
     const apiMethodArray = apiObjArray[apiObjArrayIndex].method;

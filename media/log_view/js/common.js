@@ -511,7 +511,7 @@ class LogScroller {
 
   getRowWithFocus() {
     return this.getContainingRow(document.activeElement);
-  };
+  }
 
   initScroll() {
     this.initScrollBarDrag();
