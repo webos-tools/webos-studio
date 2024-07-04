@@ -214,9 +214,9 @@ module.exports = async function previewApp(appSelectedDir, previewPanelInfo, con
                 <div id="prv_toolBarBody" class="prv_toolBarBody">
                     <div class="prv_toolBarMenu" id="prv_toolBarMenu">
                         <span id ="prv_resTitle" class="prv_resTitle">Resolution - Fit to Windows</span>
-                        <i id ="prv_ddmenu" title="Menu" class="codicon codicon-menu prv_icon"></i>
+                        <i id ="prv_ddmenu" title="Change Resolution" class="codicon codicon-editor-layout prv_icon"></i>
                         <i id ="prv_zoomin" title="Zoom-In" class="codicon codicon-zoom-in prv_icon_zoom"></i>
-                        <i id ="prv_zoomout" title="Zoom-out" class="codicon codicon-zoom-out prv_icon_zoom"></i>
+                        <i id ="prv_zoomout" title="Zoom-Out" class="codicon codicon-zoom-out prv_icon_zoom"></i>
                     </div>
             
             
