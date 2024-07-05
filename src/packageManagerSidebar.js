@@ -62,6 +62,7 @@ class PackageManagerSidebar {
           command: "SET_STATUS_JSON",
           data: this.compMangerObj.getStatusJson(),
         });
+        this.compMangerObj.updateAvailableDiskspaceOnEnvPath();
       }, 100);
 
       this.panel.webview.onDidReceiveMessage(async (msg) => {
@@ -351,7 +352,7 @@ class PackageManagerSidebar {
     await this.compMangerObj.updatePreReqStatus();
     this.compMangerObj.getDependancyJson();
     this.compMangerObj.clearDownloadDir();
-    this.compMangerObj.updateAvailableDiskspaceOnEnvPath();
+    // this.compMangerObj.updateAvailableDiskspaceOnEnvPath();
     this.compMangerObj.addEnvIfMissing();
     this.compMangerObj.promptIfTVSDKInstallerIsAvailable();
 
