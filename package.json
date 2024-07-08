@@ -591,12 +591,12 @@
                 },
                 {
                     "submenu": "webososeDevices.runApp",
-                    "when": "webos.profile == 'OSE' && view == webososeDevices && viewItem == installed",
+                    "when": "webos.profile == 'OSE' && view == webososeDevices && viewItem == installed || webos.profile == 'OSE' && view == webososeDevices && viewItem == running",
                     "group": "app1@1"
                 },
                 {
                     "command": "webososeDevices.runApp",
-                    "when": "webos.profile == 'TV' && view == webososeDevices && viewItem == installed",
+                    "when": "webos.profile == 'TV' && view == webososeDevices && viewItem == installed || webos.profile == 'TV' && view == webososeDevices && viewItem == running",
                     "group": "app1@1"
                 },
                 {
