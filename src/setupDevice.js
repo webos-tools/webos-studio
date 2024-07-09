@@ -16,6 +16,12 @@ async function _setDeviceInfo(device) {
         defaultIp = device.ip;
         defaultPort = device.port;
         defaultUsername = device.username;
+    } else {
+        let profile = await getCurrentDeviceProfile();
+        if (profile === "tv") {
+            defaultPort = '9922';
+            defaultUsername = 'prisoner';
+        }
     }
 
     let controller = new InputController();
