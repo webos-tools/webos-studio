@@ -148,9 +148,8 @@ class InputChecker {
         if (value.length === 1) {
             return 'Please enter the device name with a minimum of 2 characters.';
         }
-        if (!matchReg(value, /^[_a-zA-Z0-9][a-zA-Z0-9#_-]*/g)) {
-            return `Please include only letters(A-Z, a-z), digits(0-9), and special characters('-', '_', '#').
-                    And it cannot begin with '-' or '#'.`;
+        if (['$', '%'].indexOf(value[0]) != -1) {
+            return `The device name should not start with '%' or '$'.`;
         }
         return null;
     }
