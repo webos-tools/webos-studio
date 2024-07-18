@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023-2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const vscode = require('vscode');
 
 let resourceMonitoringPanelCnt = 0;

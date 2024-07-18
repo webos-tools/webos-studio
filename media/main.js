@@ -1,7 +1,7 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
-  * SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright (c) 2021-2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 (function () {
     const vscode = acquireVsCodeApi();
     document.body.style.display = "block";

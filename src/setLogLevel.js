@@ -1,7 +1,7 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
-  * SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright (c) 2021-2023 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const vscode = require('vscode');
 const { InputController } = require("./lib/inputController");
 const { InputChecker } = require("./lib/inputChecker");

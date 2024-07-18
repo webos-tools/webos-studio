@@ -1,7 +1,7 @@
 /*
-  * Copyright (c) 2021-2023 LG Electronics Inc.
-  * SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright (c) 2021-2023 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const templateList = [
     { name: 'Basic Web App', id: 'webapp', desc: 'web app for webOS' },
     { name: 'Basic Enact App', id: 'enact', desc: 'enact app for webOS' },

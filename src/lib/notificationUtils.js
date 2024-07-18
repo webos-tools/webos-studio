@@ -1,7 +1,7 @@
 /*
-  * Copyright (c) 2021-2022 LG Electronics Inc.
-  * SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright (c) 2021-2022 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const vscode = require('vscode');
 let wait1 = async () => await new Promise((resolve) => { setTimeout(() => { resolve(); }, 3500); });
 let wait2 = async () => await new Promise((resolve) => { setTimeout(() => { resolve(); }, 1500); });

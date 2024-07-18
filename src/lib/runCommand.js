@@ -1,7 +1,7 @@
 /*
-  * Copyright (c) 2021-2023 LG Electronics Inc.
-  * SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright (c) 2021-2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const vscode = require('vscode');
 const path = require('path');
 const { exec, spawn } = require('child_process');
