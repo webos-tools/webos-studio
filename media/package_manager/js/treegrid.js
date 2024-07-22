@@ -1,4 +1,7 @@
-
+/*
+ * Copyright (c) 2023-2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 'use strict';
 function TreeGrid(treegridElem, doAllowRowFocus, doStartRowFocus) {
   function initAttributes() {

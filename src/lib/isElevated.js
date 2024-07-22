@@ -1,5 +1,8 @@
 
-//const process = require( 'node:process');
+/*
+ * Copyright (c) 2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const execa = require( 'execa');
 
  function isElevated() {

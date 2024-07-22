@@ -1,5 +1,8 @@
 
-
+/*
+ * Copyright (c) 2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const vscode = require("vscode");
 const util = require("util");
 const fs = require("fs");

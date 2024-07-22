@@ -1,4 +1,7 @@
-
+/*
+ * Copyright (c) 2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 class PeviewApp {
     constructor() {

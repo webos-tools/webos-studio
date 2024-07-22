@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023-2024 LG Electronics Inc.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 var SOCKET_SERVER_IP ="127.0.0.1";
 var SOCKET_SERVER_PORT ="8000";
 
