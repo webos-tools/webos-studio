@@ -228,61 +228,11 @@ function getClientId(key = clientKey) {
   return storedValue;
 }
 
-/**
- * Ask to user for UDC agreement, and show user agreement. It is not necessary as legal review.
- * @param {*} context 
- * @returns 
- */
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function checkInitialExecution(context) {
-  const license_agreement = globalConfig.getConfigs("license_agreement");
-  if (license_agreement !== true) {
-    getUserAgreement(context);
-  }
-  if (vscode.workspace.getConfiguration().get("webos.enableUserDataCollection")) {
-    return;
-  }
-}
-
-/**
- * @param {vscode.ExtensionContext} context
- */
-function getUserAgreement(context) {
-  const header = "webOS Studio License Agreement";
-  // if modal is true, InformationMessage will be shown as modal dialog.
-  const options = {
-    detail: "Do you agree to the terms and conditions of this license agreement?",
-    modal: true
-  }
-
-  // copy agreement file, to do not change original file.
-  const agreementFilePath = path.join(getHomeDir(), "agreement");
-  fs.copyFileSync(path.join(context.extensionUri.fsPath, "media", "udc", "agreement.txt"), agreementFilePath);
-  // load and show agreement file in editor area
-  vscode.workspace.openTextDocument(vscode.Uri.file(agreementFilePath).with({ scheme: 'file' })).then(doc => {
-    vscode.window.showTextDocument(doc);
-  });
-
-  vscode.window.showInformationMessage(header, options, ...[{title: "Yes"}, {title: "No", isCloseAffordance: true}]).then((answer) => {
-    if (answer.title === "I agree") {
-      // since click "I agree", the dialog will not show.
-      globalConfig.updateConfigs("license_agreement", true);
-      vscode.workspace.getConfiguration().update("webos.enableUserDataCollection", true);
-    } else {
-      // when user click "No", the dialog will show again at next time.
-      vscode.workspace.getConfiguration().update("webos.enableUserDataCollection", false);
-    }
-  });
-  return true;
-}
-
 module.exports = {
   initLocalStorage     : initLocalStorage,
   sendLaunchEvent      : mpGa4EventLaunched,
   mpGa4Event           : mpGa4Event,
   sendPageView         : ga4PageView,
   EVENT_KEYS           : EVENT_KEYS,
-  checkInitialExecution: checkInitialExecution,
   globalConfig         : globalConfig
 };
