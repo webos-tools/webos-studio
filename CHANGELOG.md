@@ -1,8 +1,29 @@
-# Change Log
+# Changelog
 
 All notable changes to the "webOS Studio" extension will be documented in this file.
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
+
+## [2.1.0] [2024-07-31]
+
+- New features
+  - Providing a list of the latest SDK versions in PACKAGE MANAGER
+  - Importing apps/services from outside of the current workspace
+  - Adjusting resolution in the app preview
+- Improve UI
+  - PACKAGE MANAGER, SIMULATOR MANAGER, IPK Analyzer
+- Change PACKAGE MANAGER to only show SDKs of the current profile
+- Change the naming rule of the target device
+- Change webOS Studio to not open the OUTPUT panel by default when it starts
+- Update README.md
+- TV profile
+  - Support auto-completion
+- OSE profile
+  - Support LS2 API level 29
+  - Add a new feature: Log Viewer
+- Bug fix
+  - Fixed a bug where KNOWN DEVICE was not updated properly
+  - Fixed a bug where icons in KNOWN DEVICE were not displayed properly in the 'Light High Contrast' theme
 
 ## [2.0.2] [2024-04-06]
 

@@ -35,12 +35,12 @@ Emulator-related features are not supported in Apple Silicon Mac.
 
 ### Software
 
-| Software                      | Required version                  |
-| ----------------------------- | --------------------------------- |
-| Microsoft Visual Studio Code  | 1.58.0 or higher                  |
-| Node.js                       | v14.15.1 or higher (verified on v14.15.1 and v16.20.2)              |
-| Python                        | 3.6 or higher                     |
-| VirtualBox                    | 6.1                     |
+| Software                      | Required Version                                       |
+| ----------------------------- | ------------------------------------------------------ |
+| Microsoft Visual Studio Code  | 1.58.0 or higher                                       |
+| Node.js                       | v14.15.1 or higher (verified on v14.15.1 and v16.20.2) |
+| Python                        | 3.6 or higher                                          |
+| VirtualBox                    | 6.1                                                    |
 
 ## Setup
 
@@ -75,18 +75,6 @@ Or you can also do the same job with the following command:
 npm install -g @enact/cli @webos-tools/cli patch-package
 ```
 
-### Emulator Launcher
-
-Emulator Launcher is a command-line based tool which helps users set up the [webOS emulator](https://www.webosose.org/docs/tools/sdk/emulator/virtualbox-emulator/emulator-user-guide/) more easier.
-
-You can install the Emulator Launcher with the following command:
-
-``` bash
-python3 -m pip install --upgrade webos-emulator --force-reinstall
-```
-
-> For Windows users, use `python` instead of `python3`.
-
 ### Device Profile
 
 webOS Studio supports multiple webOS platforms. So, you need to set the proper profile for your webOS device.
@@ -106,23 +94,26 @@ For more detailed user guide, see each platform's website.
 
 webOS Studio supports the following commands:
 
-| Command                               | TV  | OSE | Description                                                         |
-| ------------------------------------- |:---:|:---:| ------------------------------------------------------------------- |
-| webOS: Set Device Profile             |  v  |  v  | Sets the target platform of webOS Studio (webOS OSE of webOS TV).   |
-| webOS: Create Project Wizard          |  v  |  v  | Generates source code templates.                                    |
-| webOS: Install Global Packages        |  v  |  v  | Installs essential global packages to run this extension.           |
-| webOS: Install Emulator Launcher      |  v  |  v  | Installs webOS Emulator Launcher.                                   |
-| webOS: Package Application            |  v  |  v  | Packages an app into a package file (IPK).                          |
-| webOS: Set Up Device                  |  v  |  v  | Adds, modifies, or removes devices from the device list.            |
-| webOS: Install Application            |  v  |  v  | Installs an app on the device.                                      |
-| webOS: Launch Application             |  v  |  v  | Runs an app installed on the device.                                |
-| webOS: Run Application                |  v  |  v  | Packages, install, and launches an app sequentially.                |
-| webOS: Debug                          |  v  |  v  | Packages, install, and inspects an app sequentially.                |
-| webOS: IPK Analyzer                   |  v  |  v  | Analyzes a specific IPK.                                            |
-| webOS: Auto Reload                    |  v  |  v  | Auto Reload                                                         |
-| webOS OSE: Launch Resource Monitoring |     |  v  | Launches Resource Monitoring window.                                |
-| webOS TV: Set Up SSH Key              |  v  |     | Sets up ssh key for webOS TV                                        |
-| webOS TV: Run on Simulator            |  v  |     | Runs an app on the [webOS TV Simulator](https://webostv.developer.lge.com/develop/tools/simulator-introduction).                              |
+| Command                                   | TV  | OSE | Description                                                         |
+| ----------------------------------------- |:---:|:---:| ------------------------------------------------------------------- |
+| webOS: Set Device Profile                 |  v  |  v  | Sets the target platform of webOS Studio (webOS OSE of webOS TV).   |
+| webOS: Create Project Wizard              |  v  |  v  | Generates source code templates.                                    |
+| webOS: Install Global Packages            |  v  |  v  | Installs essential global packages to run this extension.           |
+| webOS: Install Emulator Launcher          |  v  |  v  | Installs webOS Emulator Launcher.                                   |
+| webOS: Package Application                |  v  |  v  | Packages an app into a package file (IPK).                          |
+| webOS: Set Up Device                      |  v  |  v  | Adds, modifies, or removes devices from the device list.            |
+| webOS: Install Application                |  v  |  v  | Installs an app on the device.                                      |
+| webOS: Launch Application                 |  v  |  v  | Launches an installed app.                                          |
+| webOS: Launch Application with Parameters |  v  |  v  | Launches an installed app with parameters.                          |
+| webOS: Run Application                    |  v  |  v  | Packages, install, and launches an app sequentially.                |
+| webOS: Debug                              |  v  |  v  | Packages, install, and inspects an app sequentially.                |
+| webOS: IPK Analyzer                       |  v  |  v  | Analyzes a specific IPK.                                            |
+| webOS: Auto Reload                        |  v  |  v  | Auto Reload.                                                        |
+| webOS OSE: Start Log Viewer               |     |  v  | Start Log Viewer.                                                   |
+| webOS OSE: Stop Log Viewer                |     |  v  | Stop Log Viewer.                                                    |
+| webOS OSE: Launch Resource Monitoring     |     |  v  | Launches Resource Monitoring window.                                |
+| webOS TV: Set Up SSH Key                  |  v  |     | Sets up ssh key for webOS TV                                        |
+| webOS TV: Run on Simulator                |  v  |     | Runs an app on the [webOS TV Simulator](https://webostv.developer.lge.com/develop/tools/simulator-introduction). |
 
 ## Miscellaneous Information
 
@@ -131,7 +122,7 @@ webOS Studio supports the following commands:
 
 ## Known Issues
 
-- Auto-completion feature is supported only on webOS OSE.
+- Log Viewer feature is supported only on webOS OSE.
 - Web app and JS service debuggings by "Debug On -> VS Code" are not supported for old webOS targets.
 
 ## Other Resources
