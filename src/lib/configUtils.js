@@ -119,7 +119,7 @@ async function checkCliVersion() {
                         console.log(`Supported CLI version: ${validRange}`);
                         doneCliCheck = true;
                         vscode.window.showErrorMessage("webOS Studio", {
-                            detail: `Found old TV/OSE CLI. Please uninstall  and install 3.0 or higher CLI to use webOS Studio. (Refer https://github.com/webos-tools/cli)`,
+                            detail: `Found old TV/OSE CLI. Please uninstall and install 3.1 or higher CLI to use webOS Studio. (Refer https://github.com/webos-tools/cli)`,
                             modal: true} );
                         return false;
                     }

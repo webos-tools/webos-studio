@@ -204,7 +204,7 @@ module.exports = function packageApp(appSelectedDir, isSkip) {
                     if (isNotLinked) {
                         throw isNotLinked;
                     }
-                    await notify.showProgress(progress, 10, `Packageing Application started...`);
+                    await notify.showProgress(progress, 10, `Packaging Application started...`);
                     let ipkPath;
                     let isEnact = await enactUtils.isEnactApp(appDir);
                     if (isEnact) {
