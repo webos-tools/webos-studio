@@ -8,75 +8,102 @@ Please be informed that LG Electronics, Inc. product may contain open source sof
 
 7zip-bin 5.1.1 (MIT)
 https://github.com/develar/7zip-bin
+Copyright (c) 2016 Vladimir Krivosheev
 
 7zip-min 1.4.4 (MIT)
 https://www.npmjs.com/package/7zip-min
+Copyright (c) 2018 Mykhailo Onikiienko
 
 abort-controller 3.0.0 (MIT)
 https://github.com/mysticatea/abort-controller
+Copyright (c) 2017, Toru Nagashima
 
 accepts 1.3.8 (MIT)
 https://github.com/jshttp/accepts
+Copyright (c) 2014 Jonathan Ong <me@jongleberry.com>
+Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 ajv 6.12.6 (MIT)
 https://www.npmjs.org/ajv
+Copyright (c) 2015-2017 Evgeny Poberezkin
+Copyright (c) 2012 Julian Berman
 
 andyperlitch-jsbn 0.1.1 (MIT-like License (jsbn))
 https://github.com/andyperlitch/jsbn
+Copyright (c) 2003-2005  Tom Wu
 
 ansi-regex 6.0.1 (MIT)
 https://github.com/sindresorhus/ansi-regex
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 ansi-regex 5.0.1 (MIT)
 https://github.com/sindresorhus/ansi-regex
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 ansi-styles 4.3.0 (MIT)
 https://github.com/chalk/ansi-styles
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 ansi-styles 6.2.1 (MIT)
 https://github.com/chalk/ansi-styles
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 anymatch 3.1.3 (ISC)
 https://github.com/es128/anymatch
+Copyright (c) 2019 Elan Shanker, Paul Miller (https://paulmillr.com)
 
 archiver 7.0.1 (MIT)
 https://github.com/archiverjs/node-archiver
+Copyright (c) 2012-2014 Chris Talkington
 
 archiver-utils 5.0.2 (MIT)
 https://github.com/archiverjs/archiver-utils
+Copyright (c) 2015 Chris Talkington
 
 array-flatten 1.1.1 (MIT)
 https://github.com/blakeembrey/array-flatten
+Copyright (c) 2014 Blake Embrey (hello@blakeembrey.com)
 
 async 3.2.5 (MIT)
 https://www.npmjs.com/package/async
+Copyright (c) 2010-2018 Caolan McMahon
 
 async 2.6.4 (MIT)
 https://www.npmjs.com/package/async
+Copyright (c) 2010-2018 Caolan McMahon
 
 asynckit 0.4.0 (MIT)
 https://github.com/alexindigo/asynckit
+Copyright (c) 2016 Alex Indigo
 
 aws-sign2 0.7.0 (Apache-2.0)
 https://www.npmjs.org/aws-sign2
+Copyright (c) Mikeal Rogers <mikeal.rogers@gmail.com> (http://www.futurealoof.com)
 
 aws4 1.12.0 (MIT)
 https://www.npmjs.org/aws4
+Copyright (c) 2013 Michael Hart (michael.hart.au@gmail.com)
 
 axios 1.4.0 (MIT)
 https://www.npmjs.com/package/axios
+Copyright (c) 2014 Yehuda Katz Tom Dale Stefan Penner and contributors
+Copyright (c) 2014-present Matt Zabriskie
 
 b4a 1.6.6 (Apache-2.0)
 https://www.npmjs.com/package/b4a
+Copyright 2023 Holepunch Inc
 
 balanced-match 1.0.2 (MIT)
 https://github.com/juliangruber/balanced-match
+Copyright (c) 2013, Julian Gruber
 
 bare-events 2.4.2 (Apache-2.0)
 https://www.npmjs.com/package/bare-events
+Copyright 2023 Holepunch Inc
 
 base64id 2.0.0 (MIT)
 https://github.com/faeldt/base64id
+Copyright (c) 2012-2016 Kristian Faeldt <faeldt_kristian@cyberagent.co.jp>
 
 bcrypt-pbkdf 1.0.2 (BSD-3-Clause)
 https://www.npmjs.org/bcrypt-pbkdf
@@ -84,27 +111,36 @@ Copyright (c) 1997 Niels Provos <provos@physnet.uni-hamburg.de>
 
 beatgammit-base64-js 1.5.1 (MIT)
 https://github.com/beatgammit/base64-js
+Copyright (c) 2014 Jameson Little
 
 binary-extensions 2.2.0 (MIT)
 https://github.com/sindresorhus/binary-extensions
+Copyright (c) 2019 Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com), Paul Miller (https://paulmillr.com)
 
 bl 1.2.3 (MIT)
 https://github.com/rvagg/bl
+Copyright (c) 2013-2016 bl contributors
 
 bluebird 3.4.7 (MIT)
 http://bluebirdjs.com/docs/getting-started.html
+Copyright (c) 2013-2015 Petka Antonov
 
 body-parser 1.20.0 (MIT)
 https://github.com/expressjs/body-parser
+Copyright (c) 2014-2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+Copyright (c) 2014 Jonathan Ong <me@jongleberry.com>
 
 brace-expansion 1.1.11 (MIT)
 https://github.com/juliangruber/brace-expansion
+Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
 
 brace-expansion 2.0.1 (MIT)
 https://github.com/juliangruber/brace-expansion
+Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
 
 braces 3.0.2 (MIT)
 https://github.com/jonschlinkert/braces
+Copyright (c) 2014-2018, Jon Schlinkert.
 
 buffer-alloc 1.2.0 (MIT)
 https://www.npmjs.org/package/buffer-alloc
@@ -114,239 +150,331 @@ https://www.npmjs.org/package/buffer-alloc-unsafe
 
 buffer-crc32 1.0.0 (MIT)
 https://github.com/brianloveswords/buffer-crc32
+Copyright (c) 2013-2024 Brian J. Brennan
 
 buffer-crc32 0.2.13 (MIT)
 https://github.com/brianloveswords/buffer-crc32
+Copyright (c) 2013 Brian J. Brennan
 
 buffer-fill 1.0.0 (MIT)
 https://www.npmjs.org/package/buffer-fill
 
 buffer-indexof-polyfill 1.0.2 (MIT)
 https://github.com/sarosia/buffer-indexof-polyfill
+Copyright (c) 2015 Sarosia
 
 buildcheck 0.0.6 (MIT)
 https://www.npmjs.com/package/buildcheck
+Copyright Brian White
 
 Bytes utility 3.1.2 (MIT)
 https://github.com/visionmedia/bytes.js
+Copyright (c) 2012-2014 TJ Holowaychuk <tj@vision-media.ca>
+Copyright (c) 2015 Jed Watson <jed.watson@me.com>
 
 cacheable-lookup 5.0.4 (MIT)
 https://github.com/szmarczak/cacheable-lookup
+Copyright (c) 2019 Szymon Marczak
 
 cacheable-request 7.0.4 (MIT)
 https://www.npmjs.com/package/cacheable-request
+Copyright (c) 2017-2021 Luke Childs
+Copyright (c) 2022 Jared Wray
 
 call-bind 1.0.2 (MIT)
 https://www.npmjs.com/package/call-bind
+Copyright (c) 2020 Jordan Harband
 
 caseless 0.12.0 (Apache-2.0)
 https://www.npmjs.org/caseless
+Copyright (c) Mikeal Rogers <mikeal.rogers@gmail.com>
 
 catalogist 1.0.4 (MIT)
 https://github.com/proudbird/catalogist
+Copyright (c) 2019-present cubismo contributors
 
 chalk 4.1.2 (MIT)
 https://github.com/sindresorhus/chalk
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 check-disk-space 3.4.0 (MIT)
 https://github.com/Alex-D/check-disk-space
+Copyright (c) 2017-2019 Alexandre Demode
 
 chokidar 3.5.3 (MIT)
 http://paulmillr.com
+Copyright (c) 2012-2019 Paul Miller (https://paulmillr.com), Elan Shanker
 
 cliui 8.0.2 (ISC)
 https://github.com/bcoe/cliui
+Copyright (c) 2015, Contributors
 
 clone-response 1.0.3 (MIT)
 https://www.npmjs.com/package/clone-response
+Copyright (c) 2017 Luke Childs
 
 color-convert 2.0.1 (MIT)
 https://github.com/qix-/color-convert
+Copyright (c) 2011-2016 Heather Arthur <fayearthur@gmail.com>
 
 color-name 1.1.4 (MIT)
 https://github.com/dfcreative/color-name
+Copyright (c) 2015 Dmitry Ivanov
 
 commander 2.20.3 (MIT)
 https://github.com/tj/commander.js
+Copyright (c) 2011 TJ Holowaychuk <tj@vision-media.ca>
 
 commander 9.4.0 (MIT)
 https://github.com/tj/commander.js
+Copyright (c) 2011 TJ Holowaychuk <tj@vision-media.ca>
 
 compare-versions 6.1.0 (MIT)
+Copyright (c) 2015-2021 Ole Michelsen
 
 content-disposition 0.5.4 (MIT)
 https://github.com/jshttp/content-disposition
+Copyright (c) 2014-2017 Douglas Christopher Wilson
 
 content-type 1.0.4 (MIT)
 https://github.com/jshttp/content-type
+Copyright (c) 2015 Douglas Christopher Wilson
 
 core-util-is 1.0.2 (MIT)
 https://github.com/isaacs/core-util-is
+Copyright (c) Node.js contributors.
 
 core-util-is 1.0.3 (MIT)
 https://github.com/isaacs/core-util-is
+Copyright (c) Node.js contributors
 
 cors 2.8.5 (MIT)
 https://www.npmjs.org/cors
+Copyright (c) 2013 Troy Goode <troygoode@gmail.com>
 
 cpu-features 0.0.10 (MIT)
 https://www.npmjs.com/package/cpu-features
+Copyright Brian White
 
 create-desktop-shortcuts 1.10.1 (MIT)
 https://www.npmjs.com/package/create-desktop-shortcuts
+Copyright (c) 2019 Jared Wilcurt
 
 cross-spawn 7.0.3 (MIT)
+Copyright (c) 2018 Made With MOXY Lda
 
 decompress 4.2.1 (MIT)
 https://github.com/kevva/decompress
+Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>
 
 decompress-response 6.0.0 (MIT)
 https://github.com/sindresorhus/decompress-response
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 decompress-tar 4.1.1 (MIT)
 https://github.com/kevva/decompress-tar
+Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>
 
 decompress-tarbz2 4.1.1 (MIT)
 https://github.com/kevva/decompress-tarbz2
+Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>
 
 decompress-targz 4.1.1 (MIT)
 https://github.com/kevva/decompress-targz
+Copyright (c) Kevin Martensson (https://github.com/kevva)
+Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>
 
 decompress-unzip 4.0.1 (MIT)
 https://github.com/kevva/decompress-unzip
+Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>
 
 deep-is 0.1.4 (MIT)
 https://github.com/thlorenz/deep-is
+Copyright (c) 2009 Thomas Robinson <280north.com>
+Copyright (c) 2012 James Halliday <mail@substack.net>
+Copyright (c) 2012, 2013 Thorsten Lorenz <thlorenz@gmx.de>
 
 default-gateway 6.0.3 (BSD-2-Clause)
 https://github.com/silverwind/default-gateway
+Copyright (c) silverwind
 
 defer-to-connect 2.0.1 (MIT)
 https://github.com/szmarczak/defer-to-connect
+Copyright (c) 2018 Szymon Marczak
 
 DefinitelyTyped 20.5.9 (MIT)
 https://github.com/DefinitelyTyped/DefinitelyTyped
+Copyright (c) Microsoft Corporation
 
 DefinitelyTyped 6.0.3 (MIT)
 https://github.com/DefinitelyTyped/DefinitelyTyped
+Copyright (c) 2012 The Chromium Authors
+Copyright (c) Microsoft Corporation
+Copyright (c) Microsoft and contributors
 
 DefinitelyTyped 3.1.4 (MIT)
 https://github.com/DefinitelyTyped/DefinitelyTyped
+Copyright (c) Microsoft Corporation
 
 DefinitelyTyped 0.4.1 (MIT)
 https://github.com/DefinitelyTyped/DefinitelyTyped
+Copyright (c) Microsoft Corporation
 
 DefinitelyTyped 1.0.0 (MIT)
 https://github.com/DefinitelyTyped/DefinitelyTyped
+Copyright (c) 2016-2018 Google Inc.
+Copyright (c) Microsoft Corporation.
 
 DefinitelyTyped 2.8.14 (MIT)
 https://github.com/DefinitelyTyped/DefinitelyTyped
+Copyright (c) Microsoft Corporation
 
 DefinitelyTyped 4.0.1 (MIT)
 https://github.com/DefinitelyTyped/DefinitelyTyped
+Copyright (c) Microsoft Corporation.
 
 destroy 1.2.0 (MIT)
 https://github.com/stream-utils/destroy
+Copyright (c) 2014 Jonathan Ong me@jongleberry.com
+Copyright (c) 2015-2022 Douglas Christopher Wilson doug@somethingdoug.com
 
 dom-serializer 2.0.0 (MIT)
 https://github.com/cheeriojs/dom-serializer
+Copyright (c) 2014 The cheeriojs contributors
 
 domelementtype 2.3.0 (BSD-2-Clause)
 https://www.npmjs.com/package/domelementtype
+Copyright (c) Felix Bohm
 
 DomHandler 5.0.3 (BSD-2-Clause)
 https://github.com/fb55/DomHandler
+Copyright (c) Felix Bohm
 
 domutils 3.1.0 (BSD-2-Clause)
 https://www.npmjs.com/package/domutils
+Copyright (c) Felix Bohm
 
 duplexer2 0.1.4 (BSD-3-Clause)
 https://github.com/deoxxa/duplexer2
+Copyright (c) 2013, Deoxxa Development
 
 eastasianwidth 0.2.0 (MIT)
 https://www.npmjs.com/package/eastasianwidth
 
 ecc-jsbn 0.1.2 (MIT)
 https://www.npmjs.org/ecc-jsbn
+Copyright (c) 2014 Jeremie Miller
 
 ee-first 1.1.1 (MIT)
 https://github.com/jonathanong/ee-first
+Copyright (c) 2014 Jonathan Ong me@jongleberry.com
 
 emitter 3.1.0 (MIT)
+Copyright (c) 2014 Component
 
 emoji-regex 8.0.0 (MIT)
 https://github.com/mathiasbynens/emoji-regex
+Copyright (c) Mathias Bynens <https://mathiasbynens.be/>
 
 emoji-regex 9.2.2 (MIT)
 https://github.com/mathiasbynens/emoji-regex
+Copyright (c) Mathias Bynens <https://mathiasbynens.be/>
 
 encodeurl 1.0.2 (MIT)
 https://github.com/pillarjs/encodeurl
+Copyright (c) 2016 Douglas Christopher Wilson
 
 end-of-stream 1.4.4 (MIT)
-https://github.com/mafintosh/end-of-stream
+https://www.npmjs.com/package/end-of-stream
+Copyright (c) 2014 Mathias Buus
 
 engine.io 6.5.2 (MIT)
 http://socket.io
+Copyright (c) 2014 Guillermo Rauch <guillermo@learnboost.com>
 
 engine.io-parser 5.2.1 (MIT)
 http://socket.io
+Copyright (c) 2016 Guillermo Rauch
 
 entities 4.5.0 (BSD-2-Clause)
 https://github.com/fb55/entities
+Copyright (c) Felix Bohm
 
 escape-html 1.0.3 (MIT)
 https://github.com/component/escape-html
+Copyright (c) 2012-2013 TJ Holowaychuk
+Copyright (c) 2015 Andreas Lubbe
+Copyright (c) 2015 Tiancheng "Timothy" Gu
 
 eslint-plugin-html 7.1.0 (ISC)
 https://github.com/BenoitZugmeyer/eslint-plugin-html
+Copyright (c) 2016, Benoit Zugmeyer
 
 etag 1.8.1 (MIT)
 https://github.com/jshttp/etag
+Copyright (c) 2014-2016 Douglas Christopher Wilson
 
 event-target-shim 5.0.1 (MIT)
 https://github.com/mysticatea/event-target-shim
+Copyright (c) 2015, Toru Nagashima
 
 execa 5.1.1 (MIT)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 express 4.18.1 (MIT)
 http://expressjs.com
+Copyright (c) 2009-2014 TJ Holowaychuk <tj@vision-media.ca>
+Copyright (c) 2013-2014 Roman Shtylman <shtylman+expressjs@gmail.com>
+Copyright (c) 2014-2015 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 fast-deep-equal 3.1.3 (MIT)
 https://www.npmjs.org/fast-deep-equal
+Copyright (c) 2017 Evgeny Poberezkin
 
 fast-fifo 1.3.2 (MIT)
 https://www.npmjs.com/package/fast-fifo
+Copyright (c) 2019 Mathias Buus
 
 fast-folder-size 1.7.0 (ISC)
 https://github.com/simoneb/fast-folder-size
+Copyright (c) 2015-present Simone Busoli
 
 fast-json-stable-stringify 2.1.0 (MIT)
 https://github.com/epoberezkin/fast-json-stable-stringify
+Copyright (c) 2017 Evgeny Poberezkin
+Copyright (c) 2013 James Halliday
 
 feross-buffer 6.0.3 (MIT)
 https://github.com/feross/buffer
+Copyright (c) Feross Aboukhadijeh, and other contributors.
 
 feross-buffer 5.7.1 (MIT)
 https://github.com/feross/buffer
+Copyright (c) Feross Aboukhadijeh, and other contributors.
 
 file-type 3.9.0 (MIT)
 https://github.com/sindresorhus/file-type
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 file-type 6.2.0 (MIT)
 https://github.com/sindresorhus/file-type
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 file-type 5.2.0 (MIT)
 https://github.com/sindresorhus/file-type
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 fill-range 7.0.1 (MIT)
 https://github.com/jonschlinkert/fill-range
+Copyright (c) 2014-present, Jon Schlinkert.
 
 finalhandler 1.2.0 (MIT)
 https://github.com/pillarjs/finalhandler
+Copyright (c) 2014-2022 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 follow-redirects 1.15.2 (MIT)
 https://github.com/olalonde/follow-redirects
+Copyright 2014-present Olivier Lalonde <olalonde@gmail.com> , James Talmage <james@talmage.io> , Ruben Verborgh
 
 Font Awesome 6.4.0 (CC-BY-4.0, MIT, OFL-1.1)
 http://fontawesome.io
@@ -356,268 +484,363 @@ http://fontawesome.io
 
 foreground-child 3.2.0 (ISC)
 https://github.com/tapjs/foreground-child
+Copyright (c) 2015-2023 Isaac Z. Schlueter and Contributors
 
 forever-agent 0.6.1 (Apache-2.0)
 http://github.com/mikeal/forever-agent
 
 form-data 4.0.0 (MIT)
 https://github.com/felixge/node-form-data
+Copyright (c) 2012 Felix Geisendorfer (felix@debuggable.com) and contributors
 
 form-data 2.3.3 (MIT)
 https://github.com/felixge/node-form-data
+Copyright (c) 2012 Felix Geisendörfer (felix@debuggable.com) and contributors
 
 forwarded 0.2.0 (MIT)
 https://github.com/jshttp/forwarded
+Copyright (c) 2014-2017 Douglas Christopher Wilson
 
 fresh 0.5.2 (MIT)
 https://github.com/jshttp/fresh
+Copyright (c) 2012 TJ Holowaychuk <tj@vision-media.ca>
+Copyright (c) 2016-2017 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 fs-constants 1.0.0 (MIT)
 https://github.com/mafintosh/fs-constants
+Copyright (c) 2018 Mathias Buus
 
 fs.realpath 1.0.0 (ISC)
 https://github.com/isaacs/fs.realpath
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 fstream 1.0.12 (ISC)
 https://github.com/npm/fstream
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 function-bind 1.1.1 (MIT)
 https://github.com/Raynos/function-bind
+Copyright (c) 2013 Raynos.
 
 gar 1.0.4 (MIT)
 https://www.npmjs.com/package/gar
+Copyright (c) 2018 Ethan Davis
 
 get-folder-size 2.0.1 (MIT)
 https://www.npmjs.com/package/get-folder-size
 
 get-intrinsic 1.1.2 (MIT)
 https://www.npmjs.com/package/get-intrinsic
+Copyright (c) 2020 Jordan Harband
 
 get-stream 6.0.1 (MIT)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 get-stream 5.2.0 (MIT)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 get-stream 2.3.1 (MIT)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 glob-parent 5.1.2 (ISC)
 https://github.com/es128/glob-parent
+Copyright (c) 2015, 2019 Elan Shanker
 
 googlefonts-rubik  (OFL-1.1)
 https://github.com/googlefonts/rubik
+Copyright (c) 2015 The Rubik Project Authors (https://github.com/googlefonts/rubik)
 
 got 11.8.6 (MIT)
 https://www.npmjs.org/got
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 Gozala-events 3.3.0 (MIT)
 https://github.com/Gozala/events
+Copyright (c) Joyent, Inc. and other Node contributors.
 
 har-schema 2.0.0 (ISC)
 https://www.npmjs.org/har-schema
+Copyright (c) 2015, Ahmad Nassri <ahmad@ahmadnassri.com>
 
 har-validator 5.1.5 (MIT)
 https://www.npmjs.org/har-validator
+Copyright (c) 2018 Ahmad Nassri <ahmad@ahmadnassri.com>
 
 has 1.0.3 (MIT)
 https://github.com/tarruda/has
+Copyright (c) 2013 Thiago de Arruda
 
 has-flag 4.0.0 (MIT)
 https://github.com/sindresorhus/has-flag
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com>
 
 has-symbols 1.0.3 (MIT)
 https://github.com/ljharb/has-symbols
+Copyright (c) 2016 Jordan Harband
 
 htmlparser2 8.0.2 (MIT)
 https://github.com/fb55/htmlparser2
+Copyright 2010, 2011, Chris Winberry <chris@winberry.net>
 
 http-cache-semantics 4.1.1 (BSD-2-Clause)
 https://www.npmjs.com/package/http-cache-semantics
+Copyright (c) 2016-2018 Kornel Lesinski
 
 http-errors 2.0.0 (MIT)
 https://github.com/jshttp/http-errors
+Copyright (c) 2014 Jonathan Ong me@jongleberry.com
+Copyright (c) 2016 Douglas Christopher Wilson doug@somethingdoug.com
 
 http-timer 4.0.6 (MIT)
 https://github.com/szmarczak/http-timer
+Copyright (c) 2018 Szymon Marczak
 
 http2-wrapper 1.0.3 (MIT)
 https://www.npmjs.com/package/http2-wrapper
+Copyright (c) 2018 Szymon Marczak
 
 human-signals 2.1.0 (Apache-2.0)
 https://www.npmjs.com/package/human-signals
+Copyright (c) 2019 ehmicky <ehmicky@gmail.com>
 
 iconfinder_tv_3325159  (CC-BY-3.0)
 https://www.iconfinder.com
 
 iconv-lite 0.4.24 (MIT)
 https://github.com/ashtuchkin/iconv-lite
+Copyright (c) 2011 Alexander Shtuchkin
 
 ieee754 1.2.1 (BSD-3-Clause)
 https://github.com/feross/ieee754
+Copyright (c) 2008, Fair Oaks Labs, Inc.
 
 inflight 1.0.6 (ISC)
 https://github.com/npm/inflight
+Copyright (c) Isaac Z. Schlueter
 
 inherits 2.0.4 (ISC)
 https://github.com/isaacs/inherits
+Copyright (c) Isaac Z. Schlueter
 
 invert-kv 3.0.1 (MIT)
 https://www.npmjs.org/invert-kv
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 ip-regex 4.3.0 (MIT)
 https://github.com/sindresorhus/ip-regex
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 ipaddr.js 1.9.1 (MIT)
 https://github.com/whitequark/ipaddr.js
+Copyright (c) 2011-2017 whitequark <whitequark@whitequark.org>
 
 is-binary-path 2.1.0 (MIT)
 https://github.com/sindresorhus/is-binary-path
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 is-extglob 2.1.1 (MIT)
 https://github.com/jonschlinkert/is-extglob
+Copyright (c) 2014-2015, Jon Schlinkert.
 
 is-fullwidth-code-point 3.0.0 (MIT)
 https://www.npmjs.org/is-fullwidth-code-point
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 is-glob 4.0.3 (MIT)
 https://github.com/jonschlinkert/is-glob
+Copyright (c) 2014-2017, Jon Schlinkert
 
 is-natural-number 4.0.1 (MIT)
 https://github.com/shinnn/is-natural-number.js
+Copyright (c) 2014 - 2016 Shinnosuke Watanabe
 
 is-number 7.0.0 (MIT)
 https://github.com/jonschlinkert/is-number
+Copyright (c) 2014-present, Jon Schlinkert.
 
 is-stream 1.1.0 (MIT)
 https://github.com/sindresorhus/is-stream
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 is-stream 2.0.1 (MIT)
 https://github.com/sindresorhus/is-stream
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 is-typedarray 1.0.0 (MIT)
 https://www.npmjs.org/is-typedarray
+Copyright (c) Hugh Kennedy <hughskennedy@gmail.com> (http://hughsk.io/)
 
 is-url 1.2.4 (MIT)
 https://github.com/segmentio/is-url
 
 is2 2.0.7 (MIT)
 http://github.com/stdarg/is2
+Copyright (c) 2013 Edmond Meinfelder
 
 isarray 1.0.0 (MIT)
 https://github.com/juliangruber/isarray
+Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
 
 isexe 2.0.0 (ISC)
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 isStream 0.1.2 (MIT)
 https://github.com/rvagg/isstream
+Copyright (c) 2015 Rod Vagg
 
 jackspeak 3.4.0 (BlueOak-1.0.0)
-https://github.com/isaacs/jackspeak
+https://www.npmjs.com/package/jackspeak
 
 js-crc32 1.2.2 (Apache-2.0)
 https://www.npmjs.com/package/crc-32
+Copyright (c) 2014-present  SheetJS
 
 js-traverse 0.3.9 (MIT)
 https://github.com/substack/js-traverse
+Copyright (c) 2010 James Halliday (mail@substack.net)
 
 jshttp-cookie 0.4.2 (MIT)
 https://github.com/jshttp/cookie
+Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
 
 jshttp-cookie 0.5.0 (MIT)
 https://github.com/jshttp/cookie
+Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
 
 json-buffer 3.0.1 (MIT)
 https://www.npmjs.com/package/json-buffer
+Copyright (c) 2013 Dominic Tarr
 
 json-schema 0.4.0 (AFL-2.1)
 https://www.npmjs.org/json-schema
+Copyright (c) 2005-2015, The Dojo Foundation
 
 json-schema-traverse 0.4.1 (MIT)
 https://www.npmjs.org/json-schema-traverse
+Copyright (c) 2017 Evgeny Poberezkin
 
 json-stringify-safe 5.0.1 (ISC)
 https://github.com/isaacs/json-stringify-safe
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 keyv 4.5.2 (MIT)
 https://www.npmjs.com/package/keyv
+Copyright (c) 2021-2022 Jared Wray
+Copyright (c) 2017-2021 Luke Childs
 
 lcid 4.0.1 (MIT)
 https://www.npmjs.org/lcid
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 listenercount 1.0.1 (ISC)
 https://github.com/jden/node-listenercount
+Copyright (c) MMXV jden jason@denizac.org
 
 lodash 4.17.21 (MIT)
 https://github.com/lodash/lodash
+Copyright (c) JS Foundation and other contributors 
 
 lowercase-keys 2.0.0 (MIT)
 https://www.npmjs.org/lowercase-keys
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+(c) Sindre Sorhus (https://sindresorhus.com)
 
 make-dir 1.3.0 (MIT)
 https://github.com/sindresorhus/make-dir
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 media-typer 0.3.0 (MIT)
 https://github.com/jshttp/media-typer
+Copyright (c) 2014 Douglas Christopher Wilson
 
 merge-descriptors 1.0.1 (MIT)
 https://github.com/component/merge-descriptors
+Copyright (c) 2013 Jonathan Ong <me@jongleberry.com>
+Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 merge-stream 2.0.0 (MIT)
 https://github.com/grncdr/merge-stream
+Copyright (c) Stephen Sugden <me@stephensugden.com> (stephensugden.com)
 
 methods 1.1.2 (MIT)
 https://github.com/jshttp/methods
+Copyright (c) 2013-2014 TJ Holowaychuk <tj@vision-media.ca>
+Copyright (c) 2015-2016 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 mime-db 1.52.0 (MIT)
 https://github.com/jshttp/mime-db
+Copyright (c) 2014 Jonathan Ong <me@jongleberry.com>
+Copyright (c) 2015-2022 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 mime-types 2.1.35 (MIT)
 https://github.com/jshttp/mime-types
+Copyright (c) 2014 Jonathan Ong <me@jongleberry.com>
+Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 mimic-fn 2.1.0 (MIT)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 mimic-response 3.1.0 (MIT)
 https://github.com/sindresorhus/mimic-response
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 mimic-response 1.0.1 (MIT)
 https://github.com/sindresorhus/mimic-response
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 minimatch 3.1.2 (ISC)
 https://github.com/isaacs/minimatch
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 minimatch 9.0.4 (ISC)
 https://github.com/isaacs/minimatch
+Copyright (c) 2011-2023 Isaac Z. Schlueter and Contributors
 
 minimatch 5.1.6 (ISC)
 https://github.com/isaacs/minimatch
+Copyright (c) 2011-2023 Isaac Z. Schlueter and Contributors
 
 minimist 1.2.8 (MIT)
 https://github.com/substack/minimist
 
 minipass 7.1.2 (ISC)
 https://github.com/isaacs/minipass
+Copyright (c) 2017-2023 npm, Inc., Isaac Z. Schlueter, and Contributors
 
 ms.js 2.0.0 (MIT)
 https://www.npmjs.com/package/ms
+Copyright (c) 2016 Zeit, Inc.
 
 ms.js 2.1.2 (MIT)
 https://www.npmjs.com/package/ms
+Copyright (c) 2016 Zeit, Inc.
 
 ms.js 2.1.3 (MIT)
 https://www.npmjs.com/package/ms
+Copyright (c) 2016 Zeit, Inc.
 
 NAN 2.20.0 (MIT)
 https://github.com/nodejs/nan
+Copyright (c) 2018 NAN contributors
 
 negotiator 0.6.3 (MIT)
 https://github.com/jshttp/negotiator
+Copyright (c) 2012-2014 Federico Romero
+Copyright (c) 2012-2014 Isaac Z. Schlueter
+Copyright (c) 2014-2015 Douglas Christopher Wilson
 
 node-ar-async 0.1.4 (MIT)
 https://www.npmjs.com/package/ar-async
+Copyright (c) 2014 Jason Robitaille. 
+Copyright (c) 2013 John Vilk. 
 
 node-asn1 0.2.6 (MIT)
 https://github.com/mcavage/node-asn1
+Copyright (c) 2011 Mark Cavage
 
 node-assert-plus 1.0.0 (MIT)
 https://github.com/mcavage/node-assert-plus
+Copyright (c) 2012 Mark Cavage
 
 node-binary 0.3.0 (MIT)
 https://github.com/substack/node-binary
@@ -627,449 +850,610 @@ https://github.com/substack/node-buffers
 
 node-chainsaw 0.1.0 (MIT)
 https://github.com/substack/node-chainsaw
+Copyright (c) 2010 James Halliday (mail@substack.net)
 
 node-combined-stream 1.0.8 (MIT)
 https://github.com/felixge/node-combined-stream
+Copyright (c) 2011 Debuggable Limited <felix@debuggable.com>
 
 node-compress-commons 6.0.2 (MIT)
 https://github.com/archiverjs/node-compress-commons
+Copyright (c) 2014 Chris Talkington
 
 node-concat-map 0.0.1 (MIT)
 https://github.com/substack/node-concat-map
 
 node-cookie-signature 1.0.6 (MIT)
 http://github.com/visionmedia/node-cookie-signature
+Copyright (c) 2012 LearnBoost <tj@learnboost.com>
 
 node-crc32-stream 6.0.0 (MIT)
 https://github.com/archiverjs/node-crc32-stream
+Copyright (c) 2014 Chris Talkington
 
 node-dashdash 1.14.1 (MIT)
 https://www.npmjs.org/dashdash
+Copyright (c) 2013 Trent Mick.
+Copyright (c) 2013 Joyent Inc.
 
 node-delayed-stream 1.0.0 (MIT)
 https://github.com/felixge/node-delayed-stream
+Copyright (c) 2011 Debuggable Limited <felix@debuggable.com>
 
 node-downloader-helper 2.1.9 (MIT)
 https://www.npmjs.com/package/node-downloader-helper
+Copyright (c) 2018 Jose De Gouveia
 
 node-extend 3.0.2 (MIT)
 https://github.com/justmoon/node-extend
+Copyright (c) 2014 Stefan Thomas
 
 node-extsprintf 1.3.0 (MIT)
 https://www.npmjs.org/extsprintf
+Copyright (c) 2012, Joyent, Inc.
 
 node-fd-slicer 1.1.0 (MIT)
 https://github.com/andrewrk/node-fd-slicer
+Copyright (c) 2014 Andrew Kelley
 
 node-fetch 2.7.0 (MIT)
 https://github.com/node-fetch/node-fetch
+Copyright (c) 2016 David Frank
 
 node-fs-extra 11.2.0 (MIT)
 https://github.com/jprichardson/node-fs-extra
+Copyright (c) 2011-2017 JP Richardson
 
 node-getpass 0.1.7 (MIT)
 https://www.npmjs.org/getpass
+Copyright (c) Joyent, Inc. 
 
 node-glob 7.2.3 (ISC)
 https://github.com/isaacs/node-glob
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 node-glob 10.4.1 (ISC)
 https://github.com/isaacs/node-glob
+Copyright (c) 2009-2023 Isaac Z. Schlueter and Contributors
 
 node-graceful-fs 4.2.10 (ISC)
 https://github.com/isaacs/node-graceful-fs
+Copyright (c) 2011-2022 Isaac Z. Schlueter, Ben Noordhuis, and Contributors
 
 node-gtag4 0.1.2 (MIT)
 https://www.npmjs.com/package/node-gtag4
+Copyright (c) 2023 daniel (contact@danni.cool)
 
 node-http-signature 1.2.0 (MIT)
 https://github.com/joyent/node-http-signature
+Copyright (c) Joyent, Inc.
 
 node-jsonfile 6.1.0 (MIT)
 https://github.com/jprichardson/node-jsonfile
 
 node-jsprim 1.4.2 (MIT)
 https://www.npmjs.org/jsprim
+Copyright (c) 2012, Joyent, Inc.
 
 node-lazystream 1.0.1 (MIT)
 https://github.com/jpommerening/node-lazystream
+Copyright (c) 2013 J. Pommerening
 
 node-lru-cache 10.2.2 (ISC)
-https://github.com/isaacs/node-lru-cache
+https://www.npmjs.com/package/lru-cache
+Copyright (c) 2010-2023 Isaac Z. Schlueter and Contributors
 
 node-lru-cache 6.0.0 (ISC)
-https://github.com/isaacs/node-lru-cache
+https://www.npmjs.com/package/lru-cache
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 node-machine-id 1.1.12 (MIT)
 https://github.com/automation-stack/node-machine-id
+Copyright (c) 2016 Aleksandr Komlev
 
 node-mime 1.6.0 (MIT)
 http://github.com/broofa/node-mime
+Copyright (c) 2010, Benjamin Thomas, Robert Kieffer
 
 node-mkdirp 0.5.5 (MIT)
 https://github.com/substack/node-mkdirp
+Copyright (c) 2010 James Halliday (mail@substack.net)
 
 node-pend 1.2.0 (MIT)
 https://github.com/andrewrk/node-pend
+Copyright (c) 2014 Andrew Kelley
 
 node-readdir-glob 1.1.3 (Apache-2.0)
 https://www.npmjs.com/package/readdir-glob
+Copyright (c) 2020 Yann Armelin
 
 node-semver 7.3.8 (ISC)
 https://github.com/npm/node-semver
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 node-sshpk 1.17.0 (MIT)
 https://www.npmjs.org/sshpk
+Copyright (c) Joyent, Inc.
 
 node-stream-zip 1.15.0 (MIT)
 https://github.com/antelle/node-stream-zip
+Copyright (c) 2015 Antelle https://github.com/antelle
+Copyright (c) 2012 Another-D-Mention Software and other contributors, http://www.another-d-mention.ro
 
 node-tree-kill 1.2.2 (MIT)
 https://github.com/pkrumins/node-tree-kill
+Copyright (c) 2018 Peter Krumins
 
 node-unzipper 0.10.11 (MIT)
 https://github.com/ZJONSSON/node-unzipper
+Copyright (c) 2012 - 2013 Near Infinity Corporation
 
 node-uuid 3.4.0 (MIT)
 https://github.com/broofa/node-uuid
+Copyright (c) 2010-2016 Robert Kieffer and other contributors
 
 node-verror 1.10.0 (MIT)
 https://www.npmjs.org/verror
+Copyright (c) 2016, Joyent, Inc. 
 
 node-watch 0.6.4 (MIT)
 https://github.com/yuanchuan/node-watch
+Copyright (c) 2012-2018 Yuan Chuan <yuanchuan23@gmail.com>
 
 node-which 2.0.2 (ISC)
 https://github.com/npm/node-which
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 node-zip-stream 6.0.1 (MIT)
 https://github.com/archiverjs/node-zip-stream
+Copyright (c) 2014 Chris Talkington
 
 nodejs-depd 2.0.0 (MIT)
 https://github.com/dougwilson/nodejs-depd
+Copyright (c) 2014-2018 Douglas Christopher Wilson
 
 normalize-path 3.0.0 (MIT)
 https://github.com/jonschlinkert/normalize-path
+Copyright (c) 2014-2018, Jon Schlinkert.
 
 normalize-url 6.1.0 (MIT)
 https://www.npmjs.com/package/normalize-url
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 npm-run-path 4.0.1 (MIT)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 oauth-sign 0.9.0 (Apache-2.0)
 https://github.com/request/oauth-sign
+Copyright (c) Mikeal Rogers <mikeal.rogers@gmail.com>
 
 object-assign 4.1.1 (MIT)
 https://github.com/sindresorhus/object-assign
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 object-inspect 1.12.2 (MIT)
 https://www.npmjs.com/package/object-inspect
+Copyright (c) 2013 James Halliday
 
 on-finished 2.4.1 (MIT)
 https://github.com/jshttp/on-finished
+Copyright (c) 2013 Jonathan Ong <me@jongleberry.com>
+Copyright (c) 2014 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 once 1.4.0 (ISC)
 https://github.com/isaacs/once
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 onetime 5.1.2 (MIT)
 https://github.com/sindresorhus/onetime
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 p-cancelable 2.1.1 (MIT)
 https://github.com/sindresorhus/p-cancelable
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 parseargs 0.11.0 (Apache-2.0)
 https://github.com/pkgjs/parseargs
 
 parseurl 1.3.3 (MIT)
 https://github.com/pillarjs/parseurl
+Copyright (c) 2014 Jonathan Ong <me@jongleberry.com>
+Copyright (c) 2014-2017 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 path-is-absolute 1.0.1 (MIT)
 https://github.com/sindresorhus/path-is-absolute
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 path-key 3.1.1 (MIT)
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 path-scurry 1.11.1 (BlueOak-1.0.0)
 https://github.com/isaacs/path-scurry
 
 path-to-regexp 0.1.7 (MIT)
 https://github.com/component/path-to-regexp
+Copyright (c) 2014 Blake Embrey (hello@blakeembrey.com)
 
 performance-now 2.1.0 (MIT)
 https://www.npmjs.org/performance-now
+Copyright (c) 2013 Braveg1rl
 
 picomatch 2.3.1 (MIT)
 https://github.com/micromatch/picomatch
+Copyright (c) 2017-present, Jon Schlinkert
 
 pify 2.3.0 (MIT)
 https://www.npmjs.org/pify
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 pify 3.0.0 (MIT)
 https://www.npmjs.org/pify
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 pinkie 2.0.4 (MIT)
 https://www.npmjs.org/pinkie
+Copyright (c) Vsevolod Strukchinsky <floatdrop@gmail.com> (github.com/floatdrop)
 
 pinkie-promise 2.0.1 (MIT)
 https://www.npmjs.org/pinkie-promise
+Copyright (c) Vsevolod Strukchinsky <floatdrop@gmail.com> (github.com/floatdrop)
 
 Polyfill for Object.setPrototypeOf 1.2.0 (ISC)
 https://github.com/wesleytodd/setprototypeof
+Copyright (c) 2015, Wes Todd
 
 portfinder 1.0.28 (MIT)
 https://github.com/indexzero/node-portfinder
+Copyright (c) 2011-2012 Charlie Robbins
 
 process 0.11.10 (MIT)
 https://github.com/shtylman/node-process
 
 process-nextick-args 2.0.1 (MIT)
 https://github.com/calvinmetcalf/process-nextick-args
+Copyright (c) 2015 Calvin Metcalf
 
 proxy-addr 2.0.7 (MIT)
 https://github.com/jshttp/proxy-addr
+Copyright (c) 2014-2016 Douglas Christopher Wilson
 
 proxy-from-env 1.1.0 (MIT)
 https://github.com/Rob--W/proxy-from-env
+Copyright (c) 2016-2018 Rob Wu <rob@robwu.nl>
 
 psl 1.9.0 (MIT)
 https://github.com/wrangr/psl
+Copyright (c) 2017 Lupo Montero lupomontero@gmail.com
 
 pump 3.0.0 (MIT)
 https://github.com/mafintosh/pump
+Copyright (c) 2014 Mathias Buus
 
 Punycode.js 2.1.1 (MIT)
 https://github.com/bestiejs/punycode.js
 
 qs 6.10.3 (BSD-3-Clause)
 https://www.npmjs.com/package/qs
+Copyright (c) 2014, Nathan LaFreniere and other contributors (https://github.com/ljharb/qs/graphs/contributors)
 
 qs 6.5.3 (BSD-3-Clause)
 https://www.npmjs.com/package/qs
+Copyright (c) 2014, Nathan LaFreniere and other contributors (https://github.com/ljharb/qs/graphs/contributors)
 
 queue-tick 1.0.1 (MIT)
 https://www.npmjs.com/package/queue-tick
+Copyright (c) 2021 Mathias Buus
 
 quick-lru 5.1.1 (MIT)
 https://www.npmjs.com/package/quick-lru
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 range-parser 1.2.1 (MIT)
 http://github.com/jshttp/range-parser
+Copyright (c) 2012-2014 TJ Holowaychuk <tj@vision-media.ca>
+Copyright (c) 2015-2016 Douglas Christopher Wilson <doug@somethingdoug.com
 
 raw-body 2.5.1 (MIT)
 https://github.com/stream-utils/raw-body
+Copyright (c) 2014-2022 Douglas Christopher Wilson <doug@somethingdoug.com>
+Copyright (c) 2013-2014 Jonathan Ong <me@jongleberry.com>
 
 readable-stream 4.5.2 (MIT)
 https://github.com/nodejs/readable-stream
+Copyright Joyent, Inc. and other Node contributors
+Copyright Node.js contributors
 
 readable-stream 2.3.7 (MIT)
 https://github.com/nodejs/readable-stream
+Copyright (c) Node.js contributors.
 
 readdirp 3.6.0 (MIT)
 https://github.com/thlorenz/readdirp
+Copyright (c) 2012-2019 Thorsten Lorenz, Paul Miller (https://paulmillr.com)
 
 request 2.88.2 (Apache-2.0)
 https://github.com/mikeal/request
+Copyright (c) 2010-2012 Mikeal Rogers
 
 resolve-alpn 1.2.1 (MIT)
 https://www.npmjs.com/package/resolve-alpn
+Copyright (c) 2018 Szymon Marczak
 
 responselike 2.0.1 (MIT)
 https://www.npmjs.com/package/responselike
+Copyright (c) 2017 Luke Childs
 
 rimraf 3.0.2 (ISC)
 https://github.com/isaacs/rimraf
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 rimraf 2.7.1 (ISC)
 https://github.com/isaacs/rimraf
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 safe-buffer 5.2.1 (MIT)
 https://github.com/feross/safe-buffer
+Copyright (c) Feross Aboukhadijeh
 
 safe-buffer 5.1.2 (MIT)
 https://github.com/feross/safe-buffer
+Copyright (c) Feross Aboukhadijeh
 
 safer-buffer 2.1.2 (MIT)
 https://github.com/ChALkeR/safer-buffer
+Copyright (c) 2018 Nikita Skovoroda <chalkerx@gmail.com>
 
 security-holder 0.0.1-security (ISC)
 https://www.npmjs.com/package/fs
 
 seek-bzip 1.0.6 (MIT)
 https://github.com/cscott/seek-bzip
+Copyright (c) 2013-2015 C. Scott Ananian
+Copyright (c) 2011 Kevin Kwok
+Copyright (c) 2012-2015 Eli Skeggs
 
 send 0.18.0 (MIT)
 http://github.com/visionmedia/send
+Copyright (c) 2012 TJ Holowaychuk
+Copyright (c) 2014-2016 Douglas Christopher Wilson
 
 serve-static 1.15.0 (MIT)
 https://github.com/expressjs/serve-static
+Copyright (c) 2011 TJ Holowaychuk
+Copyright (c) 2010 Sencha Inc.
+Copyright (c) 2011 LearnBoost
+Copyright (c) 2014-2016 Douglas Christopher Wilson
 
 seti-ui  (MIT)
 https://github.com/jesseweed/seti-ui
+Copyright (c) 2014 Jesse Weed
 
 setImmediate 1.0.5 (MIT)
 https://www.npmjs.com/package/setimmediate
+Copyright (c) 2012 Barnesandnoble.com, llc, Donavon West, and Domenic Denicola
 
 shebang-command 2.0.0 (MIT)
+Copyright (c) Kevin Martensson <kevinmartensson@gmail.com>
 
 shebang-regex 3.0.0 (MIT)
+Copyright (c) Sindre Sorhus (https://sindresorhus.com)
 
 showdown 2.1.0 (MIT)
 http://showdownjs.com
+Copyright (c) 2018,2021 ShowdownJS
 
 side-channel 1.0.4 (MIT)
 https://www.npmjs.com/package/side-channel
+Copyright (c) 2019 Jordan Harband
 
 signal-exit 3.0.7 (ISC)
 https://www.npmjs.org/signal-exit
+Copyright (c) 2015, Contributors
 
 signal-exit 4.1.0 (ISC)
 https://www.npmjs.org/signal-exit
+Copyright (c) 2015-2023 Benjamin Coe, Isaac Z. Schlueter, and Contributors
 
 sindresorhus-is 4.6.0 (MIT)
 https://github.com/sindresorhus/is
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 socket.io 4.7.2 (MIT)
 https://github.com/Automattic/socket.io
+Copyright (c) 2014-2018 Automattic <dev@cloudup.com>
 
 socket.io  (MIT)
 https://github.com/Automattic/socket.io
+Copyright (c) 2011 Guillermo Rauch <guillermo@learnboost.com>
 
 socket.io-adapter 2.5.2 (MIT)
 https://github.com/socketio/socket.io-adapter
+Copyright (c) 2014 Guillermo Rauch <guillermo@learnboost.com>
 
 socket.io-parser 4.2.4 (MIT)
 https://github.com/socketio/socket.io-parser
+Copyright (c) 2014 Guillermo Rauch <guillermo@learnboost.com>
 
 ssh2 1.15.0 (MIT)
 https://github.com/mscdex/ssh2
+Copyright Brian White
 
 statuses 2.0.1 (MIT)
 https://github.com/jshttp/statuses
+Copyright (c) 2014 Jonathan Ong me@jongleberry.com
+Copyright (c) 2016 Douglas Christopher Wilson doug@somethingdoug.com
 
 streamx 2.18.0 (MIT)
 https://www.npmjs.com/package/streamx
+Copyright (c) 2019 Mathias Buus
 
 string-width 4.2.3 (MIT)
 https://www.npmjs.org/string-width
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 string-width 5.1.2 (MIT)
 https://www.npmjs.org/string-width
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 string_decoder 1.3.0 (MIT)
 https://github.com/rvagg/string_decoder
+Copyright (c) Node.js contributors.
 
 string_decoder 1.1.1 (MIT)
 https://github.com/rvagg/string_decoder
+Copyright (c) Node.js contributors.
+Copyright (c) Joyent, Inc. and other Node contributors.
 
 strip-ansi 6.0.1 (MIT)
 https://github.com/sindresorhus/strip-ansi
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 strip-ansi 7.1.0 (MIT)
 https://github.com/sindresorhus/strip-ansi
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 strip-dirs 2.1.0 (MIT)
 https://github.com/shinnn/node-strip-dirs
+Copyright (c) Shinnosuke Watanabe https://github.com/shinnn/node-strip-dirs
 
 strip-final-newline 2.0.0 (MIT)
 https://github.com/sindresorhus/strip-final-newline
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
 sudo-prompt-alt 9.3.0 (MIT)
 https://github.com/electron-modules/sudo-prompt-alt
+Copyright (c) 2015 Joran Dirk Greef
 
 supports-color 7.2.0 (MIT)
 https://github.com/sindresorhus/supports-color
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 tar-stream 1.6.2 (MIT)
 https://github.com/mafintosh/tar-stream
+Copyright (c) 2014 Mathias Buus
 
 tar-stream 3.1.7 (MIT)
 https://github.com/mafintosh/tar-stream
+Copyright (c) 2014 Mathias Buus
 
 tcp-port-used 1.0.2 (MIT)
 https://github.com/stdarg/tcp-port-used
+Copyright (c) 2013 jut-io
 
 text-decoder 1.1.0 (Apache-2.0)
 https://github.com/holepunchto/text-decoder
 
 through 2.3.8 (MIT)
 https://github.com/dominictarr/through
+Copyright (c) 2011 Dominic Tarr
 
 tiny-each-async 2.0.3 (MIT)
 https://www.npmjs.com/package/tiny-each-async
 
 to-buffer 1.1.1 (MIT)
 https://www.npmjs.org/package/to-buffer
+Copyright (c) 2016 Mathias Buus
 
 to-regex-range 5.0.1 (MIT)
 https://github.com/micromatch/to-regex-range
+Copyright (c) 2015-present, Jon Schlinkert.
 
 toidentifier 1.0.1 (MIT)
 https://github.com/component/toidentifier
+Copyright (c) 2016 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 tough-cookie 2.5.0 (BSD-3-Clause)
 https://github.com/salesforce/tough-cookie
+Copyright (c) 2015, Salesforce.com, Inc.
 
 tr46.js 0.0.3 (MIT)
 https://github.com/Sebmaster/tr46.js
+Copyright (c) 2016 Sebastian Mayr
 
 tunnel-agent 0.6.0 (Apache-2.0)
 https://github.com/request/tunnel-agent
+Copyright (c) Mikeal Rogers <mikeal.rogers@gmail.com> (http://www.futurealoof.com)
 
 type-is 1.6.18 (MIT)
 https://github.com/jshttp/type-is
+Copyright (c) 2014 Jonathan Ong <me@jongleberry.com>
+Copyright (c) 2014-2015 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 unbzip2-stream 1.4.3 (MIT)
 https://github.com/regular/unbzip2-stream
+Copyright (c) 2017 by Jan Boelsche (jan@lagomorph.de)
 
 universalify 2.0.1 (MIT)
 https://github.com/RyanZim/universalify
+Copyright (c) 2017, Ryan Zimmerman <opensrc@ryanzim.com>
 
 unpipe 1.0.0 (MIT)
 https://github.com/stream-utils/unpipe
+Copyright (c) 2015 Douglas Christopher Wilson <doug@somethingdoug.com>
 
 uri-js 4.4.1 (BSD-2-Clause-Views)
 https://github.com/garycourt/uri-js
+Copyright (c) 2011 Gary Court
 
 util-deprecate 1.0.2 (MIT)
 https://github.com/TooTallNate/util-deprecate
+Copyright (c) 2014 Nathan Rajlich <nathan@tootallnate.net>
 
 utils-merge 1.0.1 (MIT)
 https://github.com/jaredhanson/utils-merge
+Copyright (c) 2013 Jared Hanson
 
 vary 1.1.2 (MIT)
 https://github.com/jshttp/vary
+Copyright (c) 2014-2017 Douglas Christopher Wilson
 
 visionmedia-debug 4.3.4 (MIT)
 https://github.com/visionmedia/debug
+Copyright (c) 2018-2021 Josh Junon
+Copyright (c) 2014-2017 TJ Holowaychuk <tj@vision-media.ca>
 
 visionmedia-debug 4.3.1 (MIT)
 https://github.com/visionmedia/debug
+Copyright (c) 2014 TJ Holowaychuk <tj@vision-media.ca>
 
 visionmedia-debug 2.6.9 (MIT)
 https://github.com/visionmedia/debug
+Copyright (c) 2014 TJ Holowaychuk <tj@vision-media.ca>
 
 visionmedia-debug 3.2.7 (MIT)
 https://github.com/visionmedia/debug
+Copyright (c) 2014 TJ Holowaychuk <tj@vision-media.ca>
 
 vscode-codicons  (CC-BY-4.0)
 https://github.com/microsoft/vscode-codicons
+Copyright (c) Microsoft Corporation
 
 vscode-codicons 0.0.20 (CC-BY-4.0)
 https://github.com/microsoft/vscode-codicons
+Copyright (c) Microsoft Corporation
 
 vscode-extension-tizentv 1.2.0 (Apache-2.0)
 https://github.com/Samsung/vscode-extension-tizentv
+Copyright (c) 2014 Samsung Electronics Co., Ltd
+Copyright (c) 2014 Julian Shapiro.
 
 vscode-log-output-colorizer  (MIT)
 https://github.com/ibm-cloud/vscode-log-output-colorizer
+Copyright (c) 2016 International Business Machines
 
 webidl-conversions 3.0.1 (BSD-2-Clause)
 https://github.com/jsdom/webidl-conversions
+Copyright (c) 2014, Domenic Denicola
 
 webos-studio  (Apache-2.0)
 https://github.com/webos-tools/webos-studio
+Copyright (c) 2021-2022 LG Electronics Inc.
 
 webos-studio 1.0.0 (Apache-2.0)
 https://github.com/webos-tools/webos-studio
+Copyright (c) 2021-2022 LG Electronics Inc.
+Copyright (c) 2022 LG Electronics Inc.
+Copyright (c) 2015, Wes Todd
 
 webos-studio 2.1.0 (Apache-2.0)
 https://github.com/webos-tools/webos-studio
@@ -1077,27 +1461,35 @@ Copyright (c) 2021-2024 LG Electronics, Inc.
 
 websockets-ws 8.11.0 (MIT)
 https://github.com/websockets/ws
+Copyright (c) 2011 Einar Otto Stangvik <einaros@gmail.com>
 
 whatwg-url 5.0.0 (MIT)
 https://github.com/jsdom/whatwg-url
+Copyright (c) 2015-2016 Sebastian Mayr
 
 wrap-ansi 7.0.0 (MIT)
 https://www.npmjs.org/wrap-ansi
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 wrap-ansi 8.1.0 (MIT)
 https://www.npmjs.org/wrap-ansi
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 
 wrappy 1.0.2 (ISC)
 https://github.com/npm/wrappy
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 xtend 4.0.2 (MIT)
 https://github.com/Raynos/xtend
+Copyright (c) 2012-2014 Raynos.
 
 yallist 4.0.0 (ISC)
 https://github.com/isaacs/yallist
+Copyright (c) Isaac Z. Schlueter and Contributors
 
 yauzl 2.10.0 (MIT)
 https://github.com/thejoshwolfe/yauzl
+Copyright (c) 2014 Josh Wolfe
 _________________________________________________________________________________________________________________________
 
 
@@ -1686,5 +2078,5 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
 
 
 
-(OSSNotice-7198_webOS Studio_2.1_240729)
+(OSSNotice-7198_webOS Studio_2.1_240812)
 
