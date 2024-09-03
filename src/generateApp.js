@@ -419,7 +419,7 @@ async function generateApp() {
                     if (templateId == "enact") {
                         library = "@enact/webos";
                     } else {
-                        library = "@types/webos-service";
+                        library = "@types/webos-service@0.4.6";
                         await notify.showProgress(progress, 20, `JS Service Patch file adding in progress`);
                         await copyDirSync(jsServicePatchPath, path.join(projectPath, "patches"));
                         await updatePackageJson(projectPath);
@@ -481,7 +481,7 @@ async function generateAppFromProjectWizard(template, projectLocation, projectNa
                     if (templateId == "enact") {
                         library = "@enact/webos";
                     } else {
-                        library = "@types/webos-service";
+                        library = "@types/webos-service@0.4.6";
                         await notify.showProgress(progress, 20, `JS Service Patch file adding in progress`);
                         await copyDirSync(jsServicePatchPath, path.join(projectPath, "patches"));
                         await updatePackageJson(projectPath);

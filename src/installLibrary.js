@@ -30,7 +30,7 @@ module.exports = async function installLibrary(appDirName, type) {
                     await notify.showProgress(progress, 20, `${library} Library adding to project in progress...`);
                     await addLibrary(false, library, projectPath);
                 } else {
-                    library = "@types/webos-service";
+                    library = "@types/webos-service@0.4.6";
                     await notify.showProgress(progress, 20, `JS Service Patch file adding in progress`);
                     await copyDirSync(jsServicePatchPath, path.join(projectPath, "patches"));
                     await updatePackageJson(projectPath)
