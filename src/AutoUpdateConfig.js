@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2024 LG Electronics Inc.
  * SPDX-License-Identifier: Apache-2.0
@@ -6,21 +5,14 @@
 const vscode = require("vscode");
 const util = require("util");
 const fs = require("fs");
-const sudoExec = util.promisify(require("sudo-prompt-alt").exec);
 const os = require("os");
-const { isElevated } = require("./lib/isElevated");
-
-
 const fetch = require("node-fetch");
 const path = require("path");
 const { logger } = require('./lib/logger');
 const exec = util.promisify(require("child_process").exec);
 const dns = require('dns').promises;
 
-
-
 class AutoUpdate {
-
     constructor(context) {
         this.context = context;
         this.isConfigUpdated = false;
@@ -38,7 +30,6 @@ class AutoUpdate {
 
     async doAutoUpateConfigFile() {
         let isConnected = await this.checkInternet();
-
 
         if (isConnected) {
             this.configJson = this.getConfigJson();
@@ -62,13 +53,7 @@ class AutoUpdate {
             logger.warn("Unable to connect to internet to check Package Manager updates")
             return false;
         }
-
-
-
-
-
     }
-
 
     orderConfig(objArray) {
         let o = {};
@@ -80,7 +65,7 @@ class AutoUpdate {
             key, a = [];
 
         for (key in o) {
-            if (o.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(o, key)) {
                 a.push(key);
             }
         }
@@ -147,8 +132,6 @@ class AutoUpdate {
         orderedEntries = this.orderConfig(this.configJson.tv["tv-simulator"])
         this.configJson.tv["tv-simulator"] = [];
         Object.keys(orderedEntries).forEach((key) => { this.configJson.tv["tv-simulator"].push(orderedEntries[key]) })
-
-
     }
     updateOSEConfig() {
         //Emulator
@@ -173,7 +156,6 @@ class AutoUpdate {
                 logger.info("AutoUpdate - Found New version of  " + servEntry["displayName"] + " " + servEntry["shortDisplayName"])
 
             }
-
         });
         //order entries
         let orderedEntries = this.orderConfig(this.configJson.ose["ose-emulator"])
@@ -181,15 +163,13 @@ class AutoUpdate {
         Object.keys(orderedEntries).forEach((key) => { this.configJson.ose["ose-emulator"].push(orderedEntries[key]) })
     }
 
-
     async getServerTVComponents() {
         await this.getListOfTVEmulatorFromDevServer();
         await this.getListOfTVSimulatorFromDevServer()
-
     }
     async getListOfTVEmulatorFromDevServer() {
         const respBaseUrl = await fetch("https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007403")
-            .catch((err) => {
+            .catch(() => {
                 logger.warn("Unable to connect developer.lge.com to check for update")
             });
         if (!respBaseUrl) return;
@@ -223,21 +203,14 @@ class AutoUpdate {
                     "uninstallMethod": "TV_EMULATOR_UNINSTALL_FORALL"
                 }
 
-
-
                 this.tv_servEmulators.push(configEntry);
-
-
             }
         }
         this.tv_servEmulators = this.assignSortOrder(this.tv_servEmulators, "tv", "tv-emulator")
-
-
-
     }
     async getListOfTVSimulatorFromDevServer() {
         const respBaseUrl = await fetch("https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007585")
-            .catch((err) => {
+            .catch(() => {
                 logger.warn("Unable to connect developer.lge.com to check for update")
             });
         if (!respBaseUrl) return;
@@ -279,8 +252,6 @@ class AutoUpdate {
             }
         }
         this.tv_servSimulators = this.assignSortOrder(this.tv_servSimulators, "tv", "tv-simulator")
-
-
     }
     async getServerOSEComponents() {
         await this.getListOfOSEEmulatorFromDevServer();
@@ -314,14 +285,9 @@ class AutoUpdate {
                 }
                 this.ose_servEmulators.push(configEntry);
             }
-
-
-
         }
         this.ose_servEmulators.reverse();
         this.ose_servEmulators = this.assignSortOrder(this.ose_servEmulators, "ose", "ose-emulator")
-
-
     }
     getConfigJson() {
         // getting Config json , which contains the component information

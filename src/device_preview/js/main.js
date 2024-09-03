@@ -12,7 +12,6 @@ class DevPreview {
     this.dp_home = document.getElementById("dp_home");
     this.dp_status_box = document.getElementById("dp_status_box");
     this.progress_bar = document.getElementById("progress_bar");
-    
   }
   init() {
     // this.dp_app_iframe.style.display = "none";
@@ -24,13 +23,10 @@ class DevPreview {
     this.connectUserMC();
   }
   loadApp(url) {
-  
    window.location.href =url
-  //window.open(url,"_blank")
-
+   // window.open(url,"_blank")
   }
   unloadApp() {
-
     this.dp_home.style.display = "block";
   }
   setStatus(isOnline) {
@@ -59,9 +55,7 @@ class DevPreview {
 
     let socket = io(url, options);
 
-    socket.on("connect_error",  (err)=> {
-   
-  
+    socket.on("connect_error",  ()=> {
     });
 
     socket.on("connection_resp",  (data)=> {
@@ -113,14 +107,11 @@ class DevPreview {
 // };
 // webOSLaunch event
 document.addEventListener('webOSLaunch', function(inData) {
-
-
   SOCKET_SERVER_IP = inData.detail.SOCKET_SERVER_IP
   SOCKET_SERVER_PORT = inData.detail.SOCKET_SERVER_PORT
 
   let dp = new DevPreview();
   dp.init();
- 
 
 }, true);
 

@@ -86,7 +86,7 @@ function getSimulatorDirPath(sdkPath) {
 
 async function aresVersion() {
     try {
-        const { stdout, stderr } = await exec('ares -V');
+        const { stdout } = await exec('ares -V');
         if (stdout) {
             return stdout.trim().split(': ')[1];
         }
@@ -104,6 +104,7 @@ async function checkCliVersion() {
             const cliPackageJsonVersion = await aresVersion();
             const cliVersionStr = semver.valid(semver.coerce(cliPackageJsonVersion));
             console.log(`webOS CLI version: ${cliPackageJsonVersion}`);
+
             if (!cliPackageJsonVersion || !cliVersionStr) {
                 // vscode.window.showWarningMessage(`Warning! Failed to check the webOS CLI version.`);
                 return true;

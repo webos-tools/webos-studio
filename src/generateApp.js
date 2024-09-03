@@ -451,7 +451,7 @@ async function generateAppFromProjectWizard(template, projectLocation, projectNa
             location = path.join(defaultDir, location);
         }
         let projectPath = path.join(location, projectName);
-        let templateId = templateUtils.getTemplateId(template, deviceProfile);
+        let templateId = templateUtils.getTemplateId(template);
         if (deviceProfile == 'TV' && templateId == 'webapp') {
             templateId = 'basic';
         }

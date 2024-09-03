@@ -148,7 +148,7 @@ function activate(context) {
                 const [methodNameArr, methodDescArr] = findMethodInArray(serviceName);
                 for (const i in methodNameArr) {
                     const methodItemName = methodNameArr[i].substring(1);
-                    // eslint-disable-next-line no-async-promise-executor
+                    // eslint-disable-next-line no-unused-vars
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
                     const methodItemInterface = { label: methodItemName, description: "Luna API Method" };
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
@@ -201,7 +201,7 @@ function activate(context) {
                 methodName = methodName.split("'")[0];
 
                 // eslint-disable-next-line no-async-promise-executor
-                const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodName);
+                const [paramNameArr, paramDescArr] = findParamInArray(serviceName, methodName);
                 for (const i in paramNameArr) {
                     const paramItemName = paramNameArr[i];
                     const paramItemInterface = { label: paramItemName, description: "Luna API Param" };
@@ -317,7 +317,7 @@ function activate(context) {
                 const [methodNameArr, methodDescArr] = findMethodInArray(serviceName);
                 for (const i in methodNameArr) {
                     const methodItemName = methodNameArr[i].substring(1);
-                    // eslint-disable-next-line no-async-promise-executor
+                    // eslint-disable-next-line no-unused-vars
                     const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodItemName);
                     const methodItemInterface = { label: methodItemName, description: "Luna API Method" };
                     const methodItemDesc = methodDescArr[i] + methodParamDesc;
@@ -370,7 +370,7 @@ function activate(context) {
                 methodName = lineSplitEnd.split("'")[1];
 
                 // eslint-disable-next-line no-async-promise-executor
-                const [paramNameArr, paramDescArr, methodParamDesc] = findParamInArray(serviceName, methodName);
+                const [paramNameArr, paramDescArr] = findParamInArray(serviceName, methodName);
                 for (const i in paramNameArr) {
                     const paramItemName = paramNameArr[i];
                     const paramItemInterface = { label: paramItemName, description: "Luna API Param" };
@@ -1123,15 +1123,6 @@ function getResourcePath() {
     const resource = dataPath.with({ scheme: 'vscode-resource' });
 
     return resource;
-}
-
-function showProfile(profile) {
-    const currentProfile = profile.trim().toUpperCase();
-    myStatusBarItem.text = 'webOS ' + currentProfile;
-    let tooltip = 'Current profile of webOS Studio is set to ' + currentProfile;
-    tooltip += '\nClick to change profile';
-    myStatusBarItem.tooltip = tooltip;
-    myStatusBarItem.show();
 }
 
 function updateStatusBarItem() {

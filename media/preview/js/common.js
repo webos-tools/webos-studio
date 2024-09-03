@@ -2,7 +2,6 @@
  * Copyright (c) 2024 LG Electronics Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
-
 class PeviewApp {
     constructor() {
         this.currentRes = "FTW" //FTW,FHD,HD,RATIO
@@ -20,15 +19,13 @@ class PeviewApp {
                     let url = iframeElement.getAttribute("src")
                     iframeElement.setAttribute("src", url + "?couter=" + Math.random());
                 }
-                    break;
-
+                break;
             }
         });
         window.addEventListener('resize', () => {
             if (this.currentRes == "FTW") {
                 this.setSize();
             }
-
         }, true);
         this.setSize();
         document.getElementById("prv_resTitle").onclick = (event) => {
@@ -90,8 +87,6 @@ class PeviewApp {
             this.setResTitle("FHD - 1920 X 1080")
             this.hideToolBarMenu();
             this.appScrollToCenter()
-
-
         }
         document.getElementById("prv_menu_hd").onclick = () => {
             let iframeElement = document.getElementById("previewEle");
@@ -112,12 +107,9 @@ class PeviewApp {
         document.getElementById("prv_menu_4-3").onclick = () => {
             this.setResolutionByRatio(4, 3)
         }
-
-
         document.body.onclick = () => {
             this.hideToolBarMenu()
         }
-
     }
     appScrollToCenter() {
         document.getElementById('previewEle').scrollIntoView({
@@ -133,13 +125,11 @@ class PeviewApp {
         else {
             document.getElementById("prv_resTitle").innerHTML = "Screen Ratio - " + title
         }
-
     }
     setSize() {
         let iframeElement = document.getElementById("previewEle");
         iframeElement.style.height = (window.innerHeight - 10) + "px";
         iframeElement.style.width = "100%";
-
     }
     hideToolBarMenu() {
         this.isToolBarMenuVisible = false;
@@ -150,7 +140,6 @@ class PeviewApp {
         this.isToolBarMenuVisible = true;
         let menu = document.getElementById("prv_toolBarCtxMenu")
         menu.style = `display:block;top:28px;right:35px`
-
     }
     getRationValue(w, h) {
         let divValue = h
@@ -164,10 +153,8 @@ class PeviewApp {
             unit = wUnit
         }
         return unit;
-
     }
     setResolutionByRatio(w, h) {
-        
         let unit = this.getRationValue(w, h)
         let iframeElement = document.getElementById("previewEle");
         iframeElement.classList.remove("previewEleTrans")

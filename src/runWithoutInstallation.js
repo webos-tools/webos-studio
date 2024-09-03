@@ -15,16 +15,13 @@ const notify = require("./lib/notificationUtils");
 
 const {
   getDeviceList,
-  getInstalledList,
   getRunningList,
   updateDeviceStatus,
 } = require("./lib/deviceUtils");
 const fs = require("fs");
 const defaultGateway = require("default-gateway");
 const os = require("os");
-
 const watch = require("node-watch");
-
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
@@ -33,7 +30,6 @@ const enactUtils = require("./lib/enactUtils");
 const kill = require("tree-kill");
 let sysIP = "127.0.0.1";
 const { logger } = require("./lib/logger");
-const { rejects } = require("assert");
 
 let userAppDir = "";
 let targetDevice = null;
@@ -55,10 +51,7 @@ let dpContext = {
 };
 let containerAppInfo = null;
 
- let gContext =null;
 async function runWithoutInstall(appSelectedDir, context) {
-   gContext =context;
-
   let device = null;
 
   let deviceList = await getDeviceList();
@@ -174,8 +167,6 @@ async function runWithoutInstall(appSelectedDir, context) {
     isEnact = await enactUtils.isEnactApp(appDir);
 
     if(!isEnact){
-      const title = 'Auto Reload Application';
-      const prompt = 'Enter Directory Path to Run';
       const hostIp = sysIP;
       const deviceName = device.name;
     
@@ -237,7 +228,9 @@ async function getExistingContainerAppInfo(device) {
       appInfoArray.forEach((cell) => {
         try {
           appInfoJsonArray.push(cell.trim());
-        } catch (e) {}
+        } catch (e) {
+          // Do not handle exception
+        }
       });
 
       //getRunningList
@@ -346,7 +339,7 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                         errMsg = `Please check ${device}'s IP address or port.`;
                       }
                       await notify.clearProgress(progress, `ERROR! ${errMsg}`);
-                      let erMsg = err.toString();
+                      errMsg = err.toString();
                       vscode.window.showErrorMessage(
                         `ERROR! ${errMsg}`
                       );
@@ -364,7 +357,7 @@ async function installContainerAndStartSocketAndLaunch(context, device) {
                     errMsg = `Please check ${device.name}'s IP address or port.`;
                   }
                   await notify.clearProgress(progress, `ERROR! ${errMsg}`);
-                  let erMsg = err.toString();
+                  errMsg = err.toString();
                   vscode.window.showErrorMessage(
                     `ERROR! ${errMsg}`
                   );
@@ -401,13 +394,9 @@ async function getContainerAppPackage(context){
       .catch((err) => {
         console.log("error", err);
         reject(err)
-      
       });
     }
-    
-
   })
-
 }
 async function startSocketAndLaunchContainerApp(context, device) {
   portfinder
@@ -536,8 +525,6 @@ async function startSocketServer(ip, port) {
   });
 
   socketClient = io.on("connection", (socket) => {
-    theSocket = socket;
-
     console.log(`new client connected, id = ${socket.id} `);
     socket.emit("connection_resp", { status: "connected" });
 
@@ -681,14 +668,10 @@ async function startLocalPreview() {
                   ).then(()=>{
                     isAppReloading = false;
                   })
-                  .catch( async(errMsg)=>{
+                  .catch(async()=>{
                     isAppReloading = false;
-                
                   });
                 }
-                
-
-                
               }
             );
           }
@@ -711,9 +694,7 @@ function isWebappExcludedFiles(fileName){
     return true
   }
  
-    return false
-
-  
+  return false
 }
 
 async function stopServerAndClearResources(context, isFromCommand) {
@@ -754,7 +735,7 @@ async function stopServerAndClearResources(context, isFromCommand) {
             "Application Launch on Device has been stoped."
           );
         })
-        .catch((err) => {
+        .catch(() => {
           console.log("Error on removing  Launch App on " + deviceName);
           vscode.window.showErrorMessage(
             "Error on removing  Launch App on " + deviceName

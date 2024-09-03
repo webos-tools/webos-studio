@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023 LG Electronics Inc.
+ * Copyright (c) 2021-2024 LG Electronics Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
 const templateList = [
@@ -19,7 +19,8 @@ function getTemplateList() {
     return templateList.map(template => template.name);
 }
 
-function getTemplateId(name, deviceProfile = 'OSE') {
+
+function getTemplateId(name) {
     let id;
     for (let i in templateList) {
         if (name === templateList[i].name) {

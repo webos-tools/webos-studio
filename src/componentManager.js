@@ -51,9 +51,6 @@ function isJunk(filename) {
   return junkRegex.test(filename);
 }
 
-
-
-
 class ComponentMgr {
   constructor(context) {
     this.context = context;
@@ -99,7 +96,7 @@ class ComponentMgr {
       key, a = [];
 
     for (key in o) {
-      if (o.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(o, key)) {
         a.push(key);
       }
     }
@@ -2043,11 +2040,9 @@ class ComponentMgr {
       npmPrg = `"${npmPrg}"`
     }
     if (withoutProfileLoader) {
-      return npmPrg.replace(/\"/g, '')
-
+      return npmPrg.replace(/\"/g, '') // eslint-disable-line
     } else {
       return `${profileLoader} ${npmPrg}`
-
     }
   }
   getNpmGloablFolder() {

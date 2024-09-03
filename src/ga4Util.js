@@ -40,8 +40,8 @@ function getSysType() {
 // functions for global configuration
 
 const IS_WINDOWS = process.platform.startsWith('win');
-const IS_LINUX = process.platform.startsWith('linux');
-const IS_MACOSX = process.platform.startsWith('darwin');
+// const IS_LINUX = process.platform.startsWith('linux');
+// const IS_MACOSX = process.platform.startsWith('darwin');
 
 function getHomeDir() {
   // fallback
@@ -178,11 +178,11 @@ function ga4PageView(title) {
 /**
  * @param {import("node-gtag4/types/gtag").eventPayloadType} param
  */
-function ga4Event(param) {
-  if (vscode.workspace.getConfiguration().get("webos.enableUserDataCollection") === true) {
-    ga4.event(param);
-  }
-}
+// function ga4Event(param) {
+//   if (vscode.workspace.getConfiguration().get("webos.enableUserDataCollection") === true) {
+//     ga4.event(param);
+//   }
+// }
 
 /**
  * @param {any} version

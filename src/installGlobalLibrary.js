@@ -18,11 +18,12 @@ const command = "npm install -g @enact/cli @webos-tools/cli patch-package"
 
 async function isNodeInstalledRoot() {
     try {
-        const { stdout, stderr } = await exec('stat -f "%Su"  `npm config get prefix`');
+        const { stdout } = await exec('stat -f "%Su"  `npm config get prefix`');
         if (stdout.trim() === 'root') {
             return true;
         }
     } catch (e) {
+        // Do not handle exception
     }
     return false;
 }

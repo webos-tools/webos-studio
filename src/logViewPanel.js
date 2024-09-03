@@ -2,6 +2,7 @@
  * Copyright (c) 2021-2024 LG Electronics Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
+/* eslint-disable no-useless-escape */
 const vscode = require("vscode");
 const path = require("path");
 const fs = require("fs");

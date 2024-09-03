@@ -2,7 +2,6 @@
  * Copyright (c) 2021-2024 LG Electronics Inc.
  * SPDX-License-Identifier: Apache-2.0
  */
-const vscode = require('vscode');
 const path = require('path');
 const os = require('os');
 const { exec } = require('child_process');
@@ -40,10 +39,9 @@ function _execAsync(cmd, option, next) {
                     // showPrompt();
                     if (cmd.includes('VBoxManage')) {
                         logger.warn(`Unable to find the VirtualBox.\n`);
-                        reject("Unable to find the installed  VirtualBox");
+                        reject("Unable to find the installed VirtualBox");
                     } else {
-                      
-                        reject("Unable to find the installed  webos-emulator");
+                        reject("Unable to find the installed webos-emulator");
                     }
                 } else {
                     reject(stderr);
@@ -189,7 +187,6 @@ async function _setInstanceList() {
                 });
         }).catch((err) => {
             console.error(err);
-            // vscode.window.showErrorMessage(`Error! Failed to get the device list.`);
         })
     await checkWebosEmulator()
         .then(async (data) => {

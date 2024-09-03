@@ -7,11 +7,10 @@ const fs = require('fs');
 const path = require('path');
 const { InputController } = require('./inputController');
 const { InputChecker } = require('./inputChecker');
-const { getDefaultDir, getIpkArray } = require('./workspaceUtils');
+const { getDefaultDir } = require('./workspaceUtils');
 const { fileURLToPath } = require('url');
 
 const folderBtn = InputController.FileBrowser;
-
 const LAUNCHPARAMS_FILE = '.launchparams.json';
 
 /**
