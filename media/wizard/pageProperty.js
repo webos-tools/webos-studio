@@ -81,12 +81,16 @@
             container.removeChild(document.getElementById('hosted-url-input'));
             container.removeChild(document.getElementById('webOS-library-label'));
             container.removeChild(document.getElementById('webOS-library-check'));
+
+            setVisibleProperty('hosted-url-input', false);
         } else if (type === 'Hosted Web App') {
             container.removeChild(document.getElementById('webOS-library-label'));
             container.removeChild(document.getElementById('webOS-library-check'));
         } else if (type === 'Basic Enact App' ) {
             container.removeChild(document.getElementById('hosted-url-label'));
             container.removeChild(document.getElementById('hosted-url-input'));
+
+            setVisibleProperty('hosted-url-input', false);
         } else if (type === 'JS Service' || type === 'JS Service Info') {
             propertyGuide.innerText = 'Insert Service Information';
             labelId.innerText = 'Service ID';
@@ -100,6 +104,8 @@
             container.removeChild(document.getElementById('hosted-url-input'));
 
             setVisibleProperty('app-version-input', false);
+            setVisibleProperty('app-title-input', false);
+            setVisibleProperty('hosted-url-input', false);
         }
 
         if (inputLocation.defaultValue) {
@@ -166,14 +172,7 @@
         if (inputLocation.value) {
             setFilledProperty('location', true);
         } else {
-            // When user does not set location, set existing defaultValue.
-            // If workspace is not set, default location is "".
-            inputLocation.value = inputLocation.defaultValue;
-            if (inputLocation.value) {
-                setFilledProperty('location', true);
-            } else {
-                setFilledProperty('location', false);
-            }
+            setFilledProperty('location', false);
         }
     });
 
@@ -197,28 +196,34 @@
     inputId.addEventListener('input', function() {
         setValidTextColor('id', true);
         if (!inputId.value) {
-            inputId.value = inputId.defaultValue;
+            setFilledProperty('id', false);
+        } else {
+            setFilledProperty('id', true);
         }
-        setFilledProperty('id', true);
     });
 
     inputVersion.addEventListener('input', function() {
         setValidTextColor('version', true);
         if (!inputVersion.value) {
-            inputVersion.value = inputVersion.defaultValue;
+            setFilledProperty('version', false);
+        } else {
+            setFilledProperty('version', true);
         }
-        setFilledProperty('version', true);
     });
 
     inputTitle.addEventListener('input', function() {
         if (!inputTitle.value) {
-            inputTitle.value = inputTitle.defaultValue;
+            setFilledProperty('title', false);
+        } else {
+            setFilledProperty('title', true);
         }
     });
 
     inputUrl.addEventListener('input', function() {
         if (!inputUrl.value) {
-            inputUrl.value = inputUrl.defaultValue;
+            setFilledProperty('url', false);
+        } else {
+            setFilledProperty('url', true);
         }
     });
 
@@ -331,7 +336,9 @@
         { id : 'project-location-input', valueType : 'location', visible: true, filled : true }, // Project 
         { id : 'project-name-input', valueType : 'name', visible: true, filled : false },
         { id : 'project-id-input', valueType : 'id', visible: true, filled : true },
-        { id : 'app-version-input', valueType : 'version', visible: true, filled : true }
+        { id : 'app-version-input', valueType : 'version', visible: true, filled : true },
+        { id : 'app-title-input', valueType : 'title', visible: true, filled : true },
+        { id : 'hosted-url-input', valueType : 'url', visible: true, filled : true }
     ]
 
     let isFinishEnable = true;

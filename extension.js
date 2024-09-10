@@ -1803,13 +1803,13 @@ function getWebviewPropertyPage(appType, appTypeIndex, resource) {
                         <label class="grid-container-label" for="project-name-input">Project Name</label>
                         <input type="text" id="project-name-input" placeholder="Enter Project Name" style="width:298px">
                         <label class="grid-container-label" id="project-id-label" for="project-id-input">App ID</label>
-                        <input type="text" id="project-id-input" style="width:298px">
+                        <input type="text" id="project-id-input" placeholder="Enter ID" style="width:298px">
                         <label class="grid-container-label" id="app-version-label" for="app-version-input">App Version</label>
-                        <input type="text" id="app-version-input" style="width:298px">
-                        <label class="grid-container-label" id="app-title-label" for="app-title-input">App title</label>
-                        <input type="text" id="app-title-input" style="width:298px">
+                        <input type="text" id="app-version-input" placeholder="Enter Version" style="width:298px">
+                        <label class="grid-container-label" id="app-title-label" for="app-title-input">App Title</label>
+                        <input type="text" id="app-title-input" placeholder="Enter Title" style="width:298px">
                         <label class="grid-container-label" id="hosted-url-label" for="hosted-url-input">Hosted url</label>
-                        <input type="text" id="hosted-url-input" style="width:298px">
+                        <input type="text" id="hosted-url-input" placeholder="Enter Hosted url" style="width:298px">
                         <label class="grid-container-label" id="webOS-library-label">Add webOS library</label>
                         <div id = "webOS-library-check">
                             <label class="check-container">Yes<input type="checkbox" id = "check-yes" checked>
