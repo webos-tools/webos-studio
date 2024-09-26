@@ -657,12 +657,10 @@ function activate(context) {
     context.subscriptions.push(changeLogCommand);
     context.subscriptions.push(initHelpCommand);
 
-    const webososeHelpProvider = new HelpProvider([
-        { "label": "Resource Monitoring", "onSelectCommand": "webosose.resourceMonitoring", "icon": "resource_monitoring" },
-        { "label": "Readme", "onSelectCommand": "quickLauncher.readme", "icon": "info" },
-        { "label": "Change Log", "onSelectCommand": "quickLauncher.changeLog", "icon": "versions" }
-    ]);
+    const webososeHelpProvider = new HelpProvider([]);
     vscode.window.registerTreeDataProvider('quickLauncher', webososeHelpProvider);
+
+    context.subscriptions.push(vscode.commands.registerCommand('getHelpProvider', () => webososeHelpProvider));
 
     // comment out unused command registration, webosose.generateApp
     /*context.subscriptions.push(vscode.commands.registerCommand('webosose.generateApp', async () => {

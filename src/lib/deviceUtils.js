@@ -124,6 +124,10 @@ async function setCurrentDeviceProfile(profile) {
                   });
               
             }
+            const helpProvider = await vscode.commands.executeCommand("getHelpProvider");
+            if(helpProvider ){
+                helpProvider.refresh()
+            }
            
         }).catch(err =>{
             console.error(err);

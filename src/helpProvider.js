@@ -8,7 +8,7 @@ const path = require('path');
 const showdown = require('showdown');
 const package_json = JSON.parse(fs.readFileSync(path.join(__filename, '..', '..', "package.json"), "utf-8"));
 const extensionBasePath = vscode.extensions.getExtension(`${package_json.publisher}.${package_json.name}`).extensionPath;
-
+const { getCurrentDeviceProfile } = require('./lib/deviceUtils');
 class HelpItem {
     constructor(label, command, icon) {
         this.label = label;
@@ -28,6 +28,21 @@ class HelpProvider {
     constructor(items) {
         this.items = items;
     }
+    async setItems(){
+        let profile = await  getCurrentDeviceProfile()
+        if(profile =="ose"){
+            this.items = [
+                { "label": "Resource Monitoring", "onSelectCommand": "webosose.resourceMonitoring", "icon": "resource_monitoring" },
+                { "label": "Readme", "onSelectCommand": "quickLauncher.readme", "icon": "info" },
+                { "label": "Change Log", "onSelectCommand": "quickLauncher.changeLog", "icon": "versions" }
+            ]
+        }else{
+            this.items = [
+                { "label": "Readme", "onSelectCommand": "quickLauncher.readme", "icon": "info" },
+                { "label": "Change Log", "onSelectCommand": "quickLauncher.changeLog", "icon": "versions" }
+            ]
+        }
+    }
 
     refresh(element) {
         if (element) {
@@ -41,7 +56,8 @@ class HelpProvider {
         return element;
     }
 
-    getChildren() {
+    async getChildren() {
+        await this.setItems()
         let helpItems = this.items.map((item) => {
             return new HelpItem(item.label, item.onSelectCommand, item.icon);
         });
