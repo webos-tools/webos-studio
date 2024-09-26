@@ -12,7 +12,6 @@ const tcpPortUsed = require('tcp-port-used');
 const defaultGateway = require('default-gateway');
 const { logger } = require('./logger');
 
-
 function _execAsync(cmd, option, next) {
     logger.run(cmd)
     // +" "+ typeof option == "object"?JSON.stringify(option):""
@@ -37,8 +36,10 @@ function _execAsync(cmd, option, next) {
             if (err) {
                 logger.error(err)
                 if (stderr.includes('not recognized') || stderr.includes('not found') || (os.type() == "Windows_NT" && err.code == 1)) {
-                    const { showPrompt } = require('../installGlobalLibrary');
-                    showPrompt();
+                    const { showPrompt, getPromptlock } = require('../installGlobalLibrary');
+                    if (getPromptlock() == false) {
+                        showPrompt();
+                    }
                     reject("Global Package needed");
                 } else {
                     reject(stderr);

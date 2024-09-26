@@ -35,8 +35,6 @@ function _execAsync(cmd, option, next) {
             if (err) {
                 logger.error(err);
                 if (stderr.includes('not recognized') || stderr.includes('not found') || (os.type() == "Windows_NT" && err.code == 1)) {
-                    // const { showPrompt } = require('../installGlobalLibrary');
-                    // showPrompt();
                     if (cmd.includes('VBoxManage')) {
                         logger.warn(`Unable to find the VirtualBox.\n`);
                         reject("Unable to find the installed VirtualBox");
@@ -47,7 +45,6 @@ function _execAsync(cmd, option, next) {
                     reject(stderr);
                 }
             } else {
-
                 if (next) {
                     next(stdout, resolve, reject);
                 } else {

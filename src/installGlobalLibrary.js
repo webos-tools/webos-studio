@@ -15,6 +15,15 @@ const libraryPrompt = {
     "patch-package": `patch-package Global package adding in progress...`
 }
 const command = "npm install -g @enact/cli @webos-tools/cli patch-package"
+let promptlock = false;
+
+function getPromptlock() {
+    return promptlock;
+}
+
+function setPromptlock(set) {
+    promptlock = set;
+}
 
 async function isNodeInstalledRoot() {
     try {
@@ -29,8 +38,7 @@ async function isNodeInstalledRoot() {
 }
 
 async function installGlobalLibrary() {
-    handlingPrompt = true;
-    vscode.window.withProgress({
+    await vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
         title: "Install Global Packages",
         cancellable: false
@@ -111,17 +119,21 @@ async function installEmulatorLauncher() {
     });
 }
 
-let handlingPrompt = false;
 async function showPrompt() {
-    if (handlingPrompt) return;
+    // Prevent to show installing globalpacakge message multiple times at once.
+    if (getPromptlock() == true) {
+        return;
+    } else {
+        setPromptlock(true);
+    }
     if (process.platform == "darwin") {
         const isRoot = await isNodeInstalledRoot();
         if (isRoot === true) {
             vscode.window.showInformationMessage(`node permission problem. Please refer to option 2 in https://npm.github.io/installation-setup-docs/installing/a-note-on-permissions.html`);
+            setPromptlock(false);
             return;
         }
     }
-    handlingPrompt = true;
     await vscode.window.showInformationMessage(
         `Warnning! If you have already installed OSE/TV vs code extensions and CLIs, you should remove them before using this extension.
              This extension needs following packages to be installed globally, ${libraryList}.
@@ -129,14 +141,18 @@ async function showPrompt() {
              ${command}`,
         ...["Yes", "No"]
     )
-        .then(async (answer) => {
-            if (answer === "Yes") {
-                installGlobalLibrary();
-            } else {
-                vscode.window.showInformationMessage(`Please install manually these packages using NPM command, ${command}`);
-            }
-            handlingPrompt = false;
-        });
+    .then(async (answer) => {
+        if (answer === "Yes") {
+            await installGlobalLibrary();
+            setPromptlock(false);
+        } else {
+            //user clicks "No", "X" button or timeouted the popup message
+            vscode.window.showInformationMessage(`Please install manually these packages using NPM command, ${command}`);
+            // Do not show message to inform installing global package to user.
+            // User can install the package by "webOS : Install global pacakage" command palette
+            setPromptlock(true);
+        }
+    })
 }
 
 async function showEmulatorPrompt() {
@@ -178,6 +194,8 @@ module.exports = {
     installGlobalLibrary: installGlobalLibrary,
     installEmulatorLauncher: installEmulatorLauncher,
     showPrompt: showPrompt,
+    getPromptlock : getPromptlock,
+    setPromptlock : setPromptlock,
     showEmulatorPrompt: showEmulatorPrompt,
     getSudoPassword: getSudoPassword
 }
