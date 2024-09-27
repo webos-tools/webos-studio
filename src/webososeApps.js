@@ -51,10 +51,17 @@ class AppsProvider {
     storeSupportedDir(directory, appList) {
         let dirList = [];
         let appsList = []
+        let enactAppList =[]
         appList.forEach((app) => {
             dirList.push(path.join(directory, app.name)); // type is valid and its available
             if (app.type == 'web-app' || app.type == 'enact-app') {
                 appsList.push(path.join(directory, app.name));
+                if (app.type == 'enact-app') {
+                    appsList.push(path.join(directory, app.name,"dist"));
+                    dirList.push(path.join(directory, app.name,"dist"));
+                    enactAppList.push(path.join(directory, app.name));
+                    enactAppList.push(path.join(directory, app.name,"dist"));
+                }
             }
         });
         if (dirList.length > 0) {
@@ -63,6 +70,9 @@ class AppsProvider {
         }
         if (appsList.length > 0) {
             vscode.commands.executeCommand('setContext', 'webosose.supportedAppFolders', appsList);
+        }
+        if(enactAppList.length>0){
+            vscode.commands.executeCommand('setContext', 'webosose.supportedEnactAppFolders', enactAppList);
         }
     }
     storeConfigDependancies(directory, appList, context) {

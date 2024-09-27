@@ -1017,6 +1017,17 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.runWithoutInstall', async (resource) => {
         explorerMenuMgr.runWithoutInstall(resource)
     }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.removeApp', async (resource) => {
+        explorerMenuMgr.removeApp(resource)
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.runLint', async (resource) => {
+        explorerMenuMgr.runLint(resource)
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('webosose.explorermenu.clearLint', async (resource) => {
+        explorerMenuMgr.clearLint(resource)
+    }));
+
     context.subscriptions.push(vscode.commands.registerCommand('ipkanalyze.start', async () => {
 
 

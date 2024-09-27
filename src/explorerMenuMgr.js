@@ -10,8 +10,21 @@ class ExplorerMenuMgr {
     // "webosose.explorermenu.runApp",
     // "webosose.explorermenu.appPreview",
     // "webosose.explorermenu.debug"
+    
+    // "onCommand:webosose.explorermenu.removeApp",
+    // "onCommand:webosose.explorermenu.runLint",
+    // "onCommand:webosose.explorermenu.ClearLint"
 
     constructor() { }
+    removeApp(resource) {
+        vscode.commands.executeCommand('apps.removeApp', this.getAppObject(resource));
+    }
+    runLint(resource) {
+        vscode.commands.executeCommand('apps.lintEnactApp', this.getAppObject(resource));
+    }
+    clearLint(resource) {
+        vscode.commands.executeCommand('apps.lintEnactAppDisable', this.getAppObject(resource));
+    }
     packageApp(resource) {
         vscode.commands.executeCommand('apps.packageApp', this.getAppObject(resource));
     }
@@ -43,7 +56,13 @@ class ExplorerMenuMgr {
         let fPath = resource._fsPath==null?resource.fsPath:resource._fsPath
         let pathElement = fPath.split(path.sep)
         // let pathElement = resource._fsPath.split(path.sep)
-         return { "label": pathElement[pathElement.length - 1].trim() }
+        if(pathElement[pathElement.length-1].trim()=="dist"){
+            // return { "label": path.join(pathElement[pathElement.length -2].trim(),pathElement[pathElement.length - 1].trim()) }
+            return { "label": pathElement[pathElement.length -2].trim() }
+        }else{
+            return { "label": pathElement[pathElement.length - 1].trim() }   
+        }
+         
     }
 }
 

@@ -190,7 +190,7 @@
 		},
 		"webos-emulator-launcher": {
 			"linux": {
-				"0.8.9": {
+				"0.9.5": {
 					"installMethod": "INSTALL_WEBOS_EMU_LAUNCHER",
 					"location": "",
 					"expFileSizeInMB": "1",
@@ -198,7 +198,7 @@
 				}
 			},
 			"win32": {
-				"0.8.9": {
+				"0.9.5": {
 					"installMethod": "INSTALL_WEBOS_EMU_LAUNCHER",
 					"location": "",
 					"expFileSizeInMB": "1",
@@ -206,7 +206,7 @@
 				}
 			},
 			"darwin": {
-				"0.8.9": {
+				"0.9.5": {
 					"installMethod": "INSTALL_WEBOS_EMU_LAUNCHER",
 					"location": "",
 					"expFileSizeInMB": "1",

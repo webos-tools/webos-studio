@@ -104,7 +104,10 @@
         "onCommand:ipkanalyze.start",
         "onCommand:logview.start",
         "onCommand:logview.stop",
-        "onCommand:packagemanager.checkreleases"
+        "onCommand:packagemanager.checkreleases",
+        "onCommand:webosose.explorermenu.removeApp",
+        "onCommand:webosose.explorermenu.runLint",
+        "onCommand:webosose.explorermenu.clearLint"
 
     ],
     "main": "./extension.js",
@@ -308,6 +311,18 @@
             {
                 "command": "webosose.explorermenu.runApp",
                 "title": "webOS: Run Application"
+            },
+            {
+                "command": "webosose.explorermenu.removeApp",
+                "title": "webOS: Remove Application"
+            },
+            {
+                "command": "webosose.explorermenu.runLint",
+                "title": "webOS: Run Lint"
+            },
+            {
+                "command": "webosose.explorermenu.clearLint",
+                "title": "webOS: Clear Lint"
             },
             {
                 "command": "webosose.explorermenu.runSimulator",
@@ -765,6 +780,21 @@
                     "submenu": "webosose.explorermenu.debug",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedFolders",
                     "group": "device2@1"
+                },
+                {
+                    "command": "webosose.explorermenu.removeApp",
+                    "when": "explorerResourceIsFolder && resourcePath in webosose.supportedFolders",
+                    "group": "device4@5"
+                },
+                {
+                    "command": "webosose.explorermenu.runLint",
+                    "when": "explorerResourceIsFolder && resourcePath in webosose.supportedEnactAppFolders",
+                    "group": "device4@6"
+                },
+                {
+                    "command": "webosose.explorermenu.clearLint",
+                    "when": "explorerResourceIsFolder && resourcePath in webosose.supportedEnactAppFolders",
+                    "group": "device4@7"
                 }
             ],
             "commandPalette": [
@@ -818,6 +848,18 @@
                 },
                 {
                     "command": "webosose.explorermenu.runApp",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorermenu.removeApp",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorermenu.runLint",
+                    "when": "false"
+                },
+                {
+                    "command": "webosose.explorermenu.clearLint",
                     "when": "false"
                 },
                 {
