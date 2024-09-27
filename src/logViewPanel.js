@@ -1011,13 +1011,16 @@ class LogViewPanel {
       case "IMPORT_LOG":
         {
           if (this.isLiveLog) {
-            vscode.window.showInformationMessage(`Do you want to save the current log `,
+            const header = "Log Viewer";
+            const options = { detail: 'Do you want to save the current log?', modal: true };
+
+            vscode.window.showInformationMessage(header,options, 
               ...["Yes", "No"])
               .then(async (answer) => {
                 if (answer === "Yes") {
                   await this.openExportFolderDlg(msg);
                   await this.openImportFolderDlg()
-                } else {
+                } else if (answer === "No") {
                   await this.openImportFolderDlg()
                 }
               })
@@ -1267,10 +1270,13 @@ class LogViewPanel {
   }
 
   async switchLog() {
-    vscode.window.showInformationMessage(`This action will restart the device, do you want to continue? `,
-      ...["Yes", "No"])
+    const header = "Log Viewer";
+    const options = { detail: 'This action will restart the device, do you want to continue?', modal: true };
+
+    vscode.window.showInformationMessage(header,options, 
+      ...["Ok"])
       .then(async (answer) => {
-        if (answer === "Yes") {
+        if (answer === "Ok") {
           await this.stopServer();
           this.panel.webview.postMessage({
             command: "PREPARE_LOG_SWITCH",
