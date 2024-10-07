@@ -351,7 +351,7 @@ class ComponentMgr {
     try {
       instVer = instVer.replace("r", ".").replace("_", ".");
       rvalue = satisfies(instVer, reqVer);
-    } catch(e) {      console.log(e) }
+    } catch (e) { console.log(e) }
     return rvalue;
   }
   compareVersionWithoutOp(reqVer, availableV, op) {
@@ -389,7 +389,7 @@ class ComponentMgr {
     fs.writeFileSync(filePath, JSON.stringify(statusJson), "utf8");
     this.statusJson = statusJson;
   }
-  addEnvVarInLinux(newVarLine) {
+  addEnvVarInLinux_old(newVarLine) {
     // environment var in linux willbe added to three files
     return new Promise(async (resolve, reject) => {
       let filePath = path.join("~/.profile");
@@ -407,7 +407,20 @@ class ComponentMgr {
         });
     });
   }
-  addEnvVarInMac(newVarLine) {
+  addEnvVarInLinux(envVariableName, envVariableValue) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await this.replaceEnvVariable(path.join(os.homedir(), '.bashrc'), envVariableName, envVariableValue);
+        await this.replaceEnvVariable(path.join(os.homedir(), '.profile'), envVariableName, envVariableValue);
+        await this.replaceEnvVariable(path.join(os.homedir(), '.bash_profile'), envVariableName, envVariableValue);
+        resolve(); // Resolve the promise after all variables are added
+      } catch (error) {
+        console.error('Error adding environment variable:', error);
+        reject(error); // Reject the promise in case of an error
+      }
+    });
+  }
+  addEnvVarInMac_old(newVarLine) {
     // On mac Environment var will be added to Bash_Profile
     return new Promise(async (resolve, reject) => {
       let filePath = path.join("~/.bash_profile");
@@ -423,6 +436,52 @@ class ComponentMgr {
     });
   }
 
+  addEnvVarInMac(envVariableName, envVariableValue) {
+    return new Promise(async (resolve, reject) => {
+      try {
+         await this.replaceEnvVariable(path.join(os.homedir(), '.bash_profile'), envVariableName, envVariableValue);
+        resolve(); // Resolve the promise after all variables are added
+      } catch (error) {
+        console.error('Error adding environment variable:', error);
+        reject(error); // Reject the promise in case of an error
+      }
+    });
+  //   this.replaceEnvVariable(path.join(os.homedir(), '.bash_profile', envVariableName, envVariableValue));
+
+  }
+  
+
+
+
+  replaceEnvVariable(filePath, envVariableName, envVariableValue) {
+    return new Promise((resolve, reject) => {
+      const exportString = `export ${envVariableName}="${envVariableValue}"\n`;
+      
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+
+        // Use a global regex to remove all instances
+        const variableRegex = new RegExp(`^export\\s+${envVariableName}=.*\n?`, 'gm');
+        const updatedData = data.replace(variableRegex, '');
+        const finalData = updatedData + exportString;
+        
+        fs.writeFile(filePath, finalData, 'utf8', (err) => {
+          if (err) {
+            console.error('Error writing to file:', err);
+            return reject(err);
+          } else {
+            console.log(`Replaced ${envVariableName} in ${filePath}.`);
+            return resolve(); // Resolve after successful write
+          }
+        });
+      });
+    });
+  }
+
+
+  
   getVboxCommandPath() {
     // if vbox command is throwing error, in case it is not updated in profile
     // get the vbox install path along with command and return
@@ -1011,9 +1070,11 @@ class ComponentMgr {
           await exec(`. ~/.bashrc`);
           process.env[msgData.envVarName] = msgData.envVarValue;
           output = await exec(`printenv ${msgData.envVarName}`);
-          await this.addEnvVarInLinux(
-            `export ${msgData.envVarName}="${msgData.envVarValue}"`
-          );
+          // await this.addEnvVarInLinux(
+          //   `export ${msgData.envVarName}="${msgData.envVarValue}"`
+          // );
+          await this.addEnvVarInLinux(msgData.envVarName,msgData.envVarValue)
+        
           await exec(`. ~/.profile`);
           break;
         }
@@ -1021,9 +1082,11 @@ class ComponentMgr {
           await exec(`export ${msgData.envVarName}="${msgData.envVarValue}"`);
           await exec(`source ~/.bash_profile`);
           process.env[msgData.envVarName] = msgData.envVarValue;
-          await this.addEnvVarInMac(
-            `export ${msgData.envVarName}="${msgData.envVarValue}"`
-          );
+          // await this.addEnvVarInMac(
+          //   `export ${msgData.envVarName}="${msgData.envVarValue}"`
+          // );
+          await this.addEnvVarInMac(msgData.envVarName,msgData.envVarValue)
+         
           output = await exec(`printenv ${msgData.envVarName}`);
           break;
         }
@@ -1120,9 +1183,11 @@ class ComponentMgr {
             await exec(`. ~/.bashrc`);
             process.env[envVarName] = envVarValue;
 
-            await this.addEnvVarInLinux(
-              `export ${envVarName}="${envVarValue}"`
-            );
+            // await this.addEnvVarInLinux(
+            //   `export ${envVarName}="${envVarValue}"`
+            // );
+            await this.addEnvVarInLinux(envVarName,envVarValue)
+         
             await exec(`. ~/.profile`);
 
             break;
@@ -1130,7 +1195,8 @@ class ComponentMgr {
           case "darwin": {
             await exec(`export ${envVarName}="${envVarValue}"`);
 
-            await this.addEnvVarInMac(`export ${envVarName}="${envVarValue}"`);
+            // await this.addEnvVarInMac(`export ${envVarName}="${envVarValue}"`);
+            await this.addEnvVarInMac(envVarName,envVarValue);
             await exec(`source ~/.bash_profile`);
             process.env[envVarName] = envVarValue;
 
