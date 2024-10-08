@@ -10,21 +10,8 @@ class ExplorerMenuMgr {
     // "webosose.explorermenu.runApp",
     // "webosose.explorermenu.appPreview",
     // "webosose.explorermenu.debug"
-    
-    // "onCommand:webosose.explorermenu.removeApp",
-    // "onCommand:webosose.explorermenu.runLint",
-    // "onCommand:webosose.explorermenu.ClearLint"
 
     constructor() { }
-    removeApp(resource) {
-        vscode.commands.executeCommand('apps.removeApp', this.getAppObject(resource));
-    }
-    runLint(resource) {
-        vscode.commands.executeCommand('apps.lintEnactApp', this.getAppObject(resource));
-    }
-    clearLint(resource) {
-        vscode.commands.executeCommand('apps.lintEnactAppDisable', this.getAppObject(resource));
-    }
     packageApp(resource) {
         vscode.commands.executeCommand('apps.packageApp', this.getAppObject(resource));
     }
