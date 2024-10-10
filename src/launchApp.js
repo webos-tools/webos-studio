@@ -106,7 +106,7 @@ module.exports = async function launchApp(id, deviceName, displayId, withParams)
                     resolve();
                 }).catch(async (err) => {
                     let errMsg = `Failed to launch ${appId} on ${device}.`
-                    if (err.includes(`Connection timeout`)) {
+                    if (err.includes(`Connection time out`)) {
                         errMsg = `Please check ${device}'s IP address or port.`
                     }
                     await notify.clearProgress(progress, `ERROR! ${errMsg}`);
