@@ -40,7 +40,7 @@ module.exports = async function inspectApp_ipk(appId, device) {
                                     let errMsg = `Failed to close ${appId} on ${device}.`
                                     if (err.includes(`Unknown method "closeByAppId" for category "/dev"`)) {
                                         errMsg = `Please make sure the 'Developer Mode' is on.`;
-                                    } else if (err.includes(`Connection time out`)) {
+                                    } else if (err.includes(`Connection timeout`)) {
                                         errMsg = `Please check ${device}'s IP address or port.`
                                     }
                                     console.log(`Error! ${errMsg}`);

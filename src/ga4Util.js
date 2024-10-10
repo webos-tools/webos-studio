@@ -141,7 +141,7 @@ const api_secret = `nT6EaHVeTgSjGaNrMqmK6w`;
  */
 async function mpGa4Event(eventName, params = {}) {
   if (eventName.indexOf('.') >= 0) {
-    console.log(`[WARN] eventName ${eventName} contains '.' charactor, it should not be measured.`);
+    console.log(`[WARN] eventName ${eventName} contains '.' character, it should not be measured.`);
   }
   let debugParam = ga_debug ? "debug/" : "";
   got.post(`https://www.google-analytics.com/${debugParam}mp/collect?measurement_id=${measurement_id}&api_secret=${api_secret}`, {

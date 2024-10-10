@@ -46,7 +46,7 @@ module.exports = async function lintApp(appFolder, collection, appType, isLintEn
             title: `${appType} Lint`,
             cancellable: false
         }, async (progress) => {
-            await notify.showProgress(progress, 30, `Analyzing lint in progress, please wait for few seconds...`);
+            await notify.showProgress(progress, 30, `Analyzing lint in progress, please wait for a few seconds...`);
             require('./ga4Util').mpGa4Event("LintApp", { category: "Commands" });
             await ares.getLintResults(dirPath, lintAppPath, extensionBasePath, appType)
                 .then(async (stdout) => {

@@ -1066,7 +1066,7 @@ class LogViewPanel {
                 filesJson[msg.data.fileName + "_" + (i + 1) + ".weboslog"] = { path: filePathWithName, start: i * this.exportRSize, end: (i * this.exportRSize) + (exportedCount - 2) };
               }
 
-              // arhive the created files
+              // archive the created files
               const outputArchStream = fs.createWriteStream(path.join(folderUri[0].fsPath, msg.data.fileName + ".zip"));
 
               const archive = archiver('zip', {

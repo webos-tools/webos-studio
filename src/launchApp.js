@@ -94,7 +94,7 @@ module.exports = async function launchApp(id, deviceName, displayId, withParams)
         }, async (progress, token) => {
             token.onCancellationRequested(() => {
                 console.log("User canceled the long running operation");
-                return Promise.reject("CANCEL! Process ened by user..");
+                return Promise.reject("CANCEL! Process ended by user..");
             });
             // let progress = await notify.initProgress("generate application", true);
             await notify.showProgress(progress, 20, `Preparing to launch ${appId}`);
@@ -106,7 +106,7 @@ module.exports = async function launchApp(id, deviceName, displayId, withParams)
                     resolve();
                 }).catch(async (err) => {
                     let errMsg = `Failed to launch ${appId} on ${device}.`
-                    if (err.includes(`Connection time out`)) {
+                    if (err.includes(`Connection timeout`)) {
                         errMsg = `Please check ${device}'s IP address or port.`
                     }
                     await notify.clearProgress(progress, `ERROR! ${errMsg}`);

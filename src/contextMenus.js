@@ -16,7 +16,7 @@ function uninstallApp(appId, device) {
                 let errMsg = `Failed to uninstall ${appId} on ${device}.`
                 if (err.includes(`Unknown method "remove" for category "/dev"`)) {
                     errMsg = `Please make sure the 'Developer Mode' is on.`;
-                } else if (err.includes(`Connection time out`)) {
+                } else if (err.includes(`Connection timeout`)) {
                     errMsg = `Please check ${device}'s IP address or port.`
                 }
                 vscode.window.showErrorMessage(`Error! ${errMsg}`);
@@ -37,7 +37,7 @@ function closeApp(appId, device, dp) {
                 let errMsg = `Failed to close ${appId} on ${device}.`
                 if (err.includes(`Unknown method "closeByAppId" for category "/dev"`)) {
                     errMsg = `Please make sure the 'Developer Mode' is on.`;
-                } else if (err.includes(`Connection time out`)) {
+                } else if (err.includes(`Connection timeout`)) {
                     errMsg = `Please check ${device}'s IP address or port.`
                 }
                 vscode.window.showErrorMessage(`Error! ${errMsg}`);
@@ -52,7 +52,7 @@ function getDeviceInfo(device) {
             vscode.window.showInformationMessage(`${info}`, { modal: true });
         }).catch((err) => {
             let errMsg = `Failed to get ${device}'s information.`;
-            if (err.includes(`Connection time out`)) {
+            if (err.includes(`Connection timeout`)) {
                 errMsg = `Please check ${device}'s IP address or port.`
             }
             vscode.window.showErrorMessage(`Error! ${errMsg}`);
@@ -65,7 +65,7 @@ async function setDefaultDevice(deviceLabel) {
             vscode.window.showInformationMessage(`${deviceLabel} is set as the default device.`, { modal: true });
         }).catch((err) => {
             let errMsg = `Failed to set ${deviceLabel} as the default device.`;
-            if (err.includes(`Connection time out`)) {
+            if (err.includes(`Connection timeout`)) {
                 errMsg = `Please check ${deviceLabel}'s IP address or port.`
             }
             vscode.window.showErrorMessage(`Error! ${errMsg}`);

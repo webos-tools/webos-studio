@@ -45,8 +45,8 @@ function _install(appFilePath, device) {
             cancellable: false
         }, async (progress, token) => {
             token.onCancellationRequested(() => {
-                console.log("User canceled the long running operation");
-                reject("CANCEL! Process ened by user..");
+                console.log("User cancelled the long running operation");
+                reject("CANCEL! Process ended by user..");
             });
             // let progress = await notify.initProgress("generate application", true);
             await notify.showProgress(progress, 20, `Installation of IPK to device in progress...`);
@@ -70,7 +70,7 @@ function _install(appFilePath, device) {
                     }
                     await notify.clearProgress(progress, `ERROR! ${errMsg}`);
                     let erMsg = err.toString();
-                    vscode.window.showErrorMessage(`ERROR! ${errMsg}. Details As follows: ${erMsg}`);
+                    vscode.window.showErrorMessage(`ERROR! ${errMsg}. Details as follows: ${erMsg}`);
                     reject(err);
                 });
         });

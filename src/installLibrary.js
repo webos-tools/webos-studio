@@ -44,7 +44,7 @@ module.exports = async function installLibrary(appDirName, type) {
             return Promise.resolve();
         } catch (err) {
             let erMsg = err.toString();
-            vscode.window.showErrorMessage(`ERROR! Failed to install package. Details As follows: ${erMsg}`);
+            vscode.window.showErrorMessage(`ERROR! Failed to install package. Details are as follows: ${erMsg}`);
             await notify.clearProgress(progress, `ERROR! Failed to install package.`);
             return Promise.reject(err);
         }

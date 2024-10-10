@@ -38,10 +38,10 @@ async function installGlobalLibrary() {
             console.log("User canceled the long running operation");
         });
         try {
-            await notify.showProgress(progress, 1, `Instalation initiated..`);
+            await notify.showProgress(progress, 1, `Installation initiated..`);
             let pw = "";
             if (process.platform == "nodarwin") {
-                await notify.showProgress(progress, 5, `Please enter Sudo password in top input field.`);
+                await notify.showProgress(progress, 5, `Please enter sudo password in top input field.`);
                 pw = await getSudoPassword();
                 if (pw) {
                     for (let i = 0; i < libraryList.length; i++) {
@@ -61,11 +61,11 @@ async function installGlobalLibrary() {
                     await notify.showProgress(progress, 10, libraryPrompt[`${libraryList[i]}`]);
 
                     await addLibrary(true, libraryList[i]);
-                    await notify.showProgress(progress, 10, `${libraryList[i]} Global package adding Completed.`);
+                    await notify.showProgress(progress, 10, `${libraryList[i]} Global package adding completed.`);
                 }
                 await installEnactTemplate();
                 vscode.commands.executeCommand('webososeDevices.refreshList');
-                await notify.clearProgress(progress, `Success! All Package installed`);
+                await notify.clearProgress(progress, `Success! All packages installed`);
                 vscode.commands.executeCommand('webos.updateProfile');
                 return Promise.resolve();
             }
@@ -90,14 +90,14 @@ async function installEmulatorLauncher() {
             console.log("User canceled the long running operation");
         });
         try {
-            await notify.showProgress(progress, 1, `Instalation initiated..`);
+            await notify.showProgress(progress, 1, `Installation initiated..`);
             await notify.showProgress(progress, 10, `Emulator Launcher`);
 
             await addEmulatorLauncher();
             await notify.showProgress(progress, 10, `Emulator Launcher install Completed.`);
                 
             vscode.commands.executeCommand('webososeDevices.refreshList');
-            await notify.clearProgress(progress, `Success! Emulator Launcher installed`);
+            await notify.clearProgress(progress, `Success! Emulator Launcher installed.`);
             return Promise.resolve();
         } catch (err) {
             let erMsg = err.toString();
@@ -116,13 +116,13 @@ async function showPrompt() {
     if (process.platform == "darwin") {
         const isRoot = await isNodeInstalledRoot();
         if (isRoot === true) {
-            vscode.window.showInformationMessage(`node permission problem. Please refer to option 2 in https://npm.github.io/installation-setup-docs/installing/a-note-on-permissions.html`);
+            vscode.window.showInformationMessage(`Node permission problem. Please refer to option 2 in https://npm.github.io/installation-setup-docs/installing/a-note-on-permissions.html`);
             return;
         }
     }
     handlingPrompt = true;
     await vscode.window.showInformationMessage(
-        `Warnning! If you have already installed OSE/TV vs code extensions and CLIs, you should remove them before using this extension.
+        `Warning! If you have already installed OSE/TV vs code extensions and CLIs, you should remove them before using this extension.
              This extension needs following packages to be installed globally, ${libraryList}.
              Click 𝐘𝐞𝐬 to approve installing them, else install them manually using following command,
              ${command}`,

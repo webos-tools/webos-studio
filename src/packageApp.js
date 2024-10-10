@@ -105,7 +105,7 @@ module.exports = function packageApp(appSelectedDir, isSkip) {
                             let controller1 = new InputController();
                             controller1.addStep({
                                 title: 'Create Package with App',
-                                placeholder: `Service Directory if need to packaged with service else leave blank`,
+                                placeholder: `Service Directory if need to be packaged with service else leave blank`,
                                 prompt: 'Enter Service directory if needed',
                                 buttons: [folderBtn],
                                 validator: function (value) {
@@ -238,8 +238,8 @@ module.exports = function packageApp(appSelectedDir, isSkip) {
                     } else {
                         errMsg = err;
                     }
-                    vscode.window.showErrorMessage(`ERROR! Packaging App Failed. Details As follows: ${errMsg}`);
-                    await notify.clearProgress(progress, `ERROR! Packaging App Failed due to ${errMsg}`);
+                    vscode.window.showErrorMessage(`ERROR! Packaging App Failed. Details as follows: ${errMsg}`);
+                    await notify.clearProgress(progress, `ERROR! Packaging App failed due to ${errMsg}`);
                 }
             });
         }

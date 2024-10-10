@@ -254,7 +254,7 @@ async function getExistingContainerAppInfo(device) {
     .catch((err) => {
       console.log("Error", err);
       vscode.window.showErrorMessage(
-        `Error Connecting Device. Details As follows: ${err.toString()}`
+        `Error Connecting Device. Details as follows: ${err.toString()}`
       );
     });
     if(installedAppInfoObj["id"] == null ){
@@ -461,7 +461,7 @@ async function startSocketAndLaunchContainerApp(context, device) {
               await notify.clearProgress(progress, `ERROR! ${errMsg}`);
               let erMsg = err.toString();
               vscode.window.showErrorMessage(
-                `ERROR! ${errMsg}. Details As follows: ${erMsg}`
+                `ERROR! ${errMsg}. Details as follows: ${erMsg}`
               );
             });
         }
@@ -504,7 +504,7 @@ async function onlyLaunchContainerApp(context, device) {
           await notify.clearProgress(progress, `ERROR! ${errMsg}`);
           let erMsg = err.toString();
           vscode.window.showErrorMessage(
-            `ERROR! ${errMsg}. Details As follows: ${erMsg}`
+            `ERROR! ${errMsg}. Details as follows: ${erMsg}`
           );
         });
     }
@@ -598,7 +598,7 @@ async function startLocalPreview() {
           dpContext.isPreviewStarted = true;
           dpContext.isPreviewUrlSent = false;
           if (isEnact) {
-            // send compailing
+            // send compiling
             clearInterval(enactProgressTimer);
             // pvalue =60;
             if (socketClient) {
@@ -751,13 +751,13 @@ async function stopServerAndClearResources(context, isFromCommand) {
         .installRemove(dp_appInfo["id"], deviceName)
         .then(async () => {
           vscode.window.showInformationMessage(
-            "Application Launch on Device has been stoped."
+            "Application launch on device has been stopped."
           );
         })
         .catch((err) => {
-          console.log("Error on removing  Launch App on " + deviceName);
+          console.log("Error removing Launch App on " + deviceName);
           vscode.window.showErrorMessage(
-            "Error on removing  Launch App on " + deviceName
+            "Error removing Launch App on " + deviceName
           );
         });
     } else {

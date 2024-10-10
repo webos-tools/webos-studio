@@ -70,7 +70,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
 
             let indexAppId = installed.indexOf(appId);
             if (indexAppId < 0) {
-                vscode.window.showErrorMessage(`ERROR! Failed to run a debug, since not installed app.`);
+                vscode.window.showErrorMessage(`ERROR! Failed to run a debug, since the app not installed.`);
                 return Promise.reject();
             }
         }
@@ -84,7 +84,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                 return Promise.reject();
             }
             if (!isInstalled) {
-                vscode.window.showErrorMessage(`ERROR! Failed to run a debug, since not installed service.`);
+                vscode.window.showErrorMessage(`ERROR! Failed to run a debug, since the service is not installed.`);
                 return Promise.reject();
             }
             isService = true;
@@ -279,7 +279,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                                 })
                                 .catch((err) => {
                                     console.error(err);
-                                    vscode.window.showErrorMessage(`Error! Failed to ge free port`);
+                                    vscode.window.showErrorMessage(`Error! Failed to get free port`);
                                 });
                         }
                         else {

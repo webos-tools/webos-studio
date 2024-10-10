@@ -294,7 +294,7 @@ class InstanceWebviewProvider {
                                     })
                             } else {
                                 console.log("do not contain uuid..", stdout)
-                                vscode.window.showErrorMessage("Error gettng instance uuid")
+                                vscode.window.showErrorMessage("Error getting instance uuid")
                             }
                         }).catch((err) => {
                             // display error
@@ -760,7 +760,7 @@ class InstanceWebviewProvider {
                     <tr><td>
                     <label for="vmdkFile">Select VMDK File</label>
                     <input type="file" id="vmdkFile" accept=".vmdk" style ="display:none" >
-                    <div class ="fileButtonContainer"> <span theFile="" id="selectedFile">No VMDK file choosen</span><span id ="fileButton" class="fileButton"> Choose File </span></div>
+                    <div class ="fileButtonContainer"> <span theFile="" id="selectedFile">No VMDK file chosen</span><span id ="fileButton" class="fileButton"> Choose File </span></div>
                   
                     </td></tr>
                     <tr><td>

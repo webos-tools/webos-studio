@@ -119,7 +119,7 @@ class ComponentMgr {
   }
 
   async updateAvailableDiskspaceOnEnvPath() {
-    // gets the Avalialble diskspace and send a msg to UI
+    // gets the available disk space and send a msg to UI
     await checkDiskSpace(this.envPath).then((diskSpace) => {
       let dskSpace = Math.floor((diskSpace.free / 1024) / 1024);
       let dskSpaceStr = "";
