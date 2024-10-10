@@ -66,7 +66,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'],
         {
             provideCompletionItems(document, position) {
-                if (studioProfile === "") {
+                if (studioProfile == "") {
+                    return undefined;
+                }
+                if (!isActiveTextInApp()) {
                     return undefined;
                 }
 
@@ -118,7 +121,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'],
         {
             provideCompletionItems(document, position) {
-                if (studioProfile === "") {
+                if (studioProfile == "") {
+                    return undefined;
+                }
+                if (!isActiveTextInApp()) {
                     return undefined;
                 }
 
@@ -173,7 +179,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
-            if (studioProfile === "") {
+            if (studioProfile == "") {
+                return undefined;
+            }
+            if (!isActiveTextInApp()) {
                 return undefined;
             }
 
@@ -227,7 +236,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems() {
-            if (studioProfile === "") {
+            if (studioProfile == "") {
+                return undefined;
+            }
+            if (!isActiveTextInApp()) {
                 return undefined;
             }
 
@@ -295,7 +307,10 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
-            if (studioProfile === "") {
+            if (studioProfile == "") {
+                return undefined;
+            }
+            if (!isActiveTextInApp()) {
                 return undefined;
             }
 
@@ -342,9 +357,13 @@ function activate(context) {
         ['plaintext', 'javascript', 'typescript', 'html'], {
 
         provideCompletionItems(document, position) {
-            if (studioProfile === "") {
+            if (studioProfile == "") {
                 return undefined;
             }
+            if (!isActiveTextInApp()) {
+                return undefined;
+            }
+
             const returnItemArray = [];
             let serviceName = "";
             let methodName = "";
@@ -1102,8 +1121,6 @@ function initExtViews() {
     // vscode.commands.executeCommand('apps.focus');
     // vscode.commands.executeCommand('webososeDevices.focus');
 
-
-
     setTimeout(() => {
         if (logger.extInit == false) {
             logger.log("webOS Studio initialized successfully.");
@@ -1114,6 +1131,31 @@ function initExtViews() {
 
         }
     }, 5000)
+}
+
+function isActiveTextInApp()
+{
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    const activeTextEditors = vscode.window.activeTextEditor;
+    if (!workspaceFolders) {
+        return false;
+    }
+    if (activeTextEditors) {
+        const docUri = activeTextEditors.document.uri;
+        if (docUri?.fsPath) {
+            const uriPath = docUri.fsPath;
+            const parent = (vscode.Uri.file(path.dirname(uriPath)));
+            const workspaceFloder = vscode.workspace.getWorkspaceFolder(parent);
+            const appList = getAppsListinWorkspace(workspaceFloder.uri.fsPath);
+            for (let appName of appList) {
+                if (appName instanceof fs.Dirent && parent.fsPath.indexOf(appName.name) > 0) {
+                    return true;
+                }
+            }
+        }
+    } else {
+        return false;
+    }
 }
 
 function getResourcePath() {
