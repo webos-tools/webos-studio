@@ -29,13 +29,13 @@
             document.getElementById("vmdkFile").oninput = this.fileInputChange.bind(this);
         }
         shadowfileButtonClick() {
-            // selectedFile">No VMDK file choosen
+            // selectedFile">No VMDK file chosen
             document.getElementById("vmdkFile").click();
             document.getElementById("selectedFile").setAttribute("theFile", "");
-            document.getElementById("selectedFile").innerHTML = "No VMDK file choosen";
+            document.getElementById("selectedFile").innerHTML = "No VMDK file chosen";
         }
         fileInputChange() {
-            let selectedFile = "No VMDK file choosen"
+            let selectedFile = "No VMDK file chosen"
             if (document.getElementById("vmdkFile").files.length > 0) {
                 selectedFile = document.getElementById("vmdkFile").files.item(0).path;
                 document.getElementById("selectedFile").setAttribute("theFile", selectedFile)
@@ -222,7 +222,7 @@
             document.getElementById("btnAddInstnce").innerHTML = "Add Instance";
             document.getElementById("btnAddInstnce").setAttribute("uuid", "");
             document.getElementById("btnAddInstnce").setAttribute("vmdkController", "");
-            document.getElementById("selectedFile").innerHTML = "No VMDK file choosen";
+            document.getElementById("selectedFile").innerHTML = "No VMDK file chosen";
             document.getElementById("selectedFile").setAttribute("theFile", "")
 
             document.getElementById("notSupportedContainer").style.display = "none";
@@ -277,7 +277,7 @@
             document.getElementById("btnAddInstnce").innerHTML = "Update Instance";
             document.getElementById("btnAddInstnce").setAttribute("uuid", data.uuid);
             document.getElementById("btnAddInstnce").setAttribute("vmdkController", data.vmdkController);
-            document.getElementById("selectedFile").innerHTML = data.vmdkFile ? data.vmdkFile : "No VMDK file choosen"
+            document.getElementById("selectedFile").innerHTML = data.vmdkFile ? data.vmdkFile : "No VMDK file chosen"
             document.getElementById("selectedFile").setAttribute("theFile", data.vmdkFile ? data.vmdkFile : "")
 
             // check if non supported parametes

@@ -78,7 +78,7 @@ class AutoUpdate {
     }
     updateTVConfig() {
         //Emulator
-        // geneerate comp_uid
+        // generate comp_uid
         let lastIDInt = this.configJson.tv["tv-emulator"].length + 1;
 
         this.tv_servEmulators.forEach(servEntry => {
@@ -135,7 +135,7 @@ class AutoUpdate {
     }
     updateOSEConfig() {
         //Emulator
-        // geneerate comp_uid
+        // generate comp_uid
         let lastIDInt = this.configJson.ose["ose-emulator"].length + 1;
 
         this.ose_servEmulators.forEach(servEntry => {

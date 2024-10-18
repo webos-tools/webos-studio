@@ -142,7 +142,7 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
     // Check influxdb install path
     let influxdb_install_path = webosose_config.get('resourceMonitoring.influxdbInstallPath');
     if (influxdb_install_path == null) {
-        vscode.window.showErrorMessage('InfluxDB Install Path is empty.');
+        vscode.window.showErrorMessage('InfluxDB install path is empty.');
         return;
     }
     influxdb_install_path = influxdb_install_path.replace(/\\/g, "/") + "/";
@@ -153,21 +153,21 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         influxdbConfFile = "/etc/influxdb/" + influxdbConfFile;
         if (!isExistPath(influxdb_install_path + influxdbBinFile)
             || !isExistPath(influxdb_install_path + influxdbConfFile)) {
-            vscode.window.showErrorMessage('InfluxDB Install Path is wrong.');
+            vscode.window.showErrorMessage('InfluxDB install path is wrong.');
             return;
         }
     }
     // Check grafana install path
     let grafana_install_path = webosose_config.get('resourceMonitoring.grafanaInstallPath');
     if (grafana_install_path == null) {
-        vscode.window.showErrorMessage('Grafana Install Path is empty.');
+        vscode.window.showErrorMessage('Grafana install path is empty.');
         return;
     }
     grafana_install_path = grafana_install_path.replace(/\\/g, "/") + "/";
     if (!isExistPath(grafana_install_path)
         || !isExistPath(grafana_install_path + grafanaBinFile)
         || !isExistPath(grafana_install_path + grafanaConfFile)) {
-        vscode.window.showErrorMessage('Grafana Install Path is wrong.');
+        vscode.window.showErrorMessage('Grafana install path is wrong.');
         return;
     }
 

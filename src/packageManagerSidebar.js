@@ -221,7 +221,7 @@ class PackageManagerSidebar {
         let filePath = vscode.Uri.file(folderUri[0].path);
         if (filePath.fsPath.includes(" ")) {
           vscode.commands.executeCommand('setContext', 'webosose.showpackagemanager', false);
-          vscode.window.showErrorMessage(`Unable to configure Package Manager, selected folder name or parent folder name contains space charactor`);
+          vscode.window.showErrorMessage(`Unable to configure Package Manager, selected folder name or parent folder name contains space character.`);
           return Promise.reject()
         }
         let osStr = os.platform().toLowerCase();

@@ -62,7 +62,7 @@ class DeviceProvider {
 
         let isOnline = await updateDeviceStatus(deviceName);
         if (!isOnline) {
-            vscode.window.showErrorMessage(`Unaable to connect device '${deviceName}', device may offline `);
+            vscode.window.showErrorMessage(`Unable to connect device '${deviceName}', device may be offline.`);
             return []
         }
         if (label === 'Installed') {
