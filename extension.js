@@ -1624,6 +1624,7 @@ function getWebviewHome(resource) {
                 <select name="selelct-api-version" id="selelct-api-version" disabled>
                         <option value="none" selected disabled hidden>====== select ======</option>
                         <!--[REQUIRED] Update the api level when new version of OSE is released.-->
+                        <option value="OSE_APILevel_31">OSE APILevel31</option>
                         <option value="OSE_APILevel_29">OSE APILevel29</option>
                         <option value="OSE_APILevel_28">OSE APILevel28</option>
                         <option value="OSE_APILevel_27">OSE APILevel27</option>

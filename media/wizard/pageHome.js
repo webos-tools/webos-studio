@@ -30,10 +30,11 @@
     }
     window.onload = onLoadEvent;
 
-    const removeCount = 9;
+    //[REQURIED] Need to increase removeCount
+    const removeCount = 10;
     //[REQURIED] Need to add api level
     const tvAPI = [["TV_APILevel_0", "Default"]];
-    const oseAPI = [["OSE_APILevel_29", "APILevel29"], ["OSE_APILevel_28", "APILevel28"],
+    const oseAPI = [["OSE_APILevel_31", "APILevel31"],["OSE_APILevel_29", "APILevel29"], ["OSE_APILevel_28", "APILevel28"],
         ["OSE_APILevel_27", "APILevel27"],["OSE_APILevel_25", "APILevel25"],["OSE_APILevel_24", "APILevel24"],
         ["OSE_APILevel_23", "APILevel23"], ["OSE_APILevel_22", "APILevel22"],["OSE_APILevel_21", "APILevel21"],
         ["OSE_APILevel_20", "APILevel20"]];
@@ -90,6 +91,8 @@
             description.value = descriptionValue + '2.25.0';
         } else if (apiVersionValue === 'OSE_APILevel_29') {
             description.value = descriptionValue + '2.26.0';
+        } else if (apiVersionValue === 'OSE_APILevel_31') {
+            description.value = descriptionValue + '2.27.0';
         }
 
         //[REQURIED] : Need to add api level
