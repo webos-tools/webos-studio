@@ -173,7 +173,7 @@ async function runWithoutInstall(appSelectedDir, context) {
       // ares-launch --hosted --host-ip
       ares.launchHosted(appDir, deviceName, hostIp)
           .then(() => {
-              vscode.window.showInformationMessage(`Success! ${appDir} is running on ${deviceName}.`);
+              vscode.window.showInformationMessage(`Running '${appDir}' on '${deviceName}'.`);
             }).catch((err) => {
             console.log(err.toString())
               let errMsg = `Failed to run ${appDir} on ${deviceName}.`;
@@ -732,7 +732,7 @@ async function stopServerAndClearResources(context, isFromCommand) {
         .installRemove(dp_appInfo["id"], deviceName)
         .then(async () => {
           vscode.window.showInformationMessage(
-            "Application launch on device has been stopped."
+            "Stopping the currently running app."
           );
         })
         .catch(() => {
@@ -791,7 +791,7 @@ function clearProcess() {
   // ares-launch --hosted --host-ip
   ares.launchHosted(appDir, device, hostIp)
       .then(() => {
-          vscode.window.showInformationMessage(`Success! ${appDir} is running on ${device}.`);
+          vscode.window.showInformationMessage(`Running '${appDir}' on '${deviceName}'.`);
       }).catch((err) => {
           let errMsg = `Failed to run ${appDir} on ${device}.`;
           if (typeof err === 'string' && err.includes(`Unknown method`) && err.includes(`for category "/dev"`)) {

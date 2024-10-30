@@ -91,14 +91,14 @@ module.exports = function runSimulator(selectedDir = null, selectedVersion = nul
                                 obj.appDir = path.join(obj.appDir, 'dist');
                                 // check dist directory is exists
                                 if (!fs.existsSync(obj.appDir)) {
-                                    vscode.window.showInformationMessage(`Please package enact app before launching TV Simulator!`);
+                                    vscode.window.showErrorMessage(`Error! Failed to install the app. Please check that your app is packaged correctly.`);
                                     return;
                                 }
                             }
                             ares.launchSimulator(obj.appDir, obj.simulatorVersion, obj.params)
                                 .then(() => {
                                     const paramsMsg = JSON.stringify(obj.params) === '{}' ? '' : ` with parameters ${JSON.stringify(obj.params)}`;
-                                    vscode.window.showInformationMessage(`Success! ${obj.appDir} is running on webOS_TV_${obj.simulatorVersion}_Simulator${paramsMsg}.`);
+                                    vscode.window.showInformationMessage(`Running ${obj.appDir} on webOS_TV_${obj.simulatorVersion}_Simulator${paramsMsg}.`);
                                 }).catch((err) => {
                                     let errMsg = `Failed to run a simulator.`;
                                     if (err) errMsg = err;
@@ -110,7 +110,7 @@ module.exports = function runSimulator(selectedDir = null, selectedVersion = nul
                             vscode.window.showErrorMessage(`Error! ${errMsg}`);
                         });
                 } else {
-                    vscode.window.showInformationMessage(`Only TV Profile supports Simulator.`);
+                    vscode.window.showInformationMessage(`Only the TV profile supports Simulator. Please change the profile.`);
                     return;
                 }
             });

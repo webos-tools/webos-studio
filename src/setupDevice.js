@@ -89,7 +89,7 @@ async function addDevice(deviceList) {
         require('./ga4Util').mpGa4Event("AddDevice", {category:"Commands"});
         await ares.setupDeviceAdd(name, info)
             .then(() => {
-                vscode.window.showInformationMessage(`Success! Added the device '${name}'.`);
+                vscode.window.showInformationMessage(`'${name}' has been successfully added.`);
             }).catch((err) => {
                 vscode.window.showErrorMessage(`Error! Failed to add the device '${name}'. ${err}`);
             })
@@ -124,7 +124,7 @@ async function modifyDevice(deviceList, deviceName) {
     require('./ga4Util').mpGa4Event("ModifyDevice", {category:"Commands"});
     await ares.setupDeviceModify(name, info)
         .then(() => {
-            vscode.window.showInformationMessage(`Success! Modified the device '${name}'.`);
+            vscode.window.showInformationMessage(`'${name}' has been successfully modified.`);
         }).catch((err) => {
             console.error(err);
             vscode.window.showErrorMessage(`Error! Failed to modify the device '${name}'.`);
@@ -176,7 +176,7 @@ async function removeDevice(deviceList, deviceName) {
         require('./ga4Util').mpGa4Event("RemoveDevice", {category:"Commands"});
         await ares.setupDeviceRemove(name)
             .then(() => {
-                vscode.window.showInformationMessage(`Success! Removed the device '${name}'.`);
+                vscode.window.showInformationMessage(`'${name}' has been successfully removed.`);
             }).catch((err) => {
                 console.error(err);
                 vscode.window.showErrorMessage(`Error! Failed to remove the device '${name}'.`);

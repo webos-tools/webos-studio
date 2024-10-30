@@ -111,7 +111,7 @@ module.exports = function launchResourceMonitoring(extensionPath, context) {
         return;
     } else if (resourceMonitoringPanelCnt == 0) {
         if (isStartingGrafana) {
-            vscode.window.showInformationMessage('Grafana service is starting...');
+            vscode.window.showInformationMessage('Starting the Grafana service...');
             return;
         }
         if (isRunning("grafana")) {

@@ -129,7 +129,7 @@ async function showPrompt() {
     if (process.platform == "darwin") {
         const isRoot = await isNodeInstalledRoot();
         if (isRoot === true) {
-            vscode.window.showInformationMessage(`Node permission problem. Please refer to option 2 in https://npm.github.io/installation-setup-docs/installing/a-note-on-permissions.html`);
+            vscode.window.showErrorMessage(`Error! Node permission error. Please refer to the Option 2 in the [npm/installation-setup-docs](https://npm.github.io/installation-setup-docs/installing/a-note-on-permissions.html#option-2-change-npms-default-directory-to-another-directory).`);
             setPromptlock(false);
             return;
         }

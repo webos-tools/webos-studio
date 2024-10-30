@@ -520,7 +520,7 @@ function _removeAppDir(appDirPath) {
 
 async function removeApp(app) {
     await vscode.window
-        .showInformationMessage(`This will delete application folder, Do you really want to delete application '${app.label}' ?`, ...["Yes", "No"])
+        .showWarningMessage(`Warning! Are you sure you want to delete the app directory?`, ...["Yes", "No"])
         .then(async (answer) => {
             if (answer === "Yes") {
                 return await vscode.window.withProgress({
@@ -599,8 +599,7 @@ async function importApp() {
                         const folderName = path.basename(sourceFolderPath)
                         var sorcefolderdir = path.dirname(sourceFolderPath);
                         if (appDir != sourceFolderPath) {
-                            vscode.window.showInformationMessage(`Selected App is not a webOS App/Service. Please select webOS App/Service.`);
-
+                            vscode.window.showErrorMessage(`Error! The selected app is not a webOS app/service. Please select the app/service correctly. A webOS app (service) has an appinfo.json (services.json) file in the root directory.`);
                         } else {
                             const destinationFolder = path.join(destinationFolderpath, folderName);
                             if (sorcefolderdir != defaultDir) {
@@ -648,7 +647,7 @@ async function importApp() {
 
                             }
                             else {
-                                vscode.window.showInformationMessage(`please select the different workspace`)
+                                vscode.window.showWarningMessage(`Warning! You have selected the app in the current workspace. Please select an app in a different workspace.`)
                             }
                         }
                     }

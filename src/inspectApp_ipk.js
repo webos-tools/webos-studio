@@ -26,7 +26,7 @@ module.exports = async function inspectApp_ipk(appId, device) {
         ares.inspect(appId, device, false)
             .then(([url, child]) => {
                 url = url.toString();
-                vscode.window.showInformationMessage(`Web inspector is running on ${url}`, 'Stop')
+                vscode.window.showInformationMessage(`Web Inspector is running on ${url}`, 'Stop')
                     .then((selectedItem) => {
                         if ('Stop' == selectedItem) {
                             console.log("Stop");

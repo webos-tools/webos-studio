@@ -10,7 +10,7 @@ function uninstallApp(appId, device) {
         require('./ga4Util').mpGa4Event("UninstallApp", {category:"Commands"});
         ares.installRemove(appId, device)
             .then(() => {
-                vscode.window.showInformationMessage(`Uninstalled ${appId} on ${device}.`);
+                vscode.window.showInformationMessage(`${appId} has been successfully uninstalled from the ${device}.`);
                 resolve();
             }).catch((err) => {
                 let errMsg = `Failed to uninstall ${appId} on ${device}.`
@@ -31,7 +31,7 @@ function closeApp(appId, device, dp) {
         require('./ga4Util').mpGa4Event("CloseApp", {category:"Commands"});
         ares.launchClose(appId, device, dp)
             .then(() => {
-                vscode.window.showInformationMessage(`Closed ${appId} on ${device}.`);
+                vscode.window.showInformationMessage(`${appId} has been successfully closed on the ${device}.`);
                 resolve();
             }).catch((err) => {
                 let errMsg = `Failed to close ${appId} on ${device}.`

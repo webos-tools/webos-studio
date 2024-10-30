@@ -61,7 +61,7 @@ module.exports = async function getKey(deviceName) {
 
     await ares.novacomGetkey(device, passphrase)
         .then(() => {
-            vscode.window.showInformationMessage(`Success! Set the SSH private key from '${device}'.`);
+            vscode.window.showInformationMessage(`The SSH private key has been successfully configured.`);
         }).catch(() => {
             vscode.window.showErrorMessage(`Error! Please make sure the 'Key Server' is on and the 'Passphrase' is correct.`);
         });

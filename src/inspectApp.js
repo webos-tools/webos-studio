@@ -103,7 +103,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
 
     return new Promise((resolve, reject) => {
         if (vscode.debug.activeDebugSession) {
-            vscode.window.showInformationMessage(`Debug session is already active. Disconnect the session to start new debug session!`);
+            vscode.window.showErrorMessage(`Error! A debug session is already running. Disconnect the previous session and start a new session.`);
             resolve();
             return;
         }
@@ -117,8 +117,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                 if (isService) {
                     //Check IDE debugging or Browser
                     if(debugoption === 'BROWSER'){
-                        vscode.window.showInformationMessage(`${url} As follows, open "chrome://inspect" in chrome,
-                        - Click configure. - Enter URL and Done.`, 'Stop'
+                        vscode.window.showInformationMessage(`Open Chrome > Go to "chrome://inspect" > Click "Configure" > Enter the URL > Click "Done". ${url}`, 'Stop'
                         ).then((selectedItem) => {
                             if ('Stop' == selectedItem) {
                                 child.stdin.pause();
@@ -158,7 +157,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                     }
                 } else {
                     if(debugoption === 'BROWSER'){
-                        vscode.window.showInformationMessage(`Web inspector is running on ${url}`, 'Stop'
+                        vscode.window.showInformationMessage(`Web Inspector is running on ${url}`, 'Stop'
                         ).then((selectedItem) => {
                             if ('Stop' == selectedItem) {
                                 console.log("Stop");
@@ -235,7 +234,7 @@ module.exports = async function inspectApp(id, deviceName, isFolder, debugoption
                                                         if (!debugStart) {
                                                             debugStart = true;
                                                             vscode.debug.activeDebugConsole.appendLine(`window.location = "${url}"`);
-                                                            vscode.debug.activeDebugConsole.appendLine(`Enter the command - window.location = "${url}" in DEBUG CONSOLE to debug pre-compiled files.(In case scripts are not loaded)`);
+                                                            vscode.debug.activeDebugConsole.appendLine(`Enter the following command in DEBUG CONSOLE: window.location = "${url}" (In case scripts are not loaded)`);
                                                             //vscode.window.showInformationMessage(`Enter the command - window.location = "${url}" in DEBUG CONSOLE to debug pre-compiled files.`);
                                                             // vscode.debug.activeDebugConsole.appendLine(eval(`this.window.location = "${url}"`));
                                                             // vscode.debug.activeDebugConsole.appendLine(`this.window.location.reload()`);

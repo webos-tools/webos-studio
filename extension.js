@@ -710,7 +710,7 @@ function activate(context) {
                 if (data === 'tv') {
                     getKey();
                 } else {
-                    vscode.window.showInformationMessage(`Only TV Profile supports Set Up SSH Key.`);
+                    vscode.window.showErrorMessage(`Error! 'Set Up SSH Key' is only available in the TV profile. Please change the profile.`);
                 }
             });
     }));
@@ -759,7 +759,7 @@ function activate(context) {
         device = deviceClone(device);
         if (device != null) {
             if (device.label === 'emulator') {
-                vscode.window.showInformationMessage(`The emulator cannot be removed.`);
+                vscode.window.showErrorMessage(`Error! This emulator cannot be removed. (the default emulator)`);
                 return;
             }
             else {
@@ -1100,9 +1100,9 @@ function activate(context) {
 
     context.subscriptions.push(vscode.commands.registerCommand('packagemanager.checkreleases', async () => {
         if (await new AutoUpdate(context).doAutoUpateConfigFile()) {
-            vscode.window.showInformationMessage("AutoUpdate- Found new releases in Package Manager and Updated");
+            vscode.window.showInformationMessage("AutoUpdate - New releases have been found and updated in Package Manager.");
         } else {
-            vscode.window.showInformationMessage("AutoUpdate- Not found any new releases in Package Manager");
+            vscode.window.showInformationMessage("AutoUpdate - No new releases were found.");
         }
 
     }));
@@ -1138,6 +1138,7 @@ function isActiveTextInApp()
     const workspaceFolders = vscode.workspace.workspaceFolders;
     const activeTextEditors = vscode.window.activeTextEditor;
     if (!workspaceFolders) {
+        // vscode.window.showWarningMessage("Warning! To enable auto-completion, please open a directory in VS Code first.");
         return false;
     }
     if (activeTextEditors) {
@@ -1303,7 +1304,7 @@ function setFromConvertCacheAPI() {
     const activeTextEditors = vscode.window.activeTextEditor;
 
     if (!workspaceFolders) {
-        vscode.window.showInformationMessage("Open a folder/workspace first");
+        vscode.window.showWarningMessage("Warning! To enable auto-completion, please open a directory in VS Code first.");
         return;
     }
 
@@ -1341,15 +1342,15 @@ function setFromConvertCacheAPI() {
     if (apiData) {
         apiLevel = apiData;
     } else {
-        vscode.window.showInformationMessage(`There is no API level information in ".webosstudio.config" file.
+        vscode.window.showErrorMessage(`There is no API level information in '.webosstudio.config' file.
                                             Please check the file`);
         return;
     }
 
     //check api level validation depends on profile
     if (!studioAPILevelList.includes(apiLevel)) {
-        vscode.window.showInformationMessage(`API level ${apiLevel} is not supported by ${studioProfile} profile.
-                                            Please check ".webosstudio.config" file`);
+        vscode.window.showErrorMessage(`Error! API level ${apiLevel} is not supported by the ${studioProfile} profile.
+                                            Please check '.webosstudio.config' file.`);
         return;
     }
 

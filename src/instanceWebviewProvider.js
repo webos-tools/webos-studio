@@ -443,7 +443,7 @@ class InstanceWebviewProvider {
                 let commands = [];
                 if (data.uuid == runninguuid) {
                     // already launched
-                    vscode.window.showWarningMessage("Selected instance is already running...")
+                    vscode.window.showWarningMessage("Warning! The selected instance is already running.")
                     resolve("already running")
                 } else if (runninguuid !== "") {
                     // running some other
@@ -570,8 +570,8 @@ class InstanceWebviewProvider {
     }
     async deleteInstance(data) {
         vscode.window
-            .showInformationMessage((wemulIntegration) ? `Do you want to delete instance '${data.instName}' ?` :
-                `This will delete 'VMDK file' and 'Saved State', Do you want to delete instance '${data.instName}' ?`,
+            .showWarningMessage((wemulIntegration) ? `Warning! Are you sure you want to delete the '${data.instName}' instance?` :
+                `Warning! This will delete the VMDK file and saved state. Are you sure you want to delete the '${data.instName}' instance?`,
                 ...["Yes", "No"])
             .then(async (answer) => {
                 if (answer === "Yes") {
