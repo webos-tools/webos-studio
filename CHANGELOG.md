@@ -4,6 +4,22 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+## [2.1.1] [2024-11-08]
+
+- Add webOS context menu support for JS services and dist directories under Enact apps
+- Revamp notification messages (info/warning) for clearer and more precise communication
+- Restrict the auto-completion to only work within webOS projects
+- Prevent default input values from being re-populated when deleted in Project Manager
+- TV profile
+  - Hide the "Resource Monitoring" menu in Quick Launcher
+- OSE profile
+  - Support level 31 APIs
+- Bug fix
+  - Fix issue where environment variables were created redundantly
+  - Fix bug causing simultaneous notifications in Log Viewer; now showing file location prompt only after "yes" is selected in the notification
+  - Fix issue where the "Global install packaging" pop-up would disappear immediately
+  - Fix typos
+
 ## [2.1.0] [2024-07-31]
 
 - New features
