@@ -56,7 +56,7 @@ To use the webOS Studio, you have to set up the followings:
 
 Navigate to **File** > **Open Folder** and select a directory. This directory will be your a new workspace.
 
-![Selecting the workspace folder](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/webos-studio/selecting-the-workspace-folder.png)
+![Selecting the workspace folder](https://res.cloudinary.com/dcsdn4mzr/image/upload/v1710123740/webOS-TV/images/docs/tools/selecting-the-workspace-folder_sol4zb.webp)
 
 > **Note:** The workspace of webOS Studio is different from that of VS Code. webOS Studio can only have one workspace at a time.
 
@@ -67,7 +67,7 @@ Global packages are essential packages to run webOS Studio. This extension suppo
 1. Open the Command Palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
 2. Execute `webOS: Install Global Packages`.
 
-![Installing global packages](https://webosose.s3.ap-northeast-2.amazonaws.com/tools/webos-studio/install-global-packages.png)
+![Installing global packages](https://res.cloudinary.com/dcsdn4mzr/image/upload/v1710123739/webOS-TV/images/docs/tools/install-global-packages_nvvf08.webp)
 
 Or you can also do the same job with the following command:
 
