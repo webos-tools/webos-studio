@@ -2,7 +2,7 @@
     "name": "webosstudio",
     "displayName": "webOS Studio",
     "description": "webOS Studio SDK for VS Code - webOS app and service Create, package, install, launch, debug and more.",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "publisher": "webOSSDK",
     "homepage": "https://www.webosose.org/docs/tools/sdk/vs-code-extension/vs-code-extension-overview/",
     "engines": {
@@ -1106,9 +1106,9 @@
     },
     "scripts": {
         "pack": "vsce package"
-    },
-    "dependencies": {
-        "@typescript-eslint/parser": "4.33.0",
+    },  
+      "dependencies": {
+        "@typescript-eslint/parser": "^8.61.1",
         "7zip-min": "^1.4.4",
         "@vscode/codicons": "0.0.20",
         "ar-async": "0.1.4",
@@ -1122,11 +1122,10 @@
         "decompress": "^4.2.1",
         "default-gateway": "6.0.3",
         "eslint-plugin-html": "^7.1.0",
-        "eslint-plugin-import": "^2.29.0",
+        "eslint-plugin-import": "^2.32.0",
         "execa": "^5.1.1",
         "express": "^4.18.1",
         "fast-folder-size": "1.7.0",
-        "fs": "^0.0.1-security",
         "fs-extra": "^11.1.1",
         "get-folder-size": "2.0.1",
         "node-downloader-helper": "^2.1.9",
@@ -1136,7 +1135,6 @@
         "node-stream-zip": "^1.15.0",
         "node-watch": "^0.6.2",
         "portfinder": "^1.0.28",
-        "request": "^2.88.2",
         "rimraf": "3.0.2",
         "semver": "^7.3.8",
         "showdown": "^2.1.0",
@@ -1145,17 +1143,24 @@
         "sudo-prompt-alt": "^9.3.0",
         "tcp-port-used": "^1.0.2",
         "tree-kill": "^1.2.2",
-        "typescript": "4.4.4",
-        "eslint": "6.8.0"
+        "typescript": "^5.4.5",
+        "eslint": "^8.57.1"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/webos-tools/webos-studio.git"
     },
     "devDependencies": {
-        "@typescript-eslint/parser": "4.33.0",
-        "eslint": "^6.8.0",
-        "eslint-plugin-import": "2.22.0",
-        "typescript": "4.4.4"
+        "@typescript-eslint/eslint-plugin": "^8.61.1",
+        "@typescript-eslint/parser": "^8.61.1",
+        "eslint": "^8.57.1",
+        "eslint-plugin-import": "^2.32.0",
+        "typescript": "^5.4.5"
+    },
+    "overrides": {
+        "axios": "1.18.0",
+        "ws": "8.21",
+        "brace-expansion": "5.0.6",
+        "picomatch": "4.0.4"
     }
 }

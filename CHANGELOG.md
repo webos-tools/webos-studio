@@ -4,6 +4,39 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+
+## [2.1.3] [2026-06-15]
+-Vulnerabilities fix
+  -Resolved vulnerabilities in transitive npm dependencies.
+
+-Dependencies overriden
+  - axios overridden to 1.18.0
+  - Fixes 12 security vulnerabilities (max CVSS 10.0)
+  - Issues: LGPSVEOS-275953, LGPSVEOS-261321, LGPSVEOS-311920, LGPSVEOS-275954,
+    LGPSVEOS-347337, LGPSVEOS-347338, LGPSVEOS-347339, LGPSVEOS-347340,
+    LGPSVEOS-347341, LGPSVEOS-275955, LGPSVEOS-275957, LGPSVEOS-275956
+
+- ws overridden to 8.21
+  - Fixes WebSocket denial-of-service vulnerability (CVSS 7.5)
+  - Issue: LGPSVEOS-319493
+
+- brace-expansion overridden to 5.0.6
+  - Fixes Regular Expression Denial of Service (ReDoS) vulnerability (CVSS 7.5)
+  - Issue: LGPSVEOS-262599
+
+- picomatch overridden to 4.0.4
+  - Fixes path matching ReDoS vulnerability (CVSS 7.5)
+  - Issue: LGPSVEOS-258603
+
+-Dependencies removed
+  fs, request
+
+-Dependencies updated
+  @typescript-eslint/parser 4.33.0 -> 8.61.1
+  eslint-plugin-import  2.22.0 -> 2.32.0
+  typescript from 4.4.4 -> 5.4.5
+  eslint  6.8.0 -> 8.57.1
+
 ## [2.1.1] [2024-11-08]
 
 - Add webOS context menu support for JS services and dist directories under Enact apps
