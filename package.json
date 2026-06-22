@@ -1128,7 +1128,7 @@
         "get-folder-size": "2.0.1",
         "node-downloader-helper": "^2.1.9",
         "node-fetch": "^2.6.9",
-         "got": "^11.8.6",
+        "got": "^11.8.6",
         "node-gtag4": "^0.1.2",
         "node-stream-zip": "^1.15.0",
         "node-watch": "^0.6.2",
@@ -1150,7 +1150,7 @@
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^8.61.1",
         "@typescript-eslint/parser": "^8.61.1",
-        "eslint": "^10.5.0",
+        "eslint": "^9.39.4",
         "eslint-plugin-import": "^2.32.0",
         "typescript": "^4.4.4"
     },

@@ -31,8 +31,10 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 -Dependencies removed
   fs, request
 
--Dependencies updated
-    eslint  6.8.0 -> 10.5.0
+
+- Downgraded eslint   10.5.0 -> 9.39.4  
+  - Reason: Fixes `npm ci` installation issue caused by incompatibility with current project setup
+
 ## [2.1.1] [2024-11-08]
 
 - Add webOS context menu support for JS services and dist directories under Enact apps
