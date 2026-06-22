@@ -16,7 +16,7 @@ All notable changes to the "webOS Studio" extension will be documented in this f
     LGPSVEOS-347337, LGPSVEOS-347338, LGPSVEOS-347339, LGPSVEOS-347340,
     LGPSVEOS-347341, LGPSVEOS-275955, LGPSVEOS-275957, LGPSVEOS-275956
 
-- ws overridden to 8.21
+- ws overridden to 8.21.0
   - Fixes WebSocket denial-of-service vulnerability (CVSS 7.5)
   - Issue: LGPSVEOS-319493
 
@@ -32,11 +32,7 @@ All notable changes to the "webOS Studio" extension will be documented in this f
   fs, request
 
 -Dependencies updated
-  @typescript-eslint/parser 4.33.0 -> 8.61.1
-  eslint-plugin-import  2.22.0 -> 2.32.0
-  typescript from 4.4.4 -> 5.4.5
-  eslint  6.8.0 -> 8.57.1
-
+    eslint  6.8.0 -> 10.5.0
 ## [2.1.1] [2024-11-08]
 
 - Add webOS context menu support for JS services and dist directories under Enact apps

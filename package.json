@@ -261,9 +261,9 @@
                 "title": "webOS: Launch Application"
             },
             {
-				"command": "webos.launchParams",
-				"title": "webOS: Launch Application with Parameters"
-			},
+                "command": "webos.launchParams",
+                "title": "webOS: Launch Application with Parameters"
+            },
             {
                 "command": "webosose.inspectApp",
                 "title": "webOS OSE: Inspect Application"
@@ -729,7 +729,6 @@
                     "when": "resourceExtname == .ipk",
                     "group": "device2@1"
                 },
-              
                 {
                     "command": "webosose.explorermenu.packageApp",
                     "when": "explorerResourceIsFolder && resourcePath in webosose.supportedAppFolders",
@@ -1106,9 +1105,8 @@
     },
     "scripts": {
         "pack": "vsce package"
-    },  
-      "dependencies": {
-        "@typescript-eslint/parser": "^8.61.1",
+    },
+    "dependencies": {
         "7zip-min": "^1.4.4",
         "@vscode/codicons": "0.0.20",
         "ar-async": "0.1.4",
@@ -1130,7 +1128,7 @@
         "get-folder-size": "2.0.1",
         "node-downloader-helper": "^2.1.9",
         "node-fetch": "^2.6.9",
-        "got": "^11.8.6",
+         "got": "^11.8.6",
         "node-gtag4": "^0.1.2",
         "node-stream-zip": "^1.15.0",
         "node-watch": "^0.6.2",
@@ -1143,8 +1141,7 @@
         "sudo-prompt-alt": "^9.3.0",
         "tcp-port-used": "^1.0.2",
         "tree-kill": "^1.2.2",
-        "typescript": "^5.4.5",
-        "eslint": "^8.57.1"
+        "typescript": "^4.4.4"
     },
     "repository": {
         "type": "git",
@@ -1153,13 +1150,13 @@
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^8.61.1",
         "@typescript-eslint/parser": "^8.61.1",
-        "eslint": "^8.57.1",
+        "eslint": "^10.5.0",
         "eslint-plugin-import": "^2.32.0",
-        "typescript": "^5.4.5"
+        "typescript": "^4.4.4"
     },
     "overrides": {
         "axios": "1.18.0",
-        "ws": "8.21",
+        "ws": "8.21.0",
         "brace-expansion": "5.0.6",
         "picomatch": "4.0.4"
     }
