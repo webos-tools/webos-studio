@@ -32,7 +32,7 @@ All notable changes to the "webOS Studio" extension will be documented in this f
   fs, request
 
 
-- Downgraded eslint   10.5.0 -> 9.39.4  
+- Upgraded eslint   6.8.0 -> 9.39.4  
   - Reason: Fixes `npm ci` installation issue caused by incompatibility with current project setup
 
 ## [2.1.1] [2024-11-08]
