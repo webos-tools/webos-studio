@@ -1158,6 +1158,7 @@
         "axios": "1.18.0",
         "ws": "8.21.0",
         "brace-expansion": "5.0.9",
-        "picomatch": "4.0.4"
+        "picomatch": "4.0.4",
+        "undici-types": "8.10.0"
     }
 }
