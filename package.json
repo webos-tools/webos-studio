@@ -1114,7 +1114,7 @@
         "catalogist": "1.0.4",
         "chalk": "^4.1.0",
         "check-disk-space": "^3.3.1",
-        "chokidar": "^3.5.2",
+        "chokidar": "^4.0.3",
         "compare-versions": "^6.0.0-rc.1",
         "create-desktop-shortcuts": "^1.10.1",
         "default-gateway": "6.0.3",
@@ -1155,9 +1155,9 @@
         "typescript": "^4.4.4"
     },
     "overrides": {
-        "axios": "1.18.0",
+        "axios": "1.20.0",
         "ws": "8.21.0",
-        "brace-expansion": "5.0.9",
+        "brace-expansion": "5.0.12",
         "picomatch": "4.0.4",
         "undici-types": "8.10.0"
     }
