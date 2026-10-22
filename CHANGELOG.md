@@ -4,6 +4,16 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+## [2.1.4] [2026-10-22]
+-Vulnerabilities fix
+
+-Dependencies updated
+  - chokidar updated to 4.0.3
+  - axios updated to 1.20.0
+  - brace-expansion to 5.0.12
+
+-Bug fix
+  fixed the issue of webOS TV 25 and 26 Simulator Versions Not Displayed in Package Manager
 
 ## [2.1.3] [2026-06-15]
 -Vulnerabilities fix
