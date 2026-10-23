@@ -1,9 +1,6 @@
 {
     "sdk_env": "LG_WEBOS_STUDIO_SDK_HOME",
-    "env": {
-     
-    },
-   
+    "env": {},
     "tv": {
         "subDirName": "TV",
         "components": [
@@ -17,14 +14,11 @@
                 "displayName": "Emulator",
                 "subDirName": "Emulator"
             }
-          
-           
         ],
-      
         "tv-emulator": [
             {
                 "comp_uid": "tv_emulator_1",
-                "sortOrder":1,
+                "sortOrder": 1,
                 "subDirName": "v1.2.0",
                 "displayName": "webOS TV Emulator",
                 "shortDisplayName": "v1.2.0",
@@ -41,7 +35,7 @@
             },
             {
                 "comp_uid": "tv_emulator_2",
-                "sortOrder":2,
+                "sortOrder": 2,
                 "subDirName": "v2.0.0",
                 "displayName": "webOS TV Emulator",
                 "shortDisplayName": "v2.0.0",
@@ -58,7 +52,7 @@
             },
             {
                 "comp_uid": "tv_emulator_3",
-                "sortOrder":3,
+                "sortOrder": 3,
                 "subDirName": "v3.0.0",
                 "displayName": "webOS TV Emulator",
                 "shortDisplayName": "v3.0.0",
@@ -75,7 +69,7 @@
             },
             {
                 "comp_uid": "tv_emulator_4",
-                "sortOrder":4,
+                "sortOrder": 4,
                 "subDirName": "v4.0.0",
                 "displayName": "webOS TV Emulator",
                 "shortDisplayName": "v4.0.0",
@@ -92,7 +86,7 @@
             },
             {
                 "comp_uid": "tv_emulator_5",
-                "sortOrder":5,
+                "sortOrder": 5,
                 "subDirName": "v5.0.0",
                 "displayName": "webOS TV Emulator",
                 "shortDisplayName": "v5.0.0",
@@ -109,7 +103,7 @@
             },
             {
                 "comp_uid": "tv_emulator_6",
-                "sortOrder":6,
+                "sortOrder": 6,
                 "subDirName": "v6.0.0",
                 "displayName": "webOS TV Emulator",
                 "shortDisplayName": "v6.0.0",
@@ -128,7 +122,7 @@
         "tv-simulator": [
             {
                 "comp_uid": "tv_simulator_1",
-                "sortOrder":1,
+                "sortOrder": 1,
                 "subDirName": "webOS_TV_6.0_Simulator_1.4.1",
                 "displayName": "webOS TV 6.0 Simulator",
                 "shortDisplayName": "(webOS 6.0) v1.4.1",
@@ -147,7 +141,7 @@
             },
             {
                 "comp_uid": "tv_simulator_2",
-                "sortOrder":2,
+                "sortOrder": 2,
                 "subDirName": "webOS_TV_22_Simulator_1.4.1",
                 "displayName": "webOS TV 22 Simulator",
                 "shortDisplayName": "(webOS22) v1.4.1",
@@ -164,10 +158,9 @@
                 "installMethod": "TV_SIMULATOR_INSTALL_FORALL",
                 "uninstallMethod": "TV_SIMULATOR_UNINSTALL_FORALL"
             },
-           
             {
                 "comp_uid": "tv_simulator_3",
-                "sortOrder":3,
+                "sortOrder": 3,
                 "subDirName": "webOS_TV_23_Simulator_1.4.1",
                 "displayName": "webOS TV 23 Simulator",
                 "shortDisplayName": "(webOS23) v1.4.1",
@@ -186,7 +179,7 @@
             },
             {
                 "comp_uid": "tv_simulator_4",
-                "sortOrder":4,
+                "sortOrder": 4,
                 "subDirName": "webOS_TV_24_Simulator_1.4.1",
                 "displayName": "webOS TV 24 Simulator",
                 "shortDisplayName": "(webOS24) v1.4.1",
@@ -202,12 +195,50 @@
                 "expFileSizeInMB": "71",
                 "installMethod": "TV_SIMULATOR_INSTALL_FORALL",
                 "uninstallMethod": "TV_SIMULATOR_UNINSTALL_FORALL"
+            },
+            {
+                "subDirName": "webOS_TV_25_Simulator_1.4.4",
+                "displayName": "webOS TV 25 Simulator",
+                "shortDisplayName": "(webOS25) v1.4.4",
+                "shortName": "Simulator",
+                "sdk_version": "25.0",
+                "sdk_version_act": "1.4.4",
+                "tvos_version": "25",
+                "apiLevel": "21",
+                "repository": "https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007636",
+                "description": "",
+                "userid": "sdk",
+                "password": "sdk",
+                "expFileSizeInMB": "60",
+                "installMethod": "TV_SIMULATOR_INSTALL_FORALL",
+                "uninstallMethod": "TV_SIMULATOR_UNINSTALL_FORALL",
+                "sortOrder": 5,
+                "comp_uid": "tv_simulator_5"
+            },
+            {
+                "subDirName": "webOS_TV_26_Simulator_1.5.0",
+                "displayName": "webOS TV 26 Simulator",
+                "shortDisplayName": "(webOS26) v1.5.0",
+                "shortName": "Simulator",
+                "sdk_version": "26.0",
+                "sdk_version_act": "1.5.0",
+                "tvos_version": "26",
+                "apiLevel": "21",
+                "repository": "https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007636",
+                "description": "",
+                "userid": "sdk",
+                "password": "sdk",
+                "expFileSizeInMB": "60",
+                "installMethod": "TV_SIMULATOR_INSTALL_FORALL",
+                "uninstallMethod": "TV_SIMULATOR_UNINSTALL_FORALL",
+                "sortOrder": 6,
+                "comp_uid": "tv_simulator_6"
             }
         ],
-        "tv-beanviser":[
+        "tv-beanviser": [
             {
                 "comp_uid": "tv_beanviser_1",
-                "sortOrder":1,
+                "sortOrder": 1,
                 "subDirName": "",
                 "displayName": "webOS TV Beanviser",
                 "shortDisplayName": "v1.5.4",
@@ -232,7 +263,6 @@
                 "displayName": "Emulator",
                 "subDirName": "Emulator"
             },
-           
             {
                 "type": "ose-workflowdesigner",
                 "displayName": "Workflow Designer",
@@ -243,13 +273,11 @@
                 "displayName": "Resource Monitor",
                 "subDirName": "ResourceMonitor"
             }
-
         ],
-      
         "ose-emulator": [
             {
                 "comp_uid": "ose_emulator_1",
-                "sortOrder":1,
+                "sortOrder": 1,
                 "subDirName": "v2.20.0",
                 "displayName": "webOS OSE Emulator",
                 "shortDisplayName": "v2.20.0",
@@ -266,7 +294,7 @@
             },
             {
                 "comp_uid": "ose_emulator_2",
-                "sortOrder":2,
+                "sortOrder": 2,
                 "subDirName": "v2.20.1",
                 "displayName": "webOS OSE Emulator",
                 "shortDisplayName": "v2.20.1",
@@ -283,7 +311,7 @@
             },
             {
                 "comp_uid": "ose_emulator_3",
-                "sortOrder":3,
+                "sortOrder": 3,
                 "subDirName": "v2.21.0",
                 "displayName": "webOS OSE Emulator",
                 "shortDisplayName": "v2.21.0",
@@ -298,10 +326,9 @@
                 "installMethod": "OSE_EMULATOR_INSTALL_FORALL",
                 "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL"
             },
-            
             {
                 "comp_uid": "ose_emulator_4",
-                "sortOrder":4,
+                "sortOrder": 4,
                 "subDirName": "v2.22.0",
                 "displayName": "webOS OSE Emulator",
                 "shortDisplayName": "v2.22.0",
@@ -316,10 +343,9 @@
                 "installMethod": "OSE_EMULATOR_INSTALL_FORALL",
                 "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL"
             },
-          
             {
                 "comp_uid": "ose_emulator_5",
-                "sortOrder":5,
+                "sortOrder": 5,
                 "subDirName": "v2.23.0",
                 "displayName": "webOS OSE Emulator",
                 "shortDisplayName": "v2.23.0",
@@ -336,7 +362,7 @@
             },
             {
                 "comp_uid": "ose_emulator_6",
-                "sortOrder":6,
+                "sortOrder": 6,
                 "subDirName": "v2.24.0",
                 "displayName": "webOS OSE Emulator",
                 "shortDisplayName": "v2.24.0",
@@ -353,7 +379,7 @@
             },
             {
                 "comp_uid": "ose_emulator_7",
-                "sortOrder":7,
+                "sortOrder": 7,
                 "subDirName": "v2.25.0",
                 "displayName": "webOS OSE Emulator",
                 "shortDisplayName": "v2.25.0",
@@ -367,13 +393,63 @@
                 "expFileSizeInMB": "3650",
                 "installMethod": "OSE_EMULATOR_INSTALL_FORALL",
                 "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL"
+            },
+            {
+                "subDirName": "v2.26.0",
+                "displayName": "webOS OSE Emulator",
+                "shortDisplayName": "v2.26.0",
+                "shortName": "Emulator",
+                "sdk_version": "2.26.0",
+                "apiLevel": "28",
+                "repository": "https://github.com/webosose/build-webos/releases/download/v2.26.0/webos-ose-2-26-0-qemux86-64.tar.bz2",
+                "description": "",
+                "userid": "sdk",
+                "password": "sdk",
+                "expFileSizeInMB": "3650",
+                "installMethod": "OSE_EMULATOR_INSTALL_FORALL",
+                "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL",
+                "sortOrder": 8,
+                "comp_uid": "ose_emulator_8"
+            },
+            {
+                "subDirName": "v2.27.0",
+                "displayName": "webOS OSE Emulator",
+                "shortDisplayName": "v2.27.0",
+                "shortName": "Emulator",
+                "sdk_version": "2.27.0",
+                "apiLevel": "28",
+                "repository": "https://github.com/webosose/build-webos/releases/download/v2.27.0/webos-ose-2-27-0-qemux86-64.tar.bz2",
+                "description": "",
+                "userid": "sdk",
+                "password": "sdk",
+                "expFileSizeInMB": "3650",
+                "installMethod": "OSE_EMULATOR_INSTALL_FORALL",
+                "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL",
+                "sortOrder": 9,
+                "comp_uid": "ose_emulator_9"
+            },
+            {
+                "subDirName": "v2.28.0",
+                "displayName": "webOS OSE Emulator",
+                "shortDisplayName": "v2.28.0",
+                "shortName": "Emulator",
+                "sdk_version": "2.28.0",
+                "apiLevel": "28",
+                "repository": "https://github.com/webosose/build-webos/releases/download/v2.28.0/webos-ose-2-28-0-qemux86-64.tar.bz2",
+                "description": "",
+                "userid": "sdk",
+                "password": "sdk",
+                "expFileSizeInMB": "3650",
+                "installMethod": "OSE_EMULATOR_INSTALL_FORALL",
+                "uninstallMethod": "OSE_EMULATOR_UNINSTALL_FORALL",
+                "sortOrder": 10,
+                "comp_uid": "ose_emulator_10"
             }
         ],
-       
         "ose-workflowdesigner": [
             {
                 "comp_uid": "ose_workflowdesigner_1",
-                "sortOrder":1,
+                "sortOrder": 1,
                 "subDirName": "",
                 "displayName": "webOS OSE Workflow Designer",
                 "shortDisplayName": "v1.0.3",
@@ -392,7 +468,7 @@
         "ose-resourcemonitor": [
             {
                 "comp_uid": "ose_resourcemonitor_1",
-                "sortOrder":1,
+                "sortOrder": 1,
                 "subDirName": "grafana-9.4.17",
                 "displayName": "Resource Monitor",
                 "shortDisplayName": "v1.0.0",
@@ -408,6 +484,5 @@
                 "uninstallMethod": "OSE_RESMONITOR_UNINSTALL_FORALL"
             }
         ]
-       
     }
 }

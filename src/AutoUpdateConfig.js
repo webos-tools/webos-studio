@@ -209,7 +209,7 @@ class AutoUpdate {
         this.tv_servEmulators = this.assignSortOrder(this.tv_servEmulators, "tv", "tv-emulator")
     }
     async getListOfTVSimulatorFromDevServer() {
-        const respBaseUrl = await fetch("https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007585")
+        const respBaseUrl = await fetch("https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007636")
             .catch(() => {
                 logger.warn("Unable to connect developer.lge.com to check for update")
             });
@@ -238,7 +238,7 @@ class AutoUpdate {
                     "sdk_version_act": ver2,
                     "tvos_version": ver1,
                     "apiLevel": "21",
-                    "repository": "https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007585",
+                    "repository": "https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007636",
                     "description": "",
                     "userid": "sdk",
                     "password": "sdk",
