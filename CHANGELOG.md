@@ -11,6 +11,9 @@ All notable changes to the "webOS Studio" extension will be documented in this f
   - brace-expansion from 5.0.9 to 5.0.12
   - Updated ws from 8.21.0 to 8.21.1
 
+-Bug fix
+ Fixed an issue where webOS TV 25 and webOS TV 26 simulator versions were not listing in the Package Manager.
+ 
 ## [2.1.3] [2026-06-15]
 -Vulnerabilities fix
   -Resolved vulnerabilities in transitive npm dependencies.
