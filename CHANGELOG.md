@@ -9,6 +9,7 @@ All notable changes to the "webOS Studio" extension will be documented in this f
   - chokidar updated from 3.5.2 to 4.0.3
   - axios updated from 1.18.0 to 1.20.0
   - brace-expansion from 5.0.9 to 5.0.12
+  - Updated ws from 8.21.0 to 8.21.1
 
 -Bug fix
  Fixed an issue where webOS TV 25 and webOS TV 26 simulator versions were not listing in the Package Manager.
