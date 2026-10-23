@@ -4,6 +4,12 @@ All notable changes to the "webOS Studio" extension will be documented in this f
 
 > This extension is based on the [webOS OSE extension](https://marketplace.visualstudio.com/items?itemName=webOSOSESDK.webosose).
 
+## [2.1.4] [2026-10-22]
+-Dependencies updated
+  - chokidar updated from 3.5.2 to 4.0.3
+  - axios updated from 1.18.0 to 1.20.0
+  - brace-expansion from 5.0.9 to 5.0.12
+  - Updated ws from 8.21.0 to 8.21.1
 
 ## [2.1.3] [2026-06-15]
 -Vulnerabilities fix
