@@ -12,6 +12,8 @@ const { logger } = require('./lib/logger');
 const exec = util.promisify(require("child_process").exec);
 const dns = require('dns').promises;
 
+const TV_SIMULATOR_RESOURCE_ID = "RS00007636";
+
 class AutoUpdate {
     constructor(context) {
         this.context = context;
@@ -209,7 +211,7 @@ class AutoUpdate {
         this.tv_servEmulators = this.assignSortOrder(this.tv_servEmulators, "tv", "tv-emulator")
     }
     async getListOfTVSimulatorFromDevServer() {
-        const respBaseUrl = await fetch("https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007636")
+        const respBaseUrl = await fetch(`https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=${TV_SIMULATOR_RESOURCE_ID}`)
             .catch(() => {
                 logger.warn("Unable to connect developer.lge.com to check for update")
             });
@@ -238,7 +240,7 @@ class AutoUpdate {
                     "sdk_version_act": ver2,
                     "tvos_version": ver1,
                     "apiLevel": "21",
-                    "repository": "https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=RS00007636",
+                    "repository": `https://developer.lge.com/resource/tv/RetrieveToolLastVersion.dev?resourceId=${TV_SIMULATOR_RESOURCE_ID}`,
                     "description": "",
                     "userid": "sdk",
                     "password": "sdk",
